@@ -1,0 +1,768 @@
+// 흐름 추적 — 사용자 동작 하나가 어느 파일을 거쳐 디스크까지 닿는지.
+// 각 단계를 누르면 그 파일의 해당 줄로 이동한다(코드가 리뷰 데이터에 실려 있는 경우).
+//
+// sectionIds 에 적은 섹션에서만 해당 흐름이 보인다.
+
+window.MN_FLOWS = [
+  {
+    sectionIds: ['project-map', 'documents-overview', 'file-loaders', 'documents', 'viewer-base'],
+    title: '파일 열기 — 드롭에서 화면까지',
+    summary:
+      '파일을 창에 떨어뜨리면 확장자와 내용으로 종류를 판정하고, 문서 객체를 만들어 탭·사이드바에 올린 뒤, 그 문서가 처음 활성화될 때 비로소 렌더합니다.',
+    steps: [
+      {
+        label: '드롭 수신',
+        location: 'app.js',
+        file: 'src/js/app.js',
+        line: 1,
+        body: 'app.js 가 drop 이벤트를 받아 내부 드래그(INTERNAL_DRAG_MIME)와 외부 파일을 구분하고 handleFiles 로 넘깁니다.',
+      },
+      {
+        label: '입력 판정',
+        location: 'file-loaders.js:28',
+        file: 'src/js/file-loaders.js',
+        line: 28,
+        body: 'handleFiles 가 확장자와 옵션을 보고 어느 로더로 보낼지 정합니다. 폴더·압축은 별도 경로입니다.',
+      },
+      {
+        label: '알 수 없는 확장자',
+        location: 'file-loaders.js:8',
+        file: 'src/js/file-loaders.js',
+        line: 8,
+        body: 'isLikelyTextBytes 가 앞 8KB 를 보고 NUL 이 있으면 이진, 제어문자 10% 이하면 텍스트로 판정합니다.',
+      },
+      {
+        label: '확장자 표',
+        location: 'documents.js:14',
+        file: 'src/js/documents.js',
+        line: 14,
+        body: 'CODE_EXTS·IMG_EXTS·BINARY_ASSET_EXTS 가 지원 형식과 구문강조 프로파일의 원본입니다.',
+      },
+      {
+        label: '문서 생성',
+        location: 'documents.js:426',
+        file: 'src/js/documents.js',
+        line: 426,
+        body: 'makeDoc 이 kind 별 컨테이너를 만들고 docsBySourceKey 에 등록해 중복 열기를 O(1)로 검사합니다.',
+      },
+      {
+        label: '지연 렌더 계약',
+        location: 'viewer-base.js:4',
+        file: 'src/js/viewer-base.js',
+        line: 4,
+        body: 'loadOffice 가 doc.render 클로저를 붙입니다. 실제 그리기는 이 시점이 아니라 문서가 처음 활성화될 때입니다.',
+      },
+      {
+        label: '활성화',
+        location: 'documents.js:456',
+        file: 'src/js/documents.js',
+        line: 456,
+        body: 'setActiveDoc 이 탭을 바꾸며 아직 그려지지 않은 문서면 render() 를 부릅니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['runtime-shapes', 'code-viewer', 'launcher-save', 'documents-overview', 'batch-replace'],
+    title: '텍스트 저장 — 원본이냐 사본이냐',
+    summary:
+      '이 앱에서 사용자가 가장 크게 다칠 수 있는 분기입니다. File System Access 핸들이 있으면 원본에 직접 쓰고, 없으면 EXE 의 저장 루트 또는 다운로드 사본으로 갑니다.',
+    steps: [
+      {
+        label: '저장 창구',
+        location: 'code-viewer.js:3533',
+        file: 'src/js/code-viewer.js',
+        line: 3533,
+        body: 'saveTextDoc(value, ownerDoc, name, options) 가 앱 전체의 텍스트 저장 진입점입니다. {silent, existingOnly} 옵션으로 조용한 저장도 지원합니다.',
+      },
+      {
+        label: '① 원본 핸들이 있으면',
+        location: 'recent-files.js',
+        file: 'src/js/recent-files.js',
+        line: 1,
+        body: 'saveFsHandle·rememberFolderHandle 로 보관해 둔 핸들을 찾아 권한 확인 한 번으로 원본에 씁니다.',
+      },
+      {
+        label: '② EXE 가 있으면',
+        location: 'launcher.cs:1901',
+        file: 'desktop/launcher.cs',
+        line: 1901,
+        body: 'POST /save-file — X-Save-Path(저장 루트 기준 상대경로, 퍼센트 인코딩)와 본문으로 실제 디스크에 씁니다. 토큰이 필요합니다.',
+      },
+      {
+        label: '첫 저장 충돌 확인',
+        location: 'launcher.cs:1879',
+        file: 'desktop/launcher.cs',
+        line: 1879,
+        body: 'POST /save-file-exists — 새 문서의 첫 저장 전에 저장 루트의 기존 파일과 충돌하는지 확인합니다.',
+      },
+      {
+        label: '③ 둘 다 없으면',
+        location: 'code-viewer.js:3533',
+        file: 'src/js/code-viewer.js',
+        line: 3533,
+        body: '다운로드 사본으로 떨어집니다. 화면 위쪽 배지가 "사본 저장" 으로 바뀌어 사용자에게 알립니다.',
+      },
+      {
+        label: '저장 폴더 열기',
+        location: 'launcher.cs:1647',
+        file: 'desktop/launcher.cs',
+        line: 1647,
+        body: 'POST /open-file-folder — 방금 저장한 파일을 하이라이트한 채 탐색기를 엽니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['python-overview', 'python-runtime', 'python-run-context', 'launcher-python', 'runtime-shapes'],
+    title: 'Python 실행 — 로컬이냐 Pyodide 냐',
+    summary:
+      '실행 버튼 하나가 두 백엔드로 갈라집니다. EXE + 로컬 Python 이면 실제 프로세스를, 아니면 브라우저 Pyodide 를 씁니다. 옆 파일까지 묶어 실행하는 번들 경로도 여기 있습니다.',
+    steps: [
+      {
+        label: '백엔드 확인',
+        location: 'python-run-context.js:14',
+        file: 'src/js/python-run-context.js',
+        line: 14,
+        body: '_pyBackend 캐시로 로컬 Python 가용 여부를 기억합니다. 미확인이면 EXE 에 물어봅니다.',
+      },
+      {
+        label: 'EXE 응답',
+        location: 'launcher.cs:1446',
+        file: 'desktop/launcher.cs',
+        line: 1446,
+        body: 'GET /can-run-python — 로컬에 파이썬이 설치돼 있는지 알려 주어 프런트가 미리 분기하게 합니다.',
+      },
+      {
+        label: '실행 문맥 구성',
+        location: 'python-run-context.js:19',
+        file: 'src/js/python-run-context.js',
+        line: 19,
+        body: '작업 폴더·프로젝트 루트·상대 경로를 계산하고, 옆 파일을 번들로 묶습니다(합계 상한 50MB).',
+      },
+      {
+        label: '실행 총괄',
+        location: 'python-runtime.js:3',
+        file: 'src/js/python-runtime.js',
+        line: 3,
+        body: 'runPythonSource 가 모드(일반·채점·진단·추적·노트북 셀)를 정하고 진단/추적이면 하네스로 소스를 감쌉니다.',
+      },
+      {
+        label: '① 로컬 실행',
+        location: 'launcher.cs:2319',
+        file: 'desktop/launcher.cs',
+        line: 2319,
+        body: 'POST /run-python-bundle — 작업폴더를 만들고 프로세스를 띄웁니다. 출력은 LimitedTextBuffer 에 담깁니다(앞 4MB, 결과 JSON 구간은 별도 6MB).',
+      },
+      {
+        label: '증분 폴링',
+        location: 'launcher.cs:2298',
+        file: 'desktop/launcher.cs',
+        line: 2298,
+        body: '/python-session-poll 이 오프셋 이후 증분만 돌려줍니다. 누적 출력을 매번 복사하지 않기 위한 구조입니다.',
+      },
+      {
+        label: '② Pyodide 실행',
+        location: 'python-runtime.js:1078',
+        file: 'src/js/python-runtime.js',
+        line: 1078,
+        body: 'ensurePyodide 가 EXE 의 /pyodide/ 로컬 서빙을 우선 쓰고, 없으면 CDN 으로 폴백합니다.',
+      },
+      {
+        label: '한글 그래프',
+        location: 'korean-font.js',
+        file: 'src/js/korean-font.js',
+        line: 1,
+        body: 'NanumGothic 데이터를 Pyodide 파일시스템에 써 넣고 Matplotlib 폰트로 등록합니다.',
+      },
+      {
+        label: '결과 그림',
+        location: 'image-lightbox.js',
+        file: 'src/js/image-lightbox.js',
+        line: 1,
+        body: '그래프를 클릭하면 큰 오버레이로 띄우고 PNG 저장·메모 보내기를 제공합니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['python-overview', 'notebook-tools', 'notebook-cells', 'launcher-terminal-kernel'],
+    title: '노트북 셀 실행 — 상태가 이어지는 커널',
+    summary:
+      '노트북은 셀 사이에 변수 상태가 이어져야 합니다. EXE 는 지속형 Python 커널 프로세스를 띄우고, 브라우저는 상태 유지 Pyodide 콘솔로 대신합니다.',
+    steps: [
+      {
+        label: '셀 실행 요청',
+        location: 'notebook-cells.js',
+        file: 'src/js/notebook-cells.js',
+        line: 1,
+        body: '셀 UI 가 실행 버튼을 눌러 코드와 셀 식별자를 넘깁니다.',
+      },
+      {
+        label: '작업공간 번들',
+        location: 'notebook-tools.js:11',
+        file: 'src/js/notebook-tools.js',
+        line: 11,
+        body: 'buildNotebookWorkspaceBundle 이 압축 추출을 문서당 한 번만 수행하도록 _nbWorkspacePromise 로 캐시합니다.',
+      },
+      {
+        label: '커널 시작',
+        location: 'launcher.cs:2149',
+        file: 'desktop/launcher.cs',
+        line: 2149,
+        body: 'POST /python-kernel-start-bundle — 작업공간 파일까지 포함해 지속형 커널 프로세스를 띄웁니다.',
+      },
+      {
+        label: '커널 본체',
+        location: 'python_kernel.py',
+        file: 'desktop/python_kernel.py',
+        line: 1,
+        body: 'exe 리소스로 들어간 507줄짜리 커널이 표준입출력으로 셀을 받아 같은 전역 공간에서 실행합니다.',
+      },
+      {
+        label: '셀 시간 제한',
+        location: 'launcher.cs:152',
+        file: 'desktop/launcher.cs',
+        line: 152,
+        body: '지속형 커널은 WaitForExit 제한을 타지 않으므로 셀 하나에 10분 제한을 따로 겁니다 — 데이터 분석 셀이 일반 스크립트보다 길 수 있다는 판단입니다.',
+      },
+      {
+        label: '출력 반영',
+        location: 'notebook-model.js',
+        file: 'src/js/notebook-model.js',
+        line: 1,
+        body: '결과를 셀 출력 모델에 넣고 실행 상태 해시를 갱신해 "결과가 지금 코드와 맞는지" 표시합니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['office-replace', 'docx-editor', 'batch-replace', 'editors-overview'],
+    title: 'Word 찾아 바꾸기 — read → compute → build',
+    summary:
+      '한 낱말이 서식 때문에 여러 run 으로 쪼개져 있어도 찾아내고, 되쓸 때는 첫 조각에만 넣고 나머지를 비웁니다. 바꾼 파트만 갈아끼운 새 zip 을 만들어 나머지 바이트는 건드리지 않습니다.',
+    steps: [
+      {
+        label: '파트 풀기',
+        location: 'office-replace.js:621',
+        file: 'src/js/office-replace.js',
+        line: 621,
+        body: 'readParts 가 zip.js 로 문서 파트를 한 번만 풉니다. MNLazy 의 zip 묶음을 씁니다.',
+      },
+      {
+        label: '파트 역할 판정',
+        location: 'office-replace.js:515',
+        file: 'src/js/office-replace.js',
+        line: 515,
+        body: 'officePartRole 이 본문·머리말/꼬리말·각주·발표자 노트·메모·차트를 구분합니다. Word 와 PowerPoint 의 유일한 차이가 이 표입니다.',
+      },
+      {
+        label: '읽기',
+        location: 'office-replace.js:644',
+        file: 'src/js/office-replace.js',
+        line: 644,
+        body: 'read 가 파트를 모으고 제외 사유(암호·변경 이력·데이터 바인딩·40MB)를 판정합니다.',
+      },
+      {
+        label: '계산',
+        location: 'office-replace.js:664',
+        file: 'src/js/office-replace.js',
+        line: 664,
+        body: 'compute 가 문단을 이어붙인 평문에서 찾고, run 경계를 보며 치환 계획을 세웁니다. 찾을 말이 바뀔 때마다 여기만 다시 돕니다.',
+      },
+      {
+        label: '문단 편집 계획',
+        location: 'office-replace.js:463',
+        file: 'src/js/office-replace.js',
+        line: 463,
+        body: 'officeParagraphEditPlan — docx-editor.js 의 문단 편집이 무엇을 어떻게 되쓸지도 전부 이 순수 함수가 정합니다.',
+      },
+      {
+        label: '되쓰기',
+        location: 'office-replace.js:697',
+        file: 'src/js/office-replace.js',
+        line: 697,
+        body: 'build 가 바꾼 파트만 갈아끼운 새 zip 을 만듭니다. 나머지 엔트리는 바이트 그대로 옮겨 재압축하지 않습니다.',
+      },
+      {
+        label: '저장 성공 후 화면 갱신',
+        location: 'batch-replace.js:84',
+        file: 'src/js/batch-replace.js',
+        line: 84,
+        body: '오피스 문서는 편집기가 없어서, 저장에 실패하면 화면도 바꾸지 않습니다 — "바뀐 줄 알았는데 파일은 그대로"를 막습니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['lazy', 'loading-contract', 'tool-build-offline', 'tool-check-source'],
+    title: '지연 vendor 로드 — 시작 비용 7.2MB 제거',
+    summary:
+      '엑셀 파일을 처음 열 때에야 SheetJS 가 실행됩니다. 단일 파일 빌드에서는 심어 둔 text/plain 블록을 실행 가능한 script 로 옮겨 심는 방식입니다.',
+    steps: [
+      {
+        label: '묶음 정의',
+        location: 'lazy.js:20',
+        file: 'src/js/lazy.js',
+        line: 20,
+        body: 'BUNDLES 가 묶음별 파일 목록과 라벨을 정의합니다. files 배열 순서가 곧 실행 순서입니다.',
+      },
+      {
+        label: '빌드가 심어 두기',
+        location: 'build-offline.js:1',
+        file: 'build-offline.js',
+        line: 1,
+        body: '지연 대상은 실행되는 script 가 아니라 data-mn-lazy 속성이 붙은 text/plain 블록으로 인라인됩니다.',
+      },
+      {
+        label: '모드 판별',
+        location: 'lazy.js:54',
+        file: 'src/js/lazy.js',
+        line: 54,
+        body: 'usesInlineSources 가 data-mn-lazy 블록의 존재로 단일 파일 모드인지 자동 판별합니다.',
+      },
+      {
+        label: '필요 시 로드',
+        location: 'lazy.js:118',
+        file: 'src/js/lazy.js',
+        line: 118,
+        body: 'loadBundle 이 진행 중 Promise 를 재사용해 같은 묶음을 동시에 여러 번 요청해도 한 번만 싣습니다.',
+      },
+      {
+        label: 'JSZip 버전 교체',
+        location: 'lazy.js:35',
+        file: 'src/js/lazy.js',
+        line: 35,
+        body: 'docx 묶음은 JSZip 3.x 를 요구하고 PPTX 는 2.6.1 을 씁니다. jszipSwap 과 직렬화 큐로 순서를 재현합니다.',
+      },
+      {
+        label: '쌍방 검사',
+        location: 'check-source.js:57',
+        file: 'tools/check-source.js',
+        line: 57,
+        body: 'BUNDLES 와 manifest 의 lazy 목록이 서로 완전히 일치하지 않으면 빌드가 실패합니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['state-sync', 'launcher-boot', 'launcher-security', 'runtime-shapes'],
+    title: 'EXE 기동 — 포트 고정과 토큰 주입',
+    summary:
+      'exe 를 누르면 고정 포트 후보 중 하나에 바인딩하고, 실행별 토큰을 HTML 에 심어 브라우저를 엽니다. 브라우저는 그 토큰으로만 로컬 API 를 부를 수 있습니다.',
+    steps: [
+      {
+        label: '기동',
+        location: 'launcher.cs:1004',
+        file: 'desktop/launcher.cs',
+        line: 1004,
+        body: 'Main 이 17645 → 18645 → 19645 → 27645 → 37645 → 47645 순서로 결정적으로 포트를 잡습니다. 랜덤이 아니어야 origin 별 localStorage 가 유지됩니다.',
+      },
+      {
+        label: '단일 인스턴스',
+        location: 'launcher.cs:1027',
+        file: 'desktop/launcher.cs',
+        line: 1027,
+        body: '뮤텍스로 동시 기동 경쟁을 막습니다. 뒤에 온 프로세스는 포트 기록을 기다렸다가 브라우저만 엽니다.',
+      },
+      {
+        label: '토큰 생성',
+        location: 'launcher.cs:118',
+        file: 'desktop/launcher.cs',
+        line: 118,
+        body: 'CreateLocalAuthToken() 이 실행마다 새 토큰을 만들고, 서빙하는 HTML 에 window.__MANNEUNG_LOCAL_TOKEN__ 으로 심습니다.',
+      },
+      {
+        label: 'fetch 래핑',
+        location: 'state-sync.js:28',
+        file: 'src/js/state-sync.js',
+        line: 28,
+        body: '프런트가 같은 origin 요청에만 X-Manneung-Token 헤더를 자동으로 붙입니다. 각 호출부는 토큰을 몰라도 됩니다.',
+      },
+      {
+        label: '설정 선복원',
+        location: 'state-sync.js:1',
+        file: 'src/js/state-sync.js',
+        line: 1,
+        body: '동기 XHR 로 서버 저장분을 받아 localStorage 를 먼저 채웁니다 — theme.js 가 읽기 전이어야 화면 깜빡임이 없습니다.',
+      },
+      {
+        label: '서버측 검증',
+        location: 'launcher.cs:829',
+        file: 'desktop/launcher.cs',
+        line: 829,
+        body: 'RequiresLocalAuthToken 이 메서드·경로로 토큰 필요 여부를 판정하고, TokenEquals 가 상수 시간으로 비교합니다.',
+      },
+      {
+        label: 'Host·Origin 확인',
+        location: 'launcher.cs:809',
+        file: 'desktop/launcher.cs',
+        line: 809,
+        body: 'Host 가 127.0.0.1/localhost 인지(DNS rebinding 차단), Origin 이 있으면 현재 loopback origin 과 같은지 확인합니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['workspace-store', 'launcher-save', 'backup', 'documents-overview'],
+    title: '작업공간 저장·복원 — 서버와 IndexedDB 두 경로',
+    summary:
+      '열어 둔 파일·폴더·탭 상태를 같은 바이너리 포맷으로 저장합니다. EXE 가 있으면 서버, 없으면 IndexedDB 이며 복원 동선은 동일합니다.',
+    steps: [
+      {
+        label: '변경 직렬화',
+        location: 'workspace-store.js:7',
+        file: 'src/js/workspace-store.js',
+        line: 7,
+        body: 'workspaceMutationQueue 로 저장·삭제를 Promise 체인에 태워 동시 쓰기 경합을 없앱니다.',
+      },
+      {
+        label: '저장 요청',
+        location: 'workspace-store.js:358',
+        file: 'src/js/workspace-store.js',
+        line: 358,
+        body: 'POST /workspace-save?replace=… 로 보냅니다. 서버가 없으면 같은 포맷으로 IndexedDB 에 넣습니다.',
+      },
+      {
+        label: '복원 요청',
+        location: 'workspace-store.js:444',
+        file: 'src/js/workspace-store.js',
+        line: 444,
+        body: 'GET /workspace-load 로 이전 상태를 받아 옵니다.',
+      },
+      {
+        label: '서버 처리',
+        location: 'launcher.cs:1286',
+        file: 'desktop/launcher.cs',
+        line: 1286,
+        body: 'GET /workspace-load · POST /workspace-clear · /workspace-remove 가 서버측 저장소를 다룹니다. 모두 토큰이 필요합니다.',
+      },
+      {
+        label: '전체 백업',
+        location: 'backup.js',
+        file: 'src/js/backup.js',
+        line: 1,
+        body: '작업공간·PDF 복구·이미지 메모·설정을 전용 매니페스트가 든 ZIP 하나로 묶고, 복원 시 형식·버전을 검증합니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['exam-paper', 'launcher-exam-lan', 'learning-overview'],
+    title: '시험지 — 출제에서 성적까지',
+    summary:
+      '정답이 든 원본, 정답을 뺀 배포본, 봉인된 제출본을 파일 단위로 분리하고 버전 일치를 검사합니다. 교실 LAN 제출은 별도 리스너를 씁니다.',
+    steps: [
+      {
+        label: '① 원본 .examkey',
+        location: 'exam-paper.js',
+        file: 'src/js/exam-paper.js',
+        line: 1,
+        body: '선생님 암호로 잠근 원본입니다. 정답과 배점이 들어 있습니다.',
+      },
+      {
+        label: '② 배포본 .exam',
+        location: 'exam-paper.js',
+        file: 'src/js/exam-paper.js',
+        line: 1,
+        body: '최신 원본과 버전이 일치하는 정답 제거본입니다. 열기 암호를 선택적으로 걸 수 있습니다.',
+      },
+      {
+        label: '③ 제출본 .examdone',
+        location: 'exam-paper.js',
+        file: 'src/js/exam-paper.js',
+        line: 1,
+        body: '학생이 이름·서명 후 공개키로 봉인합니다. 내부에 신원과 버전이 들어갑니다.',
+      },
+      {
+        label: 'LAN 제출 열기',
+        location: 'launcher.cs:1938',
+        file: 'desktop/launcher.cs',
+        line: 1938,
+        body: 'POST /exam-receive-start — 선생님 PC 에 제출 전용 리스너를 엽니다. /exam-receive-stop 으로 닫습니다.',
+      },
+      {
+        label: '학생 연결',
+        location: 'exam-paper.js:2104',
+        file: 'src/js/exam-paper.js',
+        line: 2104,
+        body: '주소와 6자리 코드로 연결을 확인하고 제출합니다. 실패하면 파일 제출로 폴백합니다.',
+      },
+      {
+        label: '수신 처리',
+        location: 'launcher.cs:7154',
+        file: 'desktop/launcher.cs',
+        line: 7154,
+        body: '/exam-hello 로 연결을 확인하고 제출을 받습니다. 이 리스너는 앱 서버와 분리돼 있습니다.',
+      },
+      {
+        label: '채점',
+        location: 'exam-paper.js',
+        file: 'src/js/exam-paper.js',
+        line: 1,
+        body: '봉인 내부의 신원·버전을 검증한 뒤 일괄 채점표를 만들고, 수동 채점 결과를 영구 저장하며 누적 성적 CSV 를 냅니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['history', 'bootstrap-overview', 'module-boundaries'],
+    title: '되돌리기 — 7개 편집기가 쓰는 한 엔진',
+    summary:
+      '각 편집기는 capture·apply·isEqual 세 함수만 넘기고, 스택·상한·redo 무효화·버튼 상태는 공통 엔진이 처리합니다.',
+    steps: [
+      {
+        label: '엔진 생성',
+        location: 'history.js:30',
+        file: 'src/js/history.js',
+        line: 30,
+        body: 'MNEditHistory.create({capture, apply, isEqual, limit, onChange}) — 셋 중 하나라도 함수가 아니면 즉시 예외를 던집니다.',
+      },
+      {
+        label: '종류별 상한',
+        location: 'history.js:22',
+        file: 'src/js/history.js',
+        line: 22,
+        body: 'text 300 / board 140 / image 50 / pdf 50 / sheet 40 / notebook 24. 스냅샷 무게가 달라 상한을 나눴습니다.',
+      },
+      {
+        label: '불변 조건',
+        location: 'history.js:9',
+        file: 'src/js/history.js',
+        line: 9,
+        body: 'entries[index] 는 항상 화면의 현재 상태와 같습니다. 그래서 commit() 은 편집 직전이 아니라 편집을 마친 뒤에 부릅니다.',
+      },
+      {
+        label: 'isEqual 이 필수인 이유',
+        location: 'history.js:13',
+        file: 'src/js/history.js',
+        line: 13,
+        body: 'undo() 는 기록되지 않은 현재 상태를 먼저 commit 합니다. 이때 동등성 판정이 없으면 undo 가 방금 만든 같은 상태로 돌아가 아무 일도 하지 않습니다.',
+      },
+      {
+        label: '소비자 검사',
+        location: 'check-source.js:34',
+        file: 'tools/check-source.js',
+        line: 34,
+        body: 'manifest 의 소비자 7개가 실제로 MNEditHistory 를 참조하고 나중에 로드되는지 빌드가 확인합니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['data-convert', 'data-convert-ui', 'table-export'],
+    title: '형식 변환 — 8개 형식, 중간 표현 2개',
+    summary:
+      'JSON·JSONL·YAML·XML·CSV·TSV·마크다운 표·HTML 표를 Value(트리) ⇄ Table(표) 두 중간 표현을 거쳐 변환하고, 왕복 재검사로 손실을 보고합니다.',
+    steps: [
+      {
+        label: '진입점 3개',
+        location: 'data-convert-ui.js',
+        file: 'src/js/data-convert-ui.js',
+        line: 1,
+        body: 'Ctrl+K → 형식 변환 · 코드 뷰어의 🔄 변환 · 표 블록의 변환 버튼. 셋 다 같은 창을 엽니다.',
+      },
+      {
+        label: '입력 채우기',
+        location: 'code-viewer.js:17',
+        file: 'src/js/code-viewer.js',
+        line: 17,
+        body: 'CONVERTIBLE_EXTS 에 해당하는 파일이면 변환 버튼이 붙고, 활성 문서가 표면 doc.sheetRows() 로 시트를 받아 채웁니다.',
+      },
+      {
+        label: '변환',
+        location: 'data-convert.js',
+        file: 'src/js/data-convert.js',
+        line: 1,
+        body: 'MNDataConvert 가 중간 표현을 거쳐 변환합니다. XML·HTML 은 자체 토크나이저로 읽어 DOM 의존을 끊었습니다.',
+      },
+      {
+        label: '손실 리포트',
+        location: 'data-convert.js',
+        file: 'src/js/data-convert.js',
+        line: 1,
+        body: '결과를 다시 원래 형식으로 되돌려 비교하고 무엇이 사라졌는지 배너로 알립니다.',
+      },
+      {
+        label: '출구',
+        location: 'table-export.js',
+        file: 'src/js/table-export.js',
+        line: 1,
+        body: '복사(TSV) · CSV 저장(BOM + RFC 4180) · 표 편집기로 열기 · 새 탭. 원본 파일에 되쓰는 경로는 만들지 않았습니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['javascript-overview', 'js-runtime', 'js-editor', 'code-viewer', 'notebook-run', 'notebook-cells'],
+    title: 'JavaScript 실행 — 편집기에서 격리 Worker까지',
+    summary:
+      '.js·.mjs 문서와 JavaScript 노트북 셀이 같은 런타임 어댑터를 사용합니다. 실행마다 새 Worker를 만들고, 지속 커널만 명시적으로 Worker를 재사용합니다.',
+    steps: [
+      {
+        label: '실행 UI 연결',
+        location: 'code-viewer.js:928',
+        file: 'src/js/code-viewer.js',
+        line: 928,
+        body: '코드 문서의 확장자를 보고 JavaScript 실행 바를 붙입니다. 읽기·편집 화면의 진입점은 같고 실행기는 별도 모듈입니다.',
+      },
+      {
+        label: '실행 어댑터',
+        location: 'js-editor.js:330',
+        file: 'src/js/js-editor.js',
+        line: 330,
+        body: 'renderJsRunnable 이 입력·출력·채점·중지 버튼을 묶고 문서별 라이브러리 선택 상태를 실행 옵션으로 넘깁니다.',
+      },
+      {
+        label: '라이브러리 준비',
+        location: 'js-libraries.js:144',
+        file: 'src/js/js-libraries.js',
+        line: 144,
+        body: '내장본·신뢰한 로컬 파일·EXE npm 번들의 소스를 모아 실행 순서를 고정합니다.',
+      },
+      {
+        label: '실행 요청 정규화',
+        location: 'js-runtime.js:1115',
+        file: 'src/js/js-runtime.js',
+        line: 1115,
+        body: 'runJsSource 가 일반 실행·자동채점·진단·추적 모드를 하나의 요청 형식으로 정리합니다.',
+      },
+      {
+        label: '새 Worker 시작',
+        location: 'js-runtime.js:738',
+        file: 'src/js/js-runtime.js',
+        line: 738,
+        body: '일반 실행은 매번 새 Worker를 만들고 제한 시간이 지나거나 중지를 누르면 terminate 합니다.',
+      },
+      {
+        label: '격리 실행',
+        location: 'js-runtime.js:471',
+        file: 'src/js/js-runtime.js',
+        line: 471,
+        body: 'Worker 본체가 console·input·결과 메시지를 프로토콜로 중계합니다. DOM은 없지만 네트워크까지 보안 격리하는 샌드박스는 아닙니다.',
+      },
+      {
+        label: '자동채점',
+        location: 'js-runtime.js:822',
+        file: 'src/js/js-runtime.js',
+        line: 822,
+        body: '테스트마다 독립 Worker를 사용해 한 테스트의 전역 상태가 다음 테스트에 새지 않게 합니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['javascript-overview', 'js-libraries', 'js-editor', 'launcher-js-npm', 'launcher-security'],
+    title: 'EXE npm 설치 — 확인에서 Worker 번들까지',
+    summary:
+      '사용자가 패키지와 버전을 확인하면 EXE가 전용 캐시에 설치하고 esbuild로 브라우저용 번들을 만듭니다. 프런트는 진행률을 폴링하고 완성된 번들만 Worker에 주입합니다.',
+    steps: [
+      {
+        label: '설치 확인',
+        location: 'js-editor.js:228',
+        file: 'src/js/js-editor.js',
+        line: 228,
+        body: '패키지 이름·버전과 로컬 코드 실행 위험을 사용자에게 보여 주고 명시적 확인을 받습니다.',
+      },
+      {
+        label: '설치 작업 요청',
+        location: 'js-libraries.js:251',
+        file: 'src/js/js-libraries.js',
+        line: 251,
+        body: '프런트가 토큰과 확인 헤더를 붙여 /js-npm-install-start 를 부르고 작업 ID를 받습니다.',
+      },
+      {
+        label: '서버 라우팅',
+        location: 'launcher.cs:2059',
+        file: 'desktop/launcher.cs',
+        line: 2059,
+        body: '런처가 설치·폴링·취소·목록·삭제·번들 조회 엔드포인트를 인증 뒤 분기합니다.',
+      },
+      {
+        label: '제한 적용',
+        location: 'launcher.cs:5640',
+        file: 'desktop/launcher.cs',
+        line: 5640,
+        body: '최대 20개 패키지, 설치 결과 250MB, 실행 번들 8MB, 작업 8분 제한과 캐시 복구를 관리합니다.',
+      },
+      {
+        label: '스크립트 차단 설치',
+        location: 'npm_package_runner.js:73',
+        file: 'desktop/npm_package_runner.js',
+        line: 73,
+        body: 'npm install --ignore-scripts 로 install/postinstall 스크립트를 실행하지 않습니다.',
+      },
+      {
+        label: '브라우저 번들',
+        location: 'npm_package_runner.js:99',
+        file: 'desktop/npm_package_runner.js',
+        line: 99,
+        body: 'esbuild가 browser 플랫폼 IIFE로 묶습니다. Node 전용 모듈이나 정적 import는 이 경계에서 실패할 수 있습니다.',
+      },
+      {
+        label: 'Worker 주입',
+        location: 'js-runtime.js:682',
+        file: 'src/js/js-runtime.js',
+        line: 682,
+        body: '완성된 번들을 사용자 코드보다 먼저 평가해 패키지의 전역 이름을 실행 문맥에 제공합니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['pipeline-overview', 'tool-build-offline', 'tool-check-source', 'tool-check-release', 'desktop-build'],
+    title: '빌드 — 소스에서 EXE 까지',
+    summary: 'npm run verify 가 네 단계를 걸고, EXE 만 수동 단계입니다. 각 단계는 앞 단계가 성공해야 실행됩니다.',
+    steps: [
+      {
+        label: '① check',
+        location: 'check-source.js:13',
+        file: 'tools/check-source.js',
+        line: 13,
+        body: 'HTML script 순서와 manifest.localScripts 를 문자열로 비교합니다. 태그만 추가하고 manifest 를 잊으면 여기서 걸립니다.',
+      },
+      {
+        label: '전역 충돌',
+        location: 'check-source.js:1',
+        file: 'tools/check-source.js',
+        line: 1,
+        body: 'vm 으로 각 스크립트를 평가해 전역 선언을 수집하고 충돌을 찾습니다.',
+      },
+      {
+        label: '② test',
+        location: 'release-contract.test.js:17',
+        file: 'tests/release-contract.test.js',
+        line: 17,
+        body: 'vendor 고정본·sha384·지연 태그·문서 완전성을 한 파일에서 검사합니다. docs/JS-파일별-기능.md 갱신을 잊으면 실패합니다.',
+      },
+      {
+        label: '③ build(워커)',
+        location: 'build-korean-spell-worker.mjs',
+        file: 'tools/build-korean-spell-worker.mjs',
+        line: 1,
+        body: 'hunspell 사전 워커를 esbuild 로 묶고 manifest 의 sha384 도 함께 갱신합니다.',
+      },
+      {
+        label: '③ build(HTML)',
+        location: 'build-offline.js:24',
+        file: 'build-offline.js',
+        line: 24,
+        body: 'vendor 해시를 검증하며 CSS·JS·vendor 를 한 파일로 인라인합니다. "</script" 이스케이프와 CRLF 정규화 재계산이 들어 있습니다.',
+      },
+      {
+        label: '④ release-check',
+        location: 'check-release.js:22',
+        file: 'tools/check-release.js',
+        line: 22,
+        body: '실행되는 script 만 뽑아 네트워크 URL 이 없는지 확인합니다. text/plain 지연 블록은 제외됩니다.',
+      },
+      {
+        label: '⑤ EXE(수동)',
+        location: 'build.bat',
+        file: 'desktop/build.bat',
+        line: 1,
+        body: '오프라인 HTML 을 app.html 로 복사하고 csc.exe 로 컴파일합니다. C# 컴파일러가 없으면 Go 폴백(PowerPoint 변환 없음)입니다.',
+      },
+    ],
+  },
+];

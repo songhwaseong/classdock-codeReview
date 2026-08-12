@@ -1,0 +1,184 @@
+// 코드 메서드·실행 패턴 사전 — 3차 표준 API 확장 범위.
+// 표준 객체의 메서드는 코드에서 직접 연결하고, 여러 줄에 걸친 실행 패턴은 사전 카드와 검색으로 제공한다.
+
+const method = (name, languages, kind, label, body) => ({ name, languages, kind, label, body, type: 'method' });
+const pattern = (key, label, body) => ({
+  name: key,
+  languages: ['js', 'cs', 'py'],
+  kind: '실행 패턴',
+  label,
+  body,
+  type: 'pattern',
+});
+
+const ENTRIES = [
+  // 배열 · 문자열 메서드 — JavaScript 중심, 같은 이름의 Python 메서드는 함께 설명한다.
+  method('map', ['js'], '배열·문자열 메서드', '각 값을 바꾼 새 배열', '배열의 각 원소에 함수를 적용한 결과로 같은 길이의 새 배열을 만듭니다.'),
+  method('filter', ['js'], '배열·문자열 메서드', '조건에 맞는 값만', '조건 함수가 참을 돌려준 원소만 모아 새 배열을 만듭니다.'),
+  method('reduce', ['js'], '배열·문자열 메서드', '여러 값을 하나로 누적', '배열을 앞에서부터 돌며 누적값을 갱신해 합계·객체·그룹 같은 하나의 결과를 만듭니다.'),
+  method('forEach', ['js'], '배열·문자열 메서드', '각 값마다 실행', '배열 원소마다 함수를 실행합니다. 새 배열을 만드는 용도보다 화면 갱신 같은 부수 효과에 씁니다.'),
+  method('find', ['js'], '배열·문자열 메서드', '첫 일치 값 찾기', '조건을 만족하는 첫 번째 원소를 돌려주고, 없으면 undefined를 돌려줍니다.'),
+  method('findIndex', ['js'], '배열·문자열 메서드', '첫 일치 위치 찾기', '조건을 만족하는 첫 번째 원소의 배열 위치를 돌려주고, 없으면 -1을 돌려줍니다.'),
+  method('some', ['js'], '배열·문자열 메서드', '하나라도 맞는지', '배열 원소 중 하나라도 조건을 만족하면 true를 돌려줍니다.'),
+  method('every', ['js'], '배열·문자열 메서드', '모두 맞는지', '배열의 모든 원소가 조건을 만족할 때만 true를 돌려줍니다.'),
+  method('includes', ['js'], '배열·문자열 메서드', '값 포함 여부', '배열이나 문자열 안에 지정한 값이 들어 있는지 검사합니다.'),
+  method('set', ['js'], '배열·문자열 메서드', 'Map 값 저장', 'Map에서 키와 값을 연결해 저장하고 Map 자신을 돌려줍니다.'),
+  method('delete', ['js'], '배열·문자열 메서드', 'Map·Set 값 제거', 'Map에서는 키의 항목을, Set에서는 지정한 값을 제거하고 성공 여부를 돌려줍니다.'),
+  method('keys', ['js'], '배열·문자열 메서드', '키 목록 순회', 'Object·Map 등에서 들어 있는 키들을 얻거나 순서대로 반복할 수 있게 합니다.'),
+  method('entries', ['js'], '배열·문자열 메서드', '키·값 쌍 순회', 'Object·Map·배열 등에서 키와 값을 한 쌍씩 얻어 반복할 수 있게 합니다.'),
+  method('add', ['js'], '배열·문자열 메서드', 'Set·클래스 값 추가', 'Set에는 중복 없는 값을 추가하고, classList에는 CSS 클래스 이름을 추가합니다.'),
+  method('has', ['js'], '배열·문자열 메서드', 'Map·Set 포함 검사', 'Map에 키가 있거나 Set에 값이 들어 있는지 검사합니다.'),
+  method('push', ['js'], '배열·문자열 메서드', '배열 끝에 추가', '배열 끝에 값을 하나 이상 추가하고 바뀐 배열 길이를 돌려줍니다.'),
+  method('pop', ['js', 'py'], '배열·문자열 메서드', '마지막 값 꺼내기', '목록의 마지막 값을 제거해 돌려줍니다. Python은 위치를 주어 다른 항목도 꺼낼 수 있습니다.'),
+  method('shift', ['js'], '배열·문자열 메서드', '배열 앞에서 꺼내기', '배열의 첫 값을 제거해 돌려주며 나머지 원소 위치가 앞으로 당겨집니다.'),
+  method('unshift', ['js'], '배열·문자열 메서드', '배열 앞에 추가', '배열 맨 앞에 값을 추가하고 바뀐 배열 길이를 돌려줍니다.'),
+  method('slice', ['js'], '배열·문자열 메서드', '일부 구간 복사', '배열이나 문자열의 지정 구간을 원본을 바꾸지 않고 새 값으로 잘라 냅니다.'),
+  method('splice', ['js'], '배열·문자열 메서드', '배열 중간 수정', '배열 중간에서 원소를 제거하거나 추가하며 원본 배열 자체를 바꿉니다.'),
+  method('join', ['js', 'py'], '배열·문자열 메서드', '구분자로 이어 붙이기', '여러 문자열 값을 지정한 구분자로 이어 하나의 문자열로 만듭니다.'),
+  method('split', ['js', 'py'], '배열·문자열 메서드', '문자열 나누기', '문자열을 지정한 구분 기준으로 잘라 문자열 목록으로 만듭니다.'),
+  method('replace', ['js', 'py'], '배열·문자열 메서드', '문자열 일부 바꾸기', '찾은 문자열이나 패턴을 다른 문자열로 바꾼 새 문자열을 만듭니다.'),
+  method('match', ['js'], '배열·문자열 메서드', '정규식 일치 찾기', '문자열에서 정규식과 일치하는 결과를 찾습니다.'),
+  method('matchAll', ['js'], '배열·문자열 메서드', '정규식 모든 일치', '문자열에서 전역 정규식과 일치하는 모든 결과를 순서대로 꺼낼 수 있게 합니다.'),
+  method('startsWith', ['js'], '배열·문자열 메서드', '시작 문자열 검사', '문자열이 지정한 글자로 시작하는지 검사합니다.'),
+  method('endsWith', ['js'], '배열·문자열 메서드', '끝 문자열 검사', '문자열이 지정한 글자로 끝나는지 검사합니다.'),
+  method('trim', ['js'], '배열·문자열 메서드', '양끝 공백 제거', '문자열 양끝의 공백과 줄바꿈을 제거한 새 문자열을 만듭니다.'),
+  method('toLowerCase', ['js'], '배열·문자열 메서드', '소문자로 변환', '문자열의 영문 대문자를 소문자로 바꾼 새 문자열을 만듭니다.'),
+  method('toUpperCase', ['js'], '배열·문자열 메서드', '대문자로 변환', '문자열의 영문 소문자를 대문자로 바꾼 새 문자열을 만듭니다.'),
+  method('sort', ['js'], '배열·문자열 메서드', '배열 정렬', '비교 함수를 기준으로 배열 원본의 순서를 바꿉니다. 비교 함수를 생략하면 문자열 기준으로 정렬됩니다.'),
+  method('reverse', ['js'], '배열·문자열 메서드', '배열 순서 뒤집기', '배열 원본의 원소 순서를 반대로 바꿉니다.'),
+  method('flatMap', ['js'], '배열·문자열 메서드', '변환 후 한 단계 펼치기', '각 원소를 배열로 변환한 뒤 결과를 한 단계 펼쳐 하나의 새 배열로 만듭니다.'),
+  method('indexOf', ['js'], '배열·문자열 메서드', '값의 첫 위치', '배열이나 문자열에서 지정한 값이 처음 나오는 위치를 돌려주고, 없으면 -1을 돌려줍니다.'),
+
+  // DOM · 이벤트 메서드
+  method('createElement', ['js'], 'DOM·이벤트 메서드', '새 요소 만들기', '지정한 HTML 태그 이름으로 아직 화면에 붙지 않은 DOM 요소를 만듭니다.'),
+  method('appendChild', ['js'], 'DOM·이벤트 메서드', '자식 요소 하나 붙이기', 'DOM 노드의 마지막 자식으로 다른 노드를 붙이거나 기존 위치에서 옮깁니다.'),
+  method('append', ['js', 'py'], 'DOM·이벤트 메서드', '끝에 추가', 'JavaScript DOM에서는 노드나 문자열을 끝에 붙이고, Python 목록에서는 값 하나를 끝에 추가합니다.'),
+  method('remove', ['js', 'py'], 'DOM·이벤트 메서드', '요소·값 제거', 'JavaScript에서는 DOM 요소를 문서에서 떼고, Python 목록에서는 처음 일치하는 값을 제거합니다.'),
+  method('closest', ['js'], 'DOM·이벤트 메서드', '가장 가까운 조상 찾기', '현재 요소부터 위로 올라가며 CSS 선택자와 처음 일치하는 요소를 찾습니다.'),
+  method('matches', ['js'], 'DOM·이벤트 메서드', '선택자 일치 검사', 'DOM 요소 하나가 지정한 CSS 선택자와 일치하는지 검사합니다.'),
+  method('contains', ['js'], 'DOM·이벤트 메서드', '하위 노드 포함 검사', 'DOM 노드가 다른 노드를 자기 자신이나 자손으로 포함하는지 검사합니다.'),
+  method('setAttribute', ['js'], 'DOM·이벤트 메서드', 'HTML 속성 설정', 'DOM 요소에 이름으로 HTML 속성 값을 설정합니다.'),
+  method('getAttribute', ['js'], 'DOM·이벤트 메서드', 'HTML 속성 읽기', 'DOM 요소에서 이름으로 HTML 속성 값을 읽습니다.'),
+  method('removeAttribute', ['js'], 'DOM·이벤트 메서드', 'HTML 속성 제거', 'DOM 요소에서 지정한 HTML 속성을 완전히 제거합니다.'),
+  method('toggle', ['js'], 'DOM·이벤트 메서드', '클래스·상태 전환', 'classList에서는 CSS 클래스가 있으면 빼고 없으면 넣습니다. 두 번째 인자로 원하는 상태를 강제할 수 있습니다.'),
+  method('preventDefault', ['js'], 'DOM·이벤트 메서드', '브라우저 기본 동작 취소', '링크 이동이나 폼 제출처럼 이벤트에 딸린 브라우저 기본 동작을 막습니다.'),
+  method('stopPropagation', ['js'], 'DOM·이벤트 메서드', '이벤트 전파 중단', '이벤트가 부모 요소 쪽으로 더 전달되는 것을 막습니다.'),
+  method('focus', ['js'], 'DOM·이벤트 메서드', '입력 초점 이동', '키보드 입력 대상과 접근성 포커스를 지정한 요소로 옮깁니다.'),
+  method('select', ['js'], 'DOM·이벤트 메서드', '입력 내용 선택', '텍스트 입력 요소의 전체 내용을 선택 상태로 만듭니다.'),
+  method('click', ['js'], 'DOM·이벤트 메서드', '클릭 동작 실행', '코드에서 요소의 클릭 동작을 실행해 등록된 클릭 처리와 기본 동작을 호출합니다.'),
+  method('scrollIntoView', ['js'], 'DOM·이벤트 메서드', '요소가 보이게 스크롤', '지정한 DOM 요소가 스크롤 영역 안에 보이도록 화면 위치를 이동합니다.'),
+
+  // 비동기 · 파일 메서드
+  method('then', ['js'], '비동기·파일 메서드', 'Promise 성공 이후', 'Promise가 성공한 뒤 실행할 함수를 연결하고 그 결과를 담는 새 Promise를 돌려줍니다.'),
+  method('catch', ['js'], '비동기·파일 메서드', 'Promise 실패 처리', 'Promise 처리 중 생긴 실패를 받아 복구하거나 다른 실패로 바꾸는 함수를 연결합니다.'),
+  method('finally', ['js'], '비동기·파일 메서드', 'Promise 마무리 처리', 'Promise의 성공·실패 여부와 관계없이 마지막에 실행할 정리 함수를 연결합니다.'),
+  method('arrayBuffer', ['js'], '비동기·파일 메서드', '응답을 바이트 버퍼로', 'Response나 Blob의 전체 내용을 ArrayBuffer로 비동기 변환합니다.'),
+  method('text', ['js'], '비동기·파일 메서드', '응답을 문자열로', 'Response나 Blob의 전체 내용을 문자열로 비동기 변환합니다.'),
+  method('createObjectURL', ['js'], '비동기·파일 메서드', '메모리 데이터 임시 주소', 'Blob이나 File을 현재 페이지에서 열 수 있는 임시 blob 주소로 만듭니다.'),
+  method('revokeObjectURL', ['js'], '비동기·파일 메서드', '임시 주소 해제', '더 쓰지 않는 blob 주소를 해제해 연결된 메모리를 정리합니다.'),
+
+  // C# 표준 메서드
+  method('ReadAllText', ['cs'], 'C# 표준 메서드', '파일 전체 문자열 읽기', '파일의 모든 글자를 한 번에 문자열로 읽습니다.'),
+  method('ReadAllBytes', ['cs'], 'C# 표준 메서드', '파일 전체 바이트 읽기', '파일의 모든 내용을 byte 배열로 읽습니다.'),
+  method('WriteAllBytes', ['cs'], 'C# 표준 메서드', '파일 전체 바이트 쓰기', 'byte 배열 전체를 파일에 쓰며 기존 파일이 있으면 내용을 바꿉니다.'),
+  method('Exists', ['cs'], 'C# 표준 메서드', '파일·폴더 존재 확인', 'File이나 Directory에서 지정한 경로가 실제로 존재하는지 검사합니다.'),
+  method('Combine', ['cs'], 'C# 표준 메서드', '경로 조각 합치기', '운영체제에 맞는 구분자를 사용해 여러 경로 조각을 하나로 합칩니다.'),
+  method('GetFullPath', ['cs'], 'C# 표준 메서드', '절대 경로 만들기', '상대 경로나 정리되지 않은 경로를 완전한 절대 경로로 바꿉니다.'),
+  method('Start', ['cs'], 'C# 표준 메서드', '프로세스·작업 시작', '설정해 둔 프로세스나 실행 대상을 시작합니다.'),
+  method('WaitForExit', ['cs'], 'C# 표준 메서드', '프로세스 종료 기다리기', '외부 프로세스가 끝날 때까지 기다리거나 제한 시간 안에 끝났는지 확인합니다.'),
+  method('Kill', ['cs'], 'C# 표준 메서드', '프로세스 강제 종료', '실행 중인 프로세스를 정상 종료 절차 없이 강제로 끝냅니다.'),
+  method('Dispose', ['cs'], 'C# 표준 메서드', '자원 즉시 정리', '파일 핸들·프로세스·스트림 같은 관리 자원을 더 쓰지 않을 때 해제합니다.'),
+  method('ToString', ['cs'], 'C# 표준 메서드', '문자열 표현 만들기', '값을 로그·화면·저장에 사용할 문자열 표현으로 바꿉니다.'),
+
+  // Python 표준 메서드 — 위의 공통 이름 외에 Python 표기가 따로 있는 것들.
+  method('decode', ['py'], 'Python 표준 메서드', '바이트를 문자열로', '바이트 데이터를 UTF-8 같은 지정 인코딩의 문자열로 해석합니다.'),
+  method('startswith', ['py'], 'Python 표준 메서드', '시작 문자열 검사', '문자열이 지정한 글자나 글자 묶음으로 시작하는지 검사합니다.'),
+  method('write', ['py'], 'Python 표준 메서드', '파일·스트림에 쓰기', '열린 파일이나 메모리 스트림에 문자열 또는 바이트 내용을 씁니다.'),
+  method('get', ['js', 'py'], '배열·문자열 메서드', '키의 값 안전하게 읽기', 'JavaScript Map이나 Python 사전에서 키의 값을 읽습니다. Python은 키가 없을 때 사용할 기본값도 지정할 수 있습니다.'),
+  method('endswith', ['py'], 'Python 표준 메서드', '끝 문자열 검사', '문자열이 지정한 글자나 글자 묶음으로 끝나는지 검사합니다.'),
+  method('exists', ['py'], 'Python 표준 메서드', '경로 존재 확인', 'pathlib 경로가 파일이나 폴더로 실제 존재하는지 검사합니다.'),
+  method('strip', ['py'], 'Python 표준 메서드', '양끝 문자 제거', '문자열 양끝의 공백 또는 지정한 문자들을 제거한 새 문자열을 만듭니다.'),
+  method('encode', ['py'], 'Python 표준 메서드', '문자열을 바이트로', '문자열을 UTF-8 같은 지정 인코딩의 바이트 데이터로 변환합니다.'),
+  method('insert', ['py'], 'Python 표준 메서드', '목록 중간에 삽입', '목록의 지정한 위치에 값을 하나 삽입합니다.'),
+  method('items', ['py'], 'Python 표준 메서드', '사전 키·값 쌍', '사전의 키와 값을 한 쌍씩 반복할 수 있는 뷰를 돌려줍니다.'),
+  method('values', ['js', 'py'], '배열·문자열 메서드', '값 모음 순회', 'JavaScript 컬렉션이나 Python 사전에 들어 있는 값들을 순서대로 반복할 수 있게 합니다.'),
+
+  // 여러 줄에 걸쳐 나타나는 실행 패턴 15개 — 코드 토큰 대신 검색과 사전 카드로 제공한다.
+  pattern('callback', '콜백', '함수를 다른 코드에 넘겨 두었다가 이벤트나 작업 완료 시점에 다시 호출하게 하는 패턴입니다.'),
+  pattern('early-return', '조기 반환', '처리할 필요가 없는 조건을 함수 앞에서 return해 핵심 로직의 들여쓰기를 얕게 유지하는 패턴입니다.'),
+  pattern('guard-clause', '가드 절', '잘못된 입력·권한·상태를 함수 시작 부분에서 검사해 즉시 종료하거나 예외를 내는 방어 패턴입니다.'),
+  pattern('destructuring', '구조 분해', '배열이나 객체에서 필요한 값만 같은 모양으로 꺼내 여러 이름에 한 번에 담는 문법 패턴입니다.'),
+  pattern('method-chaining', '메서드 체이닝', '메서드가 돌려준 값에 점을 이어 다음 메서드를 연속 호출해 처리 단계를 한 흐름으로 적는 패턴입니다.'),
+  pattern('event-delegation', '이벤트 위임', '많은 자식마다 이벤트를 달지 않고 공통 부모 하나에서 이벤트가 올라온 대상을 판별하는 패턴입니다.'),
+  pattern('debounce', '디바운스', '입력이 연달아 들어올 때 타이머를 다시 시작해 마지막 입력 뒤 한 번만 작업을 실행하는 패턴입니다.'),
+  pattern('throttle', '스로틀', '이벤트가 매우 자주 발생해도 일정 시간에 한 번 이하로만 작업을 실행하게 제한하는 패턴입니다.'),
+  pattern('polling', '폴링', '완료 여부나 새 데이터를 알기 위해 같은 상태 조회를 일정 간격으로 반복하는 패턴입니다.'),
+  pattern('memoization', '메모이제이션', '같은 입력의 계산 결과를 기억해 두었다가 다시 계산하지 않고 재사용하는 캐시 패턴입니다.'),
+  pattern('async-pipeline', '비동기 파이프라인', '읽기·변환·저장처럼 기다림이 있는 여러 단계를 순서대로 연결하고 실패를 한 흐름에서 처리하는 패턴입니다.'),
+  pattern('resource-cleanup', '자원 정리', '파일·프로세스·URL·이벤트 리스너를 사용한 뒤 finally·Dispose·해제 함수로 반드시 정리하는 패턴입니다.'),
+  pattern('serialization-boundary', '직렬화 경계', '메모리 객체가 JSON·XML·바이트로 바뀌어 저장되거나 다른 프로세스로 넘어가는 지점을 명확히 두는 패턴입니다.'),
+  pattern('queue-lock', '큐·락 직렬화', '동시에 들어온 작업이 같은 파일이나 상태를 겹쳐 수정하지 않도록 줄을 세우거나 잠그는 패턴입니다.'),
+  pattern('fallback-branch', '폴백 분기', '가장 좋은 실행 경로를 먼저 시도하고 사용할 수 없거나 실패하면 제한된 대체 경로로 물러나는 패턴입니다.'),
+];
+
+const LANGUAGE_LABEL = { js: 'JavaScript', cs: 'C#', py: 'Python' };
+const KINDS = [
+  '배열·문자열 메서드',
+  'DOM·이벤트 메서드',
+  '비동기·파일 메서드',
+  'C# 표준 메서드',
+  'Python 표준 메서드',
+  '실행 패턴',
+];
+const firstSentence = (text) => (/^.*?\.(?=\s|$)/.exec(text) ?? [text])[0];
+
+export const CODE_PATTERNS = ENTRIES.map((item, index) => ({
+  ...item,
+  id: item.type === 'method' ? `cm-${item.name}` : `cp-${item.name}`,
+  languageLabel:
+    item.type === 'method' ? item.languages.map((language) => LANGUAGE_LABEL[language]).join(' · ') : '공통 패턴',
+  short: firstSentence(item.body),
+  order: index,
+}));
+
+export default ({ helpers }) => {
+  const { sec } = helpers;
+  const byKind = (kind) => CODE_PATTERNS.filter((item) => item.kind === kind);
+  const methods = CODE_PATTERNS.filter((item) => item.type === 'method');
+  const patterns = CODE_PATTERNS.filter((item) => item.type === 'pattern');
+
+  return [
+    sec({
+      id: 'code-patterns',
+      category: '개요',
+      group: '코드 메서드·실행 패턴 사전',
+      title: '코드 메서드·실행 패턴 사전',
+      subtitle: `표준 메서드 ${methods.length}개와 실행 패턴 ${patterns.length}개`,
+      summary:
+        `3차 표준 API 확장 범위로, 실제 코드에 나오는 표준 메서드 ${methods.length}개와 여러 줄에 걸친 실행 패턴 ${patterns.length}개를 모았습니다. ` +
+        '메서드는 객체 뒤에 점을 찍어 호출하는 경우에만 코드에서 연결하므로 프로젝트 함수와 같은 이름을 잘못 잡지 않습니다. 실행 패턴은 한 단어로 판별할 수 없어 검색과 사전 카드로 제공합니다.',
+      usage: KINDS.map((kind) => ({
+        title: `${kind} (${byKind(kind).length}개)`,
+        body: byKind(kind).map((item) => (item.type === 'method' ? item.name : item.label)).join(', '),
+      })),
+      features: CODE_PATTERNS.map((item) => ({
+        id: item.id,
+        title: item.type === 'method' ? `\`${item.name}\` — ${item.label}` : item.label,
+        body: `${item.languageLabel} · ${item.body}`,
+      })),
+      files: [],
+      notes: [
+        {
+          type: 'info',
+          label: '연결 기준',
+          body: '표준 메서드는 객체.메서드 형태일 때만 점선 밑줄과 툴팁을 붙입니다. 이름이 같은 프로젝트 함수에는 연결하지 않습니다.',
+        },
+        {
+          type: 'info',
+          label: '다음 범위',
+          body: '프로젝트 전용 함수는 이름 후보가 수천 개라 별도의 4차 프로젝트 API 사전에서 공유·반복 호출 상위 150개만 다룹니다. 외부 라이브러리 API는 계속 제외합니다.',
+        },
+      ],
+    }),
+  ];
+};

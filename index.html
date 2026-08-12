@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>만능파일교실 코드리뷰 맵</title>
+    <script>
+      // 스타일이 그려지기 전에 테마를 정해 초기 깜빡임을 막는다(앱의 theme.js와 같은 방식).
+      document.documentElement.dataset.theme =
+        localStorage.getItem('mn-review-theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    </script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <button type="button" class="nav-toggle" id="navToggle" aria-label="메뉴 열기">☰</button>
+    <div class="shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand">
+          <span class="brand-mark">만</span>
+          <div>
+            <h1>만능파일교실 코드리뷰</h1>
+            <p>로딩 계층과 기능 기준으로 보는 프로젝트 지도</p>
+          </div>
+          <button type="button" class="theme-toggle" id="themeToggle" aria-label="테마 전환" title="테마 전환"></button>
+        </div>
+
+        <label class="search">
+          <span>검색</span>
+          <input id="searchInput" type="search" placeholder="파일명, 기능, 용어, 코드 낱말" />
+        </label>
+
+        <nav id="reviewNav" class="nav" aria-label="코드리뷰 섹션"></nav>
+      </aside>
+
+      <div
+        class="resizer"
+        id="resizer"
+        role="separator"
+        aria-orientation="vertical"
+        aria-label="사이드바 너비 조절"
+        title="드래그하여 너비 조절 · 더블클릭 시 기본값"
+      ></div>
+
+      <main class="content">
+        <section class="hero">
+          <div>
+            <p class="eyebrow" id="sectionEyebrow">Manneung Classroom Code Review Map</p>
+            <h2 id="sectionTitle">프로젝트 구조</h2>
+            <p id="sectionSummary"></p>
+          </div>
+          <div class="hero-stats" id="sectionStats"></div>
+        </section>
+
+        <nav class="section-jump" id="sectionJump" aria-label="섹션 내 이동"></nav>
+
+        <section class="panel diagram-panel" id="diagramPanel" hidden>
+          <div class="panel-head">
+            <div>
+              <h3 id="diagramTitle">구조도</h3>
+              <p id="diagramCaption"></p>
+            </div>
+            <div class="diagram-zoom" id="diagramZoom">
+              <button type="button" data-zoom="out" aria-label="축소">−</button>
+              <span id="diagramZoomLevel">100%</span>
+              <button type="button" data-zoom="in" aria-label="확대">+</button>
+              <button type="button" data-zoom="reset">리셋</button>
+            </div>
+          </div>
+          <div class="diagram-stage" id="diagramStage"></div>
+          <div class="diagram-legend" id="diagramLegend"></div>
+        </section>
+
+        <section class="panel layout-panel" id="layoutPanel">
+          <div class="panel-head">
+            <h3>구조에서 놓인 자리</h3>
+          </div>
+          <div id="layoutUsage" class="usage-grid"></div>
+        </section>
+
+        <section class="panel" id="featurePanel">
+          <div class="panel-head">
+            <h3 id="featureTitle">기능별 코드 설명</h3>
+          </div>
+          <div id="featureList" class="feature-list"></div>
+        </section>
+
+        <section class="panel" id="flowPanel">
+          <div class="panel-head">
+            <div>
+              <h3>흐름 추적</h3>
+              <p>사용자 동작이 어느 파일을 거쳐 디스크까지 닿는지 순서대로 보고, 각 단계를 누르면 해당 코드 위치로 이동합니다.</p>
+            </div>
+          </div>
+          <div id="flowList" class="flow-list"></div>
+        </section>
+
+        <section class="panel contract-panel" id="contractPanel" hidden>
+          <div class="panel-head">
+            <div>
+              <h3>계약 · 인터페이스</h3>
+              <p>전역 스크립트가 서로를 부르는 지점과 EXE 로컬 API 계약입니다.</p>
+            </div>
+          </div>
+          <div id="contractList" class="contract-list"></div>
+        </section>
+
+        <section class="panel code-panel" id="codePanel">
+          <div class="panel-head code-head">
+            <div>
+              <h3>관련 코드</h3>
+              <p id="codeMeta"></p>
+              <div id="codeCommentNav" class="code-comment-nav"></div>
+            </div>
+            <div class="code-head-actions">
+              <div id="fileTabs" class="file-tabs" role="tablist"></div>
+              <button type="button" class="copy-btn" id="codeCopy" data-label="코드 복사">코드 복사</button>
+            </div>
+          </div>
+          <div class="code-box" id="codeBlock" aria-label="코드와 리뷰 주석"></div>
+        </section>
+
+        <section class="panel" id="notesPanel">
+          <div class="panel-head">
+            <h3>리뷰 포인트</h3>
+          </div>
+          <div id="reviewNotes" class="note-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="nav-backdrop" id="navBackdrop" hidden></div>
+
+    <div id="glossaryTip" class="glossary-tip" role="tooltip" hidden></div>
+    <div id="codeWordTip" class="glossary-tip code-word-tip" role="tooltip" hidden></div>
+
+    <div id="codeModal" class="code-modal">
+      <div class="code-modal-backdrop" data-modal-close></div>
+      <div class="code-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="codeModalTitle">
+        <header class="code-modal-head">
+          <div>
+            <h3 id="codeModalTitle">관련 코드</h3>
+            <p id="codeModalMeta"></p>
+          </div>
+          <div class="code-modal-actions">
+            <button type="button" class="copy-btn" id="codeModalCopy" data-label="복사">복사</button>
+            <button type="button" class="code-modal-close" data-modal-close aria-label="닫기">&times;</button>
+          </div>
+        </header>
+        <div class="code-modal-body">
+          <div class="code-box" id="codeModalBlock" aria-label="코드와 리뷰 주석"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./review-data.generated.js"></script>
+    <script src="./review-comments.js"></script>
+    <script src="./flows.js"></script>
+    <script src="./contracts.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
