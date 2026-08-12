@@ -61,6 +61,7 @@ const navToggle = $('navToggle');
 const navBackdrop = $('navBackdrop');
 const sidebar = $('sidebar');
 const resizer = $('resizer');
+const shell = document.querySelector('.shell');
 const content = document.querySelector('.content');
 
 // ── 공통 유틸 ──────────────────────────────────────────
@@ -1322,7 +1323,8 @@ resizer.addEventListener('mousedown', () => {
 });
 window.addEventListener('mousemove', (event) => {
   if (!resizing) return;
-  const width = Math.min(560, Math.max(220, event.clientX));
+  // 껍데기가 가운데 정렬이라 뷰포트 좌표를 그대로 쓰면 왼쪽 여백만큼 어긋난다.
+  const width = Math.min(560, Math.max(220, event.clientX - shell.getBoundingClientRect().left));
   document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
 });
 window.addEventListener('mouseup', () => {

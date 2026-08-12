@@ -44,6 +44,7 @@
   --tok-function: #2453b8;
 
   --sidebar-width: 320px;
+  --shell-max: 1600px;
 }
 
 :root[data-theme='dark'] {
@@ -258,6 +259,9 @@ button {
   display: grid;
   grid-template-columns: var(--sidebar-width) 6px minmax(0, 1fr);
   min-height: 100vh;
+  /* 넓은 화면에서 본문이 무한정 늘어나지 않도록 껍데기 전체를 가운데로 모은다. */
+  max-width: var(--shell-max);
+  margin-inline: auto;
 }
 
 .sidebar {
