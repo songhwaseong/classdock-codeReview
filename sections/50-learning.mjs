@@ -62,7 +62,7 @@ export default ({ manifest, helpers }) => {
 
     mod('lesson-replay.js', {
       title: 'lesson-replay.js — 수업 녹화·재생',
-      subtitle: '702줄, .lesson 타임라인',
+      subtitle: '.lesson 타임라인',
       summary:
         '.lesson 데이터 검증, 화이트보드·PDF·Python 이벤트 녹화, 타임라인 재생·탐색·속도 조절과 파일 저장을 담당합니다. ' +
         '화면 영상이 아니라 이벤트를 기록하므로 파일이 작고, 재생 중에도 확대·이동이 가능합니다.',
@@ -109,7 +109,7 @@ export default ({ manifest, helpers }) => {
 
     mod('diff-viewer.js', {
       title: 'diff-viewer.js — 파일 비교',
-      subtitle: '521줄, patience diff 자체 구현',
+      subtitle: 'patience diff 자체 구현',
       summary:
         'diff 라이브러리를 넣지 않고 patience diff 를 직접 구현했습니다. 나란히/한 줄 보기, 공백 무시, 접기, 두 파일 선택 모달, 저장본 비교, ' +
         '과제 시작 코드와의 비교 진입점을 제공합니다.',
@@ -141,7 +141,7 @@ export default ({ manifest, helpers }) => {
 
     mod('batch-replace.js', {
       title: 'batch-replace.js — 여러 파일 찾아 바꾸기',
-      subtitle: '720줄, 텍스트 + Word·PowerPoint',
+      subtitle: '텍스트 + Word·PowerPoint',
       summary:
         '열린 텍스트·코드 문서와 Word(.docx) 본문·PowerPoint(.pptx) 슬라이드에서 한꺼번에 찾아 바꿉니다(대소문자·정규식·그룹 치환). ' +
         '미리보기 체크리스트를 거쳐 saveTextDoc({silent, existingOnly})로 조용히 저장하고 되돌리기를 제공합니다. ' +
@@ -192,7 +192,7 @@ export default ({ manifest, helpers }) => {
 
     mod('task-package.js', {
       title: 'task-package.js — 과제 패키지 (.task/.taskdone)',
-      subtitle: '1,030줄, 배포·제출·자동채점',
+      subtitle: '배포·제출·자동채점',
       summary:
         '.task 과제 만들기·검증·내보내기, .taskdone 제출본 생성·검수·재채점, 일괄 검수와 성적 CSV 를 담당합니다. ' +
         '채점은 python-runtime.js 의 gradeTests 모드로 학생 코드를 돌려 판정합니다.',
@@ -227,7 +227,7 @@ export default ({ manifest, helpers }) => {
 
     mod('exam-paper.js', {
       title: 'exam-paper.js — 시험지 (.examkey/.exam/.examdone)',
-      subtitle: '2,593줄, 봉인·검증·LAN 제출',
+      subtitle: '봉인·검증·LAN 제출',
       summary:
         '출제부터 채점까지의 전 과정을 다룹니다. 선생님 암호로 잠근 원본 .examkey, 최신 원본과 버전이 일치하는 정답 제거 배포본 .exam(열기 암호 선택), ' +
         '학생이 이름·서명 후 공개키로 봉인한 제출본 .examdone, 봉인 내부의 신원·버전을 검증하는 일괄 채점표, 수동 채점 영구 저장과 시험별·누적 성적 CSV. ' +
@@ -291,7 +291,7 @@ export default ({ manifest, helpers }) => {
 
     mod('screensaver.js', {
       title: 'screensaver.js — 유휴 화면',
-      subtitle: '345줄, 시계·영상 재생',
+      subtitle: '시계·영상 재생',
       summary:
         '유휴 상태에서 시계나 지정한 영상을 재생합니다. 영상 목록을 IndexedDB 에 저장하고 재생 가능성을 검사하며 전체화면 종료를 처리합니다. ' +
         '교실 앞 화면을 쉬는 시간에 쓰는 용도로 보입니다.',
@@ -310,7 +310,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pet-data.js', {
       title: 'pet-data.js — 펫 스프라이트와 기본 데이터',
-      subtitle: '1,319줄, 종족별 시트·팔레트·대사',
+      subtitle: '종족별 시트·팔레트·대사',
       summary: '픽셀 펫 종족별 스프라이트 좌표, 팔레트, 이름과 기본 대사를 정의합니다. 로직이 아니라 데이터 파일입니다.',
       features: [
         { title: '종족', body: '복실고양이·삼색고양이·이끼골렘·하늘섬·사람 등. 각각 전용 스프라이트 시트를 씁니다.' },
@@ -327,7 +327,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pet-custom.js', {
       title: 'pet-custom.js — 나만의 펫',
-      subtitle: '478줄, 대사 편집과 외형 조합',
+      subtitle: '대사 편집과 외형 조합',
       summary: '펫 대사 편집, 사용자별 종족 대사, 나만의 펫 외형 조합과 저장·복원을 담당합니다.',
       features: [
         { title: '우선순위', body: 'tests/pet-custom-priority.test.js 가 사용자 설정이 기본값을 덮는 우선순위를 고정합니다.' },
@@ -345,7 +345,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pet-events.js', {
       title: 'pet-events.js — 행동 도감 데이터',
-      subtitle: '82줄, 이벤트 이름과 한·영 설명',
+      subtitle: '이벤트 이름과 한·영 설명',
       summary: '펫 행동 도감의 고유 이벤트 이름과 한국어·영어 설명을 정의합니다. 가장 작은 데이터 파일입니다.',
       features: [{ title: '무결성 검사', body: 'tests/pet-events.test.js 가 도감 데이터와 종족 참조가 어긋나지 않는지 검사합니다.' }],
       files: [{ path: 'tests/pet-events.test.js', label: 'pet-events.test.js', description: '도감 데이터·종족 참조 무결성' }],
@@ -360,7 +360,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pet.js', {
       title: 'pet.js — 픽셀 펫 엔진',
-      subtitle: '2,270줄, 이동·점프·플랫폼 탐색·애니메이션',
+      subtitle: '이동·점프·플랫폼 탐색·애니메이션',
       summary:
         '픽셀 펫의 이동·점프·플랫폼 탐색·행동·대사·드래그·이벤트 도감과 실제 DOM 애니메이션 엔진입니다. ' +
         '펫이 화면 요소 위를 걸어다니므로 레이아웃을 실시간으로 읽어 플랫폼을 찾습니다.',
@@ -402,7 +402,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pet-focus.js', {
       title: 'pet-focus.js — 집중·휴식 타이머',
-      subtitle: '283줄, 뽀모도로와 펫 행동 연동',
+      subtitle: '뽀모도로와 펫 행동 연동',
       summary:
         '집중·휴식 타이머, 오늘 완료 횟수, 타이핑 중 조용한 상태, 집중 모드에 따른 펫 행동을 관리합니다. ' +
         '펫을 방해 요소가 아니라 학습 리듬의 표시로 쓰는 연결점입니다.',
@@ -422,7 +422,7 @@ export default ({ manifest, helpers }) => {
 
     mod('data-convert.js', {
       title: 'data-convert.js — 형식 변환 코어 (MNDataConvert)',
-      subtitle: '1,069줄, DOM 없는 순수 모듈',
+      subtitle: 'DOM 없는 순수 모듈',
       summary:
         'JSON·JSONL·YAML·XML·CSV·TSV·마크다운 표·HTML 표를 중간 표현(Value ⇄ Table)을 거쳐 서로 변환합니다. ' +
         '자체 마크업 토크나이저로 XML·HTML 을 브라우저 API 없이 읽고(YAML 만 setYaml 으로 주입받은 js-yaml 사용), ' +
@@ -473,7 +473,7 @@ export default ({ manifest, helpers }) => {
 
     mod('table-export.js', {
       title: 'table-export.js — 표 꺼내기 (MNTableExport)',
-      subtitle: '179줄, 메모·블록 문서의 표를 바깥으로',
+      subtitle: '메모·블록 문서의 표를 바깥으로',
       summary:
         '메모창과 블록 문서의 표를 탭 구분(TSV)으로 복사, 엑셀용 CSV(BOM·RFC 4180 인용 — 규칙 자체는 MNDataConvert 에 위임)로 저장, ' +
         '복사본을 새 탭의 표 편집기(xlsx)로 열기, 형식 변환 창으로 보내기를 담당합니다.',
@@ -504,7 +504,7 @@ export default ({ manifest, helpers }) => {
 
     mod('data-convert-ui.js', {
       title: 'data-convert-ui.js — 형식 변환 창',
-      subtitle: '515줄, 규칙은 없고 배선만',
+      subtitle: '규칙은 없고 배선만',
       summary:
         'Ctrl+K → 형식 변환, 코드 뷰어의 🔄 변환, 표 블록의 변환 버튼으로 열리는 창입니다. 입력·미리보기 두 칸, 손실 배너, ' +
         '평탄화·타입 추론·빈 칸·구분자·XML 요소 이름 옵션과 복사·표 편집기·파일 저장·새 탭 열기를 제공합니다. ' +
@@ -541,7 +541,7 @@ export default ({ manifest, helpers }) => {
 
     mod('scratchpad.js', {
       title: 'scratchpad.js — 임시 메모',
-      subtitle: '2,238줄, 여러 탭·블록·펼치기',
+      subtitle: '여러 탭·블록·펼치기',
       summary:
         '여러 탭 임시 메모와 글·이미지·표·노트북 셀 블록, 배치·크기·잠금·드래그 순서·자동 저장·이전 형식 마이그레이션을 담당합니다. ' +
         '각 블록 도구막대의 ⤢ 는 그 블록만 편집 가능한 채로 펼치고 ⤡ 또는 Esc 로 복귀합니다. ▦ 목록은 메모 카드 격자를 보여 주고, ' +
@@ -583,7 +583,7 @@ export default ({ manifest, helpers }) => {
 
     mod('mnote.js', {
       title: 'mnote.js — 블록 문서 (.mnote)',
-      subtitle: '812줄, 글·이미지·표 블록 문서',
+      subtitle: '글·이미지·표 블록 문서',
       summary:
         '글·이미지·표 블록을 한 문서에서 편집하고 .mnote JSON 으로 저장·재편집합니다. 내용 검색 이동, 되돌리기, HTML/Markdown 내보내기, ' +
         '표 블록의 복사·CSV·표 편집기 버튼을 제공합니다. scratchpad 가 "임시"라면 이쪽은 "저장하는 문서"입니다.',
@@ -624,7 +624,7 @@ export default ({ manifest, helpers }) => {
 
     mod('image-memo.js', {
       title: 'image-memo.js — 캡처 이미지 메모',
-      subtitle: '862줄, 붙여넣기·자동 저장·복구',
+      subtitle: '붙여넣기·자동 저장·복구',
       summary:
         '캡처 이미지 여러 장 붙여넣기·드롭, EXE 자동 저장, 브라우저 임시 복구, 다시 시도·삭제·미리보기·일반 메모 보내기를 담당합니다. ' +
         'EXE 의 /image-memo-* 엔드포인트를 씁니다.',
@@ -650,7 +650,7 @@ export default ({ manifest, helpers }) => {
 
     mod('backup.js', {
       title: 'backup.js — 전체 백업·복원',
-      subtitle: '637줄, 매니페스트가 든 ZIP',
+      subtitle: '매니페스트가 든 ZIP',
       summary:
         '미저장 작업·메모·복구 데이터와 설정을 전용 매니페스트가 든 ZIP 으로 내보내고, 형식·버전·필수 구조를 검증해 ' +
         'IndexedDB·localStorage·작업공간으로 복원합니다. 여러 저장소에 흩어진 상태를 한 파일로 옮기는 유일한 경로입니다.',
@@ -687,7 +687,7 @@ export default ({ manifest, helpers }) => {
 
     mod('app.js', {
       title: 'app.js — 최종 이벤트 배선',
-      subtitle: '1,937줄, 앱의 마지막 조립 지점',
+      subtitle: '앱의 마지막 조립 지점',
       summary:
         '드래그 앤 드롭, 파일/폴더 열기, 설정 모달, 자동 저장 폴더, 도움말, 단축키, 헤더 메뉴, 서버 heartbeat, 앱 시작·종료 흐름을 연결합니다. ' +
         '이 파일 자체에는 도메인 로직이 거의 없고, 앞의 모든 기능을 사용자 동작에 붙이는 일을 합니다. 계층 순서상 마지막에서 두 번째입니다.',
@@ -739,7 +739,7 @@ export default ({ manifest, helpers }) => {
 
     mod('command-palette.js', {
       title: 'command-palette.js — Ctrl+K 명령 팔레트',
-      subtitle: '315줄, 로드 순서상 마지막 파일',
+      subtitle: '로드 순서상 마지막 파일',
       summary:
         '명령 목록, 현재 문맥별 활성화 조건, 검색·키보드 선택과 실제 기능 호출을 담당합니다. ' +
         `${manifest.localScripts.length}개 스크립트 중 마지막으로 로드되며, 그 이유는 모든 기능이 준비된 뒤에야 명령으로 노출할 수 있기 때문입니다.`,

@@ -74,7 +74,7 @@ export default ({ manifest, helpers }) => {
 
     mod('office-doc-viewers.js', {
       title: 'office-doc-viewers.js — DOCX·HWP·HWPX 미리보기',
-      subtitle: '778줄, 암호 판별과 편집 토글 부착',
+      subtitle: '암호 판별과 편집 토글 부착',
       summary:
         'DOCX·HWP·HWPX 미리보기와 Office 암호화 문서 판별·복호화 보조를 담당합니다. .docx 는 docx-preview 로 그린 뒤 MNDocxEditor 의 문단 편집 토글을 붙이는데, ' +
         '암호를 풀어서 연 문서에는 붙이지 않습니다 — 저장하면 암호가 사라지기 때문입니다.',
@@ -115,7 +115,7 @@ export default ({ manifest, helpers }) => {
 
     mod('office-replace.js', {
       title: 'office-replace.js — Word·PPT 되쓰기 코어 (MNOfficeReplace)',
-      subtitle: '2,123줄, DOM 없는 순수 함수 + zip 재조립',
+      subtitle: 'DOM 없는 순수 함수 + zip 재조립',
       summary:
         'Word(.docx)와 PowerPoint(.pptx)는 문단·run·글자 태그가 이름공간만 다르고 구조가 같습니다(<w:p>/<w:r>/<w:t> ↔ <a:p>/<a:r>/<a:t>). ' +
         '그래서 한 코어가 둘을 처리하고, 형식별로 다른 것은 "어느 파트를 어떻게 다루는가" 표(officePartRole)뿐입니다. ' +
@@ -264,7 +264,7 @@ export default ({ manifest, helpers }) => {
 
     mod('docx-editor.js', {
       title: 'docx-editor.js — Word 제자리 편집 (MNDocxEditor)',
-      subtitle: '2,202줄, 미리보기 위에서 직접 고치기 + 목록 화면 대비',
+      subtitle: '미리보기 위에서 직접 고치기 + 목록 화면 대비',
       summary:
         '보기는 docx-preview 결과를 그대로 두고, 편집 모드에서 그 미리보기 DOM 을 직접 편집 가능하게 만듭니다(제자리 편집). ' +
         'docx-preview 가 DOM ↔ 원본 XML 매핑을 남기지 않는다는 사실은 지금도 그대로여서, 이 파일은 매핑을 "순서"로 잇고 그 순서를 믿지 않고 검증합니다. ' +
@@ -385,7 +385,7 @@ export default ({ manifest, helpers }) => {
 
     mod('spreadsheet-viewer.js', {
       title: 'spreadsheet-viewer.js — 표 편집기',
-      subtitle: '5,915줄, 프로젝트 최대 파일',
+      subtitle: '프로젝트 최대 파일',
       summary:
         'XLSX/XLS/CSV 로딩과 시트 UI, 셀 편집·선택·복사, 수식 계산, 행/열·병합·서식·필터·정렬, 저장과 새 표 생성을 담당합니다. ' +
         '엑셀 편집의 거의 전 영역을 한 파일에서 다루며, 이 프로젝트에서 가장 큰 파일입니다.',
@@ -435,7 +435,7 @@ export default ({ manifest, helpers }) => {
 
     mod('spreadsheet-chart.js', {
       title: 'spreadsheet-chart.js — 표 범위 차트',
-      subtitle: '443줄, 외부 차트 라이브러리 없이 SVG 생성',
+      subtitle: '외부 차트 라이브러리 없이 SVG 생성',
       summary:
         '선택한 표 범위에서 차트에 적합한 데이터를 추론하고 막대·선·원형 SVG 차트를 만듭니다. ' +
         '차트 라이브러리를 넣지 않고 직접 SVG 를 그려 오프라인 용량을 아꼈습니다.',
@@ -454,7 +454,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pptx-viewer.js', {
       title: 'pptx-viewer.js — PPTX 근사 미리보기',
-      subtitle: '315줄, EXE 정확 변환의 폴백',
+      subtitle: 'EXE 정확 변환의 폴백',
       summary:
         'PPTX 간이 슬라이드 미리보기, 슬라이드 맞춤, 포함 폰트 변환과 상대 리소스 경로 해석을 담당합니다. ' +
         'EXE + 설치된 PowerPoint 로 PDF 정확 변환이 가능하면 그쪽을 쓰고, 실패하거나 EXE 가 없으면 이 근사 미리보기로 떨어집니다.',
@@ -485,7 +485,7 @@ export default ({ manifest, helpers }) => {
 
     mod('image-viewer.js', {
       title: 'image-viewer.js — 이미지 보기·편집',
-      subtitle: '1,513줄, 편집·갤러리·복구',
+      subtitle: '편집·갤러리·복구',
       summary:
         '이미지 보기·확대·회전·뒤집기·자르기·내보내기와 작업공간 복구, 폴더 안 이미지/PDF 격자 갤러리를 담당합니다. ' +
         'MNEditHistory 의 image 상한(50단계)을 씁니다.',
@@ -506,7 +506,7 @@ export default ({ manifest, helpers }) => {
 
     mod('image-lightbox.js', {
       title: 'image-lightbox.js — 결과 그림 큰 창',
-      subtitle: '312줄, 실행 결과와 노트북 출력용',
+      subtitle: '실행 결과와 노트북 출력용',
       summary:
         '파이썬 실행 결과 그래프와 노트북 출력 그림을 클릭하면 큰 오버레이로 띄우고 확대·이동·넘기기·PNG 저장·메모 보내기를 제공합니다. ' +
         'Matplotlib 그래프를 작은 결과창에서 보던 불편을 해결하는 얇은 계층입니다.',
@@ -525,7 +525,7 @@ export default ({ manifest, helpers }) => {
 
     mod('board-render.js', {
       title: 'board-render.js — 벡터 렌더러 (MNBoardRenderer)',
-      subtitle: '186줄, 화이트보드와 리플레이 공유',
+      subtitle: '화이트보드와 리플레이 공유',
       summary:
         '화이트보드와 수업 리플레이가 공유하는 선·도형·텍스트·이미지 벡터 렌더러입니다. ' +
         '그리기 결과를 나중에 재생해야 하므로, "그리는 코드"와 "화면을 만드는 코드"를 분리한 것이 핵심입니다. ' +
@@ -576,13 +576,34 @@ export default ({ manifest, helpers }) => {
 
     mod('whiteboard.js', {
       title: 'whiteboard.js — 화이트보드 문서',
-      subtitle: '1,342줄, 그리기·선택·복구·녹화 + 수학·과학 도구상자',
+      subtitle: '그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴',
       summary:
         '독립 화이트보드 문서, 그리기 도구, 선택·이동, 이미지 삽입, 되돌리기, 복구 저장과 리플레이 녹화 연결을 담당합니다. ' +
         'MNEditHistory 의 board 상한(140단계)을 씁니다 — 벡터 항목 배열이라 스냅샷이 가볍기 때문입니다. ' +
         '2026-08-09 에 수학·과학 도구상자(기호·수식·도형·과학 스텐실)가 들어오며 636 → 1,342줄이 됐고, ' +
-        '이 파일에서 처음으로 순수 함수 일부가 module.exports 로 나와 단위 테스트 대상이 됐습니다.',
+        '이 파일에서 처음으로 순수 함수 일부가 module.exports 로 나와 단위 테스트 대상이 됐습니다. ' +
+        '이어 2026-08-11~12 에 집중 도구(스포트라이트·화면 가리개)·보드 우클릭 메뉴 3단계·선택 항목 스타일 편집·화면 확대/축소·배경색이 들어와 2,785줄이 됐습니다. ' +
+        'src/js 에서 7번째로 큰 파일이며, 이 계층에서 가장 빠르게 자라는 파일입니다.',
       usage: [
+        {
+          title: '판서 콘텐츠와 화면 상태를 갈라 둔다',
+          body:
+            '집중 도구 상태는 wb.items 가 아니라 doc.boardFocus 에 따로 둡니다. 그래서 되돌리기 이력·자동 복구 스냅샷·PNG/PDF 내보내기에 섞이지 않습니다. ' +
+            '"수업을 진행하기 위한 화면 상태"와 "문서에 남을 판서"를 다른 것으로 본 판단이며, 보드를 다시 열었을 때 가려진 채로 시작하지 않는 것이 그 이득입니다.',
+        },
+        {
+          title: '집중 도구 좌표는 비율로 보관한다',
+          body:
+            'cx·cy·width·height·amount 를 모두 0~1 비율로 저장하고, 그릴 때만 현재 무대 크기를 곱합니다. ' +
+            '전체화면 전환과 창 크기 변경 뒤에도 의도한 위치가 유지되도록 하기 위해서입니다. ' +
+            '보드 확대·이동(view.scale/x/y)과는 좌표계를 아예 분리해, 보드를 확대해도 스포트라이트는 프로젝터 화면의 같은 자리에 머뭅니다.',
+        },
+        {
+          title: '우클릭 메뉴는 새 동작을 만들지 않는다',
+          body:
+            '복사·복제·삭제·되돌리기·레이어 이동·배경·배율·집중 도구·녹화·도구막대 위치가 모두 도구막대와 같은 실행 함수를 부릅니다. ' +
+            '메뉴는 진입점만 늘리고 동작은 한 곳에 두는 구조라, 두 경로가 갈라져 다르게 동작할 여지를 줄였습니다.',
+        },
         {
           title: '삽입물을 세 갈래로 나눈다',
           body:
@@ -621,11 +642,59 @@ export default ({ manifest, helpers }) => {
         { title: '내 수식·즐겨찾기·최근', body: 'localStorage 에 사용자 수식과 즐겨찾기·최근 사용을 저장하고, 읽을 때 유효한 항목만 남기고 중복을 지웁니다.' },
         { title: '두 가지 삽입 방법', body: '클릭하면 보드 한가운데, 드래그해 놓으면 놓은 자리에 들어갑니다. 커스텀 DataTransfer 타입 하나로 두 경로가 같은 함수를 부릅니다.' },
         { title: '그룹 분리', body: '스텐실 group 을 "분리"로 풀면 선·도형 낱개가 되어 하나씩 고칠 수 있습니다. 명령 팔레트에도 올라가 있습니다.' },
+        {
+          title: '스포트라이트',
+          body:
+            '무대 위에 SVG 마스크 한 장을 덮어 밝은 영역만 남깁니다. 타원·사각형 두 모양, 어둡기 조절, 조절점 숨기기를 제공하고, ' +
+            '발표 상태에서는 선택적으로 손전등 그림이 밝은 영역을 따라다닙니다. 화면 끝에서는 여유가 있는 반대편으로 옮겨 갑니다.',
+        },
+        {
+          title: '화면 가리개',
+          body:
+            '네 가장자리 중 하나에서 들어오는 불투명한 판 한 장으로, 문제와 정답을 순서대로 공개할 때 씁니다. ' +
+            '방향을 바꿔도 가림 비율은 유지하고, 0%·100% 부근 2% 안에서는 끝점에 붙습니다. 방향키 1%·Shift+방향키 5%로도 조절합니다.',
+        },
+        {
+          title: '가려진 곳에는 그려지지 않는다',
+          body:
+            'whiteboardFocusAllowsPoint 가 입력 지점을 판정해, 어두운 영역에서 시작한 획은 아예 만들지 않고 ' +
+            '그리던 획이 경계를 넘으면 거기서 끊습니다. 확대(휠)와 화면 이동(Space·가운데 버튼)은 어느 영역에서든 허용합니다.',
+        },
+        {
+          title: '보드 우클릭 메뉴',
+          body:
+            '클릭 지점에 항목이 있으면 선택 항목 메뉴(복사·복제·삭제·레이어 이동·색·크기·반전·그룹 해제), ' +
+            '빈 공간이면 보드 메뉴(삽입·배경·배율·집중 도구·전체 지우기·출력·공유·수업 기록·도구막대 위치)를 엽니다. ' +
+            '도구막대 표시 토글만은 어느 쪽에서든 보입니다.',
+        },
+        {
+          title: '내부 클립보드',
+          body:
+            'whiteboardClipboardItem 이 항목을 깊게 복제해 보관하므로, 원본을 지우거나 고쳐도 붙여넣을 값이 함께 변하지 않습니다. ' +
+            '시스템 클립보드 이벤트와 함께 쓰며 우클릭한 자리에 붙여넣습니다.',
+        },
+        {
+          title: '선택 항목 스타일 편집',
+          body:
+            '텍스트·수식·교육 도형의 색과 크기(S/M/L 과 직접 지정)를 바꾸고 이미지·수식을 좌우·상하로 뒤집습니다. ' +
+            '색을 바꿀 때 원본을 보존한 새 항목을 만들고, 수식은 whiteboardFormulaReplacementRect 로 위치와 크기를 유지합니다.',
+        },
       ],
       files: [
+        {
+          path: 'docs/화이트보드-집중도구-설계.md',
+          label: '화이트보드-집중도구-설계.md',
+          description: '설계 문서 — 상태 모델·DOM 층·판서 규칙',
+        },
         { path: 'tests/whiteboard-education-toolbox.test.js', label: 'whiteboard-education-toolbox.test.js', description: '도구 목록·수식 틀·스텐실 SVG 안전성' },
+        { path: 'tests/whiteboard-focus-tools.test.js', label: 'whiteboard-focus-tools.test.js', description: '집중 도구 정규화·영역 판정·손전등 배치' },
+        { path: 'tests/whiteboard-selection-style.test.js', label: 'whiteboard-selection-style.test.js', description: '색·크기·반전이 원본을 보존하는지' },
+        { path: 'tests/whiteboard-context-menu.test.js', label: 'whiteboard-context-menu.test.js', description: '우클릭 메뉴 1단계 — 대상 판정과 편집 동작' },
+        { path: 'tests/whiteboard-context-menu-phase2.test.js', label: 'context-menu-phase2.test.js', description: '2단계 — 클립보드·레이어·빈 공간 메뉴' },
+        { path: 'tests/whiteboard-context-menu-phase3.test.js', label: 'context-menu-phase3.test.js', description: '3단계 — 출력·공유·녹화·도구막대' },
         { path: 'tests/e2e/undo-redo.spec.js', label: 'undo-redo.spec.js', description: '획 되돌리기·redo 무효화·단축키' },
         { path: 'tests/e2e/whiteboard-save.spec.js', label: 'whiteboard-save.spec.js', description: '화이트보드 저장 흐름' },
+        { path: 'tests/e2e/whiteboard-toolbox-move.spec.js', label: 'whiteboard-toolbox-move.spec.js', description: '도구상자 창 이동' },
       ],
       notes: [
         {
@@ -656,18 +725,46 @@ export default ({ manifest, helpers }) => {
             'PNG 내보내기와 리플레이 재생에서 수식만 비는 상황이 조용히 생길 수 있습니다.',
         },
         {
-          type: 'risk',
-          label: 'Risk',
+          type: 'good',
+          label: 'Good',
           body:
-            '스텐실 60개 이상의 좌표가 코드 상수로 들어 있습니다. 도형을 고치거나 더할 때마다 이 파일이 커지고, ' +
-            '"도구 목록"과 "그리기 코드"가 같은 파일에 있어 whiteboard.js 가 계속 자랍니다. 목록을 데이터 파일로 떼면 그리기 로직만 남습니다.',
+            '집중 도구를 판서 항목이 아니라 화면 상태로 분류하고, 되돌리기·자동 복구·내보내기에서 명시적으로 뺐습니다. ' +
+            '설계 문서가 "비목표"를 먼저 적어 두고 저장 위치를 상태별로 표까지 만들어 정한 결과이며, ' +
+            '기능을 넣기 전에 경계를 정한 이 순서가 이 파일에서 가장 잘한 부분입니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '집중 도구의 판정부(normalizeWhiteboardFocusState·whiteboardFocusGeometry·whiteboardFocusAllowsPoint·whiteboardFlashlightGeometry)를 ' +
+            'module.exports 로 빼서 브라우저 없이 검증합니다. "가리개 0%는 전부 허용, 100%는 전부 차단" 같은 경계값이 단위 테스트로 고정돼 있습니다.',
         },
         {
           type: 'risk',
           label: 'Risk',
           body:
-            '도구상자 UI 검증이 소스 문자열 매칭(정규식으로 whiteboard.js·styles.css·command-palette.js 를 훑는 방식)에 기대고 있습니다. ' +
-            'CSS 선택자와 min-height 값까지 문자열로 굳혀 놓아, 이름만 바꿔도 깨지고 실제 화면이 깨져도 문자열이 같으면 통과합니다.',
+            '스텐실 60개 이상의 좌표가 코드 상수로 들어 있습니다. 도형을 고치거나 더할 때마다 이 파일이 커지고, ' +
+            '"도구 목록"과 "그리기 코드"가 같은 파일에 있어 whiteboard.js 가 계속 자랍니다. ' +
+            '실제로 636 → 1,342 → 2,785줄로 3주 만에 네 배가 됐고, 이제 도구상자·집중 도구·우클릭 메뉴·스타일 편집이 한 파일에 함께 있습니다. ' +
+            '목록을 데이터 파일로 떼면 그리기 로직만 남습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'UI 검증이 소스 문자열 매칭(정규식으로 whiteboard.js·styles.css·command-palette.js 를 훑는 방식)에 기대고 있고, 그 범위가 계속 넓어졌습니다. ' +
+            'whiteboard-focus-tools.test.js 는 36건, whiteboard-selection-style.test.js 는 14건이 assert.match(source, …) 이고, ' +
+            '우클릭 메뉴 테스트 3개는 사실상 전부 이 방식입니다. contextUngroupBtn.hidden=!(selected&&selected.type==="group") 처럼 ' +
+            '공백까지 포함한 코드 한 줄을 정규식으로 굳혀 놓아, 서식만 바꿔도 깨지고 실제 화면이 깨져도 문자열이 같으면 통과합니다. ' +
+            '순수 함수를 module.exports 로 빼는 방향이 이미 잡혀 있으니, UI 배선도 그쪽으로 옮기는 편이 낫습니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '집중 도구 상태는 doc.boardFocus 메모리에만 있고 복구 스냅샷에 저장하지 않습니다. ' +
+            '의도한 선택이지만(가려진 채로 다시 열리지 않게), 수업 중 탭을 닫으면 스포트라이트 위치가 사라진다는 뜻이기도 합니다. ' +
+            '마지막 모드·모양·어둡기·가리개색만 localStorage 에 남습니다.',
         },
       ],
     }),

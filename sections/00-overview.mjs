@@ -98,10 +98,11 @@ export default ({ manifest, helpers, diagrams }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '전역 스크립트라 파일 하나가 커지는 것을 막는 구조적 압력이 없습니다. spreadsheet-viewer.js 5,916줄 / code-viewer.js 4,034줄 / core.js 3,993줄 / documents.js 3,837줄이 그 결과입니다. ' +
+            '전역 스크립트라 파일 하나가 커지는 것을 막는 구조적 압력이 없습니다. spreadsheet-viewer.js 5,916줄 / core.js 4,104줄 / code-viewer.js 4,034줄 / documents.js 3,837줄이 그 결과입니다. ' +
             '분할하려면 로딩 순서와 전역 이름을 함께 손봐야 해서 비용이 큽니다. ' +
-            '2026-08-08~09 의 Word 편집·화이트보드 확장에서 docx-editor.js 2,202줄 · office-replace.js 2,123줄 · whiteboard.js 1,342줄이 새로 이 목록에 합류했습니다 — ' +
-            '압력이 없다는 진단이 이틀 만에 재확인된 셈입니다.',
+            '2026-08-08~09 의 Word 편집·화이트보드 확장에서 docx-editor.js 2,203줄 · office-replace.js 2,124줄 · whiteboard.js 1,342줄이 새로 이 목록에 합류했고, ' +
+            '이어진 2026-08-11~12 의 화이트보드 확장에서 whiteboard.js 만 다시 2,785줄이 되어 docx-editor.js 를 넘어섰습니다 — ' +
+            '압력이 없다는 진단이 나흘 만에 두 번 재확인된 셈입니다. 같은 기간 core.js 도 수식 파서가 늘며 code-viewer.js 를 제치고 두 번째로 큰 파일이 됐습니다.',
         },
         {
           type: 'risk',

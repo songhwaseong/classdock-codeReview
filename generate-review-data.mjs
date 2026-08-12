@@ -10,7 +10,7 @@
 // 출력은 review-data.generated.js 한 개이며 직접 수정하지 않는다. 사람이 쓰는
 // 리뷰 문장은 sections/*.mjs 에, 줄 앵커 주석은 review-comments.js 에 둔다.
 
-import { readFile, stat, writeFile } from 'node:fs/promises';
+import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -69,7 +69,11 @@ if (!rootDir) {
 }
 
 // 큰 파일도 가급적 통째로 싣는다. 5,900줄짜리 spreadsheet-viewer.js 하나만 잘린다.
-const MAX_LINES = 4000;
+//
+// 상한을 소스의 최대 파일 크기에 딱 맞추지 않고 여유를 둔다. 파일이 자라 상한을 넘으면
+// 리뷰에서 꼬리가 조용히 사라지기 때문이다(실제로 core.js 가 3,993 → 4,103줄이 되며 그럴
+// 뻔했다). 여유와 별개로, 잘린 파일은 아래 "잘린 파일" 경고로 매번 드러낸다.
+const MAX_LINES = 4400;
 
 const manifest = JSON.parse(manifestRaw);
 // manifest 의 계층 키는 name 이다. 아래 코드가 id 로 참조하므로 한 번만 맞춰 둔다.
@@ -232,6 +236,8 @@ reviewSections.splice(projectFunctionInsertAt, 0, ...projectFunctionSection);
 // ── 소스 주입 ──────────────────────────────────────────
 
 const sourceCache = new Map();
+// 상한을 넘겨 꼬리가 잘린 파일. 구간(range) 참조는 의도한 자르기라 여기에 넣지 않는다.
+const truncatedFiles = new Map();
 
 const readWhole = async (relativePath) => {
   if (sourceCache.has(relativePath)) return sourceCache.get(relativePath);
@@ -261,6 +267,7 @@ const readSource = async (relativePath, range) => {
   }
 
   if (total > MAX_LINES) {
+    truncatedFiles.set(relativePath, total);
     return {
       code:
         `${lines.slice(0, MAX_LINES).join('\n')}\n\n` +
@@ -380,6 +387,31 @@ const covered = new Set();
 hydrated.forEach((section) => section.files.forEach((file) => covered.add(file.path)));
 const uncoveredModules = manifest.localScripts.filter((file) => !covered.has(`src/js/${file}`));
 
+// 설계 문서는 전부 실린다는 전제로 검사한다. docs 는 기능 하나에 문서 하나꼴이라 수가 적고,
+// 새 기능이 들어오면 거의 항상 문서가 함께 생기므로 "리뷰가 뒤처졌다"는 신호로 정확하다.
+//
+// tests 는 같은 방식으로 검사하지 않는다. 리뷰가 테스트를 전수로 싣는 것이 아니라 기능별
+// 대표를 골라 싣는 구조라(139개 중 75개), 전수 검사를 걸면 의도한 생략까지 매번 경고로
+// 떠서 경고 자체가 무시된다. 대신 참조 비율만 아래 요약에 찍어 흐름을 눈에 보이게 둔다.
+const listDir = async (relativeDir, ext) => {
+  try {
+    const entries = await readdir(path.join(rootDir, relativeDir));
+    return entries.filter((name) => name.endsWith(ext));
+  } catch {
+    return [];
+  }
+};
+
+const docFiles = await listDir('docs', '.md');
+const uncoveredDocs = docFiles.filter((file) => !covered.has(`docs/${file}`));
+
+const testFiles = await listDir('tests', '.test.js');
+const e2eFiles = await listDir('tests/e2e', '.spec.js');
+const testCoverage = {
+  unit: { total: testFiles.length, covered: testFiles.filter((f) => covered.has(`tests/${f}`)).length },
+  e2e: { total: e2eFiles.length, covered: e2eFiles.filter((f) => covered.has(`tests/e2e/${f}`)).length },
+};
+
 // 사전에 실린 말이 리뷰 어딘가에 실제로 나오는지 확인한다. 리뷰 문장이 바뀌어 더는 쓰지 않는
 // 말이 사전에 조용히 남는 것을 막는다(위의 "섹션에 실리지 않은 파일" 검사와 같은 발상).
 // 섹션 산문뿐 아니라 줄 앵커 주석·흐름·계약도 화면에 나오는 글이므로 함께 본다.
@@ -496,7 +528,22 @@ console.log(`코드 낱말 사전 ${CODE_WORDS.length}개`);
 console.log(`코드 기호·기본 기능 사전 ${CODE_REFERENCES.length}개`);
 console.log(`코드 메서드·실행 패턴 사전 ${CODE_PATTERNS.length}개`);
 console.log(`프로젝트 API 사전 ${PROJECT_FUNCTIONS.length}개`);
+console.log(
+  `테스트 참조 단위 ${testCoverage.unit.covered}/${testCoverage.unit.total} · ` +
+    `E2E ${testCoverage.e2e.covered}/${testCoverage.e2e.total} (전수가 아니라 기능별 대표만 싣습니다)`,
+);
 
+if (truncatedFiles.size) {
+  console.warn(`\n[경고] 상한 ${MAX_LINES.toLocaleString('ko-KR')}줄을 넘겨 꼬리가 잘린 파일 ${truncatedFiles.size}개:`);
+  for (const [file, total] of truncatedFiles) {
+    console.warn(`  ${file} — ${total.toLocaleString('ko-KR')}줄 중 ${(total - MAX_LINES).toLocaleString('ko-KR')}줄이 빠졌습니다`);
+  }
+  console.warn('  구간(range)으로 나눠 싣거나 MAX_LINES 를 올리세요.');
+}
+if (uncoveredDocs.length) {
+  console.warn(`\n[경고] 섹션에 실리지 않은 docs 문서 ${uncoveredDocs.length}개:`);
+  console.warn(`  ${uncoveredDocs.join(', ')}`);
+}
 if (unusedTerms.length) {
   console.warn(`\n[경고] 리뷰 본문에 나오지 않는 사전 항목 ${unusedTerms.length}개:`);
   console.warn(`  ${unusedTerms.join(', ')}`);

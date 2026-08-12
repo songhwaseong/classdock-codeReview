@@ -70,7 +70,7 @@ export default ({ manifest, helpers, diagrams }) => {
       category: CAT,
       group: '빌드',
       title: 'build-offline.js — 단일 파일 생성기',
-      subtitle: '166줄, HTML·CSS·JS·vendor 를 한 파일로',
+      subtitle: 'HTML·CSS·JS·vendor 를 한 파일로',
       summary:
         'manneung-classroom.html 을 읽어 로컬 CSS 와 애플리케이션 스크립트를 인라인하고, CDN/vendor script 태그를 번들 파일로 바꾸고, ' +
         'pdf.worker 를 런타임 Blob 용 text/js-worker 블록으로 심어 manneung-classroom-offline.html 을 만듭니다. ' +
@@ -117,7 +117,7 @@ export default ({ manifest, helpers, diagrams }) => {
       category: CAT,
       group: '검사',
       title: 'tools/check-source.js — 구조 계약 검사',
-      subtitle: '218줄, 이 프로젝트를 지탱하는 도구',
+      subtitle: '이 프로젝트를 지탱하는 도구',
       summary:
         'JavaScript 문법, 전역 선언 충돌, manifest 로딩 계층, 공개 API 경계, 지연 vendor 계약을 한 번에 검사합니다. ' +
         '번들러도 타입 시스템도 없는 이 프로젝트에서 구조가 무너지지 않게 붙잡는 유일한 자동 장치입니다.',
@@ -166,7 +166,7 @@ export default ({ manifest, helpers, diagrams }) => {
       category: CAT,
       group: '검사',
       title: 'tools/check-release.js — 배포 산출물 검사',
-      subtitle: '61줄, "오프라인"이 진짜인지 확인',
+      subtitle: '"오프라인"이 진짜인지 확인',
       summary:
         '생성된 단일 파일 빌드가 실행 가능한 자산을 모두 담고 있고 네트워크 script URL 은 하나도 없는지 검증합니다. ' +
         '의도적으로 DOM·브라우저 없이 도는 순수 검사이며, vendor URL 이 반드시 vendor/ 로 시작하는지도 봅니다.',
@@ -201,7 +201,7 @@ export default ({ manifest, helpers, diagrams }) => {
       category: CAT,
       group: '빌드',
       title: 'tools/build-korean-spell-worker.mjs — 사전 워커 빌드',
-      subtitle: '173줄, esbuild 로 3MB 워커 생성',
+      subtitle: 'esbuild 로 3MB 워커 생성',
       summary:
         'hunspell-wasm 과 hunspell-dict-ko 를 esbuild 로 묶어 vendor/korean-hunspell-worker.js 를 만들고, ' +
         'scripts.manifest.json 의 sha384 도 함께 갱신합니다. npm run build 가 오프라인 HTML 을 만들기 전에 먼저 실행합니다.',
@@ -235,7 +235,7 @@ export default ({ manifest, helpers, diagrams }) => {
       category: CAT,
       group: '자산',
       title: 'tools/download-pyodide.js — 오프라인 Python 자산',
-      subtitle: '56줄, vendor/pyodide 구성',
+      subtitle: 'vendor/pyodide 구성',
       summary:
         'EXE 의 오프라인 Python 실행에 필요한 Pyodide 코어와 패키지를 내려받아 vendor/pyodide 를 구성합니다. ' +
         'EXE 는 이 폴더를 /pyodide/ 로 로컬 서빙하고, 없으면 CDN 으로 폴백합니다.',
@@ -279,7 +279,7 @@ export default ({ manifest, helpers, diagrams }) => {
       category: CAT,
       group: '테스트 인프라',
       title: 'tools/e2e-server.js · playwright.config.js',
-      subtitle: '34줄 + 20줄, EXE 없는 상태를 재현',
+      subtitle: '작은 정적 서버와 설정 두 파일로 EXE 없는 상태를 재현',
       summary:
         'Playwright 테스트용 로컬 정적 서버입니다. 실제 EXE 백엔드 대신 화면 흐름 테스트에 필요한 파일만 제공합니다. ' +
         '즉 모든 E2E 테스트는 "EXE 가 없는 브라우저 환경"에서 돕니다.',

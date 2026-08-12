@@ -100,7 +100,7 @@ const targetedComments = [
     type: '설계',
     title: 'UMD 래퍼가 테스트 가능성의 근간',
     body:
-      'module.exports 와 전역(PdfSignerCore) 양쪽으로 노출합니다. 이 한 줄 덕분에 브라우저 전역 앱인데도 node --test 에서 핵심 로직을 브라우저 없이 검증할 수 있습니다. tests/core.test.js 1,378줄이 전부 여기에 기대고 있습니다.',
+      'module.exports 와 전역(PdfSignerCore) 양쪽으로 노출합니다. 이 한 줄 덕분에 브라우저 전역 앱인데도 node --test 에서 핵심 로직을 브라우저 없이 검증할 수 있습니다. tests/core.test.js 1,425줄이 전부 여기에 기대고 있습니다.',
   },
   {
     sectionId: 'state',

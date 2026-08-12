@@ -100,7 +100,7 @@ export default ({ helpers }) => {
       usage: [
         {
           title: '가장 큰 테스트',
-          body: 'core.test.js 1,378줄. core.js 3,992줄에 대응하며 이 프로젝트에서 가장 넓은 안전망입니다.',
+          body: 'core.test.js 1,425줄. core.js 4,104줄에 대응하며 이 프로젝트에서 가장 넓은 안전망입니다.',
         },
         {
           title: '왕복 검증',
@@ -118,18 +118,46 @@ export default ({ helpers }) => {
             'Word 편집 확장과 함께 office-replace.test.js 가 1,123줄까지 늘어 core.test.js 다음으로 큰 단위 테스트가 됐습니다. ' +
             '표 병합·목록 번호·그림 관계처럼 손으로 확인하기 어려운 XML 조작이 순수 함수로 나와 있어서 가능했던 증가입니다.',
         },
+        {
+          title: '가장 빠르게 늘어난 묶음',
+          body:
+            '화이트보드 테스트가 10개(단위 8 + E2E 2)로 한 기능 중 가장 많습니다. ' +
+            '2026-08-11~12 에만 집중 도구·선택 스타일·우클릭 메뉴 3단계로 5개가 한꺼번에 생겼습니다. ' +
+            '리뷰에는 그중 대표 4개를 싣습니다.',
+        },
+        {
+          title: '전수가 아니라 표본',
+          body:
+            '단위 테스트 102개 중 73개, E2E 37개 중 12개를 리뷰에 싣습니다. ' +
+            '기능별 대표를 고른 것이며, 생성 스크립트가 매번 이 비율을 찍어 격차가 벌어지는지 보여 줍니다.',
+        },
       ],
       features: [
         { title: '파서 검증', body: 'doc-legacy.test.js 가 Word 97 조각표에서 유니코드·CP1252 본문을 뽑는 파서를 검사합니다.' },
         { title: 'diff', body: 'diff-viewer.test.js 가 판정·짝짓기·인라인 강조·HTML 이스케이프를 봅니다.' },
         { title: '되돌리기', body: 'edit-history.test.js 가 공용 히스토리 엔진을 검증합니다.' },
         { title: '도구상자 목록', body: 'whiteboard-education-toolbox.test.js 가 도구 개수·묶음별 최소 항목·id 중복·수식 틀의 입력 위치·스텐실 SVG 안전성을 봅니다.' },
+        {
+          title: '집중 도구 경계값',
+          body:
+            'whiteboard-focus-tools.test.js 가 스포트라이트가 화면 밖으로 나가지 않는지, 가리개 0%는 전부 허용하고 100%는 전부 막는지 같은 ' +
+            '경계값을 순수 함수로 확인합니다.',
+        },
+        {
+          title: '원본 보존',
+          body:
+            'whiteboard-selection-style.test.js 가 색·크기를 바꿀 때 원본을 보존한 새 항목이 만들어지는지, ' +
+            'S/M/L 이 처음 크기 기준으로 안정적으로 왕복하는지를 봅니다.',
+        },
         { title: 'JavaScript 실행', body: 'js-runtime.test.js 가 Worker 프로토콜·입력·자동채점·지속 커널·라이브러리 실행 경계를 폭넓게 검증합니다.' },
       ],
       files: [
-        { path: 'tests/core.test.js', label: 'core.test.js', description: '1,378줄 — 가장 큰 단위 테스트' },
+        { path: 'tests/core.test.js', label: 'core.test.js', description: '1,425줄 — 가장 큰 단위 테스트' },
         { path: 'tests/office-replace.test.js', label: 'office-replace.test.js', description: '1,123줄 — 문단·서식·표·패키지 순수 편집' },
         { path: 'tests/whiteboard-education-toolbox.test.js', label: 'whiteboard-education-toolbox.test.js', description: '수학·과학 도구상자' },
+        { path: 'tests/whiteboard-focus-tools.test.js', label: 'whiteboard-focus-tools.test.js', description: '집중 도구 정규화·영역 판정' },
+        { path: 'tests/whiteboard-selection-style.test.js', label: 'whiteboard-selection-style.test.js', description: '색·크기·반전의 원본 보존' },
+        { path: 'tests/whiteboard-context-menu-phase2.test.js', label: 'context-menu-phase2.test.js', description: '소스 문자열 매칭 방식의 대표 사례' },
         { path: 'tests/data-convert.test.js', label: 'data-convert.test.js', description: '형식 변환·손실 리포트' },
         { path: 'tests/js-runtime.test.js', label: 'js-runtime.test.js', description: '801줄 — JavaScript Worker 실행·채점·커널' },
         { path: 'tests/js-libraries.test.js', label: 'js-libraries.test.js', description: '내장·로컬·npm 라이브러리 상태' },
@@ -151,7 +179,18 @@ export default ({ helpers }) => {
         {
           type: 'risk',
           label: 'Risk',
-          body: 'core.test.js 1,378줄이 core.js 3,992줄을 덮습니다. 비율상 커버리지가 낮은 영역이 있을 수 있고, 커버리지 측정 도구는 설정돼 있지 않습니다.',
+          body: 'core.test.js 1,425줄이 core.js 4,104줄을 덮습니다. 비율상 커버리지가 낮은 영역이 있을 수 있고, 커버리지 측정 도구는 설정돼 있지 않습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'UI 배선을 소스 문자열 정규식으로 검사하는 방식이 테스트 22개 파일 324건까지 퍼졌습니다. ' +
+            'folder-workspace 56건, whiteboard-education-toolbox 39건, whiteboard-focus-tools 36건, docx-context-menu 33건이 큰 축이고, ' +
+            '2026-08-11~12 의 우클릭 메뉴 테스트 3개는 사실상 전부 이 방식입니다. ' +
+            '브라우저 없이 배선을 확인할 수 있다는 장점 때문에 늘어난 것으로 보이지만, ' +
+            '리팩터링을 막고(이름·서식만 바꿔도 실패) 실제 회귀는 놓치는(문자열이 같으면 통과) 성질이 함께 커집니다. ' +
+            'E2E 37개가 이미 있으므로, 배선 확인은 그쪽으로 옮기는 편이 방향에 맞습니다.',
         },
       ],
     }),

@@ -58,7 +58,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pdf-recovery.js', {
       title: 'pdf-recovery.js — PDF 복구본과 편집 히스토리',
-      subtitle: '228줄, IndexedDB 2개 스토어',
+      subtitle: 'IndexedDB 2개 스토어',
       summary:
         'PDF 편집 복구본을 IndexedDB 에 저장·복원하고, PDF 편집의 되돌리기/다시실행 히스토리를 관리합니다. ' +
         'pdf-signer-recovery 데이터베이스에 documents(복구본)와 signatures(서명 이미지) 두 스토어를 둡니다.',
@@ -93,7 +93,7 @@ export default ({ manifest, helpers }) => {
 
     mod('video-viewer.js', {
       title: 'video-viewer.js — 영상·오디오와 자막',
-      subtitle: '637줄, SRT/VTT/SMI 변환과 EXE MP4 변환',
+      subtitle: 'SRT/VTT/SMI 변환과 EXE MP4 변환',
       summary:
         '브라우저 기본 재생을 쓰되, 재생되지 않는 형식은 EXE 의 ffmpeg 로 MP4 변환합니다. 자막은 SRT·VTT·SMI 를 브라우저가 이해하는 형태로 변환하고 ' +
         '영상과 같은 이름이면 자동으로 연결합니다. 폴더 일괄 MP4 변환도 여기서 다룹니다.',
@@ -129,7 +129,7 @@ export default ({ manifest, helpers }) => {
 
     mod('documents.js', {
       title: 'documents.js — 문서 생명주기의 중심',
-      subtitle: '3,837줄, 탭·사이드바·분할 작업·검색',
+      subtitle: '탭·사이드바·분할 작업·검색',
       summary:
         '문서 객체 생성, 탭바, 사이드바 그룹 트리, 활성 문서 전환, 통합 검색, 분할 작업, 새로고침·닫기 — 다중 문서 앱의 중심입니다. ' +
         '지원 확장자와 코드 구문강조 프로파일도 이 파일이 정의합니다. 13개 파일이 이 파일에 의존하며, 이 앱에서 가장 파급 범위가 넓은 모듈입니다.',
@@ -199,7 +199,7 @@ export default ({ manifest, helpers }) => {
 
     mod('workspace-store.js', {
       title: 'workspace-store.js — 최근 작업공간 저장·복원',
-      subtitle: '570줄, 서버/IndexedDB 이중 경로 · 동일 포맷',
+      subtitle: '서버/IndexedDB 이중 경로 · 동일 포맷',
       summary:
         'EXE 로컬 서버가 있으면 서버에, 없으면(오프라인·온라인 HTML·file:// 포함) 같은 바이너리 포맷으로 이 브라우저의 IndexedDB 에 저장합니다. ' +
         '복원과 정리 동선은 두 경로가 완전히 동일합니다. 재실행 시 파일·폴더·탭 상태를 되살리는 근거 데이터입니다.',
@@ -241,7 +241,7 @@ export default ({ manifest, helpers }) => {
 
     mod('recent-files.js', {
       title: 'recent-files.js — 최근 연 파일·폴더 (MNRecent)',
-      subtitle: '156줄, FS 핸들 재사용',
+      subtitle: 'FS 핸들 재사용',
       summary:
         '최근 연 파일·폴더 목록을 localStorage 에 두되, 다시 열 때는 이미 보관해 둔 File System Access 핸들(saveFsHandle·rememberFolderHandle)을 찾아 ' +
         '권한 확인 한 번으로 되살립니다. 옮겨지거나 지워진 항목은 안내와 함께 목록에서 지울 수 있습니다.',
@@ -277,7 +277,7 @@ export default ({ manifest, helpers }) => {
 
     mod('file-loaders.js', {
       title: 'file-loaders.js — 입력 판정과 로더 분배',
-      subtitle: '1,889줄, 드래그·폴더·압축·확장자 판정',
+      subtitle: '드래그·폴더·압축·확장자 판정',
       summary:
         '파일·폴더·드래그로 들어온 입력을 문서 종류별 로더로 넘깁니다. 폴더 핸들, 빈 폴더, 새로고침, ZIP/TAR/GZ 해제, PPTX 변환 폴백까지 여기서 관리합니다. ' +
         '등록되지 않은 확장자라도 앞 8KB 를 검사해 텍스트로 판단되면 안전하게 엽니다.',
@@ -325,7 +325,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pdf-render.js', {
       title: 'pdf-render.js — PDF.js 로딩과 지연 캔버스 렌더',
-      subtitle: '448줄, 페이지 자리표시자와 화질·야간 모드',
+      subtitle: '페이지 자리표시자와 화질·야간 모드',
       summary:
         'PDF.js 로 문서를 열고, 모든 페이지를 미리 그리는 대신 자리표시자를 깔아 두고 보이는 페이지만 캔버스로 렌더합니다. ' +
         '화질·배율·야간 모드와 한글 폰트 렌더링을 담당합니다.',
@@ -346,7 +346,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pdf-ocr.js', {
       title: 'pdf-ocr.js — 스캔 PDF OCR 과 캐시',
-      subtitle: '212줄, 문서 지문 기준 IndexedDB 캐시',
+      subtitle: '문서 지문 기준 IndexedDB 캐시',
       summary:
         '스캔 PDF 를 Tesseract 로 OCR 하고 결과를 문서 지문(fingerprint) 기준으로 IndexedDB 에 캐시해 PDF 검색과 사이드바 통합 검색에 제공합니다. ' +
         '같은 문서를 다시 열면 OCR 을 다시 돌리지 않습니다.',
@@ -366,7 +366,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pdf-editor.js', {
       title: 'pdf-editor.js — PDF 편집 화면',
-      subtitle: '1,585줄, 서명·텍스트·날짜·체크·필기',
+      subtitle: '서명·텍스트·날짜·체크·필기',
       summary:
         'PDF 확대·축소, 현재 페이지 표시, 전체화면, 검색·강조, 서명·텍스트·날짜·체크·필기(펜/형광펜) 배치와 저장 UI 를 담당합니다. ' +
         '이 앱의 원래 출발점(pdf-signer)이자 지금도 가장 완성도 높은 편집 기능입니다.',
@@ -406,7 +406,7 @@ export default ({ manifest, helpers }) => {
 
     mod('pdf-pages.js', {
       title: 'pdf-pages.js — 저장 바이트 생성과 페이지 조작',
-      subtitle: '658줄, 책갈피·추출·삭제·회전·합치기',
+      subtitle: '책갈피·추출·삭제·회전·합치기',
       summary:
         'PDF 다운로드 바이트를 만드는 곳이자, 책갈피 목차 편집과 페이지 선택·추출·삭제·회전·순서 변경·합치기를 담당합니다. ' +
         'pdf-lib 로 실제 PDF 구조를 다시 씁니다.',
@@ -426,7 +426,7 @@ export default ({ manifest, helpers }) => {
 
     mod('viewer-base.js', {
       title: 'viewer-base.js — Office·텍스트 뷰어 공통 진입점',
-      subtitle: '773줄, 지연 렌더 계약의 정의 지점',
+      subtitle: '지연 렌더 계약의 정의 지점',
       summary:
         'DOCX·DOC·PPTX·HWP·HWPX·Markdown·일반 텍스트·HTML·SQLite 미리보기의 공통 진입점입니다. ' +
         'loadOffice 가 문서 객체를 만들고 render 클로저를 붙이는데, 이 render 는 문서가 처음 활성화될 때 실행됩니다 — 지연 렌더 계약이 여기서 정의됩니다.',
@@ -468,7 +468,7 @@ export default ({ manifest, helpers }) => {
 
     mod('korean-font.js', {
       title: 'korean-font.js — Matplotlib 한글 폰트 데이터',
-      subtitle: '4줄(생성 파일), NanumGothic gzip+base64',
+      subtitle: '생성 파일, NanumGothic gzip+base64',
       summary:
         'Pyodide 의 Matplotlib 에서 한글 라벨이 깨지지 않도록 NanumGothic 을 gzip+base64 로 담아 둔 생성 파일입니다. ' +
         '직접 수정하지 않으며, 파일 자체는 4줄이지만 내용은 폰트 바이너리입니다.',
@@ -493,7 +493,7 @@ export default ({ manifest, helpers }) => {
 
     mod('code-viewer.js', {
       title: 'code-viewer.js — 코드 보기·저장의 허브',
-      subtitle: '4,034줄, 자체 구문강조 + 저장 분기 + 실행기 연결',
+      subtitle: '자체 구문강조 + 저장 분기 + 실행기 연결',
       summary:
         '코드·설정 파일의 구문 강조와 줄번호, Python·JavaScript 실행 바, 코드·텍스트 저장, 원본 핸들/자동 저장 폴더 분기, 노트북 변환, 정의 이동 연결을 담당합니다. ' +
         '외부 하이라이터 없이 정규식 기반 강조를 직접 구현했고, 여기 있는 saveTextDoc 이 앱 전체의 텍스트 저장 창구입니다.',

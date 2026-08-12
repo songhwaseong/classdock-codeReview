@@ -78,7 +78,7 @@ export default ({ manifest, helpers }) => {
 
     mod('js-libraries.js', {
       title: 'js-libraries.js — 실행 라이브러리와 npm 연결',
-      subtitle: '322줄, 내장·npm·내 파일을 한 실행 목록으로 정규화',
+      subtitle: '내장·npm·내 파일을 한 실행 목록으로 정규화',
       summary:
         'JavaScript 실행 전에 넣을 라이브러리를 관리합니다. Lodash·Day.js·Papa Parse·Math.js는 vendor 고정본으로 제공하고, ' +
         '사용자가 고른 로컬 .js 파일과 EXE가 설치·번들한 npm 패키지를 같은 {id, name, source, global} 모양으로 바꿔 Worker에 넘깁니다.',
@@ -130,7 +130,7 @@ export default ({ manifest, helpers }) => {
 
     mod('js-runtime.js', {
       title: 'js-runtime.js — Worker 실행·채점·노트북 커널',
-      subtitle: '1,203줄, 세 실행 수명을 한 엔진으로 처리',
+      subtitle: '세 실행 수명을 한 엔진으로 처리',
       summary:
         'Blob Worker를 만들어 사용자 JavaScript를 실행하고 console 출력·input·prompt·타이머·오류 위치·한국어 도움말을 앱 결과 모양으로 바꿉니다. ' +
         '일반 실행과 자동채점은 새 Worker를 만들고, JavaScript 노트북은 같은 Worker를 살려 앞 셀의 전역 값을 다음 셀로 이어 줍니다.',
@@ -187,7 +187,7 @@ export default ({ manifest, helpers }) => {
 
     mod('js-editor.js', {
       title: 'js-editor.js — JavaScript 편집·실행 화면',
-      subtitle: '565줄, Python 편집기 뼈대를 재사용하는 얇은 어댑터',
+      subtitle: 'Python 편집기 뼈대를 재사용하는 얇은 어댑터',
       summary:
         '.js·.mjs 문서에 실행 바·입력값·출력·라이브러리 선택·자동채점·저장·원본 되돌리기를 붙입니다. ' +
         '편집기·초안·자동저장·분할선·채점 테스트 창은 python-editor.js와 python-run-context.js의 공용 함수를 재사용하고, 실행만 runJsSource로 보냅니다.',

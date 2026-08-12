@@ -54,7 +54,7 @@ export default ({ manifest, helpers }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            'core.js 3,992줄 / state.js 622줄이지만 state.js 가 core 에서 구조 분해로 가져오는 이름이 100개가 넘습니다. ' +
+            'core.js 4,104줄 / state.js 646줄이지만 state.js 가 core 에서 구조 분해로 가져오는 이름이 100개가 넘습니다. ' +
             'core.js 는 이미 "공통 유틸"이 아니라 여러 도메인의 순수 로직 창고입니다.',
         },
         {
@@ -113,7 +113,7 @@ export default ({ manifest, helpers }) => {
 
     mod('theme.js', {
       title: 'theme.js — 초기 테마 적용',
-      subtitle: '12줄, 렌더 전 실행',
+      subtitle: '렌더 전 실행',
       summary:
         '저장된 다크·라이트 테마를 문서가 그려지기 전에 적용해 초기 화면 깜빡임을 막습니다. 전체 12줄로 이 계층에서 가장 작은 파일이며, ' +
         '오직 "가장 먼저 실행되어야 한다"는 이유로 독립 파일입니다.',
@@ -132,7 +132,7 @@ export default ({ manifest, helpers }) => {
 
     mod('i18n.js', {
       title: 'i18n.js — 한국어·영어 사전과 자동 번역',
-      subtitle: '1,753줄, DOM 텍스트·title·aria 자동 치환',
+      subtitle: 'DOM 텍스트·title·aria 자동 치환',
       summary:
         '한국어를 기준 문구로 두고 영어 사전을 매핑합니다. 정적 문자열뿐 아니라 매개변수가 낀 문구, DOM 의 textContent·title·aria-label 까지 ' +
         '훑어 치환하고 언어 전환 시 다시 적용합니다. 사용자에게 보이는 새 문구를 추가하면 이 파일의 영문 사전도 함께 채워야 합니다.',
@@ -174,7 +174,7 @@ export default ({ manifest, helpers }) => {
 
     mod('lazy.js', {
       title: 'lazy.js — 지연 vendor 로더 (MNLazy)',
-      subtitle: '131줄, 시작 비용 7.2MB 제거',
+      subtitle: '시작 비용 7.2MB 제거',
       summary:
         '예전에는 vendor 18개(약 7.2MB)를 시작할 때 전부 실행했습니다. .txt 하나를 열어도 엑셀·한글·PPT·맞춤법 사전이 함께 파싱돼 저사양 교실 PC 의 첫 화면이 늦었습니다. ' +
         'MNLazy 는 묶음(bundle)을 정의하고 "그 형식을 열 때·그 버튼을 누를 때" 처음 싣습니다. PDF 만은 앱의 중심 기능이라 지금도 시작 시 함께 싣습니다.',
@@ -225,7 +225,7 @@ export default ({ manifest, helpers }) => {
 
     mod('core.js', {
       title: 'core.js — 공통 순수 함수 (PdfSignerCore)',
-      subtitle: '3,992줄, UMD, 테스트 가능성의 근간',
+      subtitle: 'UMD, 테스트 가능성의 근간',
       summary:
         '경로 정규화, 작업공간 마커, 인코딩 판별, CSV 파싱, Python 오류 설명·경로 분석·자동완성 후보, Markdown/HTML 살균, 코드 편집 순수 함수, ' +
         '단축키 정규화, Office XML 텍스트 추출까지 — DOM 없이 계산할 수 있는 로직을 모아 둔 파일입니다. ' +
@@ -242,7 +242,7 @@ export default ({ manifest, helpers }) => {
         },
         {
           title: '테스트 커버리지',
-          body: 'tests/core.test.js 1,378줄이 이 파일을 중심으로 돕니다. 프로젝트에서 가장 큰 단위 테스트입니다.',
+          body: 'tests/core.test.js 1,425줄이 이 파일을 중심으로 돕니다. 프로젝트에서 가장 큰 단위 테스트입니다.',
         },
       ],
       features: [
@@ -251,8 +251,14 @@ export default ({ manifest, helpers }) => {
         { title: '편집기 순수 로직', body: 'diffTextEdit, remapTextRangesAfterEdit, 캐럿 상태, 괄호 자동 닫기 계획, 자동완성 삽입 계획.' },
         { title: '문서·표', body: 'CSV 구분자 추론·레코드 파싱, Markdown → HTML, HTML 살균, Office XML 문단·run 텍스트 추출.' },
         { title: '분할 작업·드래그', body: '탭 드롭 분할 판정, 내부 드래그 MIME, 폴더 피커 필요 여부 판정.' },
+        {
+          title: 'LaTeX → MathML',
+          body:
+            'latexToMathML 이 노트북 셀과 화이트보드 수식이 함께 쓰는 변환기입니다. ' +
+            '2026-08-12 에 환경(texEnvironment)·구분자(texDelimiter)·행렬 조판이 더해지며 이 파일이 4,000줄을 넘겼습니다.',
+        },
       ],
-      files: [{ path: 'tests/core.test.js', label: 'core.test.js', description: '이 파일을 검증하는 1,378줄 테스트' }],
+      files: [{ path: 'tests/core.test.js', label: 'core.test.js', description: '이 파일을 검증하는 1,425줄 테스트' }],
       notes: [
         {
           type: 'good',
@@ -277,7 +283,7 @@ export default ({ manifest, helpers }) => {
 
     mod('icons.js', {
       title: 'icons.js — 이모지 버튼의 SVG 치환',
-      subtitle: '132줄, MutationObserver 로 동적 UI 보정',
+      subtitle: 'MutationObserver 로 동적 UI 보정',
       summary:
         '앱의 이모지형 버튼을 테마에 맞는 단색 SVG 아이콘으로 정리하고, 나중에 추가되는 UI 도 관찰해 같은 처리를 적용합니다. ' +
         '이모지는 OS·폰트마다 모양과 색이 달라 교실 PC 환경에서 일관성이 깨지는데, 그 문제를 렌더 후 치환으로 해결한 방식입니다.',
@@ -298,10 +304,10 @@ export default ({ manifest, helpers }) => {
 
     mod('state.js', {
       title: 'state.js — 전역 상태와 설정·단축키',
-      subtitle: '622줄, 열린 문서·탭·사이드바·토스트의 원본',
+      subtitle: '열린 문서·탭·사이드바·토스트의 원본',
       summary:
         '열린 문서 목록(docs), 탭 순서, 사이드바 트리(navNodes), 활성 문서, 앱 설정과 단축키 정의, 공용 토스트·로딩 UI 를 관리합니다. ' +
-        '파일 크기는 622줄로 크지 않지만 앱 전체가 참조하는 상태의 원본이라 실질적 영향력이 가장 큰 파일 중 하나입니다.',
+        '파일 크기는 646줄로 크지 않지만 앱 전체가 참조하는 상태의 원본이라 실질적 영향력이 가장 큰 파일 중 하나입니다.',
       usage: [
         {
           title: '조회 성능 인덱스',
@@ -341,7 +347,7 @@ export default ({ manifest, helpers }) => {
 
     mod('history.js', {
       title: 'history.js — 공용 되돌리기 엔진 (MNEditHistory)',
-      subtitle: '123줄, 7개 편집기가 공유',
+      subtitle: '7개 편집기가 공유',
       summary:
         'PDF·표·이미지·화이트보드·파이썬·노트북·메모 편집기가 저마다 만들던 스냅샷 스택을 하나로 모았습니다. ' +
         '각 편집기는 capture·apply·isEqual 세 함수만 넘기고, 스택·상한·redo 무효화·버튼 상태·연속 입력 묶기는 공통으로 처리합니다. ' +
@@ -394,7 +400,7 @@ export default ({ manifest, helpers }) => {
 
     mod('search-history.js', {
       title: 'search-history.js — 최근 검색어 (MNSearchHistory)',
-      subtitle: '315줄, 구획별 12개 보관',
+      subtitle: '구획별 12개 보관',
       summary:
         '검색어를 구획(통합검색·편집기·PDF·노트북·표·일괄바꾸기)별로 나눠 localStorage 에 12개까지 보관하고, ' +
         '찾기 창을 열 때 마지막 검색어를 채워 주며 드롭다운을 그립니다. 찾기 옵션(대소문자·단어·정규식)도 함께 기억합니다.',
@@ -432,7 +438,7 @@ export default ({ manifest, helpers }) => {
 
     mod('special-chars.js', {
       title: 'special-chars.js — 특수문자 문자표 (MNSpecialChars)',
-      subtitle: '276줄, 한자키를 대신하는 장치',
+      subtitle: '한자키를 대신하는 장치',
       summary:
         '브라우저 위에서 도는 편집기라 한글의 "ㅁ + 한자키" 입력이 오지 않습니다. 그래서 커서 자리에서 우클릭 → 특수문자(또는 Ctrl+F10)로 문자표를 열어 ' +
         '※ ○ ① ㎡ 같은 글자를 넣습니다. 한자키 자모(ㄱ·ㄴ·ㄷ…)와 같은 묶음 구성으로 보여 주어 기존 습관을 그대로 쓸 수 있게 했습니다.',
@@ -462,7 +468,7 @@ export default ({ manifest, helpers }) => {
 
     mod('spellcheck.js', {
       title: 'spellcheck.js — 오프라인 한국어 맞춤법 (MNKoreanSpellcheck)',
-      subtitle: '632줄 + 3MB hunspell 워커(지연 로드)',
+      subtitle: '본체 외에 3MB hunspell 워커(지연 로드)',
       summary:
         '외부 API 없이 도는 한국어 맞춤법·띄어쓰기 규칙 엔진과 공통 검사 패널입니다. 문서 종류에 따라 검사 범위를 달리해서, ' +
         '일반 문서는 전체 글을, 마크다운은 코드 구간을 제외하고, 코드 파일은 주석·문자열만 검사합니다. ' +

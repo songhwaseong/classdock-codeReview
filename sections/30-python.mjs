@@ -66,7 +66,7 @@ export default ({ manifest, helpers }) => {
 
     mod('python-snippets.js', {
       title: 'python-snippets.js — 예제 갤러리와 import 색인',
-      subtitle: '1,671줄, 대부분 예제 데이터',
+      subtitle: '대부분 예제 데이터',
       summary:
         'Python 예제 갤러리와 난이도·검색 필터, 예제 열기를 담당하고, 로컬 Python 의 import 색인과 자동완성 후보를 미리 준비합니다. ' +
         '수업용 도구답게 "빈 화면에서 시작하지 않게" 하는 것이 목적입니다.',
@@ -85,7 +85,7 @@ export default ({ manifest, helpers }) => {
 
     mod('python-editor.js', {
       title: 'python-editor.js — 자체 코드 편집기',
-      subtitle: '3,181줄, CodeMirror 없이 직접 구현',
+      subtitle: 'CodeMirror 없이 직접 구현',
       summary:
         '외부 편집기 라이브러리 없이 줄번호·구문 강조·자동 들여쓰기·찾기 바꾸기·자동완성·다중 캐럿·셀 경계·오류 줄·정의 이동을 직접 구현했습니다. ' +
         '여기에 열 편집(Alt+세로 드래그)의 사각 선택과 전용 클립보드, 코드 따라치기 엔진, 줄 번호로 이동 미니 창, ' +
@@ -149,7 +149,7 @@ export default ({ manifest, helpers }) => {
 
     mod('python-run-context.js', {
       title: 'python-run-context.js — 실행 문맥과 경로 계산',
-      subtitle: '1,872줄, 실행 언어 판정·작업폴더·프로젝트 루트·번들 구성',
+      subtitle: '실행 언어 판정·작업폴더·프로젝트 루트·번들 구성',
       summary:
         '.py와 .js/.mjs 중 어느 실행기를 붙일지도 판정하고, 함께 연 프로젝트 파일을 Python 실행 번들로 구성해 작업 폴더·프로젝트 루트·상대 경로·import·출력 파일 경로를 계산합니다. ' +
         '"내 PC 에서 되던 상대 경로가 브라우저에서도 되게" 만드는 것이 이 파일의 존재 이유입니다.',
@@ -192,7 +192,7 @@ export default ({ manifest, helpers }) => {
 
     mod('python-runtime.js', {
       title: 'python-runtime.js — 실행 총괄',
-      subtitle: '2,962줄, 5개 실행 모드와 스트리밍 출력',
+      subtitle: '5개 실행 모드와 스트리밍 출력',
       summary:
         '실행의 총괄 지점입니다. 백엔드(로컬 Python / Pyodide)를 고르고 패키지를 준비하고, 표준입력을 받고, 출력을 스트리밍하고, 중지·진단·단계 실행을 처리하고, ' +
         '실행이 만든 결과 파일을 수집합니다. runPythonSource 하나가 일반 실행·채점·진단·추적·노트북 셀 다섯 모드를 분기합니다.',
@@ -253,7 +253,7 @@ export default ({ manifest, helpers }) => {
 
     mod('python-terminal.js', {
       title: 'python-terminal.js — 공유 터미널',
-      subtitle: '754줄, 앱 전체에 하나뿐인 세션',
+      subtitle: '앱 전체에 하나뿐인 세션',
       summary:
         '결과/터미널 전환, 명령 기록·중지·초기화를 담당하고, EXE 에서는 지속형 로컬 PowerShell 세션을, 브라우저에서는 상태가 유지되는 Pyodide 콘솔을 같은 UI 로 제공합니다. ' +
         'sharedPythonTerminal() 로 앱에 하나만 만들고 각 문서는 자기 터미널 버튼만 attach·detach 합니다.',
@@ -303,7 +303,7 @@ export default ({ manifest, helpers }) => {
 
     mod('notebook-model.js', {
       title: 'notebook-model.js — .ipynb 모델과 직렬화',
-      subtitle: '1,260줄, DOM 비종속·Python/JavaScript 언어 판정',
+      subtitle: 'DOM 비종속·Python/JavaScript 언어 판정',
       summary:
         '.ipynb(nbformat 4) 파싱·직렬화, 셀·출력 모델, 복구본·자동 저장, 실행 상태 해시, 셀 추가·삭제·이동을 담당합니다. ' +
         'DOM 을 쓰지 않아 단위 테스트가 가능하고, 저장 포맷을 중간 형식으로 바꾸지 않고 .ipynb 를 직접 다룹니다.',
@@ -341,7 +341,7 @@ export default ({ manifest, helpers }) => {
 
     mod('notebook-tools.js', {
       title: 'notebook-tools.js — 노트북 작업공간과 커널 통신',
-      subtitle: '1,366줄, 작업공간 번들과 Python 셀 커널 제어',
+      subtitle: '작업공간 번들과 Python 셀 커널 제어',
       summary:
         '노트북 실행 작업공간과 파일 번들을 만들고, 로컬 셀 커널 선택·시작·중지와 커널 통신을 담당합니다. ' +
         '로컬 Python 이 없을 때의 설치 안내도 여기서 다룹니다. 실제 커널 프로세스는 desktop/python_kernel.py 입니다.',
@@ -380,7 +380,7 @@ export default ({ manifest, helpers }) => {
 
     mod('notebook-run.js', {
       title: 'notebook-run.js — 노트북 화면과 도구막대',
-      subtitle: '1,194줄, 전체 실행·저장·목차·찾기·JS 라이브러리',
+      subtitle: '전체 실행·저장·목차·찾기·JS 라이브러리',
       summary:
         '노트북 전체 화면과 상단 도구막대를 만들고 셀 렌더링, 전체 실행, 저장, 목차, 찾기, 출력 메뉴, 커널 상태 UI 를 연결합니다. ' +
         'JavaScript 노트북이면 라이브러리 선택 버튼을 붙이고 선택이 바뀔 때 기존 Worker 커널을 재시작합니다. ' +
@@ -403,7 +403,7 @@ export default ({ manifest, helpers }) => {
 
     mod('notebook-pdf-export.js', {
       title: 'notebook-pdf-export.js — 노트북 PDF 내보내기',
-      subtitle: '488줄, A4 페이지 분할과 리치 출력 스냅샷',
+      subtitle: 'A4 페이지 분할과 리치 출력 스냅샷',
       summary:
         '노트북을 A4 PDF 로 내보냅니다. 셀 경계를 고려한 페이지 분할, 캔버스 배치, 지도·iframe 같은 리치 출력의 스냅샷 처리를 담당합니다. ' +
         '화면 캡처 라이브러리는 MNLazy 의 capture 묶음으로 지연 로드합니다.',
@@ -423,7 +423,7 @@ export default ({ manifest, helpers }) => {
 
     mod('notebook-cells.js', {
       title: 'notebook-cells.js — 셀 UI',
-      subtitle: '1,513줄, Python·JavaScript 코드와 마크다운·Raw 셀',
+      subtitle: 'Python·JavaScript 코드와 마크다운·Raw 셀',
       summary:
         '개별 코드·마크다운·Raw 셀의 UI, 셀 실행·입력, 선택·복사·붙여넣기, 드래그 순서 변경, 접기, 메모 보내기와 셀 도구 버튼을 담당합니다. ' +
         '셀 편집기는 python-editor.js 를 재사용하되 노트북 metadata가 JavaScript이면 JS 자동완성·강조·Worker 커널을 선택하고, 맞춤법은 MNKoreanSpellcheck 를 씁니다.',
