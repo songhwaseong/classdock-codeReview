@@ -5,6 +5,10 @@ export default ({ manifest, helpers, diagrams }) => {
   const lazyCount = manifest.vendorScripts.filter((item) => item.lazy).length;
   const layerCount = manifest.applicationLayers.length;
   const dependencyCount = Object.keys(manifest.scriptDependencies ?? {}).length;
+  // 가장 큰 계층은 기능이 붙을 때마다 바뀐다. 숫자를 적어 두면 반드시 낡으므로 매니페스트에서 고른다.
+  const biggestLayer = manifest.applicationLayers.reduce((largest, layer) =>
+    layer.scripts.length > largest.scripts.length ? layer : largest,
+  );
 
   return [
     sec({
@@ -58,7 +62,7 @@ export default ({ manifest, helpers, diagrams }) => {
         {
           title: '수업 도구',
           body:
-            '과제 패키지(.task/.taskdone), 시험지(.exam/.examkey/.examdone), 수업 리플레이(.lesson), 화이트보드, 임시 메모, 픽셀 펫까지 learning-tools 계층에 모여 있습니다.',
+            '과제 패키지(.task/.taskdone), 시험지(.exam/.examkey/.examdone), 수업 리플레이(.lesson), 화이트보드, 임시 메모, 블록 문서(.mnote), 악보(.msheet), 픽셀 펫까지 learning-tools 계층에 모여 있습니다.',
         },
         {
           title: '오프라인 우선',
@@ -190,7 +194,7 @@ export default ({ manifest, helpers, diagrams }) => {
           type: 'info',
           label: 'Info',
           body:
-            `계층은 ${layerCount}개지만 learning-tools 에 20개가 몰려 있습니다. 수업 기능이 계속 붙는 자리라 자연스러운 결과지만, 이 계층 안의 상호 의존은 계층 구조로는 표현되지 않습니다.`,
+            `계층은 ${layerCount}개지만 ${biggestLayer.id} 에 ${biggestLayer.scripts.length}개가 몰려 있습니다. 수업 기능이 계속 붙는 자리라 자연스러운 결과지만, 이 계층 안의 상호 의존은 계층 구조로는 표현되지 않습니다.`,
         },
         {
           type: 'risk',

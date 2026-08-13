@@ -360,7 +360,7 @@ export default ({ manifest, helpers }) => {
         { title: '설치 안내', body: '로컬 Python 이 없으면 안내로 유도합니다.' },
       ],
       files: [
-        { path: 'desktop/python_kernel.py', label: 'python_kernel.py', description: 'EXE 가 띄우는 실제 커널 프로세스(507줄)' },
+        { path: 'desktop/python_kernel.py', label: 'python_kernel.py', description: 'EXE 가 띄우는 실제 커널 프로세스' },
         { path: 'tests/python-kernel.test.js', label: 'python-kernel.test.js', description: '셀 간 상태 유지(환경에 따라 제외 가능)' },
       ],
       notes: [

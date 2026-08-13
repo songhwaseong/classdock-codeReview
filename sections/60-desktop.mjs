@@ -18,7 +18,7 @@ export default ({ helpers, diagrams }) => {
       category: CAT,
       group: '개요',
       title: 'EXE 로컬 서버 개요',
-      subtitle: 'launcher.cs 7,257줄 — 브라우저가 못 하는 일을 여는 계층',
+      subtitle: 'launcher.cs 한 파일 — 브라우저가 못 하는 일을 여는 계층',
       summary:
         'manneung-classroom.exe 는 오프라인 HTML 을 리소스로 품고 127.0.0.1 에 작은 HTTP 서버를 띄운 뒤 브라우저를 엽니다. ' +
         '그때 열리는 것은 파일 저장(권한 팝업 없이 실제 경로), 로컬 Python 실행·pip·노트북 커널, 지속형 PowerShell 터미널, ' +
@@ -53,7 +53,7 @@ export default ({ helpers, diagrams }) => {
       files: [
         L('launcher.cs (상수·클래스)', [40, 200], '메모리 측정, 저장 경로, 상한 값 정의'),
         L('launcher.cs (버퍼·세션 클래스)', [193, 400], 'WorkspaceFile · LimitedTextBuffer · PythonSession · PipJob · TerminalSession · PythonKernel'),
-        { path: 'desktop/main.go', label: 'main.go', description: 'C# 컴파일러가 없을 때의 Go 폴백 런처(84줄)' },
+        { path: 'desktop/main.go', label: 'main.go', description: 'C# 컴파일러가 없을 때의 Go 폴백 런처' },
       ],
       notes: [
         {
@@ -425,7 +425,7 @@ export default ({ helpers, diagrams }) => {
       files: [
         L('launcher.cs (커널)', [2145, 2235], '/python-kernel-start-bundle'),
         L('launcher.cs (터미널)', [2230, 2290], '/terminal-session-open · /terminal-complete'),
-        { path: 'desktop/python_kernel.py', label: 'python_kernel.py', description: '실제 커널 프로세스(507줄)' },
+        { path: 'desktop/python_kernel.py', label: 'python_kernel.py', description: '실제 커널 프로세스' },
         { path: 'tests/python-terminal-shared.test.js', label: 'python-terminal-shared.test.js', description: '공유 터미널 계약' },
       ],
       notes: [

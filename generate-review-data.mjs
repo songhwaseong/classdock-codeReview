@@ -35,6 +35,7 @@ import buildPython from './sections/30-python.mjs';
 import buildJavaScript from './sections/35-javascript.mjs';
 import buildEditors from './sections/40-editors.mjs';
 import buildLearning from './sections/50-learning.mjs';
+import buildMusic from './sections/55-music.mjs';
 import buildDesktop from './sections/60-desktop.mjs';
 import buildTools from './sections/70-build-tools.mjs';
 import buildTests from './sections/80-tests.mjs';
@@ -211,6 +212,7 @@ const reviewSections = [
   ...buildJavaScript(context),
   ...buildEditors(context),
   ...buildLearning(context),
+  ...buildMusic(context),
   ...buildDesktop(context),
   ...buildTools(context),
   ...buildTests(context),
@@ -415,13 +417,20 @@ const testCoverage = {
 // 사전에 실린 말이 리뷰 어딘가에 실제로 나오는지 확인한다. 리뷰 문장이 바뀌어 더는 쓰지 않는
 // 말이 사전에 조용히 남는 것을 막는다(위의 "섹션에 실리지 않은 파일" 검사와 같은 발상).
 // 섹션 산문뿐 아니라 줄 앵커 주석·흐름·계약도 화면에 나오는 글이므로 함께 본다.
-const sidecarProse = (
-  await Promise.all(
-    ['review-comments.js', 'flows.js', 'contracts.js'].map((name) =>
-      readFile(path.join(reviewDir, name), 'utf8').catch(() => ''),
-    ),
-  )
-).join('\n');
+const [commentsProse, flowsProse, contractsProse] = await Promise.all(
+  ['review-comments.js', 'flows.js', 'contracts.js'].map((name) =>
+    readFile(path.join(reviewDir, name), 'utf8').catch(() => ''),
+  ),
+);
+const sidecarProse = [commentsProse, flowsProse, contractsProse].join('\n');
+
+// manifest 에 전역 공개 API 경계가 새로 생겼는데 계약 카드가 없는 경우를 잡는다.
+// 실제로 MNMusicAudio 가 2026-08-13 에 경계로 등록됐지만 계약 목록은 10개에 머물러 있었고,
+// 파일·문서 커버리지 검사가 다 통과하는 바람에 아무 신호도 뜨지 않았다.
+// 단순 includes 로 보면 MNRecent 가 MNRecentFiles 에 묻어 통과한다. 낱말 경계로 찾는다.
+const uncoveredApis = (manifest.moduleBoundaries ?? [])
+  .map((item) => item.publicApi)
+  .filter((api) => api && !new RegExp(`\\b${api}\\b`).test(contractsProse));
 
 const glossaryProse = hydrated
   .filter((section) => section.id !== 'glossary')
@@ -551,6 +560,10 @@ if (unusedTerms.length) {
 if (uncoveredModules.length) {
   console.warn(`\n[경고] 섹션에 실리지 않은 src/js 파일 ${uncoveredModules.length}개:`);
   console.warn(`  ${uncoveredModules.join(', ')}`);
+}
+if (uncoveredApis.length) {
+  console.warn(`\n[경고] contracts.js 에 계약 카드가 없는 전역 공개 API ${uncoveredApis.length}개:`);
+  console.warn(`  ${uncoveredApis.join(', ')}`);
 }
 if (missing.length) {
   console.warn(`\n[경고] 읽지 못한 파일 ${missing.length}건:`);

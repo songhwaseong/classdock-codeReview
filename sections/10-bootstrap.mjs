@@ -258,7 +258,7 @@ export default ({ manifest, helpers }) => {
             '2026-08-12 에 환경(texEnvironment)·구분자(texDelimiter)·행렬 조판이 더해지며 이 파일이 4,000줄을 넘겼습니다.',
         },
       ],
-      files: [{ path: 'tests/core.test.js', label: 'core.test.js', description: '이 파일을 검증하는 1,425줄 테스트' }],
+      files: [{ path: 'tests/core.test.js', label: 'core.test.js', description: '이 파일을 검증하는 테스트' }],
       notes: [
         {
           type: 'good',

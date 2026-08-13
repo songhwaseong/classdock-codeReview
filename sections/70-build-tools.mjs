@@ -1,9 +1,24 @@
 // 빌드·검증 도구 — 앱 화면에 로드되지 않고 개발·배포 과정에서만 실행되는 코드.
 
-export default ({ manifest, helpers, diagrams }) => {
+import { statSync } from 'node:fs';
+import path from 'node:path';
+
+// 산출물 크기는 손으로 적지 않는다. 19MB 로 적어 둔 문장이 실제 30MB 가 될 때까지
+// 아무도 눈치채지 못했다(악보 MP3 샘플이 들어오며 커졌다). 있으면 재고, 없으면 그 사실을 적는다.
+const artifactSize = (rootDir, name) => {
+  try {
+    return `${(statSync(path.join(rootDir, name)).size / 1024 / 1024).toFixed(1)}MiB`;
+  } catch {
+    return null;
+  }
+};
+
+export default ({ manifest, helpers, diagrams, rootDir }) => {
   const { sec } = helpers;
   const CAT = '빌드 · 도구';
   const vendorCount = manifest.vendorScripts.length;
+  const offlineSize = artifactSize(rootDir, 'manneung-classroom-offline.html');
+  const exeSize = artifactSize(rootDir, 'manneung-classroom.exe');
 
   return [
     sec({
@@ -95,7 +110,14 @@ export default ({ manifest, helpers, diagrams }) => {
       features: [
         { title: '태그 존재 확인', body: 'requireTag 가 예상한 태그가 없으면 즉시 실패시킵니다. HTML 구조가 바뀌면 조용히 잘못 만들지 않습니다.' },
         { title: '무결성 실패', body: 'verifyVendorIntegrity 가 해시 불일치를 예외로 던집니다.' },
-        { title: '19MB 산출물', body: '현재 오프라인 HTML은 약 19.0MiB, EXE는 약 19.2MiB입니다. JavaScript 내장 라이브러리 4종이 추가됐고, 대부분의 용량은 여전히 Pyodide·폰트·문서 라이브러리입니다.' },
+        {
+          title: '산출물 크기',
+          body:
+            (offlineSize && exeSize
+              ? `생성 시점의 오프라인 HTML 은 ${offlineSize}, EXE 는 ${exeSize} 입니다. `
+              : '이 리뷰를 만들 때 빌드 산출물이 없어 크기를 재지 못했습니다. ') +
+            '용량의 큰 몫은 Pyodide·폰트·문서 라이브러리이고, 2026-08-13 에 악보 악기 샘플 MP3 49개(9.5MB)가 base64 로 더해지며 한 번 더 뛰었습니다.',
+        },
       ],
       files: [{ path: 'build-offline.js', label: 'build-offline.js', description: '단일 파일 생성기 전체' }],
       notes: [
@@ -295,7 +317,7 @@ export default ({ manifest, helpers, diagrams }) => {
         },
       ],
       features: [
-        { title: '정적 서빙', body: '34줄짜리 최소 서버입니다. 별도 프레임워크가 없습니다.' },
+        { title: '정적 서빙', body: '최소한의 정적 서버입니다. 별도 프레임워크가 없습니다.' },
         { title: '설정', body: 'playwright.config.js 가 서버·브라우저·테스트 경로를 지정합니다.' },
       ],
       files: [

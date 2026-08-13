@@ -13,11 +13,12 @@ window.MN_CONTRACTS = [
     title: 'MNLazy — 지연 vendor 로더',
     source: 'src/js/lazy.js',
     file: 'src/js/lazy.js',
-    line: 158,
+    line: 160,
     when: '무거운 vendor 라이브러리가 실제로 필요해지는 순간(그 형식을 열 때, 그 버튼을 누를 때)',
-    tags: ['소비자 10개', 'need()', 'tryNeed()', 'isLoaded()', 'bundleLabel()', 'source()', 'BUNDLES'],
-    snippet: `// 묶음 12종: spellcheck jszip zip xlsx yaml exceljs hwp
-//           officeCrypt capture pptx docx
+    tags: ['소비자 12개', 'need()', 'tryNeed()', 'isLoaded()', 'bundleLabel()', 'source()', 'BUNDLES'],
+    snippet: `// 실행 묶음 12종: spellcheck jszip zip xlsx yaml exceljs hwp
+//               vexflow officeCrypt capture pptx docx
+// Worker 전달용 4종: jsLodash jsDayjs jsPapaParse jsMath (source() 로만 씀)
 await MNLazy.need("xlsx");        // 실패하면 예외
 const ok = await MNLazy.tryNeed("hwp");  // 실패해도 false 만
 MNLazy.isLoaded("docx");          // 이미 실행됐는가
@@ -132,6 +133,26 @@ MNDataConvert.setYaml(jsYaml);   // YAML 만 외부 라이브러리를 주입받
     snippet: `// 선·도형·텍스트·이미지 항목 배열 → 같은 그림
 // 리플레이는 사용자 입력 없이 이 렌더러만으로 화면을 재현한다`,
     note: '렌더러를 화이트보드 UI 밖으로 뺀 덕분에 리플레이가 UI 를 흉내 내지 않아도 됩니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'music-audio', 'music-overview'],
+    kind: 'API',
+    title: 'MNMusicAudio — 악보 소리 엔진',
+    source: 'src/js/music-audio.js',
+    file: 'src/js/music-audio.js',
+    line: 14,
+    when: '악보에서 음표를 누를 때, ▶ 로 재생할 때, WAV 로 저장할 때',
+    tags: ['소비자 1개', 'previewNote()', 'play()', 'stop()', 'renderWav()', '샘플 6종'],
+    snippet: `MNMusicAudio.previewNote(note, timbre);            // 음표 클릭 미리듣기
+await MNMusicAudio.play(sheet, { from, to, onNote, onEnd, countIn, metronome, loop });
+MNMusicAudio.stop();
+const blob = await MNMusicAudio.renderWav(sheet, { from, to });   // 같은 예약 함수를
+                                  // OfflineAudioContext 에 태운다 → 들은 것과 같은 파일
+// 25ms 마다 앞으로 200ms 안에 시작할 음만 AudioContext.currentTime 기준으로 예약한다.
+// 재생 중 음표 강조는 오디오가 아니라 requestAnimationFrame 에서 한다.`,
+    note:
+      '실시간 재생과 WAV 저장이 scheduleInto 하나를 공유합니다. "들은 것과 다른 파일이 저장되는" 사고가 구조적으로 막힙니다. ' +
+      '샘플 로드가 실패하면 합성음으로 내려앉고 onError 로 알립니다.',
   },
   {
     sectionIds: ['module-boundaries', 'recent-files'],

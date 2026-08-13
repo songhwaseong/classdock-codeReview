@@ -296,15 +296,16 @@ window.MN_FLOWS = [
 
   {
     sectionIds: ['lazy', 'loading-contract', 'tool-build-offline', 'tool-check-source'],
-    title: '지연 vendor 로드 — 시작 비용 7.2MB 제거',
+    title: '지연 vendor 로드 — 시작 비용 7.9MB 제거',
     summary:
-      '엑셀 파일을 처음 열 때에야 SheetJS 가 실행됩니다. 단일 파일 빌드에서는 심어 둔 text/plain 블록을 실행 가능한 script 로 옮겨 심는 방식입니다.',
+      '엑셀 파일을 처음 열 때에야 SheetJS 가 실행되고, 악보를 처음 열 때에야 VexFlow 가 실행됩니다. ' +
+      '단일 파일 빌드에서는 심어 둔 text/plain 블록을 실행 가능한 script 로 옮겨 심는 방식입니다.',
     steps: [
       {
         label: '묶음 정의',
-        location: 'lazy.js:20',
+        location: 'lazy.js:21',
         file: 'src/js/lazy.js',
-        line: 20,
+        line: 21,
         body: 'BUNDLES 가 묶음별 파일 목록과 라벨을 정의합니다. files 배열 순서가 곧 실행 순서입니다.',
       },
       {
@@ -316,23 +317,23 @@ window.MN_FLOWS = [
       },
       {
         label: '모드 판별',
-        location: 'lazy.js:54',
+        location: 'lazy.js:55',
         file: 'src/js/lazy.js',
-        line: 54,
+        line: 55,
         body: 'usesInlineSources 가 data-mn-lazy 블록의 존재로 단일 파일 모드인지 자동 판별합니다.',
       },
       {
         label: '필요 시 로드',
-        location: 'lazy.js:118',
+        location: 'lazy.js:120',
         file: 'src/js/lazy.js',
-        line: 118,
+        line: 120,
         body: 'loadBundle 이 진행 중 Promise 를 재사용해 같은 묶음을 동시에 여러 번 요청해도 한 번만 싣습니다.',
       },
       {
         label: 'JSZip 버전 교체',
-        location: 'lazy.js:35',
+        location: 'lazy.js:39',
         file: 'src/js/lazy.js',
-        line: 35,
+        line: 39,
         body: 'docx 묶음은 JSZip 3.x 를 요구하고 PPTX 는 2.6.1 을 씁니다. jszipSwap 과 직렬화 큐로 순서를 재현합니다.',
       },
       {
@@ -762,6 +763,79 @@ window.MN_FLOWS = [
         file: 'desktop/build.bat',
         line: 1,
         body: '오프라인 HTML 을 app.html 로 복사하고 csc.exe 로 컴파일합니다. C# 컴파일러가 없으면 Go 폴백(PowerPoint 변환 없음)입니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['music-overview', 'music-model', 'music-audio', 'music-editor', 'lazy'],
+    title: '악보 — 열기에서 WAV 저장까지',
+    summary:
+      '.msheet 를 열면 JSON 이 모델이 되고, 그때서야 VexFlow 를 내려받아 조판하고, 재생은 오디오 시계에 미리 예약합니다. ' +
+      'WAV 저장은 재생과 같은 예약 함수를 오프라인 컨텍스트에 태우므로 들은 것과 같은 파일이 나옵니다.',
+    steps: [
+      {
+        label: '확장자 분기',
+        location: 'file-loaders.js:61',
+        file: 'src/js/file-loaders.js',
+        line: 61,
+        body: 'handleFiles 가 .msheet 를 loadMusicSheet 로 보냅니다. .musicxml·.mxl 은 바로 다음 줄에서 loadMusicXml 로 갑니다.',
+      },
+      {
+        label: 'JSON → 모델',
+        location: 'music-model.js:776',
+        file: 'src/js/music-model.js',
+        line: 776,
+        body: 'musicParse 가 서명·버전을 확인하고 version 1~4 를 모두 현재 모델로 정규화합니다. 실패하면 편집기를 열지 않고 텍스트로 폴백합니다.',
+      },
+      {
+        label: 'VexFlow 지연 로드',
+        location: 'music-editor.js:2787',
+        file: 'src/js/music-editor.js',
+        line: 2787,
+        body: 'MNLazy.tryNeed("vexflow") — 710KB 조판 라이브러리는 악보를 처음 열 때 여기서 처음 실행됩니다. 실패해도 false 만 받아 편집기는 뜹니다.',
+      },
+      {
+        label: '조판',
+        location: 'music-editor.js:827',
+        file: 'src/js/music-editor.js',
+        line: 827,
+        body: 'drawScore 가 musicPackLines 로 줄을 나누고 마디마다 StaveNote 를 만들어 VexFlow 에 넘깁니다. 꼬리 잇기·간격 배분은 VexFlow 몫입니다.',
+      },
+      {
+        label: '재생 타임라인',
+        location: 'music-model.js:546',
+        file: 'src/js/music-model.js',
+        line: 546,
+        body: 'musicTimeline 이 도돌이를 펼치고 붙임줄을 이어 붙여 {시작초, 길이, 주파수} 목록을 만듭니다. 순수 함수라 테스트로 검증됩니다.',
+      },
+      {
+        label: '예약',
+        location: 'music-audio.js:311',
+        file: 'src/js/music-audio.js',
+        line: 311,
+        body: 'scheduleInto 가 25ms 마다 앞으로 200ms 안에 시작할 음만 AudioContext.currentTime 기준으로 예약합니다. 메인 스레드가 밀려도 템포는 흔들리지 않습니다.',
+      },
+      {
+        label: '강조',
+        location: 'music-audio.js:421',
+        file: 'src/js/music-audio.js',
+        line: 421,
+        body: 'requestAnimationFrame 에서 오디오 시계를 읽어 현재 음표에만 클래스를 붙입니다. 오디오 쪽에서 DOM 을 만지지 않습니다.',
+      },
+      {
+        label: 'WAV 렌더',
+        location: 'music-audio.js:502',
+        file: 'src/js/music-audio.js',
+        line: 502,
+        body: 'renderWav 가 OfflineAudioContext 에 같은 scheduleInto 를 태우고 startRendering 합니다. 3분 곡도 실시간을 기다리지 않습니다.',
+      },
+      {
+        label: '.msheet 저장',
+        location: 'music-editor.js:78',
+        file: 'src/js/music-editor.js',
+        line: 78,
+        body: 'saveMusicSheet 이 musicSerialize 결과를 saveTextDoc 에 넘깁니다. 원본 덮어쓰기·서버 저장·다운로드 세 경로를 그대로 물려받습니다.',
       },
     ],
   },
