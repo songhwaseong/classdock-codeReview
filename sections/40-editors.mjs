@@ -1,8 +1,40 @@
 // 5. document-editors — Office, 표, 이미지, 화이트보드.
 
-export default ({ manifest, helpers }) => {
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
+// 줄 수는 리뷰 문장에 적지 않고 생성 때 잰다. 손으로 적어 둔 "5,915줄" 이 수식 엔진을 떼어내
+// 5,161줄이 된 뒤에도 그대로 남아 있었다(같은 문장의 "앞 4,000줄만 실려 있습니다" 도 상한이
+// 4,400 이던 시절 값이었다). 소스가 움직이면 문장이 조용히 낡는 자리라 재서 쓴다.
+const sourceLines = (rootDir, relativePath) => {
+  try {
+    return readFileSync(path.join(rootDir, relativePath), 'utf8').split(/\r?\n/).length;
+  } catch {
+    return null;
+  }
+};
+
+// 최상위 함수 하나의 길이. spreadsheet-viewer.js 의 renderXlsx 처럼 "파일이 큰 것보다 한 함수가
+// 큰 것" 이 문제인 경우를 문장이 아니라 측정으로 말하기 위해서다. 본문이 들여쓰기돼 있으므로
+// 여는 선언 다음에 오는 첫 번째 "열 0 의 }" 가 그 함수의 끝이다.
+const topLevelFunctionSpan = (rootDir, relativePath, name) => {
+  try {
+    const lines = readFileSync(path.join(rootDir, relativePath), 'utf8').split(/\r?\n/);
+    const start = lines.findIndex((line) => new RegExp(`^(async )?function ${name}\\b`).test(line));
+    if (start < 0) return null;
+    const offset = lines.slice(start + 1).findIndex((line) => /^\}/.test(line));
+    if (offset < 0) return null;
+    return { start: start + 1, end: start + offset + 2, span: offset + 2 };
+  } catch {
+    return null;
+  }
+};
+
+export default ({ manifest, helpers, rootDir }) => {
   const { mod, sec } = helpers;
   const layer = manifest.applicationLayers.find((item) => item.id === 'document-editors');
+  const sheetLines = sourceLines(rootDir, 'src/js/spreadsheet-viewer.js');
+  const renderXlsx = topLevelFunctionSpan(rootDir, 'src/js/spreadsheet-viewer.js', 'renderXlsx');
 
   return [
     sec({
@@ -383,6 +415,108 @@ export default ({ manifest, helpers }) => {
       ],
     }),
 
+    mod('spreadsheet-formula.js', {
+      title: 'spreadsheet-formula.js — 직접 만든 수식 엔진',
+      subtitle: '토크나이저 → 파서 → 평가기, 함수 74개',
+      summary:
+        '엑셀 수식을 외부 라이브러리 없이 처음부터 구현한 739줄입니다. 문자열을 토큰으로 자르고(tokenizeFormula), ' +
+        '연산자 우선순위를 지켜 AST 로 세우고(parseFormula), 셀 값을 돌려주는 resolver 를 받아 평가합니다(evaluateAst). ' +
+        '여기에 행·열 삽입과 시트 이름 변경을 따라가는 참조 재작성, 자동 채우기 패턴, 수식 자동완성, 자동합계까지 붙어 있습니다. ' +
+        '표 편집기의 계산 부분 전체가 이 한 파일에 들어 있고, DOM 을 전혀 만지지 않아 그대로 단위 테스트할 수 있습니다.',
+      usage: [
+        {
+          title: '오류를 값으로 흘려보낸다',
+          body:
+            'FORMULA_ERR(code) 이 { __err:"#DIV/0!" } 같은 표식 객체를 만들고, 평가기는 이것을 예외가 아니라 값으로 전파합니다. ' +
+            '중간 계산이 실패해도 스택을 풀지 않고 AST 를 타고 위로 올라가며, 사용자가 셀에 직접 적은 "#REF!" 문자열과 절대 헷갈리지 않습니다.',
+        },
+        {
+          title: '참조 재작성 세 갈래',
+          body:
+            'remapFormulaRefs() 는 행·열 삽입·삭제·정렬로 셀이 움직일 때, remapMovedFormulaRefs() 는 시트 사이를 오갈 때, ' +
+            'remapFormulaSheetName() 은 시트 이름이 바뀔 때 수식 속 참조를 고쳐 씁니다. $ 절대표기는 그대로 두고, 갈 곳이 사라지면 #REF! 로 바꿉니다.',
+        },
+        {
+          title: '날짜 직렬값 규약',
+          body:
+            '엑셀 기준점 25569(1970-01-01)에서 출발하되 벽시계 기준으로 맞춥니다. spreadsheetDateSerial() 은 getTimezoneOffset() 으로, ' +
+            'spreadsheetDateToSerial() 은 Date.UTC() 로 서로 다른 길을 가지만 같은 값에 도달하도록 짜여 있습니다 — 시간대가 바뀌어도 날짜가 하루씩 밀리지 않습니다.',
+        },
+        {
+          title: '조건 문자열 해석',
+          body:
+            'COUNTIF · SUMIF 계열이 받는 ">=90" · "<>가" 같은 조건을 makeCriteria() 가 연산자와 피연산자로 갈라 술어 함수로 만듭니다. ' +
+            '숫자로 읽히면 수치 비교, 아니면 문자열 비교로 갈라집니다.',
+        },
+      ],
+      features: [
+        {
+          title: '함수 74개',
+          body:
+            '집계(SUM·AVERAGE·MEDIAN·STDEV), 조건(IF·IFS·COUNTIFS·SUMIFS), 조회(VLOOKUP·HLOOKUP·XLOOKUP·INDEX·MATCH), ' +
+            '날짜(DATE·EDATE·DATEDIF·WEEKDAY), 문자열(TEXTJOIN·SUBSTITUTE·FIND·PROPER), 검사(ISBLANK·ISERROR)까지 다룹니다.',
+        },
+        {
+          title: '자동 채우기 패턴',
+          body:
+            'spreadsheetTextSeries() 가 요일·월·계절 순환과 "1반 → 2반" · "학생1 → 학생2" 같은 접두어·숫자·접미어 증가를 알아봅니다. ' +
+            '패턴이 아니면 null 을 돌려주고 호출부가 단순 순환 복사로 처리합니다.',
+        },
+        {
+          title: '수식 자동완성',
+          body:
+            'formulaTypingContext() 가 캐럿 앞을 보고 "함수 이름을 치는 중" 인지 "괄호 안에서 인자를 넣는 중" 인지 판별합니다. ' +
+            'SPREADSHEET_FN_HELP 의 [이름, 시그니처, 설명] 은 평가기가 실제로 지원하는 함수만 담습니다.',
+        },
+        {
+          title: '자동합계(Σ)',
+          body:
+            'spreadsheetAutoFormulaJobs() 가 선택 모양을 보고 수식 자리를 정합니다 — 여러 행이면 각 열 아래, 한 행 여러 열이면 오른쪽, 단일 셀이면 위로 이어진 숫자 범위(없으면 왼쪽).',
+        },
+      ],
+      files: [
+        { path: 'tests/xlsx-edit.test.js', label: 'xlsx-edit.test.js', description: '수식 평가·참조 재작성·자동 채우기' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '엑셀의 까다로운 규약을 대충 넘기지 않았습니다. MOD 를 ((a%b)+b)%b 로 계산해 나머지 부호를 나눌 수 쪽에 맞추고(자바스크립트 % 를 그냥 쓰면 음수에서 엑셀과 달라집니다), ' +
+            'INT 는 0 쪽이 아니라 음의 무한대 쪽으로 내립니다. WEEKDAY 도 방식 1·2·3 을 각각 다르게 돌려줍니다. ' +
+            '"돌아가기만 하는" 구현과 진짜 호환되는 구현을 가르는 지점들입니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '오류를 예외가 아니라 표식 객체로 다룬 선택이 이 엔진의 뼈대입니다. 예외였다면 SUM 안의 셀 하나가 #DIV/0! 일 때 전체 평가가 중단되거나 ' +
+            'try/catch 가 AST 마디마다 필요했을 텐데, 값으로 흘리니 IFERROR 같은 함수도 특별 취급 없이 자연스럽게 구현됩니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '계산을 화면에서 완전히 떼어 놓아, 프로젝트 최대 파일인 spreadsheet-viewer.js 를 띄우지 않고도 수식을 검증할 수 있습니다. ' +
+            '739줄 전부가 순수 함수라 회귀 테스트를 붙이는 비용이 거의 없습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '함수 74개를 손으로 구현했는데 테스트는 tests/xlsx-edit.test.js 한 파일(675줄)뿐이고, 그중 이름이 등장하는 함수는 43개입니다. ' +
+            'ROUNDUP · ROUNDDOWN · MOD · POWER · INT · WEEKDAY · HOUR · TEXTJOIN 계열 등 31개는 테스트에 나오지 않습니다. ' +
+            '위에 적었듯 구현 자체는 꼼꼼하지만, 꼼꼼함을 지켜 줄 장치가 없다는 것이 문제입니다 — 다음 사람이 MOD 를 a % b 로 "정리" 해도 아무 테스트도 빨개지지 않습니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '조회 함수(VLOOKUP·MATCH)의 비교는 대소문자를 무시합니다(lookupEqual · lookupCompare). 엑셀과 같은 동작이라 의도된 선택입니다.',
+        },
+      ],
+    }),
+
     mod('spreadsheet-viewer.js', {
       title: 'spreadsheet-viewer.js — 표 편집기',
       subtitle: '프로젝트 최대 파일',
@@ -418,7 +552,21 @@ export default ({ manifest, helpers }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '5,915줄 단일 파일입니다. 이 리뷰 페이지에도 앞 4,000줄만 실려 있습니다. 시트 렌더링·수식 엔진·서식·저장은 서로 의존이 약해 분할이 실제로 가능한 구조로 보입니다.',
+            'src/js 최대 파일인데, 문제는 크기 자체가 아니라 한 함수가 그 대부분을 차지한다는 것입니다' +
+            (renderXlsx && sheetLines
+              ? ` — renderXlsx 하나가 L${renderXlsx.start}–L${renderXlsx.end}, 파일의 ${Math.round((renderXlsx.span / sheetLines) * 100)}% 입니다.`
+              : '.') +
+            ' 시트 렌더링·선택·편집·서식·저장·컨텍스트 메뉴가 이 함수의 지역 변수를 공유하며 얽혀 있어, ' +
+            '기능 하나를 떼어내려면 그 클로저에서 무엇을 참조하는지 전부 따라가야 합니다. ' +
+            '이 리뷰 페이지가 구간(range)으로 나누지 않고 통째로 싣는 이유도 같습니다 — 어디를 잘라도 함수 중간이라 경계가 생기지 않습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '수식 엔진을 spreadsheet-formula.js 로 떼어낸 것이 이 파일에 실제로 효과가 있었습니다. ' +
+            'MNSpreadsheetFormula 가 있으면 전역에서, 없으면 require 로 받는 이중 경로라 브라우저와 테스트가 같은 코드를 씁니다. ' +
+            '남은 덩어리도 같은 방식으로 계속 덜어낼 수 있다는 선례입니다.',
         },
         {
           type: 'risk',

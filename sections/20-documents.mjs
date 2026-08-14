@@ -127,6 +127,80 @@ export default ({ manifest, helpers }) => {
       ],
     }),
 
+    mod('document-types.js', {
+      title: 'document-types.js — 파일 형식 레지스트리',
+      subtitle: '확장자 하나가 아이콘·분류·인코딩·압축 열기를 동시에 정한다',
+      summary:
+        '98줄짜리 표에 가까운 파일입니다. 확장자를 받아 아이콘 글자(iconFor), 사이드바 분류(extCategory), ' +
+        '텍스트로 읽을지 여부(TEXT_ENCODING_EXTS), 압축 안에서 열 수 있는지(ZIP_OPENABLE), 구문강조 계열(CODE_EXTS) 을 결정합니다. ' +
+        '"이 확장자를 어떻게 대할 것인가" 라는 판단이 코드 여기저기 흩어지지 않도록 한 곳에 모은 것이 목적입니다.',
+      usage: [
+        {
+          title: '구문강조 계열을 주석 문법으로 묶는다',
+          body:
+            'CODE_EXTS 는 확장자를 언어가 아니라 "c" · "hash" · "python" · "css" · "sql" · "xml" · "text" 같은 계열로 매핑합니다. ' +
+            'js·java·go·rust 를 전부 "c" 로 묶는 식이라, 언어 수만큼 강조기를 만들지 않고 주석·문자열 문법이 같은 것끼리 재사용합니다.',
+        },
+        {
+          title: '.env 를 확장자처럼 다룬다',
+          body:
+            'isEnvFile() 이 .env · .env.local · .env.production 을 알아보고, fileExtOf() 가 이들에 "env" 를 돌려줍니다. ' +
+            '점으로 시작해 확장자가 없는 파일인데도 구문강조와 분류가 붙는 이유입니다.',
+        },
+        {
+          title: '숨김 판정과 .env 의 예외',
+          body:
+            'isHiddenFolderEntry() 는 점으로 시작하는 항목과 그 하위를 전부 숨기지만 .env 만 예외로 둡니다. ' +
+            '.git · .venv 는 사이드바에서 치우고 설정 파일은 남기려는 절충입니다.',
+        },
+      ],
+      features: [
+        {
+          title: '압축 폭탄 상한',
+          body: 'ZIP_EXTRACT_CAP 256MB(전체) · ZIP_ENTRY_CAP 128MB(항목 하나). 압축을 푸는 쪽에서 메모리를 지키는 두 겹 상한입니다.',
+        },
+        {
+          title: '학습 산출물을 이진으로 분류',
+          body:
+            'BINARY_ASSET_EXTS 에 onnx · safetensors · pt · h5 · joblib · npy 등을 넣어, 텍스트로 열어 깨뜨리는 대신 이진 파일로 다룹니다. ' +
+            'tests/binary-model-extension.test.js 가 이 목록을 검사합니다.',
+        },
+        {
+          title: '브라우저·Node 양쪽 노출',
+          body: '전역 상수 MNDocumentTypes 로 두면서 module.exports 도 함께 내보내, 화면 없이 단위 테스트에서 바로 부를 수 있습니다.',
+        },
+      ],
+      files: [
+        { path: 'tests/tokens-extension.test.js', label: 'tokens-extension.test.js', description: '확장자→계열 매핑' },
+        { path: 'tests/binary-model-extension.test.js', label: 'binary-model-extension.test.js', description: '학습 산출물 이진 분류' },
+        { path: 'tests/sidebar-search-collapse.test.js', label: 'sidebar-search-collapse.test.js', description: '숨김 폴더 판정' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '확장자 판단을 한 파일로 모은 것이 맞습니다. 아이콘·분류·인코딩·압축 열기가 각자 자기 목록을 들고 있었다면 ' +
+            '"사이드바엔 코드로 보이는데 압축 안에서는 안 열리는" 종류의 불일치가 필연이었습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'SUBTITLE_EXTS · VIDEO_EXTS · AUDIO_EXTS 를 typeof 검사로 읽고, 없으면 빈 배열로 넘어갑니다(24–26줄). ' +
+            '이 값들은 IIFE 가 실행되는 순간 TEXT_ENCODING_EXTS 와 ZIP_OPENABLE 에 펼쳐져 굳으므로, video-viewer.js 가 뒤에 로드되면 ' +
+            '자막·영상·음성 확장자가 통째로 빠진 목록이 만들어집니다. 오류는 나지 않고 "압축 안의 자막이 안 열린다" 로만 드러납니다. ' +
+            'manifest 의 scriptDependencies 에 순서가 선언돼 있고 check-source.js 가 지키지만, 폴백이 빈 배열이라 방어선이 하나뿐입니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            'iconFor() 는 모르는 확장자에 앞 4글자를 대문자로 돌려줍니다. 목록에 없는 형식도 사이드바에서 깨지지 않고 그럴듯하게 보이는 이유입니다.',
+        },
+      ],
+    }),
+
     mod('documents.js', {
       title: 'documents.js — 문서 생명주기의 중심',
       subtitle: '탭·사이드바·분할 작업·검색',
@@ -487,6 +561,109 @@ export default ({ manifest, helpers }) => {
           type: 'info',
           label: 'Info',
           body: '폰트를 JS 로 인라인한 이유는 단일 파일 오프라인 HTML 에서도 Matplotlib 한글이 나와야 하기 때문입니다.',
+        },
+      ],
+    }),
+
+    mod('workspace-python.js', {
+      title: 'workspace-python.js — 작업공간 Python 색인',
+      subtitle: '열지 않은 .py 까지 읽어 자동완성·import 검사에 쓴다',
+      summary:
+        '폴더를 열었을 때 그 안의 .py 들을 "탭으로 열지 않은 것까지" 백그라운드로 읽어 두고, 자동 import 후보 · import 문 완성 · import 오류 검사에 씁니다. ' +
+        '완성 팝업은 동기라 그 자리에서 디스크를 읽을 수 없다는 제약이 이 파일 전체의 설계를 정합니다 — 미리 읽어 캐시에 채워 두는 것 말고는 방법이 없습니다. ' +
+        'Ctrl+클릭 정의 이동도 Jedi 보다 먼저 여기서 작업공간 안의 from ... import ... 를 풀어 봅니다.',
+      usage: [
+        {
+          title: '왜 미리 읽어야 하는가',
+          body:
+            '자동완성 후보를 만드는 순간은 동기 호출이라 await 을 걸 수 없습니다. 그래서 열린 문서로 우선 답하고, ' +
+            '열리지 않은 .py 는 requestIdleCallback 으로 미리 읽어 캐시에 채웁니다. 그 파일들은 다음 타이핑부터 후보에 들어옵니다.',
+        },
+        {
+          title: '못 읽은 파일과 빈 파일의 구분',
+          body:
+            'workspacePyUnreadable Set 을 따로 둡니다. 권한·스냅샷 만료·용량 초과로 못 읽은 파일도 캐시에는 빈 본문으로 들어가는데, ' +
+            '이 목록이 없으면 "내용이 없는 __init__.py" 와 구별되지 않습니다. import 검사가 그 둘을 다르게 다뤄야 하므로 필요한 구분입니다.',
+        },
+        {
+          title: '읽기 예산',
+          body:
+            '512KB 를 넘는 .py 는 색인에서 제외하고(대개 생성 코드), 한 번에 400개까지만 읽은 뒤 다음 유휴 차례로 넘깁니다. ' +
+            '한 파일마다 setTimeout(0) 으로 프레임을 양보해 타이핑이 끊기지 않게 합니다.',
+        },
+        {
+          title: '압축·폴더 묶음 격리',
+          body:
+            'archiveCtx 가 같은 문서만 색인에 넣습니다. 서로 다른 폴더나 압축 묶음을 섞으면 import 루트가 모호해지기 때문입니다.',
+        },
+      ],
+      features: [
+        {
+          title: '문자열 동일성으로 메모 판정',
+          body:
+            'workspacePyIndexMemoHit() 이 지난 색인을 재사용할지 본문 문자열 비교로 정합니다. 바뀌지 않은 파일은 같은 문자열 객체라 비교가 사실상 즉시 끝나고, ' +
+            '한 글자만 바뀌어도 정확히 걸립니다. 타이핑마다 전체 .py 를 다시 훑지 않게 하는 장치입니다.',
+        },
+        {
+          title: 'Jedi 미러는 색인이 바뀔 때만',
+          body:
+            'scheduleJediProjectSync() 를 색인이 실제로 갱신된 순간에만 부릅니다. 서버 쪽 미러 갱신은 비싸므로 타이핑마다 보내지 않습니다.',
+        },
+        {
+          title: '임시 복사본을 열지 않는다',
+          body:
+            'openWorkspaceDefinitionTarget() 이 Jedi 가 미러 안에서 찾은 경로를 원래 작업공간 탭으로 되돌려 매칭합니다. 같은 경로가 여럿이면 부모가 같은 문서를 먼저 고릅니다.',
+        },
+        {
+          title: '실행 기준 폴더 추정',
+          body:
+            'inferOpenPythonProjectRoot() 로 sys.path 루트를 추정하고, 자동 import 경로와 Jedi 프로젝트 루트가 같은 값을 쓰게 맞춥니다.',
+        },
+      ],
+      files: [
+        { path: 'tests/python-workspace-import-index.test.js', label: 'python-workspace-import-index.test.js', description: '모듈 색인과 자동 import 후보' },
+        { path: 'tests/python-import-check.test.js', label: 'python-import-check.test.js', description: 'import 검사' },
+        { path: 'tests/python-jedi-project.test.js', label: 'python-jedi-project.test.js', description: 'Jedi 프로젝트 미러 동기화' },
+        { path: 'tests/python-definition-view.test.js', label: 'python-definition-view.test.js', description: '정의 이동' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '아직 못 읽은 .py 가 하나라도 있으면 import 검사를 통째로 건너뜁니다(214–222줄). ' +
+            '"없는 모듈" 이라고 말하려면 전부 읽었다는 근거가 있어야 하는데, 부분 색인으로 경고를 띄우면 멀쩡한 import 에 빨간 줄이 그어집니다. ' +
+            '틀린 진단을 내느니 진단을 미루는 쪽을 고른 판단이 옳습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '읽지 못한 파일도 캐시에 빈 본문으로 못 박아 다시 시도하지 않게 하면서, stamp(크기:수정시각)가 달라지면 자동으로 다시 읽습니다. ' +
+            '"재시도 폭주" 와 "영영 안 읽음" 사이를 stamp 하나로 가른 부분입니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '전역을 대하는 태도가 일관되지 않습니다. pythonWorkspaceModuleIndex · scheduleJediProjectSync · openDocRunText 는 typeof 로 확인하고 부르는데, ' +
+            '문서 목록 docs 와 setActiveDoc · toast 는 확인 없이 그대로 씁니다(13 · 66 · 79 · 238줄). ' +
+            '같은 파일 안에서 어떤 전역은 없을 수 있다고 보고 어떤 전역은 반드시 있다고 보는 셈이라, 어느 쪽이 진짜 계약인지 읽는 사람이 알 수 없습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'pruneWorkspacePyTextCache() 는 캐시를 정리하지만 프리워밍 대기열(workspacePyPrewarmQueue)은 건드리지 않습니다. ' +
+            '400개를 넘겨 이어 읽는 중에 그 문서를 닫으면 대기열에 다시 들어가 남은 파일을 계속 읽습니다. ' +
+            '모두 캐시에 차면 멈추므로 무한 반복은 아니지만, 이미 닫힌 문서를 위해 디스크를 읽는 구간이 생깁니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            'WORKSPACE_PY_MAX_BYTES(512KB) · WORKSPACE_PY_PREWARM_MAX(400) 는 상수로 박혀 있습니다. ' +
+            '대형 저장소에서는 색인에서 빠지는 파일이 생기는데, 화면에는 그 사실이 드러나지 않습니다.',
         },
       ],
     }),

@@ -1,11 +1,11 @@
-// 만능파일교실 코드리뷰 데이터 생성기.
+// ClassDock 코드리뷰 데이터 생성기.
 //
 //   node code-review/generate-review-data.mjs
 //
 // 소스 루트는 기본이 이 폴더의 부모다. 리뷰 폴더를 레포 밖으로 옮겨서 쓸 때는
 // MN_ROOT 환경 변수로 실제 소스 위치를 넘긴다.
 //
-//   MN_ROOT=D:/my/myOffice node generate-review-data.mjs
+//   MN_ROOT=D:/my node generate-review-data.mjs
 //
 // 출력은 review-data.generated.js 한 개이며 직접 수정하지 않는다. 사람이 쓰는
 // 리뷰 문장은 sections/*.mjs 에, 줄 앵커 주석은 review-comments.js 에 둔다.
@@ -42,11 +42,11 @@ import buildTests from './sections/80-tests.mjs';
 
 const reviewDir = path.dirname(fileURLToPath(import.meta.url));
 
-// 소스 루트 찾기: MN_ROOT → 부모 폴더 → 형제 폴더 myOffice 순서로 본다.
+// 소스 루트 찾기: MN_ROOT → 부모 폴더 → 형제 폴더 ClassDock 순서로 본다.
 // 리뷰 폴더를 레포 밖으로 옮겨 두는 경우가 흔하므로 형제 폴더까지 자동으로 확인한다.
 const rootCandidates = process.env.MN_ROOT
   ? [path.resolve(process.env.MN_ROOT)]
-  : [path.resolve(reviewDir, '..'), path.resolve(reviewDir, '..', 'myOffice')];
+  : [path.resolve(reviewDir, '..'), path.resolve(reviewDir, '..', 'ClassDock')];
 
 let rootDir = null;
 let manifestRaw = null;
@@ -61,20 +61,26 @@ for (const candidate of rootCandidates) {
 }
 
 if (!rootDir) {
-  console.error('만능파일교실 소스 루트를 찾지 못했습니다(scripts.manifest.json 없음).');
+  console.error('ClassDock 소스 루트를 찾지 못했습니다(scripts.manifest.json 없음).');
   console.error(`확인한 위치:\n  ${rootCandidates.join('\n  ')}`);
   console.error('\n소스 위치를 직접 지정하세요:');
-  console.error('  MN_ROOT=D:/my/myOffice node generate-review-data.mjs        (bash)');
-  console.error('  $env:MN_ROOT="D:\\my\\myOffice"; node generate-review-data.mjs  (PowerShell)');
+  console.error('  MN_ROOT=D:/my node generate-review-data.mjs        (bash)');
+  console.error('  $env:MN_ROOT="D:\\my"; node generate-review-data.mjs  (PowerShell)');
   process.exit(1);
 }
 
-// 큰 파일도 가급적 통째로 싣는다. 5,900줄짜리 spreadsheet-viewer.js 하나만 잘린다.
+// 큰 파일도 가급적 통째로 싣는다. 현재 src/js 전체가 상한 안에 들어온다.
 //
 // 상한을 소스의 최대 파일 크기에 딱 맞추지 않고 여유를 둔다. 파일이 자라 상한을 넘으면
 // 리뷰에서 꼬리가 조용히 사라지기 때문이다(실제로 core.js 가 3,993 → 4,103줄이 되며 그럴
 // 뻔했다). 여유와 별개로, 잘린 파일은 아래 "잘린 파일" 경고로 매번 드러낸다.
-const MAX_LINES = 4400;
+//
+// 5,600 은 최대 파일 spreadsheet-viewer.js(5,161줄)에 약 8% 여유를 둔 값이다. 그 다음으로
+// 큰 core.js 가 3,981줄이라 이 구간에 걸리는 파일은 당분간 하나뿐이다. 이 파일을 구간(range)으로
+// 나누지 않는 이유는 1,372줄부터 끝까지가 renderXlsx 함수 하나여서, 구간을 어디로 잡아도
+// 함수 중간을 끊게 되기 때문이다. 7,256줄짜리 desktop/launcher.cs 는 최상위 선언이 여럿이라
+// 기능별 구간으로 나눠 싣는다 — 그쪽은 range 가 자연스러운 경계를 갖는다.
+const MAX_LINES = 5600;
 
 const manifest = JSON.parse(manifestRaw);
 // manifest 의 계층 키는 name 이다. 아래 코드가 id 로 참조하므로 한 번만 맞춰 둔다.
@@ -93,8 +99,8 @@ const formatArtifactSize = async (relativePath) => {
   }
 };
 const artifactSizes = {
-  offline: await formatArtifactSize('manneung-classroom-offline.html'),
-  exe: await formatArtifactSize('manneung-classroom.exe'),
+  offline: await formatArtifactSize('classdock-offline.html'),
+  exe: await formatArtifactSize('ClassDock.exe'),
 };
 
 const diagrams = {
@@ -110,7 +116,7 @@ const diagrams = {
       },
       {
         title: '검사 방법',
-        body: 'tools/check-source.js 가 manneung-classroom.html 의 script 태그 순서와 manifest 의 localScripts 가 완전히 같은지, applicationLayers 가 모든 파일을 정확히 한 번씩 담는지 확인합니다.',
+        body: 'tools/check-source.js 가 classdock.html 의 script 태그 순서와 manifest 의 localScripts 가 완전히 같은지, applicationLayers 가 모든 파일을 정확히 한 번씩 담는지 확인합니다.',
       },
       {
         title: '새 파일을 넣을 때',
@@ -188,7 +194,7 @@ const diagrams = {
       },
       {
         title: '생성 파일',
-        body: 'manneung-classroom-offline.html, desktop/app.html, src/js/korean-font.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
+        body: 'classdock-offline.html, desktop/app.html, src/js/korean-font.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
       },
       {
         title: 'EXE 단계',

@@ -17,8 +17,8 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
   const { sec } = helpers;
   const CAT = '빌드 · 도구';
   const vendorCount = manifest.vendorScripts.length;
-  const offlineSize = artifactSize(rootDir, 'manneung-classroom-offline.html');
-  const exeSize = artifactSize(rootDir, 'manneung-classroom.exe');
+  const offlineSize = artifactSize(rootDir, 'classdock-offline.html');
+  const exeSize = artifactSize(rootDir, 'ClassDock.exe');
 
   return [
     sec({
@@ -41,7 +41,7 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
         {
           title: '생성 파일',
           body:
-            'manneung-classroom-offline.html, desktop/app.html, src/js/korean-font.js, vendor/korean-hunspell-worker.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
+            'classdock-offline.html, desktop/app.html, src/js/korean-font.js, vendor/korean-hunspell-worker.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
         },
         {
           title: '오프라인 원칙의 강제',
@@ -87,8 +87,8 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
       title: 'build-offline.js — 단일 파일 생성기',
       subtitle: 'HTML·CSS·JS·vendor 를 한 파일로',
       summary:
-        'manneung-classroom.html 을 읽어 로컬 CSS 와 애플리케이션 스크립트를 인라인하고, CDN/vendor script 태그를 번들 파일로 바꾸고, ' +
-        'pdf.worker 를 런타임 Blob 용 text/js-worker 블록으로 심어 manneung-classroom-offline.html 을 만듭니다. ' +
+        'classdock.html 을 읽어 로컬 CSS 와 애플리케이션 스크립트를 인라인하고, CDN/vendor script 태그를 번들 파일로 바꾸고, ' +
+        'pdf.worker 를 런타임 Blob 용 text/js-worker 블록으로 심어 classdock-offline.html 을 만듭니다. ' +
         `vendor ${vendorCount}개의 sha384 를 만들 때마다 검증해 파일이 조용히 바뀐 경우를 잡습니다.`,
       usage: [
         {

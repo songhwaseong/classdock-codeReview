@@ -20,7 +20,7 @@ export default ({ helpers, diagrams }) => {
       title: 'EXE 로컬 서버 개요',
       subtitle: 'launcher.cs 한 파일 — 브라우저가 못 하는 일을 여는 계층',
       summary:
-        'manneung-classroom.exe 는 오프라인 HTML 을 리소스로 품고 127.0.0.1 에 작은 HTTP 서버를 띄운 뒤 브라우저를 엽니다. ' +
+        'ClassDock.exe 는 오프라인 HTML 을 리소스로 품고 127.0.0.1 에 작은 HTTP 서버를 띄운 뒤 브라우저를 엽니다. ' +
         '그때 열리는 것은 파일 저장(권한 팝업 없이 실제 경로), 로컬 Python 실행·pip·노트북 커널, 지속형 PowerShell 터미널, ' +
         'PowerPoint 를 이용한 정확한 PPTX→PDF 변환, ffmpeg 미디어 변환, SQLite 읽기·실행, 시험지 LAN 수신입니다. ' +
         '이 능력들은 전부 "브라우저 샌드박스 밖"이라 보안 경계 설계가 이 파일의 절반 가까운 무게를 차지합니다.',
@@ -151,7 +151,7 @@ export default ({ helpers, diagrams }) => {
       subtitle: '로컬 서버를 다른 페이지로부터 지키는 세 겹',
       summary:
         '127.0.0.1 에 뜬 서버는 같은 PC 의 어떤 웹페이지도 부를 수 있습니다. 그래서 세 겹으로 막습니다 — ' +
-        '① 실행별 토큰(X-Manneung-Token)을 상수 시간 비교로 검증, ② Host 헤더가 127.0.0.1/localhost 인지 확인해 DNS rebinding 을 차단, ' +
+        '① 실행별 토큰(X-ClassDock-Token)을 상수 시간 비교로 검증, ② Host 헤더가 127.0.0.1/localhost 인지 확인해 DNS rebinding 을 차단, ' +
         '③ Origin 이 있으면 현재 loopback origin 과 일치하는지 확인. Origin 을 생략하는 로컬 도구를 위해 그 경우에는 토큰 검증을 경계로 삼습니다.',
       usage: [
         {
@@ -223,7 +223,7 @@ export default ({ helpers, diagrams }) => {
       title: '파일 저장과 저장 루트',
       subtitle: '권한 팝업 없이 실제 디스크에 쓰는 경로',
       summary:
-        '브라우저에서 편집한 코드를 권한 팝업 없이 바로 저장하는 폴더(기본: 내 문서\\만능교실)를 런처가 관리합니다. ' +
+        '브라우저에서 편집한 코드를 권한 팝업 없이 바로 저장하는 폴더(기본: 내 문서\\ClassDock)를 런처가 관리합니다. ' +
         '프런트는 X-Save-Path 헤더(저장 루트 기준 상대경로, 퍼센트 인코딩)와 본문으로 /save-file 을 호출하고, ' +
         '/save-file-exists 로 첫 저장 전 충돌을 확인합니다. 저장 후 "저장 폴더" 버튼은 그 파일을 하이라이트한 채 탐색기를 엽니다.',
       usage: [
@@ -281,7 +281,7 @@ export default ({ helpers, diagrams }) => {
         {
           title: '두 번의 명시적 승인',
           body:
-            '일반 로컬 API 토큰 외에 설치 시작은 X-Manneung-Npm-Confirm: 1 헤더를 별도로 요구합니다. 화면도 패키지 다운로드와 실행 위험을 확인한 뒤에만 이 헤더를 보냅니다.',
+            '일반 로컬 API 토큰 외에 설치 시작은 X-ClassDock-Npm-Confirm: 1 헤더를 별도로 요구합니다. 화면도 패키지 다운로드와 실행 위험을 확인한 뒤에만 이 헤더를 보냅니다.',
         },
         {
           title: '설치와 실행의 분리',
@@ -572,12 +572,12 @@ export default ({ helpers, diagrams }) => {
       subtitle: 'csc.exe 우선, 없으면 go build',
       summary:
         'build.bat 은 세 단계입니다 — ① 오프라인 HTML 을 app.html 로 복사 ② csc.exe 로 launcher.cs 를 컴파일하며 app.html·python_kernel.py·npm_package_runner.js 를 리소스로 넣기 ' +
-        '③ 결과를 프로젝트 루트의 manneung-classroom.exe 로 출력. C# 컴파일러가 없으면 Go 폴백(main.go)으로 빌드하는데, 이때는 PowerPoint 변환 기능이 빠집니다.',
+        '③ 결과를 프로젝트 루트의 ClassDock.exe 로 출력. C# 컴파일러가 없으면 Go 폴백(main.go)으로 빌드하는데, 이때는 PowerPoint 변환 기능이 빠집니다.',
       usage: [
         {
           title: '선행 조건',
           body:
-            '..\\manneung-classroom-offline.html 이 있어야 합니다. 없으면 "node build-offline.js 를 먼저 실행하라"는 메시지와 함께 중단합니다.',
+            '..\\classdock-offline.html 이 있어야 합니다. 없으면 "node build-offline.js 를 먼저 실행하라"는 메시지와 함께 중단합니다.',
         },
         {
           title: '.NET Framework 사용',
@@ -587,7 +587,7 @@ export default ({ helpers, diagrams }) => {
         {
           title: '작업 순서',
           body:
-            'AGENTS.md 규칙: 실행 중인 manneung-classroom.exe 프로세스를 먼저 종료하고 → 오프라인 HTML 생성 → desktop\\build.bat. 순서를 지키지 않으면 파일 잠김으로 실패합니다.',
+            'AGENTS.md 규칙: 실행 중인 ClassDock.exe 프로세스를 먼저 종료하고 → 오프라인 HTML 생성 → desktop\\build.bat. 순서를 지키지 않으면 파일 잠김으로 실패합니다.',
         },
       ],
       features: [

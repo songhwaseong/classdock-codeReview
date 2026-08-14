@@ -91,7 +91,7 @@ const targetedComments = [
     type: '위험',
     title: '전역 fetch 를 덮어쓴다',
     body:
-      '같은 origin 요청에만 X-Manneung-Token 을 붙이도록 window.fetch 를 감쌉니다. 각 호출부가 토큰을 몰라도 되는 대신, 이후 로드되는 코드가 fetch 를 또 감싸면 순서에 따라 토큰이 빠질 수 있고 디버깅 스택이 한 겹 깊어집니다.',
+      '같은 origin 요청에만 X-ClassDock-Token 을 붙이도록 window.fetch 를 감쌉니다. 각 호출부가 토큰을 몰라도 되는 대신, 이후 로드되는 코드가 fetch 를 또 감싸면 순서에 따라 토큰이 빠질 수 있고 디버깅 스택이 한 겹 깊어집니다.',
   },
   {
     sectionId: 'core',

@@ -182,6 +182,94 @@ const blob = await MNMusicAudio.renderWav(sheet, { from, to });   // 같은 예�
 // Shift+클릭이면 닫지 않고 이어서 삽입`,
     note: 'contenteditable 자리는 python-editor.js 의 attachEditableContextMenu 가 같은 메뉴를 띄웁니다.',
   },
+  {
+    sectionIds: ['module-boundaries', 'interaction-core'],
+    kind: 'API',
+    title: 'MNInteractionCore — 드래그·분할 판정',
+    source: 'src/js/interaction-core.js',
+    file: 'src/js/interaction-core.js',
+    line: 3,
+    when: 'core.js 가 탭·파일 드롭을 받거나 참고 잠금 중 입력을 거를 때',
+    tags: ['소비자 1개', 'tabDropSplitAction()', 'splitDropSideAtPoint()', 'captureDroppedFileItems()', 'studyReadonlyKeyAllowed()', 'INTERNAL_DRAG_MIME'],
+    snippet: `// 판정만 돌려준다 — DOM 은 호출부가 바꾼다
+MNInteractionCore.tabDropSplitAction(refId, workId, "reference", draggedId, mateId);
+//  → "keep" | "swap" | "replace-reference" | "replace-work"
+//  | "pin-with-mate" | "pin-only" | "mate-as-reference" | "pin-current"
+
+// 안내선과 판정이 같은 비율을 쓰도록 splitRatio 를 넘긴다
+MNInteractionCore.splitDropSideAtPoint(x, y, rect, stacked, 0.5); // "left"|"right"|"top"|"bottom"
+
+// DataTransfer 는 이벤트가 끝나면 비므로 그 자리에서 붙잡는다
+const { files, entries, handlePromises } = MNInteractionCore.captureDroppedFileItems(dt);
+
+// 참고 잠금: 막을 것이 아니라 통과시킬 것만 나열
+MNInteractionCore.studyReadonlyPointerAllowed("sheet-selection", "click"); // true
+MNInteractionCore.studyReadonlyKeyAllowed({ key:"c", ctrlKey:true });      // true`,
+    note: 'INTERNAL_DRAG_MIME 은 "application/x-classdock-internal-drag" 입니다. 내부 이동 표시를 심는 쪽과 읽는 쪽이 이 상수를 함께 써야 하며, 외부 파일(types 에 "Files")은 항상 내부 플래그보다 우선합니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'document-types'],
+    kind: 'API',
+    title: 'MNDocumentTypes — 파일 형식 레지스트리',
+    source: 'src/js/document-types.js',
+    file: 'src/js/document-types.js',
+    line: 4,
+    when: 'documents.js 가 사이드바 아이콘·분류를 정하거나 압축 안에서 열 수 있는지 볼 때',
+    tags: ['소비자 1개', 'fileExtOf()', 'iconFor()', 'extCategory()', 'isHiddenFolderEntry()', 'ZIP_OPENABLE', 'CODE_EXTS'],
+    snippet: `MNDocumentTypes.fileExtOf(".env.local");   // "env" — 점 파일도 확장자처럼
+MNDocumentTypes.iconFor("pdf", name);      // "PDF" (모르는 형식은 앞 4글자 대문자)
+MNDocumentTypes.extCategory(kind, name);   // "code"|"sheet"|"img"|"db"|"hwp"…
+MNDocumentTypes.isHiddenFolderEntry(rel);  // .git·.venv 는 숨김, .env 는 예외
+
+MNDocumentTypes.CODE_EXTS["go"];           // "c" — 주석 문법이 같은 것끼리 계열로 묶는다
+MNDocumentTypes.ZIP_EXTRACT_CAP;           // 256MB (전체)
+MNDocumentTypes.ZIP_ENTRY_CAP;             // 128MB (항목 하나)`,
+    note: 'TEXT_ENCODING_EXTS 와 ZIP_OPENABLE 은 IIFE 실행 시점에 SUBTITLE_EXTS·VIDEO_EXTS·AUDIO_EXTS 를 펼쳐 굳힙니다. video-viewer.js 가 먼저 로드돼야 하며, 이 순서는 manifest 의 scriptDependencies 에 선언돼 check-source.js 가 검사합니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'workspace-python'],
+    kind: 'API',
+    title: 'MNWorkspacePython — 작업공간 Python 색인',
+    source: 'src/js/workspace-python.js',
+    file: 'src/js/workspace-python.js',
+    line: 3,
+    when: 'code-viewer.js 가 .py 자동완성 후보·import 검사·정의 이동을 만들 때',
+    tags: ['소비자 1개', 'workspacePythonImportCandidates()', 'workspacePythonImportDiagnostics()', 'workspacePythonModuleIndex()', 'scheduleWorkspacePythonPrewarm()'],
+    snippet: `// 열지 않은 .py 까지 미리 읽어 둔다(완성 팝업은 동기라 그 자리서 디스크를 못 읽는다)
+MNWorkspacePython.scheduleWorkspacePythonPrewarm(ownerDoc, onReady);
+await MNWorkspacePython.workspacePythonPrewarmReady(ownerDoc);
+
+MNWorkspacePython.workspacePythonImportCandidates(ownerDoc);   // 자동 import 후보
+MNWorkspacePython.workspacePythonProjectRoot(ownerDoc);        // sys.path 루트 추정값
+
+// 아직 못 읽은 .py 가 하나라도 있으면 빈 결과 — 틀린 경고를 내지 않는다
+MNWorkspacePython.workspacePythonImportDiagnostics(ownerDoc, source, onReady);`,
+    note: '읽기 예산은 파일당 512KB · 한 번에 400개입니다. 못 읽은 파일은 빈 본문으로 캐시에 박아 재시도를 막되 workspacePyUnreadable 에 따로 표시해, 내용이 빈 __init__.py 와 구분합니다. 파일이 바뀌면 stamp(크기:수정시각)가 달라져 자동으로 다시 읽습니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'spreadsheet-formula'],
+    kind: 'API',
+    title: 'MNSpreadsheetFormula — 수식 엔진',
+    source: 'src/js/spreadsheet-formula.js',
+    file: 'src/js/spreadsheet-formula.js',
+    line: 3,
+    when: 'spreadsheet-viewer.js 가 셀을 계산하거나, 행·열 편집으로 참조를 옮길 때',
+    tags: ['소비자 1개', '함수 74개', 'parseFormula()', 'evaluateAst()', 'remapFormulaRefs()', 'spreadsheetTextSeries()', 'SPREADSHEET_FN_HELP'],
+    snippet: `// 셀 값은 resolver 가 돌려준다 — 엔진은 모델을 모른다
+const ast = MNSpreadsheetFormula.parseFormula("=SUM(A1:A9)/COUNT(A1:A9)");
+const value = MNSpreadsheetFormula.evaluateAst(ast, resolver);
+
+// 오류는 던지지 않고 값으로 흐른다
+MNSpreadsheetFormula.isFormulaError(value);   // { __err:"#DIV/0!" }
+
+// 행·열 삽입·삭제·정렬로 셀이 옮겨갈 때 참조를 따라가게 한다
+MNSpreadsheetFormula.remapFormulaRefs(f, (c, r, { colAbs, rowAbs }) => ({ c, r:r+1 }));
+//  $ 절대표기는 보존, transform 이 null 이면 #REF!
+
+MNSpreadsheetFormula.formulaTypingContext(text, caret); // { type:"name"|"args", … }
+MNSpreadsheetFormula.spreadsheetAutoFormulaJobs(model, b, "SUM"); // 자동합계 Σ`,
+    note: 'DOM 의존이 전혀 없어 spreadsheet-viewer.js 를 띄우지 않고 단위 테스트할 수 있습니다. MOD 의 나머지 부호를 나눌 수 쪽에 맞추고 INT 를 음의 무한대로 내리는 등 엑셀 규약을 따르므로, 자바스크립트 기본 동작으로 "정리" 하면 호환이 깨집니다.',
+  },
 
   // ── EXE 로컬 서버 — 기동·상태 ────────────────────────
 
@@ -222,7 +310,7 @@ const blob = await MNMusicAudio.renderWav(sheet, { from, to });   // 같은 예�
     when: '브라우저 권한 팝업 없이 저장 루트 아래에 파일을 쓸 때',
     tags: ['토큰 필요', 'X-Save-Path(퍼센트 인코딩)', '본문 = 내용'],
     snippet: `POST /save-file
-X-Manneung-Token: <실행별 토큰>
+X-ClassDock-Token: <실행별 토큰>
 X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
 
 <파일 내용>`,
@@ -247,7 +335,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     file: 'desktop/launcher.cs',
     line: 1621,
     when: '설정에서 자동 저장 폴더를 보거나 바꿀 때',
-    tags: ['토큰 필요', '기본값: 내 문서\\만능교실'],
+    tags: ['토큰 필요', '기본값: 내 문서\\ClassDock'],
     note: '폴더 선택창은 버튼을 누른 브라우저 창을 소유자로 지정해 뒤에 숨지 않게 합니다.',
   },
   {

@@ -18,7 +18,7 @@ export default ({ manifest, helpers, diagrams }) => {
       title: '프로젝트 구조',
       subtitle: '단일 HTML 앱 + C# 로컬 서버 + 오프라인 vendor',
       summary:
-        '만능파일교실은 번들러도 프레임워크도 쓰지 않습니다. manneung-classroom.html 한 장이 src/js 의 전역 스크립트 ' +
+        'ClassDock 은 번들러도 프레임워크도 쓰지 않습니다. classdock.html 한 장이 src/js 의 전역 스크립트 ' +
         `${manifest.localScripts.length}개를 정해진 순서로 부르고, 무거운 문서 라이브러리는 vendor/ 에 고정본으로 두고 필요할 때만 불러옵니다. ` +
         '여기에 desktop/launcher.cs 가 만드는 127.0.0.1 로컬 서버를 얹으면 브라우저가 못 하는 일(실제 디스크 저장, 로컬 Python, PowerPoint 변환)이 열립니다. ' +
         '즉 "브라우저만으로 되는 것"과 "EXE 가 있어야 되는 것"의 이중 경로가 이 코드베이스 전체를 관통하는 가장 큰 축입니다.',
@@ -26,7 +26,7 @@ export default ({ manifest, helpers, diagrams }) => {
         {
           title: '소스의 원본',
           body:
-            'src/js/*.js 와 src/styles.css 가 원본입니다. manneung-classroom-offline.html 과 desktop/app.html 은 생성물이라 직접 고치지 않습니다. ' +
+            'src/js/*.js 와 src/styles.css 가 원본입니다. classdock-offline.html 과 desktop/app.html 은 생성물이라 직접 고치지 않습니다. ' +
             'src/js/korean-font.js 도 도구가 만드는 파일입니다.',
         },
         {
@@ -74,8 +74,8 @@ export default ({ manifest, helpers, diagrams }) => {
         { path: 'package.json', label: 'package.json', description: '스크립트와 의존성 — 런타임 의존성이 2개뿐입니다' },
         { path: 'AGENTS.md', label: 'AGENTS.md', description: '작업 지침(빌드 절차와 검증 범위 규칙)' },
         {
-          path: 'manneung-classroom.html',
-          label: 'classroom.html',
+          path: 'classdock.html',
+          label: 'classdock.html',
           description: '앱 셸. script 태그 순서가 곧 manifest 계약입니다',
         },
         {
@@ -124,7 +124,7 @@ export default ({ manifest, helpers, diagrams }) => {
       title: '스크립트 로딩 계층',
       subtitle: `applicationLayers — ${layerCount}계층, script 태그 순서가 곧 의존 방향`,
       summary:
-        `${manifest.localScripts.length}개의 전역 스크립트를 ${layerCount}개 계층으로 묶고, 그 순서를 manneung-classroom.html 의 script 태그 순서와 완전히 일치시킵니다. ` +
+        `${manifest.localScripts.length}개의 전역 스크립트를 ${layerCount}개 계층으로 묶고, 그 순서를 classdock.html 의 script 태그 순서와 완전히 일치시킵니다. ` +
         '아래 계층은 위 계층의 전역을 쓸 수 있고 그 반대는 불가능합니다. 이 규칙을 사람의 주의력이 아니라 tools/check-source.js 가 지킵니다.',
       diagram: diagrams.layers,
       usage: [
@@ -179,8 +179,8 @@ export default ({ manifest, helpers, diagrams }) => {
           description: '문법·전역 충돌·계층·경계·지연 vendor 를 한 번에 검사',
         },
         {
-          path: 'manneung-classroom.html',
-          label: 'classroom.html',
+          path: 'classdock.html',
+          label: 'classdock.html',
           description: '앱 셸. script 태그 순서가 manifest 와 대조됩니다',
         },
       ],
@@ -415,7 +415,7 @@ export default ({ manifest, helpers, diagrams }) => {
         {
           title: '실행별 토큰',
           body:
-            '로컬 서버의 위험한 엔드포인트는 실행마다 새로 만드는 X-Manneung-Token 을 요구합니다. 같은 PC 의 다른 페이지가 로컬 API 를 부르는 것을 막습니다.',
+            '로컬 서버의 위험한 엔드포인트는 실행마다 새로 만드는 X-ClassDock-Token 을 요구합니다. 같은 PC 의 다른 페이지가 로컬 API 를 부르는 것을 막습니다.',
         },
         {
           title: '상시 실행 모드',

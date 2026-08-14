@@ -82,13 +82,13 @@ export default ({ manifest, helpers }) => {
         {
           title: 'fetch 를 감싸는 부분',
           body:
-            'window.fetch 를 래핑해 같은 origin 요청에만 X-Manneung-Token 헤더를 붙입니다. 각 호출부가 토큰을 신경 쓰지 않아도 되도록 한 지점에서 처리합니다.',
+            'window.fetch 를 래핑해 같은 origin 요청에만 X-ClassDock-Token 헤더를 붙입니다. 각 호출부가 토큰을 신경 쓰지 않아도 되도록 한 지점에서 처리합니다.',
         },
       ],
       features: [
         { title: '조건부 활성', body: 'http/https 이면서 host 가 127.0.0.1 또는 localhost 일 때만 동작합니다. 그 외에는 즉시 return 합니다.' },
         { title: '종료 직전 전송', body: '창을 닫기 직전 상태도 서버로 보내 마지막 변경을 잃지 않게 합니다.' },
-        { title: '토큰 주입', body: '런처가 HTML 에 심어 둔 window.__MANNEUNG_LOCAL_TOKEN__ 을 읽어 씁니다.' },
+        { title: '토큰 주입', body: '런처가 HTML 에 심어 둔 window.__CLASSDOCK_LOCAL_TOKEN__ 을 읽어 씁니다.' },
       ],
       files: [{ path: 'desktop/launcher.cs', label: 'launcher.cs (토큰)', range: [740, 800], description: '서버측 토큰 검증' }],
       notes: [
@@ -223,6 +223,88 @@ export default ({ manifest, helpers }) => {
       ],
     }),
 
+    mod('interaction-core.js', {
+      title: 'interaction-core.js — 드래그·분할 판정 순수 함수',
+      subtitle: 'DOM 없이 결정하는 드롭 대상과 참고 잠금 허용 범위',
+      summary:
+        'core.js 에서 떼어낸 137줄짜리 순수 함수 묶음입니다. "탭을 이 칸에 놓으면 무슨 일이 일어나야 하는가", ' +
+        '"이 드롭이 내부 이동인가 외부 파일인가", "참고 잠금 중 이 키·클릭을 통과시킬 것인가" 를 DOM 을 만지지 않고 문자열과 좌표만으로 판정합니다. ' +
+        '분할 화면 상태 전이는 경우의 수가 많아 화면 코드에 섞이면 검증이 불가능해지는데, 그 판단만 끌어내 테이블처럼 읽히게 만든 것이 이 파일의 핵심입니다.',
+      usage: [
+        {
+          title: '상태 전이를 문자열로 돌려준다',
+          body:
+            'tabDropSplitAction() 은 DOM 을 바꾸지 않고 "keep" · "swap" · "replace-reference" · "pin-with-mate" 같은 결정만 돌려줍니다. ' +
+            '호출부(core.js)가 그 문자열을 보고 실제 전이를 수행하므로, 판정 로직만 따로 테스트할 수 있습니다.',
+        },
+        {
+          title: '경계선과 판정이 같은 값을 쓴다',
+          body:
+            'splitDropSideAtPoint() 에 splitRatio 를 넘겨, 드롭 안내로 그리는 시각적 경계와 실제 판정이 반드시 같은 비율을 쓰게 했습니다. ' +
+            '"보이는 곳과 떨어지는 곳이 다르다" 는 종류의 버그를 구조로 막은 부분입니다.',
+        },
+        {
+          title: '내부 드래그 식별',
+          body:
+            'INTERNAL_DRAG_MIME("application/x-classdock-internal-drag") 을 DataTransfer 에 심어 내부 이동을 표시합니다. ' +
+            'isInternalDragTransfer() 는 이 MIME 이 없더라도 fallbackActive 플래그로 한 번 더 봐 주지만, types 에 "Files" 가 있으면 항상 외부 파일로 판정합니다.',
+        },
+      ],
+      features: [
+        {
+          title: '참고 잠금은 허용 목록 방식',
+          body:
+            'studyReadonlyPointerAllowed() · studyReadonlyKeyAllowed() 는 막을 것을 나열하지 않고 통과시킬 것만 나열합니다. ' +
+            '표는 한 번 클릭(선택)까지만 열어 두고 더블클릭·컨텍스트 메뉴는 막아, 읽기와 편집 진입의 경계를 표면 단위로 나눴습니다.',
+        },
+        {
+          title: '드롭 항목 즉시 확보',
+          body:
+            'captureDroppedFileItems() 가 files·entries·getAsFileSystemHandle() Promise 를 이벤트가 끝나기 전에 한 번에 붙잡습니다. ' +
+            'DataTransfer 는 이벤트 핸들러를 벗어나면 무효화되므로 await 이후에 읽으면 이미 비어 있습니다.',
+        },
+        {
+          title: '폴더 드롭 보정',
+          body:
+            'droppedTransferNeedsFolderPicker() 는 브라우저가 폴더를 크기 0·타입 없음의 가짜 파일 하나로 넘기는 경우를 감지해 폴더 선택창으로 넘깁니다.',
+        },
+      ],
+      files: [
+        { path: 'tests/study-mode.test.js', label: 'study-mode.test.js', description: '분할 전이와 참고 잠금 허용 범위' },
+        { path: 'tests/folder-workspace.test.js', label: 'folder-workspace.test.js', description: '드롭 판정과 폴더 선택창 보정' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '분할 화면 전이를 순수 함수로 뽑아낸 판단이 이 파일의 값어치입니다. tabDropSplitAction() 하나에 분할 여부 × 드롭 역할 × 끌어온 문서의 정체까지 ' +
+            '경우의 수가 열 갈래 가까이 있는데, DOM 이 섞여 있었다면 이 조합을 테스트로 고정할 방법이 없습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '참고 잠금을 차단 목록이 아니라 허용 목록으로 짠 것이 맞습니다. 편집 진입 경로는 계속 늘어나므로, 막을 것을 세는 방식이었다면 새 기능이 생길 때마다 잠금이 조용히 뚫립니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'droppedTransferNeedsFolderPicker() 가 폴더를 "크기 0 · 타입 없음 · 항목 1개" 로 추정합니다. ' +
+            '확장자 없는 진짜 빈 파일(예: LICENSE 를 비워 둔 것)을 하나만 끌어다 놓으면 폴더로 오인해 선택창을 띄웁니다. ' +
+            '브라우저가 폴더와 빈 파일을 구분해 주지 않는 한계에서 온 것이지만, 사용자에겐 "파일을 놨는데 창이 뜬다" 로 보입니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            'isInternalDragTransfer() 의 fallbackActive 는 호출부가 들고 있는 플래그라 stale 될 수 있습니다. ' +
+            '주석이 그 점을 인정하고 "Files 가 있으면 외부 우선" 이라는 안전판을 뒀지만, 정답은 MIME 이 항상 실리는 것입니다.',
+        },
+      ],
+    }),
+
     mod('core.js', {
       title: 'core.js — 공통 순수 함수 (PdfSignerCore)',
       subtitle: 'UMD, 테스트 가능성의 근간',
@@ -238,7 +320,7 @@ export default ({ manifest, helpers }) => {
         {
           title: '작업공간 마커',
           body:
-            '.manneung-folder-keep-9f4d2a7b 같은 상수 마커 파일명을 여기서 정의합니다. 빈 폴더 보존, 이미지 건너뜀 표시, 원본 저장 표시를 파일 시스템에 남기는 방식입니다.',
+            '.classdock-folder-keep-9f4d2a7b 같은 상수 마커 파일명을 여기서 정의합니다. 빈 폴더 보존, 이미지 건너뜀 표시, 원본 저장 표시를 파일 시스템에 남기는 방식입니다.',
         },
         {
           title: '테스트 커버리지',

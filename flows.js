@@ -371,14 +371,14 @@ window.MN_FLOWS = [
         location: 'launcher.cs:118',
         file: 'desktop/launcher.cs',
         line: 118,
-        body: 'CreateLocalAuthToken() 이 실행마다 새 토큰을 만들고, 서빙하는 HTML 에 window.__MANNEUNG_LOCAL_TOKEN__ 으로 심습니다.',
+        body: 'CreateLocalAuthToken() 이 실행마다 새 토큰을 만들고, 서빙하는 HTML 에 window.__CLASSDOCK_LOCAL_TOKEN__ 으로 심습니다.',
       },
       {
         label: 'fetch 래핑',
         location: 'state-sync.js:28',
         file: 'src/js/state-sync.js',
         line: 28,
-        body: '프런트가 같은 origin 요청에만 X-Manneung-Token 헤더를 자동으로 붙입니다. 각 호출부는 토큰을 몰라도 됩니다.',
+        body: '프런트가 같은 origin 요청에만 X-ClassDock-Token 헤더를 자동으로 붙입니다. 각 호출부는 토큰을 몰라도 됩니다.',
       },
       {
         label: '설정 선복원',
