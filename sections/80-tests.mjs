@@ -1,8 +1,13 @@
 // 테스트 — node --test 단위·계약 테스트 94개와 Playwright 화면 흐름 36개.
 
-export default ({ helpers }) => {
+import { linesLabel } from '../lib/source-metrics.mjs';
+
+export default ({ helpers, rootDir }) => {
   const { sec } = helpers;
   const CAT = '테스트';
+  // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs 의 이유 참고).
+  const coreLines = linesLabel(rootDir, 'src/js/core.js');
+  const coreTestLines = linesLabel(rootDir, 'tests/core.test.js');
 
   return [
     sec({
@@ -100,7 +105,7 @@ export default ({ helpers }) => {
       usage: [
         {
           title: '가장 큰 테스트',
-          body: 'core.test.js 1,425줄. core.js 4,104줄에 대응하며 이 프로젝트에서 가장 넓은 안전망입니다.',
+          body: `core.test.js ${coreTestLines}. core.js ${coreLines}에 대응하며 이 프로젝트에서 가장 넓은 안전망입니다.`,
         },
         {
           title: '왕복 검증',
@@ -179,7 +184,7 @@ export default ({ helpers }) => {
         {
           type: 'risk',
           label: 'Risk',
-          body: 'core.test.js 1,425줄이 core.js 4,104줄을 덮습니다. 비율상 커버리지가 낮은 영역이 있을 수 있고, 커버리지 측정 도구는 설정돼 있지 않습니다.',
+          body: `core.test.js ${coreTestLines}이 core.js ${coreLines}을 덮습니다. 비율상 커버리지가 낮은 영역이 있을 수 있고, 커버리지 측정 도구는 설정돼 있지 않습니다.`,
         },
         {
           type: 'risk',

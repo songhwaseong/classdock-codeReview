@@ -3,6 +3,13 @@
 // ①은 scripts.manifest.json 의 moduleBoundaries 와 같은 목록이며, check-source.js 가
 //   "선언이 실제로 있는가 / 소비자가 정말 쓰는가 / 소비자가 나중에 로드되는가"를 검사한다.
 // ②는 desktop/launcher.cs 의 라우팅에서 뽑았다. 토큰 필요 여부는 RequiresLocalAuthToken 기준이다.
+//
+// ② 의 카드에는 endpoints 를 반드시 적는다. 화면에는 나오지 않고 생성 시 대조에만 쓰는 값으로,
+// 그 카드가 launcher.cs 의 어느 경로를 맡는지 선언한다. 생성 스크립트가 양쪽으로 맞춰 본다 —
+// 런처에 있는데 아무 카드도 안 맡은 경로, 카드가 적었는데 런처에 없는 경로, 두 카드가 겹쳐
+// 맡은 경로를 각각 경고한다. 제목에 경로를 다 적지 못하는 카드(/source-folder-* 처럼)도
+// endpoints 에는 빠짐없이 적어야 한다. 이 검사가 없던 동안 지도 엔드포인트 10개가 조용히
+// 빠져 있었다.
 
 window.MN_CONTRACTS = [
   // ── 전역 공개 API ────────────────────────────────────
@@ -271,12 +278,36 @@ MNSpreadsheetFormula.spreadsheetAutoFormulaJobs(model, b, "SUM"); // 자동합�
     note: 'DOM 의존이 전혀 없어 spreadsheet-viewer.js 를 띄우지 않고 단위 테스트할 수 있습니다. MOD 의 나머지 부호를 나눌 수 쪽에 맞추고 INT 를 음의 무한대로 내리는 등 엑셀 규약을 따르므로, 자바스크립트 기본 동작으로 "정리" 하면 호환이 깨집니다.',
   },
 
+  {
+    sectionIds: ['module-boundaries', 'board-tools'],
+    kind: 'API',
+    title: 'MNBoardTools — 화이트보드 수학·과학 계산',
+    source: 'src/js/board-tools.js',
+    file: 'src/js/board-tools.js',
+    line: 9,
+    when: '칠판에 그래프·차트·표·교구·화학·확률·과학 계산을 넣거나 다시 고칠 때',
+    tags: ['소비자 1개', '주제 15갈래', 'eval 없음', 'DOM 없음', 'Object.freeze'],
+    snippet: `// 어느 함수도 DOM 을 만들지 않는다 — board-render.js 가 그리는 벡터 group 만 돌려준다.
+// 그래서 저장·되돌리기·PNG/PDF·수업 리플레이가 전부 그대로 따라온다.
+const ast = MNBoardTools.parseExpression("2x(x+1)");   // eval 없이 토큰→구문나무
+MNBoardTools.plotGroup({ curves, xMin, xMax });        // 그래프 + 매개변수 슬라이더
+MNBoardTools.chartGroup({ kind:"box", text });         // 막대·꺾은선·원·히스토그램·산점도·상자그림
+MNBoardTools.balanceEquation("H2 + O2 -> H2O");        // 유리수 가우스 소거로 정수 계수
+MNBoardTools.recognizeStroke(stroke, {});              // 펜 획 → 반듯한 도형
+MNBoardTools.snapToRuler(p, ruler, band);              // 교구 기하 (1cm = 37.8px)
+MNBoardTools.transformedItem(item, transform, measure);// 대칭·회전·평행이동·닮음`,
+    note:
+      'eval·new Function 을 쓰지 않은 것이 이 경계의 안전 조건입니다 — 학생이 적은 식이 .lesson 으로 저장돼 다른 PC 에서 다시 열리기 때문입니다. ' +
+      '반대로 공개 이름이 60개를 넘어 "무엇이 경계이고 무엇이 내부 도우미인지"는 이 목록만으로 갈리지 않습니다.',
+  },
+
   // ── EXE 로컬 서버 — 기동·상태 ────────────────────────
 
   {
     sectionIds: ['launcher-boot', 'launcher-security'],
     kind: 'GET',
     title: '/ping · /mem — 생존과 메모리',
+    endpoints: ['/ping', '/mem', '/heartbeat', '/heartbeat-close'],
     source: 'desktop/launcher.cs:1358',
     file: 'desktop/launcher.cs',
     line: 1358,
@@ -288,6 +319,7 @@ MNSpreadsheetFormula.spreadsheetAutoFormulaJobs(model, b, "SUM"); // 자동합�
     sectionIds: ['launcher-boot'],
     kind: 'GET',
     title: '/launcher-config · /reopen-app-mode — 앱 모드',
+    endpoints: ['/launcher-config', '/reopen-app-mode'],
     source: 'desktop/launcher.cs:1562',
     file: 'desktop/launcher.cs',
     line: 1562,
@@ -304,6 +336,7 @@ MNSpreadsheetFormula.spreadsheetAutoFormulaJobs(model, b, "SUM"); // 자동합�
     sectionIds: ['launcher-save', 'code-viewer', 'runtime-shapes'],
     kind: 'POST',
     title: '/save-file — 실제 디스크에 쓰기',
+    endpoints: ['/save-file', '/can-save-file'],
     source: 'desktop/launcher.cs:1901',
     file: 'desktop/launcher.cs',
     line: 1901,
@@ -320,6 +353,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     sectionIds: ['launcher-save'],
     kind: 'POST',
     title: '/save-file-exists — 첫 저장 충돌 확인',
+    endpoints: ['/save-file-exists'],
     source: 'desktop/launcher.cs:1879',
     file: 'desktop/launcher.cs',
     line: 1879,
@@ -331,6 +365,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     sectionIds: ['launcher-save'],
     kind: 'GET',
     title: '/save-root · /choose-save-folder — 저장 루트',
+    endpoints: ['/save-root', '/choose-save-folder', '/choose-save-folder-status'],
     source: 'desktop/launcher.cs:1621',
     file: 'desktop/launcher.cs',
     line: 1621,
@@ -342,6 +377,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     sectionIds: ['launcher-save'],
     kind: 'POST',
     title: '/open-save-folder · /open-file-folder — 탐색기 열기',
+    endpoints: ['/open-save-folder', '/open-file-folder'],
     source: 'desktop/launcher.cs:1630',
     file: 'desktop/launcher.cs',
     line: 1630,
@@ -353,6 +389,11 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     sectionIds: ['launcher-save', 'python-terminal'],
     kind: 'GET',
     title: '/source-folder-* — 드라이브 포함 절대경로',
+    endpoints: [
+      '/source-folder-capability', '/source-folder-directory', '/source-folder-entry', '/source-folder-file',
+      '/source-folder-list', '/source-folder-remove', '/source-folder-restore', '/choose-source-folder',
+      '/choose-source-folder-status', '/local-file',
+    ],
     source: 'desktop/launcher.cs:1685',
     file: 'desktop/launcher.cs',
     line: 1685,
@@ -364,6 +405,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     sectionIds: ['launcher-save', 'image-memo'],
     kind: 'GET',
     title: '/image-memo-* — 캡처 이미지 메모',
+    endpoints: ['/image-memo-list', '/image-memo-file', '/image-memo-delete'],
     source: 'desktop/launcher.cs:1834',
     file: 'desktop/launcher.cs',
     line: 1834,
@@ -378,6 +420,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     sectionIds: ['launcher-save', 'workspace-store'],
     kind: 'GET',
     title: '/workspace-load · /workspace-save · /workspace-clear',
+    endpoints: ['/workspace-load', '/workspace-save', '/workspace-clear', '/workspace-remove'],
     source: 'desktop/launcher.cs:1286',
     file: 'desktop/launcher.cs',
     line: 1286,
@@ -389,6 +432,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     sectionIds: ['launcher-boot', 'state-sync'],
     kind: 'POST',
     title: '/app-state — 포트 무관 설정 저장소',
+    endpoints: ['/app-state'],
     source: 'desktop/launcher.cs:1340',
     file: 'desktop/launcher.cs',
     line: 1340,
@@ -406,6 +450,10 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     sectionIds: ['launcher-js-npm', 'js-libraries', 'launcher-security'],
     kind: 'GET/POST',
     title: '/js-npm-* — 사용자 패키지 설치·번들 캐시',
+    endpoints: [
+      '/js-npm-', '/js-npm-status', '/js-npm-list', '/js-npm-bundle', '/js-npm-install-start',
+      '/js-npm-install-poll', '/js-npm-install-cancel', '/js-npm-delete',
+    ],
     source: 'desktop/launcher.cs:2059',
     file: 'desktop/launcher.cs',
     line: 2059,
@@ -427,6 +475,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-python', 'python-runtime'],
     kind: 'GET',
     title: '/can-run-python · /python-diagnostics · /python-rescan',
+    endpoints: ['/can-run-python', '/python-diagnostics', '/python-rescan'],
     source: 'desktop/launcher.cs:1446',
     file: 'desktop/launcher.cs',
     line: 1446,
@@ -438,6 +487,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-python', 'python-runtime'],
     kind: 'POST',
     title: '/run-python · /run-python-bundle — 실행',
+    endpoints: ['/run-python', '/run-python-bundle'],
     source: 'desktop/launcher.cs:2298',
     file: 'desktop/launcher.cs',
     line: 2298,
@@ -451,6 +501,10 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-python'],
     kind: 'GET',
     title: '/python-session-poll · /python-session-file — 증분 폴링',
+    endpoints: [
+      '/python-session-', '/python-session-poll', '/python-session-file', '/python-session-input',
+      '/python-session-start', '/python-session-start-bundle', '/python-session-stop',
+    ],
     source: 'desktop/launcher.cs:2222',
     file: 'desktop/launcher.cs',
     line: 2222,
@@ -462,6 +516,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-python'],
     kind: 'POST',
     title: '/pip-install-start · /pip-install-poll — 패키지 설치',
+    endpoints: ['/pip-install', '/pip-install-start', '/pip-install-poll', '/pip-install-cancel'],
     source: 'desktop/launcher.cs:2116',
     file: 'desktop/launcher.cs',
     line: 2116,
@@ -473,6 +528,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-python', 'python-editor'],
     kind: 'POST',
     title: '/complete · /definition — Jedi 자동완성·정의 이동',
+    endpoints: ['/complete', '/definition', '/can-complete', '/python-import-index', '/python-project-sync'],
     source: 'desktop/launcher.cs:1976',
     file: 'desktop/launcher.cs',
     line: 1976,
@@ -484,6 +540,10 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-terminal-kernel', 'notebook-tools'],
     kind: 'POST',
     title: '/python-kernel-start-bundle · /python-kernel-file',
+    endpoints: [
+      '/python-kernel-', '/python-kernel-start-bundle', '/python-kernel-file', '/python-kernel-exec',
+      '/python-kernel-stop',
+    ],
     source: 'desktop/launcher.cs:2149',
     file: 'desktop/launcher.cs',
     line: 2149,
@@ -495,6 +555,10 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-terminal-kernel', 'python-terminal'],
     kind: 'POST',
     title: '/terminal-session-open · /terminal-complete',
+    endpoints: [
+      '/terminal-session-', '/terminal-session-open', '/terminal-session-poll', '/terminal-session-run',
+      '/terminal-session-stop', '/terminal-complete',
+    ],
     source: 'desktop/launcher.cs:2236',
     file: 'desktop/launcher.cs',
     line: 2236,
@@ -509,6 +573,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-convert-sqlite', 'pptx-viewer'],
     kind: 'POST',
     title: '/convert-pptx — PowerPoint 정확 변환',
+    endpoints: ['/convert-pptx', '/can-convert'],
     source: 'desktop/launcher.cs:1318',
     file: 'desktop/launcher.cs',
     line: 1318,
@@ -520,6 +585,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-convert-sqlite', 'video-viewer'],
     kind: 'POST',
     title: '/convert-media · /install-ffmpeg',
+    endpoints: ['/convert-media', '/can-convert-media', '/install-ffmpeg', '/ffmpeg-install-status'],
     source: 'desktop/launcher.cs:1394',
     file: 'desktop/launcher.cs',
     line: 1394,
@@ -531,6 +597,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-convert-sqlite', 'viewer-base'],
     kind: 'POST',
     title: '/sqlite-preview · /sqlite-disk-preview · /sqlite-exec',
+    endpoints: ['/sqlite-preview', '/sqlite-disk-preview', '/sqlite-exec'],
     source: 'desktop/launcher.cs:1466',
     file: 'desktop/launcher.cs',
     line: 1466,
@@ -549,6 +616,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     sectionIds: ['launcher-exam-lan', 'exam-paper'],
     kind: 'POST',
     title: '/exam-receive-start · /exam-receive-stop · /exam-receive-status',
+    endpoints: ['/exam-receive-start', '/exam-receive-stop', '/exam-receive-status', '/exam-hello'],
     source: 'desktop/launcher.cs:1938',
     file: 'desktop/launcher.cs',
     line: 1938,
@@ -558,5 +626,94 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
 // 교실 제출은 LAN 접근이 필요하므로 목적이 다른 리스너를 따로 연다.
 // 학생 쪽: 주소 + 6자리 코드 → 실패하면 파일 제출로 폴백`,
     note: 'LAN 리스너는 loopback 이 아니므로 Host·Origin 검증이 그대로 적용되지 않습니다. 이 경로의 입력 검증은 별도로 봐야 합니다.',
+  },
+
+  // ── EXE 로컬 서버 — 지도 ─────────────────────────────
+
+  {
+    sectionIds: ['launcher-security', 'map-overview', 'map-viewer'],
+    kind: 'GET',
+    title: '/can-proxy-tiles · /tile-proxy — 배경 타일 대리 수신',
+    endpoints: ['/can-proxy-tiles', '/tile-proxy'],
+    source: 'desktop/launcher.cs:2289',
+    file: 'desktop/launcher.cs',
+    line: 2289,
+    when: '지도 문서가 배경 타일을 그릴 때, 노트북 PDF 가 지도 스냅샷을 찍을 때',
+    tags: ['/can-proxy-tiles 토큰 필요', '/tile-proxy 토큰 불필요', 'SSRF 방지', '2층 캐시'],
+    snippet: `// 브라우저는 지도 서버를 직접 부르지 않는다 — 런처가 대신 받는다.
+GET /can-proxy-tiles            → "yes" | 404      (능력 프로브)
+GET /tile-proxy?u=<타일 URL>     → image/png|jpeg|webp
+
+// 허용 호스트 6곳만 통과(TileProxyHosts). https 아니면 거부, 아니면 502.
+//   tile.openstreetmap.org · basemaps.cartocdn.com · tile.opentopomap.org
+//   server.arcgisonline.com · tiles.stadiamaps.com · tile.thunderforest.com
+// 캐시: 메모리(같은 화면 다시 그리기) + 디스크 400MB·7일(인터넷 없는 교실)`,
+    note:
+      '/tile-proxy 만은 토큰도 Origin 검사도 없습니다 — 지도 스냅샷의 sandbox iframe 이 Origin: null 로 부르기 때문입니다. ' +
+      '대신 호스트 허용 목록이 유일한 방어선이 되므로, MAP_BASEMAPS 에 호스트를 더할 때 이 목록도 함께 늘려야 합니다. ' +
+      '디스크 캐시가 필요한 이유는 런처가 실행마다 다른 포트를 잡아 브라우저 origin 이 바뀌고, 그러면 IndexedDB·Cache API 가 다음 실행에서 남의 저장소가 되기 때문입니다.',
+  },
+  {
+    sectionIds: ['launcher-security', 'map-viewer'],
+    kind: 'GET',
+    title: '/geocode — 장소 이름 검색과 좌표 되묻기',
+    endpoints: ['/geocode'],
+    source: 'desktop/launcher.cs:2305',
+    file: 'desktop/launcher.cs',
+    line: 2305,
+    when: '지도에서 장소를 검색하거나, 찍은 자리의 주소·행정구역·주변 시설을 물을 때',
+    tags: ['토큰 필요', '공급자 6종', 'OSM 초당 1건', '검색 캐시'],
+    snippet: `GET /geocode?provider=<공급자>&q=<검색어>[&x&y&radius&page&category]
+
+// provider: osm | kakao-address | kakao-keyword
+//           kakao-coord2address | kakao-coord2region | kakao-category
+// 좌표·반경·갈래는 검색어가 아니므로 숫자·코드 꼴만 통과시킨다(ReadGeocodeSpot):
+//   x ∈ [-180,180]  y ∈ [-85,85]  radius ∈ [1,20000]  page ∈ [1,3]
+//   category 는 영문 두 글자 + 숫자 한 글자(SC4·CS2 …)
+// OSM 은 정책상 요청 간격을 강제(GeocodeMinIntervalMs), 카카오는 키가 있을 때만.`,
+    note:
+      'CLASSDOCK_GEOCODER_URL 로 Nominatim 호환 공급자를 바꿀 수 있고, https 가 아니면 기본값으로 되돌립니다. ' +
+      '프런트(mapGeocode)는 카카오 주소 → 키워드 → OSM 순으로 폴백하므로, 키가 없거나 카카오가 실패해도 검색이 끊기지 않습니다.',
+  },
+  {
+    sectionIds: ['launcher-security', 'map-viewer'],
+    kind: 'POST',
+    title: '/map-search-key · /map-search-provider — 카카오 REST 키 보관',
+    endpoints: ['/map-search-key', '/map-search-key-status', '/map-search-provider'],
+    source: 'desktop/launcher.cs:2314',
+    file: 'desktop/launcher.cs',
+    line: 2314,
+    when: '설정에서 카카오 REST 키를 넣거나 지우거나, 검색 공급자를 바꿀 때',
+    tags: ['토큰 필요', 'DPAPI 암호화', '키를 브라우저에 두지 않음'],
+    snippet: `GET    /map-search-key-status  → { hasKey, remembered, persistentSupported, provider }
+POST   /map-search-key         → 키 검증 후 보관
+DELETE /map-search-key         → 지우고 공급자를 osm 으로 되돌림
+GET/POST /map-search-provider  → "kakao" | "osm"
+
+// 키는 브라우저로 돌아가지 않는다. 상태만 돌려주고 요청에는 런처가 헤더를 붙인다.
+// 저장: ProtectedData.Protect(DataProtectionScope.CurrentUser) + 별도 엔트로피
+// 검증: 길이 16~128 · 영숫자와 -_ 만 → 실제 주소 한 건을 조회해 본 뒤에 저장`,
+    note:
+      'API 키를 프런트에 두지 않은 것이 이 계약의 핵심입니다. localStorage 에 뒀다면 오프라인 HTML·작업공간 백업·개발자 도구로 그대로 새어 나갑니다. ' +
+      '앱 모드가 별도 브라우저 프로필로 열려 localStorage 가 비어도 공급자 선택이 이어지는 것도 이 저장 위치 덕분입니다.',
+  },
+  {
+    sectionIds: ['launcher-security', 'map-overview'],
+    kind: 'GET',
+    title: '/tile-cache-status · /tile-cache-clear — 오프라인 지도 관리',
+    endpoints: ['/tile-cache-status', '/tile-cache-clear'],
+    source: 'desktop/launcher.cs:2358',
+    file: 'desktop/launcher.cs',
+    line: 2358,
+    when: '"🗂️ 오프라인 지도" 창에서 받아 둔 양을 보거나 비울 때',
+    tags: ['토큰 필요', '400MB 상한', '7일 만료'],
+    snippet: `GET  /tile-cache-status → { files, bytes, maxBytes }
+POST /tile-cache-clear  → 디스크 캐시 삭제
+
+// 400MB 를 넘긴 쓰기 직후 오래된 것부터 80% 선까지 쓸어 낸다(SweepTileCache).
+// 만료(7일)된 캐시도 버리지 않고 오프라인 fallback 으로 남겨 둔다.`,
+    note:
+      '조회조차 토큰을 요구합니다 — 같은 PC 의 아무 웹페이지나 "이 사람이 어느 지역을 봤는지"를 셀 수 있으면 안 되기 때문입니다. ' +
+      'tests/map-viewer.test.js 가 이 토큰 요구를 검사하고, C# 런처와 Go 런처가 같은 상한·같은 정리 시점을 쓰는지도 함께 대조합니다.',
   },
 ];

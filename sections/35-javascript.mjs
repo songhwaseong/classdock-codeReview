@@ -1,6 +1,8 @@
 // 4. javascript — JavaScript 편집·Worker 실행·라이브러리·자동채점.
 
-export default ({ manifest, helpers }) => {
+import { anchoredRange } from '../lib/source-metrics.mjs';
+
+export default ({ manifest, helpers, rootDir }) => {
   const { mod, sec } = helpers;
   const layer = manifest.applicationLayers.find((item) => item.id === 'javascript');
 
@@ -51,7 +53,11 @@ export default ({ manifest, helpers }) => {
         {
           path: 'src/js/code-viewer.js',
           label: 'code-viewer.js (실행 화면 연결)',
-          range: [920, 995],
+          range: anchoredRange(rootDir, 'src/js/code-viewer.js', {
+            from: 'const extRunLang =',
+            before: 6,
+            lines: 22,
+          }) ?? undefined,
           description: '파일 확장자에 따라 Python 또는 JavaScript 실행 화면 부착',
         },
       ],

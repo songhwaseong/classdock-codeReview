@@ -13,6 +13,9 @@
 import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import vm from 'node:vm';
+
+import { collectLauncherRoutes, checkEndpointContracts } from './lib/endpoint-check.mjs';
 
 import { createHelpers } from './lib/section.mjs';
 import {
@@ -24,7 +27,7 @@ import {
 } from './lib/diagram.mjs';
 
 import buildOverview from './sections/00-overview.mjs';
-import buildGlossary, { GLOSSARY_TERMS } from './sections/05-glossary.mjs';
+import buildGlossary, { GLOSSARY_TERMS, CURATED as GLOSSARY_CURATED } from './sections/05-glossary.mjs';
 import buildCodeWords, { CODE_WORDS } from './sections/06-code-words.mjs';
 import buildCodeReferences, { CODE_REFERENCES } from './sections/07-code-symbols.mjs';
 import buildCodePatterns, { CODE_PATTERNS } from './sections/08-code-patterns.mjs';
@@ -34,9 +37,10 @@ import buildDocuments from './sections/20-documents.mjs';
 import buildPython from './sections/30-python.mjs';
 import buildJavaScript from './sections/35-javascript.mjs';
 import buildEditors from './sections/40-editors.mjs';
+import buildMap from './sections/45-map.mjs';
 import buildLearning from './sections/50-learning.mjs';
 import buildMusic from './sections/55-music.mjs';
-import buildDesktop from './sections/60-desktop.mjs';
+import buildDesktop, { brokenAnchors } from './sections/60-desktop.mjs';
 import buildTools from './sections/70-build-tools.mjs';
 import buildTests from './sections/80-tests.mjs';
 
@@ -71,16 +75,27 @@ if (!rootDir) {
 
 // 큰 파일도 가급적 통째로 싣는다. 현재 src/js 전체가 상한 안에 들어온다.
 //
-// 상한을 소스의 최대 파일 크기에 딱 맞추지 않고 여유를 둔다. 파일이 자라 상한을 넘으면
+// 상한을 소스의 최대 파일 크기에 딱 맞추지 않고 넉넉히 여유를 둔다. 파일이 자라 상한을 넘으면
 // 리뷰에서 꼬리가 조용히 사라지기 때문이다(실제로 core.js 가 3,993 → 4,103줄이 되며 그럴
 // 뻔했다). 여유와 별개로, 잘린 파일은 아래 "잘린 파일" 경고로 매번 드러낸다.
 //
-// 5,600 은 최대 파일 spreadsheet-viewer.js(5,161줄)에 약 8% 여유를 둔 값이다. 그 다음으로
-// 큰 core.js 가 3,981줄이라 이 구간에 걸리는 파일은 당분간 하나뿐이다. 이 파일을 구간(range)으로
-// 나누지 않는 이유는 1,372줄부터 끝까지가 renderXlsx 함수 하나여서, 구간을 어디로 잡아도
-// 함수 중간을 끊게 되기 때문이다. 7,256줄짜리 desktop/launcher.cs 는 최상위 선언이 여럿이라
-// 기능별 구간으로 나눠 싣는다 — 그쪽은 range 가 자연스러운 경계를 갖는다.
-const MAX_LINES = 5600;
+// 여유를 얼마나 둘지는 "최대 파일 + n%" 가 아니라 "가장 빨리 자라는 파일이 얼마나 빨리 자라는가"
+// 로 정한다. 앞서 5,600(당시 최대 파일 + 8%)으로 잡았을 때, 정작 상한에 다가온 것은 최대 파일이
+// 아니라 whiteboard.js 였다 — 한 주 만에 2,785 → 4,930줄로 자라 여유를 670줄만 남겼다.
+// 상한에 부딪히는 파일은 대개 "지금 가장 큰 파일"이 아니라 "지금 가장 빨리 자라는 파일"이다.
+//
+// 7,000 은 그 관찰을 반영한 값이다 — 상위 세 파일이 모두 30% 이상 더 자라도 통째로 실린다.
+// 상한을 올려도 지금 실리는 양은 변하지 않는다(넘는 파일이 없다). 대신 아래에서 상한의 90% 를
+// 넘긴 파일을 미리 알려, 잘린 뒤가 아니라 잘리기 전에 알아채게 한다.
+//
+// 상한에 걸리는 파일을 구간(range)으로 나눌 수 있는지는 파일마다 다르다. spreadsheet-viewer.js 는
+// 1,372줄부터 끝까지가 renderXlsx 함수 하나, map-viewer.js 는 뒤쪽 절반이 mountMapEditor 함수
+// 하나여서 구간을 어디로 잡아도 함수 중간을 끊는다. 반면 desktop/launcher.cs(7천 줄대)는 최상위
+// 선언이 여럿이라 기능별 구간으로 나눠 싣는다 — 그쪽은 range 가 자연스러운 경계를 갖는다.
+const MAX_LINES = 7000;
+// 상한의 90% 를 넘긴 파일은 "아직 안 잘렸지만 곧 잘린다". 잘린 뒤에 아는 것과 그 전에 아는 것은
+// 다르므로 따로 센다.
+const MAX_LINES_WARN_AT = Math.round(MAX_LINES * 0.9);
 
 const manifest = JSON.parse(manifestRaw);
 // manifest 의 계층 키는 name 이다. 아래 코드가 id 로 참조하므로 한 번만 맞춰 둔다.
@@ -217,6 +232,7 @@ const reviewSections = [
   ...buildPython(context),
   ...buildJavaScript(context),
   ...buildEditors(context),
+  ...buildMap(context),
   ...buildLearning(context),
   ...buildMusic(context),
   ...buildDesktop(context),
@@ -246,6 +262,8 @@ reviewSections.splice(projectFunctionInsertAt, 0, ...projectFunctionSection);
 const sourceCache = new Map();
 // 상한을 넘겨 꼬리가 잘린 파일. 구간(range) 참조는 의도한 자르기라 여기에 넣지 않는다.
 const truncatedFiles = new Map();
+// 아직 상한 안이지만 90% 를 넘긴 파일. 다음 확장에서 꼬리가 잘릴 후보다.
+const nearLimitFiles = new Map();
 
 const readWhole = async (relativePath) => {
   if (sourceCache.has(relativePath)) return sourceCache.get(relativePath);
@@ -286,6 +304,7 @@ const readSource = async (relativePath, range) => {
     };
   }
 
+  if (total > MAX_LINES_WARN_AT) nearLimitFiles.set(relativePath, total);
   return { code: lines.join('\n'), lineCount: total, lineOffset: 0, totalLines: total };
 };
 
@@ -438,6 +457,27 @@ const uncoveredApis = (manifest.moduleBoundaries ?? [])
   .map((item) => item.publicApi)
   .filter((api) => api && !new RegExp(`\\b${api}\\b`).test(contractsProse));
 
+// EXE 엔드포인트 계약 대조. 전역 API 와 달리 "정답 목록"이 manifest 에 없어서, launcher.cs 의
+// 라우팅 사슬 자체를 목록으로 삼는다(lib/endpoint-check.mjs 의 설명 참고).
+//
+// contracts.js 는 브라우저용 파일이라 import 할 수 없다. 이미 읽어 둔 원문을 window 만 있는
+// 빈 컨텍스트에서 실행해 배열을 꺼낸다 — 리뷰 폴더 안의 자기 파일이라 신뢰 문제는 없다.
+const readContracts = () => {
+  try {
+    const sandbox = { window: {} };
+    vm.createContext(sandbox);
+    vm.runInContext(contractsProse, sandbox, { filename: 'contracts.js' });
+    return Array.isArray(sandbox.window.MN_CONTRACTS) ? sandbox.window.MN_CONTRACTS : null;
+  } catch (error) {
+    console.warn(`[경고] contracts.js 를 읽지 못해 엔드포인트 대조를 건너뜁니다: ${error.message}`);
+    return null;
+  }
+};
+const launcherRoutes = collectLauncherRoutes(rootDir);
+const contractList = readContracts();
+const endpointReport =
+  launcherRoutes && contractList ? checkEndpointContracts(launcherRoutes, contractList) : null;
+
 const glossaryProse = hydrated
   .filter((section) => section.id !== 'glossary')
   .flatMap((section) => [
@@ -455,6 +495,26 @@ const glossaryProse = hydrated
 const unusedTerms = GLOSSARY_TERMS.filter(
   (item) => !item.match.some((keyword) => glossaryProse.includes(keyword)),
 ).map((item) => item.term);
+
+// 반대 방향 — "리뷰에 새로 자주 나오게 됐는데 사전에 없는 말". 낱말 자체는 자동으로 맞힐 수 없다
+// (05-glossary.mjs 머리말의 설명 참고). 대신 "다시 훑을 때가 됐다"는 신호만 정확하게 낸다.
+// 리뷰 산문(사전 섹션 제외, 사람이 쓴 문장만) 길이와 주제 묶음을 마지막 큐레이션 시점과 견준다.
+const curationProse = hydrated
+  .filter((section) => !/^(glossary|code-words|code-symbols|code-patterns|project-functions)$/.test(section.id))
+  .flatMap((section) => [
+    section.title,
+    section.subtitle,
+    section.summary,
+    ...(section.usage ?? []).flatMap((item) => [item.title, item.body]),
+    ...(section.features ?? []).flatMap((item) => [item.title, item.body]),
+    ...(section.notes ?? []).map((item) => item.body),
+    ...(section.files ?? []).map((item) => item.description),
+  ])
+  .filter(Boolean)
+  .join(' ');
+const currentGroups = [...new Set(hydrated.map((section) => section.group).filter(Boolean))];
+const newGroups = currentGroups.filter((group) => !GLOSSARY_CURATED.groups.includes(group));
+const proseGrowth = (curationProse.length - GLOSSARY_CURATED.proseChars) / GLOSSARY_CURATED.proseChars;
 
 const payload = {
   generatedAt: new Date().toISOString().slice(0, 10),
@@ -536,7 +596,11 @@ const notes = hydrated.reduce((sum, section) => sum + section.notes.length, 0);
 
 console.log(`섹션 ${hydrated.length}개 · 파일 참조 ${fileEntries}건 · 고유 파일 ${covered.size}개`);
 console.log(`실린 코드 ${totalLines.toLocaleString('ko-KR')}줄 · 리뷰 포인트 ${notes}개`);
-console.log(`출력 ${(output.length / 1024 / 1024).toFixed(2)}MB → code-review/review-data.generated.js`);
+// 글자 수가 아니라 실제 바이트로 잰다. 리뷰 산문이 대부분 한글이라 UTF-8 에서 한 글자가 3바이트이고,
+// output.length 로 재면 디스크에 놓이는 크기보다 15% 가까이 작게 나온다(8.47 vs 9.6MiB).
+console.log(
+  `출력 ${(Buffer.byteLength(output, 'utf8') / 1024 / 1024).toFixed(2)}MiB → code-review/review-data.generated.js`,
+);
 
 console.log(`용어 사전 ${GLOSSARY_TERMS.length}개`);
 console.log(`코드 낱말 사전 ${CODE_WORDS.length}개`);
@@ -547,6 +611,11 @@ console.log(
   `테스트 참조 단위 ${testCoverage.unit.covered}/${testCoverage.unit.total} · ` +
     `E2E ${testCoverage.e2e.covered}/${testCoverage.e2e.total} (전수가 아니라 기능별 대표만 싣습니다)`,
 );
+// 테스트 비율과 같은 이유로 매번 찍는다 — 0 이 아닌 값이 보여야 검사가 살아 있다는 것을 안다.
+if (endpointReport && launcherRoutes) {
+  const covered = launcherRoutes.size - endpointReport.missing.length;
+  console.log(`EXE 엔드포인트 계약 ${covered}/${launcherRoutes.size} (launcher.cs 라우팅과 대조)`);
+}
 
 if (truncatedFiles.size) {
   console.warn(`\n[경고] 상한 ${MAX_LINES.toLocaleString('ko-KR')}줄을 넘겨 꼬리가 잘린 파일 ${truncatedFiles.size}개:`);
@@ -554,6 +623,21 @@ if (truncatedFiles.size) {
     console.warn(`  ${file} — ${total.toLocaleString('ko-KR')}줄 중 ${(total - MAX_LINES).toLocaleString('ko-KR')}줄이 빠졌습니다`);
   }
   console.warn('  구간(range)으로 나눠 싣거나 MAX_LINES 를 올리세요.');
+}
+if (brokenAnchors.length) {
+  console.warn(`\n[경고] launcher.cs 에서 찾지 못한 구간 앵커 ${brokenAnchors.length}개 — 그 구간은 코드 없이 실립니다:`);
+  for (const item of brokenAnchors) console.warn(`  ${item}`);
+  console.warn('  sections/60-desktop.mjs 의 앵커 문자열을 현재 소스에 맞게 고치세요.');
+}
+if (nearLimitFiles.size) {
+  console.warn(
+    `\n[알림] 상한 ${MAX_LINES.toLocaleString('ko-KR')}줄의 90% 를 넘긴 파일 ${nearLimitFiles.size}개 — 아직 통째로 실리지만 곧 잘립니다:`,
+  );
+  for (const [file, total] of nearLimitFiles) {
+    console.warn(
+      `  ${file} — ${total.toLocaleString('ko-KR')}줄 (남은 여유 ${(MAX_LINES - total).toLocaleString('ko-KR')}줄)`,
+    );
+  }
 }
 if (uncoveredDocs.length) {
   console.warn(`\n[경고] 섹션에 실리지 않은 docs 문서 ${uncoveredDocs.length}개:`);
@@ -563,6 +647,20 @@ if (unusedTerms.length) {
   console.warn(`\n[경고] 리뷰 본문에 나오지 않는 사전 항목 ${unusedTerms.length}개:`);
   console.warn(`  ${unusedTerms.join(', ')}`);
 }
+if (newGroups.length) {
+  console.warn(
+    `\n[알림] 용어 사전을 훑은 뒤 새로 생긴 주제 묶음 ${newGroups.length}개 — 새 어휘가 들어왔을 수 있습니다:`,
+  );
+  console.warn(`  ${newGroups.join(', ')}`);
+  console.warn('  sections/05-glossary.mjs 를 다시 훑고 CURATED.groups 를 갱신하세요.');
+}
+if (proseGrowth > GLOSSARY_CURATED.growthTolerance) {
+  console.warn(
+    `\n[알림] 용어 사전을 훑은 뒤 리뷰 산문이 ${Math.round(proseGrowth * 100)}% 늘었습니다 ` +
+      `(${GLOSSARY_CURATED.proseChars.toLocaleString('ko-KR')} → ${curationProse.length.toLocaleString('ko-KR')}자).`,
+  );
+  console.warn('  어휘 빈도를 다시 세어 사전을 훑고 CURATED.proseChars 를 갱신하세요.');
+}
 if (uncoveredModules.length) {
   console.warn(`\n[경고] 섹션에 실리지 않은 src/js 파일 ${uncoveredModules.length}개:`);
   console.warn(`  ${uncoveredModules.join(', ')}`);
@@ -570,6 +668,29 @@ if (uncoveredModules.length) {
 if (uncoveredApis.length) {
   console.warn(`\n[경고] contracts.js 에 계약 카드가 없는 전역 공개 API ${uncoveredApis.length}개:`);
   console.warn(`  ${uncoveredApis.join(', ')}`);
+}
+if (endpointReport) {
+  if (endpointReport.uncovered.length) {
+    console.warn(`\n[경고] endpoints 목록이 없는 EXE 계약 카드 ${endpointReport.uncovered.length}개 — 대조에서 빠집니다:`);
+    for (const title of endpointReport.uncovered) console.warn(`  ${title}`);
+  }
+  if (endpointReport.missing.length) {
+    console.warn(
+      `\n[경고] launcher.cs 에 있는데 계약 카드가 없는 EXE 엔드포인트 ${endpointReport.missing.length}개:`,
+    );
+    console.warn(`  ${endpointReport.missing.join(', ')}`);
+    console.warn('  contracts.js 에 카드를 더하거나, 기존 카드의 endpoints 에 넣으세요.');
+  }
+  if (endpointReport.stale.length) {
+    console.warn(
+      `\n[경고] 계약 카드는 있는데 launcher.cs 에 없는 엔드포인트 ${endpointReport.stale.length}개 — 사라졌거나 오타입니다:`,
+    );
+    console.warn(`  ${endpointReport.stale.join(', ')}`);
+  }
+  if (endpointReport.duplicated.length) {
+    console.warn(`\n[경고] 두 계약 카드가 함께 맡은 엔드포인트 ${endpointReport.duplicated.length}개:`);
+    for (const line of endpointReport.duplicated) console.warn(`  ${line}`);
+  }
 }
 if (missing.length) {
   console.warn(`\n[경고] 읽지 못한 파일 ${missing.length}건:`);

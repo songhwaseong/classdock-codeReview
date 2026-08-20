@@ -1,8 +1,13 @@
 // 2. documents — 파일 입력, 문서 생명주기, PDF, 코드 보기.
 
-export default ({ manifest, helpers }) => {
+import { linesLabel } from '../lib/source-metrics.mjs';
+
+export default ({ manifest, helpers, rootDir }) => {
   const { mod, sec } = helpers;
   const layer = manifest.applicationLayers.find((item) => item.id === 'documents');
+  // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs 의 이유 참고).
+  const documentsLines = linesLabel(rootDir, 'src/js/documents.js');
+  const codeViewerLines = linesLabel(rootDir, 'src/js/code-viewer.js');
 
   return [
     sec({
@@ -39,7 +44,13 @@ export default ({ manifest, helpers }) => {
         { title: '지연 렌더', body: '폴더째 열어도 활성화된 문서만 실제로 그립니다. 파일 수천 개짜리 폴더를 상정한 설계입니다.' },
       ],
       files: [
-        { path: 'src/js/documents.js', label: 'documents.js (확장자표)', range: [1, 120], description: '지원 형식과 코드 프로파일 정의' },
+        {
+          // 확장자표는 2026-08-14 의 분할로 documents.js 에서 이 파일로 옮겨졌다. 100줄짜리라
+          // 구간을 잡지 않고 통째로 가리킨다(자기 섹션에도 같은 파일이 실린다).
+          path: 'src/js/document-types.js',
+          label: 'document-types.js (확장자표)',
+          description: '지원 형식과 코드 프로파일 정의 — MNDocumentTypes 레지스트리',
+        },
       ],
       notes: [
         {
@@ -51,7 +62,7 @@ export default ({ manifest, helpers }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            'documents.js 3,837줄 + code-viewer.js 4,034줄이 이 계층의 절반입니다. 두 파일 모두 의존하는 파일이 9개 이상이라 분할 비용이 가장 큽니다.',
+            `documents.js ${documentsLines} + code-viewer.js ${codeViewerLines} 이 이 계층의 절반입니다. 두 파일 모두 의존하는 파일이 9개 이상이라 분할 비용이 가장 큽니다.`,
         },
       ],
     }),
@@ -253,7 +264,7 @@ export default ({ manifest, helpers }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '3,837줄 안에 문서 모델, 탭 UI, 트리 UI, 검색, 분할 작업이 함께 있습니다. 13개 파일이 여기 의존해서, 분할하려면 로드 순서와 전역 참조를 동시에 정리해야 합니다. ' +
+            `${documentsLines} 안에 문서 모델, 탭 UI, 트리 UI, 검색, 분할 작업이 함께 있습니다. 13개 파일이 여기 의존해서, 분할하려면 로드 순서와 전역 참조를 동시에 정리해야 합니다. ` +
             '리팩터링 계획이 있다면 "확장자 정의"와 "검색"을 먼저 떼는 것이 위험이 낮습니다.',
         },
         {
@@ -715,7 +726,7 @@ export default ({ manifest, helpers }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '4,034줄에 구문 강조, 저장, 두 언어 실행 바, 따라치기, 정의 이동, 변환 진입점이 함께 있습니다. 9개 파일이 의존하는 허브라 변경 파급이 큽니다. ' +
+            `${codeViewerLines}에 구문 강조, 저장, 두 언어 실행 바, 따라치기, 정의 이동, 변환 진입점이 함께 있습니다. 9개 파일이 의존하는 허브라 변경 파급이 큽니다. ` +
             '구문 강조 부분(정규식 상수 + 렌더)은 의존이 적어 가장 먼저 떼기 좋은 후보입니다.',
         },
         {

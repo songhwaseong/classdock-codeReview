@@ -1,8 +1,14 @@
 // 1. bootstrap — 설정과 공통 기반. 화면이 그려지기 전에 자리를 잡는 계층.
 
-export default ({ manifest, helpers }) => {
+import { anchoredRange, linesLabel } from '../lib/source-metrics.mjs';
+
+export default ({ manifest, helpers, rootDir }) => {
   const { mod, sec } = helpers;
   const layer = manifest.applicationLayers.find((item) => item.id === 'bootstrap');
+  // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs 의 이유 참고).
+  const coreLines = linesLabel(rootDir, 'src/js/core.js');
+  const stateLines = linesLabel(rootDir, 'src/js/state.js');
+  const coreTestLines = linesLabel(rootDir, 'tests/core.test.js');
 
   return [
     sec({
@@ -42,7 +48,18 @@ export default ({ manifest, helpers }) => {
         { title: '시작 비용 관리', body: 'lazy.js 가 vendor 7.2MB 를 시작 시점에서 걷어냈습니다. 이 계층에서 가장 성능에 직접 기여하는 파일입니다.' },
       ],
       files: [
-        { path: 'scripts.manifest.json', label: 'manifest', range: [1, 40], description: 'bootstrap 계층 로드 순서' },
+        {
+          path: 'scripts.manifest.json',
+          label: 'manifest (bootstrap 계층)',
+          // 줄 번호가 아니라 앵커로 — 계층에 파일이 붙으면 뒤 구간이 통째로 밀린다.
+          range: anchoredRange(rootDir, 'scripts.manifest.json', {
+            from: '"name": "bootstrap"',
+            before: 1,
+            to: '"name": "documents"',
+            after: -3,
+          }) ?? undefined,
+          description: 'bootstrap 계층 로드 순서',
+        },
       ],
       notes: [
         {
@@ -54,7 +71,7 @@ export default ({ manifest, helpers }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            'core.js 4,104줄 / state.js 646줄이지만 state.js 가 core 에서 구조 분해로 가져오는 이름이 100개가 넘습니다. ' +
+            `core.js ${coreLines} / state.js ${stateLines} 이지만 state.js 가 core 에서 구조 분해로 가져오는 이름이 100개가 넘습니다. ` +
             'core.js 는 이미 "공통 유틸"이 아니라 여러 도메인의 순수 로직 창고입니다.',
         },
         {
@@ -90,7 +107,19 @@ export default ({ manifest, helpers }) => {
         { title: '종료 직전 전송', body: '창을 닫기 직전 상태도 서버로 보내 마지막 변경을 잃지 않게 합니다.' },
         { title: '토큰 주입', body: '런처가 HTML 에 심어 둔 window.__CLASSDOCK_LOCAL_TOKEN__ 을 읽어 씁니다.' },
       ],
-      files: [{ path: 'desktop/launcher.cs', label: 'launcher.cs (토큰)', range: [740, 800], description: '서버측 토큰 검증' }],
+      files: [
+        {
+          path: 'desktop/launcher.cs',
+          label: 'launcher.cs (토큰)',
+          // 줄 번호가 아니라 앵커로 찾는다 — launcher.cs 가 자라며 [740, 800] 이 엉뚱한 함수를 가리켰다.
+          range: anchoredRange(rootDir, 'desktop/launcher.cs', {
+            from: 'static bool TokenEquals',
+            before: 4,
+            lines: 60,
+          }) ?? undefined,
+          description: '서버측 토큰 검증',
+        },
+      ],
       notes: [
         {
           type: 'good',
@@ -324,7 +353,7 @@ export default ({ manifest, helpers }) => {
         },
         {
           title: '테스트 커버리지',
-          body: 'tests/core.test.js 1,425줄이 이 파일을 중심으로 돕니다. 프로젝트에서 가장 큰 단위 테스트입니다.',
+          body: `tests/core.test.js ${coreTestLines}이 이 파일을 중심으로 돕니다. 프로젝트에서 가장 큰 단위 테스트입니다.`,
         },
       ],
       features: [
@@ -389,7 +418,7 @@ export default ({ manifest, helpers }) => {
       subtitle: '열린 문서·탭·사이드바·토스트의 원본',
       summary:
         '열린 문서 목록(docs), 탭 순서, 사이드바 트리(navNodes), 활성 문서, 앱 설정과 단축키 정의, 공용 토스트·로딩 UI 를 관리합니다. ' +
-        '파일 크기는 646줄로 크지 않지만 앱 전체가 참조하는 상태의 원본이라 실질적 영향력이 가장 큰 파일 중 하나입니다.',
+        `파일 크기는 ${stateLines}로 크지 않지만 앱 전체가 참조하는 상태의 원본이라 실질적 영향력이 가장 큰 파일 중 하나입니다.`,
       usage: [
         {
           title: '조회 성능 인덱스',

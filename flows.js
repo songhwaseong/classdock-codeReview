@@ -839,4 +839,141 @@ window.MN_FLOWS = [
       },
     ],
   },
+
+  {
+    sectionIds: ['map-overview', 'map-viewer', 'launcher-security'],
+    title: '배경 타일 — 화면 한 칸에서 디스크 캐시까지',
+    summary:
+      '지도를 열면 먼저 "이 런처가 타일을 대신 받아 주는가"를 묻고, 받아 준다면 모든 타일이 런처를 거칩니다. ' +
+      '런처는 허용 호스트만 통과시키고 받은 타일을 메모리와 디스크에 남겨, 다음 수업에 인터넷이 없어도 같은 지역이 뜨게 합니다.',
+    steps: [
+      {
+        label: '능력 프로브',
+        location: 'map-viewer.js:641',
+        file: 'src/js/map-viewer.js',
+        line: 641,
+        body:
+          'mapTileProxyBase 가 /can-proxy-tiles 를 한 번만 물어 결과를 _mapProxyProbe 에 담아 둡니다. ' +
+          '저장 가능 여부로 판단하지 않는 이유가 주석에 있습니다 — Go 폴백 런처는 저장은 못 해도 타일은 받습니다.',
+      },
+      {
+        label: '타일 층 만들기',
+        location: 'map-viewer.js:1055',
+        file: 'src/js/map-viewer.js',
+        line: 1055,
+        body:
+          'mapCreateTileLayer 가 MAP_BASEMAPS 의 주소를 프록시 앞에 붙여 Leaflet 타일 층을 만듭니다. ' +
+          '프록시가 없으면 타일 주소를 그대로 씁니다 — 같은 코드 경로에서 두 환경이 갈립니다.',
+      },
+      {
+        label: '허용 호스트 검사',
+        location: 'launcher.cs:2702',
+        file: 'desktop/launcher.cs',
+        line: 2702,
+        body:
+          'TryProxyMapTile 이 TileProxyHosts 6곳과 https 여부를 확인합니다. 목록에 없으면 502 이고 지도는 회색으로 남습니다. ' +
+          '/tile-proxy 는 토큰도 Origin 검사도 없는 유일한 경로라, 이 목록이 사실상 유일한 방어선입니다.',
+      },
+      {
+        label: '캐시 읽기',
+        location: 'launcher.cs:2748',
+        file: 'desktop/launcher.cs',
+        line: 2748,
+        body:
+          'TryReadCachedTile 이 메모리 → 디스크 순으로 봅니다. 7일이 지난 캐시도 버리지 않고 들고 있다가 ' +
+          '인터넷이 끊겼을 때 fallback 으로 내줍니다.',
+      },
+      {
+        label: '캐시 쓰기와 정리',
+        location: 'launcher.cs:2771',
+        file: 'desktop/launcher.cs',
+        line: 2771,
+        body:
+          'WriteCachedTile 이 실제로 화면에 뜬 타일만 남깁니다(사전 다운로드 없음). ' +
+          '400MB 를 넘긴 쓰기 직후 SweepTileCache 가 오래된 것부터 80% 선까지 쓸어 냅니다.',
+      },
+      {
+        label: '계속 실패하면 되돌린다',
+        location: 'map-viewer.js:1110',
+        file: 'src/js/map-viewer.js',
+        line: 1110,
+        body:
+          'mapAttachNetworkNotice 가 프록시 실패를 세다가 MAP_PROXY_FAIL_LIMIT(6)을 넘으면 직접 주소로 조용히 되돌리고 안내를 띄웁니다. ' +
+          '런처가 살아 있어도 바깥 망만 막힌 교실에서 지도가 통째로 죽지 않게 하는 장치입니다.',
+      },
+      {
+        label: '허용 목록 3중 대조',
+        location: 'map-viewer.test.js:1',
+        file: 'tests/map-viewer.test.js',
+        line: 1,
+        body:
+          'MAP_BASEMAPS 의 호스트가 launcher.cs 의 TileProxyHosts 안에 있는지, 그리고 C# 런처와 Go 런처의 목록이 서로 같은지를 ' +
+          '테스트가 세 파일의 소스를 읽어 대조합니다. 세 곳이 조용히 어긋나는 실패를 빌드 시점으로 당겼습니다.',
+      },
+    ],
+  },
+
+  {
+    sectionIds: ['map-viewer', 'map-overview', 'launcher-security'],
+    title: '주소 CSV → 표시 — 한 줄에 한 번씩, 멈출 수 있게',
+    summary:
+      '주소만 적힌 CSV 를 붙여 넣으면 한 줄씩 차례로 좌표를 찾아 표시를 찍습니다. ' +
+      '동시에 던지지 않는 것이 이 흐름의 핵심입니다 — 공급자의 초당 제한에 걸리기 때문입니다.',
+    steps: [
+      {
+        label: 'CSV 읽기',
+        location: 'map-viewer.js:477',
+        file: 'src/js/map-viewer.js',
+        line: 477,
+        body:
+          'mapMarkersFromCsv 가 좌표가 적힌 줄과 주소만 적힌 줄을 갈라, 앞쪽은 바로 표시로 만들고 뒤쪽은 pending 으로 모읍니다. ' +
+          '표시 상한은 5,000개, 좌표를 찾아야 하는 줄은 200개까지만 받습니다.',
+      },
+      {
+        label: '왜 200줄인가',
+        location: 'map-viewer.js:28',
+        file: 'src/js/map-viewer.js',
+        line: 28,
+        body:
+          'OSM 은 정책상 초당 한 건이라 한 줄에 한 번씩 부르면 200줄이 수업 시간 안에 끝나는 한계입니다. ' +
+          '상한 숫자가 아니라 그 숫자가 나온 계산이 상수 옆에 적혀 있습니다.',
+      },
+      {
+        label: '한 줄씩 차례로',
+        location: 'map-viewer.js:1017',
+        file: 'src/js/map-viewer.js',
+        line: 1017,
+        body:
+          'mapResolvePendingMarkers 가 for 문으로 하나씩 await 합니다. 진행률을 그때그때 알리고(onProgress) ' +
+          'shouldStop 으로 중간에 멈출 수 있습니다. 런처가 없다는 오류만은 곧장 던져 200번 헛돌지 않게 합니다.',
+      },
+      {
+        label: '공급자 폴백',
+        location: 'map-viewer.js:697',
+        file: 'src/js/map-viewer.js',
+        line: 697,
+        body:
+          'mapGeocode 가 카카오 주소 → 카카오 키워드 → OSM 순으로 찾고 결과를 공급자+검색어로 캐시합니다. ' +
+          '같은 주소가 CSV 에 두 번 나오면 두 번째는 바깥을 부르지 않습니다.',
+      },
+      {
+        label: '런처가 대신 부른다',
+        location: 'launcher.cs:2305',
+        file: 'desktop/launcher.cs',
+        line: 2305,
+        body:
+          '/geocode 가 공급자별 주소를 만들고, OSM 이면 요청 간격을 강제하고, 카카오면 보관한 REST 키를 Authorization 헤더로 붙입니다. ' +
+          '좌표·반경·갈래 같은 값은 숫자·코드 꼴만 통과시킵니다(ReadGeocodeSpot).',
+      },
+      {
+        label: '표시로 정규화',
+        location: 'map-viewer.js:194',
+        file: 'src/js/map-viewer.js',
+        line: 194,
+        body:
+          'mapNormalizeMarker 가 좌표를 눌러 담고 이름이 비면 찾은 장소 이름을 채웁니다. ' +
+          '못 찾은 줄은 failed 로 모아 사용자에게 그대로 보여 줍니다 — 조용히 빠뜨리지 않습니다.',
+      },
+    ],
+  },
 ];

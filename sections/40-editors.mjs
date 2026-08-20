@@ -1,40 +1,25 @@
-// 5. document-editors — Office, 표, 이미지, 화이트보드.
+// 5. document-editors — Office, 표, 이미지, 화이트보드, 지도 도구.
+//
+// 줄 수는 리뷰 문장에 적지 않고 생성 때 잰다 — 재는 함수는 lib/source-metrics.mjs 에 있다.
+// 손으로 적어 둔 "5,915줄" 이 수식 엔진을 떼어내 5,161줄이 된 뒤에도 그대로 남아 있었고,
+// 화이트보드의 "2,785줄" 도 도구상자가 들어오며 곧바로 낡았다. 소스가 움직이면 문장이 조용히
+// 낡는 자리라 재서 쓴다.
 
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-
-// 줄 수는 리뷰 문장에 적지 않고 생성 때 잰다. 손으로 적어 둔 "5,915줄" 이 수식 엔진을 떼어내
-// 5,161줄이 된 뒤에도 그대로 남아 있었다(같은 문장의 "앞 4,000줄만 실려 있습니다" 도 상한이
-// 4,400 이던 시절 값이었다). 소스가 움직이면 문장이 조용히 낡는 자리라 재서 쓴다.
-const sourceLines = (rootDir, relativePath) => {
-  try {
-    return readFileSync(path.join(rootDir, relativePath), 'utf8').split(/\r?\n/).length;
-  } catch {
-    return null;
-  }
-};
-
-// 최상위 함수 하나의 길이. spreadsheet-viewer.js 의 renderXlsx 처럼 "파일이 큰 것보다 한 함수가
-// 큰 것" 이 문제인 경우를 문장이 아니라 측정으로 말하기 위해서다. 본문이 들여쓰기돼 있으므로
-// 여는 선언 다음에 오는 첫 번째 "열 0 의 }" 가 그 함수의 끝이다.
-const topLevelFunctionSpan = (rootDir, relativePath, name) => {
-  try {
-    const lines = readFileSync(path.join(rootDir, relativePath), 'utf8').split(/\r?\n/);
-    const start = lines.findIndex((line) => new RegExp(`^(async )?function ${name}\\b`).test(line));
-    if (start < 0) return null;
-    const offset = lines.slice(start + 1).findIndex((line) => /^\}/.test(line));
-    if (offset < 0) return null;
-    return { start: start + 1, end: start + offset + 2, span: offset + 2 };
-  } catch {
-    return null;
-  }
-};
+import {
+  sourceLines,
+  linesLabel,
+  topLevelFunctionSpan,
+  functionShare,
+} from '../lib/source-metrics.mjs';
 
 export default ({ manifest, helpers, rootDir }) => {
   const { mod, sec } = helpers;
   const layer = manifest.applicationLayers.find((item) => item.id === 'document-editors');
   const sheetLines = sourceLines(rootDir, 'src/js/spreadsheet-viewer.js');
   const renderXlsx = topLevelFunctionSpan(rootDir, 'src/js/spreadsheet-viewer.js', 'renderXlsx');
+  const boardLines = linesLabel(rootDir, 'src/js/whiteboard.js');
+  const boardToolLines = linesLabel(rootDir, 'src/js/board-tools.js');
+  const renderXlsxShare = functionShare(rootDir, 'src/js/spreadsheet-viewer.js', 'renderXlsx');
 
   return [
     sec({
@@ -91,7 +76,9 @@ export default ({ manifest, helpers, rootDir }) => {
         {
           type: 'risk',
           label: 'Risk',
-          body: 'spreadsheet-viewer.js 5,915줄은 이 프로젝트에서 가장 큰 파일입니다. 시트 UI·수식 엔진·서식·저장이 한곳에 있어 분할 1순위 후보입니다.',
+          body:
+            `spreadsheet-viewer.js ${sheetLines ? sheetLines.toLocaleString('en-US') + '줄' : ''}은 이 프로젝트에서 가장 큰 파일입니다. ` +
+            (renderXlsxShare ? `그중 renderXlsx 한 함수가 ${renderXlsxShare}% 라, 파일이 큰 것보다 함수가 큰 쪽이 실제 문제입니다.` : '시트 UI·서식·저장이 한곳에 있습니다.'),
         },
         {
           type: 'risk',
@@ -722,16 +709,121 @@ export default ({ manifest, helpers, rootDir }) => {
       ],
     }),
 
+    mod('board-tools.js', {
+      title: 'board-tools.js — 화이트보드 수학·과학 도구',
+      subtitle: '계산 전용 순수 모듈 MNBoardTools — DOM 을 만들지 않고 벡터 항목만 돌려준다',
+      summary:
+        '함수 그래프, 자료 차트와 통계, 손그림 도형 정리, 교구(자·각도기·컴퍼스) 기하, 변환 기하, 동적 측정, ' +
+        '화학(주기율표·반응식 균형·화학량론), 확률 실험, 수 모형, 벡터 합성, 광학 작도, 유전, 회로 계산이 들어 있습니다. ' +
+        '어느 것도 DOM 을 만들지 않고 board-render.js 가 그대로 그리는 벡터 group 만 돌려주므로, ' +
+        '저장·되돌리기·PNG/PDF 내보내기·수업 리플레이가 전부 공짜로 따라옵니다. ' +
+        'whiteboard.js 에서 계산부를 떼어 낸 모듈이며, 화면 조작(패널·드래그)은 그대로 whiteboard.js 에 남았습니다.',
+      usage: [
+        {
+          title: '수식은 eval 없이 계산한다',
+          body:
+            '토큰 → 구문나무 → 계산의 3단계 파서를 직접 씁니다. eval 이나 new Function 을 쓰면 학생이 적은 글자가 그대로 실행되는데, ' +
+            '이 앱은 그 입력이 .lesson 파일로 저장돼 다른 PC 에서 다시 열립니다. 파서를 직접 쓴 값으로 "2x(x+1)" 처럼 ' +
+            '곱셈 기호를 생략한 학교식 표기도 읽습니다.',
+        },
+        {
+          title: '사용자 잘못과 코드 잘못을 갈라 던진다',
+          body:
+            'toolError 가 만든 오류에는 boardTool 표시가 붙습니다. 수식 오타처럼 사용자가 고칠 수 있는 것만 이 표시를 달아 ' +
+            '한국어 메시지를 그대로 화면에 보여 주고, 표시가 없는 오류는 코드 문제로 봅니다. ' +
+            '"오류 메시지를 사용자에게 보여도 되는가"를 타입으로 정해 둔 형태입니다.',
+        },
+        {
+          title: '학교 표기를 기본으로 삼는다',
+          body:
+            'log 는 상용로그, ln 은 자연로그입니다(수학 라이브러리 관례와 반대). ' +
+            '사분위수도 학교식으로 재고, 퍼넷 사각형은 우성(대문자)을 앞에 적습니다. ' +
+            '표준을 따르는 대신 교실에서 쓰는 표기를 따랐고, 그 이유가 상수 옆 주석에 한 줄씩 남아 있습니다.',
+        },
+        {
+          title: '표 그리기는 한 함수로 모았다',
+          body:
+            'tableGroup 하나가 값의 표·자료 요약 카드·도수분포표·화학량론 표를 모두 그립니다. ' +
+            '칸 너비는 estimateTextWidth 로 글자 폭을 어림해 정합니다 — 벡터 항목이라 실제 텍스트 측정을 쓸 수 없기 때문입니다.',
+        },
+      ],
+      features: [
+        { title: '함수 그래프', body: '자동 y 범위(점근선에 휘둘리지 않음), 점근선에서 획 끊기, 매개변수 슬라이더를 보드에 함께 그리기, 교점·접선·구간 넓이·부등식 영역.' },
+        { title: '자료 차트', body: '막대·꺾은선·원·히스토그램·산점도·상자그림. 쉼표·탭·띄어쓰기로 적은 표를 읽고, 산점도에는 최소제곱 추세선을 얹습니다.' },
+        { title: '통계', body: 'describeData 가 학교식 사분위수·최빈값·표준편차를 재고, 상자그림·도수분포표·추세선이 그 값을 그대로 씁니다.' },
+        { title: '손그림 정리', body: '펜 획을 직선·원·삼각형·사각형으로 인식합니다. 크게 그린 도형만 바꾸고 글씨 크기 획은 건드리지 않습니다.' },
+        { title: '교구 기하', body: '자 모서리 스냅, 15° 각도 스냅, 각도기 읽기, 컴퍼스 호. 1cm = 37.8px(96dpi) 한 상수로 눈금을 환산합니다.' },
+        { title: '변환 기하', body: '평행이동·회전·선대칭·점대칭·닮음. 그룹은 풀었다 다시 묶고, 기울어진 사각형은 다각형으로 바꿔 옮깁니다.' },
+        { title: '화학', body: '118개 원소 주기율표, 화학식 파서, 유리수 가우스 소거로 반응식 계수 맞추기, 몰질량과 화학량론.' },
+        { title: '확률·수 모형', body: '동전·주사위·주머니(복원/비복원)·스피너를 굴려 누적 상대도수로 큰 수의 법칙을 보이고, 분수·자릿값·수직선·양팔 저울을 값 그대로 그립니다.' },
+        { title: '과학 계산', body: '벡터 합성(평행사변형·합력), 렌즈·거울 광선 작도, 퍼넷 사각형, 직렬·병렬 회로.' },
+      ],
+      files: [
+        { path: 'tests/board-tools.test.js', label: 'board-tools.test.js', description: '계산 결과를 값으로 검증하는 27개' },
+        { path: 'tests/e2e/whiteboard-math-tools.spec.js', label: 'whiteboard-math-tools.spec.js', description: '그래프·차트·화학 탭' },
+        { path: 'tests/e2e/whiteboard-geometry-tools.spec.js', label: 'whiteboard-geometry-tools.spec.js', description: '교구·변환·측정' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '이 계층에서 가장 값진 분리입니다. 앞선 리뷰에서 "도구 목록과 그리기 코드가 한 파일에 있다"고 지적한 부분이 실제로 갈라졌고, ' +
+            '떼어 낸 쪽이 DOM 을 전혀 만들지 않는 순수 모듈이라 27개 테스트가 모의 객체 없이 성립합니다. ' +
+            'music-model.js·data-convert.js 와 같은 방식이 UI 계층에도 자리 잡았습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '테스트가 "그려지는지"가 아니라 "값이 맞는지"를 봅니다 — 반응식 계수가 정확한 정수인지, ' +
+            '광선 작도의 상 위치가 렌즈 공식과 맞는지, 확률 실험 합계가 횟수와 맞는지. ' +
+            'whiteboard.js 쪽 테스트가 소스 문자열 매칭에 기대는 것과 대비되며, 계산을 떼어 낸 덕에 가능해진 검증입니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '수식 계산에 eval 계열을 쓰지 않았습니다. 학생이 적은 식이 .lesson 에 저장돼 다른 PC 에서 열리는 경로가 있으므로 ' +
+            '실질적인 보안 결정이며, 파서를 직접 쓴 값으로 학교식 생략 표기까지 얻었습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '한 모듈에 15개 주제(그래프·차트·표·도형 인식·교구·변환·측정·화학·확률·수 모형·벡터·광학·유전·회로)가 번호 붙은 구획으로 들어 있고, ' +
+            '이미 2,485줄입니다. 지금은 "계산 대 화면"이라는 한 가지 기준으로 갈라져 있어 경계가 선명하지만, ' +
+            '과목이 더 붙으면 whiteboard.js 가 겪은 성장을 이 파일이 그대로 겪습니다. 주제별 분할선은 이미 주석으로 그어져 있습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '공개 API 가 60개 이상의 이름을 한 번에 내놓습니다(Object.freeze 로 얼려 두긴 했습니다). ' +
+            'whiteboard.js 가 그중 실제로 부르는 것은 60여 곳에서 30개 남짓이라, 어떤 이름이 정말 경계인지와 ' +
+            '내부 도우미가 우연히 새어 나온 것인지 구분이 되지 않습니다. check-source.js 는 이름 하나(MNBoardTools)만 검사합니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '차트·그래프가 돌려주는 항목 종류가 board-render.js 가 그릴 수 있는 것뿐인지를 테스트가 확인합니다. ' +
+            '렌더러가 모르는 종류를 만들면 저장은 되는데 다시 열었을 때 빈 자리가 되므로, 그 실패를 단위 테스트로 앞당겨 놓았습니다.',
+        },
+      ],
+    }),
+
     mod('whiteboard.js', {
       title: 'whiteboard.js — 화이트보드 문서',
       subtitle: '그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴',
       summary:
         '독립 화이트보드 문서, 그리기 도구, 선택·이동, 이미지 삽입, 되돌리기, 복구 저장과 리플레이 녹화 연결을 담당합니다. ' +
         'MNEditHistory 의 board 상한(140단계)을 씁니다 — 벡터 항목 배열이라 스냅샷이 가볍기 때문입니다. ' +
-        '2026-08-09 에 수학·과학 도구상자(기호·수식·도형·과학 스텐실)가 들어오며 636 → 1,342줄이 됐고, ' +
-        '이 파일에서 처음으로 순수 함수 일부가 module.exports 로 나와 단위 테스트 대상이 됐습니다. ' +
-        '이어 2026-08-11~12 에 집중 도구(스포트라이트·화면 가리개)·보드 우클릭 메뉴 3단계·선택 항목 스타일 편집·화면 확대/축소·배경색이 들어와 2,785줄이 됐습니다. ' +
-        'src/js 에서 7번째로 큰 파일이며, 이 계층에서 가장 빠르게 자라는 파일입니다.',
+        '2026-08-09 에 수학·과학 도구상자가 들어오며 636 → 1,342줄로 두 배가 됐고, 이 파일에서 처음으로 순수 함수 일부가 module.exports 로 나와 단위 테스트 대상이 됐습니다. ' +
+        '이어 08-11~12 에 집중 도구(스포트라이트·화면 가리개)·보드 우클릭 메뉴 3단계·선택 항목 스타일 편집·화면 확대/축소·배경색이, ' +
+        '08-15~17 에 그래프·차트·주기율표·교구·변환·측정 패널과 지도 넣기가 들어왔습니다. ' +
+        `계산부를 board-tools.js(${boardToolLines})로 떼어 냈는데도 이 파일은 ${boardLines}로, 여전히 이 계층에서 가장 빠르게 자랍니다 — ` +
+        '떼어 낸 것은 계산이고 남은 것은 그 계산을 붙이는 화면 배선이기 때문입니다.',
       usage: [
         {
           title: '판서 콘텐츠와 화면 상태를 갈라 둔다',
@@ -779,7 +871,26 @@ export default ({ manifest, helpers, rootDir }) => {
           title: '도구상자 목록',
           body:
             '기호·수식·도형·과학 4묶음에 50개 이상, 스텐실만 60개 이상입니다. 도형은 평면·입체·작도·그래프, ' +
-            '과학은 역학·전기·광학·화학·생물·지구로 다시 나뉩니다.',
+            '과학은 역학·전기·광학·화학·생물·지구로 다시 나뉩니다. ' +
+            '여기에 그래프·차트·주기율표·수 모형·과학 계산 탭이 더해졌고, 그 계산은 모두 board-tools.js 가 합니다.',
+        },
+        {
+          title: '넣은 뒤 다시 고치기',
+          body:
+            '그래프·차트·표·수 모형 항목은 만들 때 쓴 재료(toolSpec)를 항목에 함께 담아 둡니다. ' +
+            '그래서 더블클릭하면 그 폼이 값 그대로 다시 열립니다 — 지우고 새로 넣지 않아도 됩니다.',
+        },
+        {
+          title: '보드 위 슬라이더',
+          body:
+            '매개변수가 있는 그래프는 슬라이더를 보드에 함께 그립니다. 끄는 동안에는 되돌리기 칸을 만들지 않다가 ' +
+            '손을 뗄 때 한 번만 기록해, Ctrl+Z 한 번에 끌기 전으로 돌아갑니다.',
+        },
+        {
+          title: '지도 넣기',
+          body:
+            '🗺️ 가 map-viewer.js 의 openMapPicker() 를 불러 배경지도를 그림으로 삽입합니다. ' +
+            'map-viewer 가 이 파일보다 뒤에 로드되므로 실행 시점에 존재를 확인해 부릅니다.',
         },
         {
           title: '수식 사전',
@@ -891,10 +1002,10 @@ export default ({ manifest, helpers, rootDir }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '스텐실 60개 이상의 좌표가 코드 상수로 들어 있습니다. 도형을 고치거나 더할 때마다 이 파일이 커지고, ' +
-            '"도구 목록"과 "그리기 코드"가 같은 파일에 있어 whiteboard.js 가 계속 자랍니다. ' +
-            '실제로 636 → 1,342 → 2,785줄로 3주 만에 네 배가 됐고, 이제 도구상자·집중 도구·우클릭 메뉴·스타일 편집이 한 파일에 함께 있습니다. ' +
-            '목록을 데이터 파일로 떼면 그리기 로직만 남습니다.',
+            '앞선 리뷰에서 지적한 "도구 목록과 그리기 코드가 한 파일에" 는 절반만 풀렸습니다. ' +
+            '계산은 board-tools.js 로 나갔지만 스텐실 60개 이상의 좌표는 여전히 코드 상수로 이 파일에 있고, ' +
+            `그 사이 새 패널(그래프·차트·화학·교구·변환·측정)의 화면 배선이 들어와 ${boardLines}가 됐습니다. ` +
+            '남은 절반 — 도구 목록을 데이터 파일로 빼는 것 — 을 하면 그리기와 배선만 남습니다.',
         },
         {
           type: 'risk',

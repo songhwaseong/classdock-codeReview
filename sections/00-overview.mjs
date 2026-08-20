@@ -1,7 +1,14 @@
 // 개요 — 프로젝트 전체 구조와, 이 프로젝트를 읽을 때 먼저 알아야 할 계약들.
 
-export default ({ manifest, helpers, diagrams }) => {
+import { anchoredRange, largestScriptsLabel, linesLabel } from '../lib/source-metrics.mjs';
+
+export default ({ manifest, helpers, diagrams, rootDir }) => {
   const { sec } = helpers;
+  // 큰 파일 목록은 순위가 자주 바뀐다 — 적어 두지 않고 생성 때 고른다.
+  const biggestFiles = largestScriptsLabel(rootDir, manifest, 4);
+  // manifest 안의 구간도 줄 번호로 적지 않는다 — 파일이 늘면 그대로 어긋난다(실제로 어긋났다).
+  const manifestRange = (from, to) => anchoredRange(rootDir, 'scripts.manifest.json', { from, to, after: -1 }) ?? undefined;
+  const whiteboardNow = linesLabel(rootDir, 'src/js/whiteboard.js');
   const lazyCount = manifest.vendorScripts.filter((item) => item.lazy).length;
   const layerCount = manifest.applicationLayers.length;
   const dependencyCount = Object.keys(manifest.scriptDependencies ?? {}).length;
@@ -102,11 +109,14 @@ export default ({ manifest, helpers, diagrams }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '전역 스크립트라 파일 하나가 커지는 것을 막는 구조적 압력이 없습니다. spreadsheet-viewer.js 5,916줄 / core.js 4,104줄 / code-viewer.js 4,034줄 / documents.js 3,837줄이 그 결과입니다. ' +
+            `전역 스크립트라 파일 하나가 커지는 것을 막는 구조적 압력이 없습니다. 지금 가장 큰 넷은 ${biggestFiles} 입니다. ` +
             '분할하려면 로딩 순서와 전역 이름을 함께 손봐야 해서 비용이 큽니다. ' +
-            '2026-08-08~09 의 Word 편집·화이트보드 확장에서 docx-editor.js 2,203줄 · office-replace.js 2,124줄 · whiteboard.js 1,342줄이 새로 이 목록에 합류했고, ' +
-            '이어진 2026-08-11~12 의 화이트보드 확장에서 whiteboard.js 만 다시 2,785줄이 되어 docx-editor.js 를 넘어섰습니다 — ' +
-            '압력이 없다는 진단이 나흘 만에 두 번 재확인된 셈입니다. 같은 기간 core.js 도 수식 파서가 늘며 code-viewer.js 를 제치고 두 번째로 큰 파일이 됐습니다.',
+            '이 진단은 3주 사이에 네 번 재확인됐습니다 — 2026-08-08~09 의 Word 편집·화이트보드 확장으로 docx-editor.js·office-replace.js·whiteboard.js 가 이 목록권에 들어왔고, ' +
+            '08-11~12 의 집중 도구·우클릭 메뉴로 whiteboard.js 가 다시 두 배가 됐으며, ' +
+            `08-15~17 의 수학·과학 도구상자로 또 한 번 늘어 지금 ${whiteboardNow}이고, ` +
+            '08-17~20 에는 지도(map-viewer.js)가 통째로 새 상위권 파일로 들어왔습니다. ' +
+            '다만 같은 기간에 반대 방향의 움직임도 있었습니다 — spreadsheet-viewer.js 에서 수식 엔진을, whiteboard.js 에서 계산 도구를 떼어 냈습니다. ' +
+            '떼어 낸 쪽은 둘 다 DOM 없는 순수 모듈이라, 압력이 없는 구조에서도 분할이 되는 조건("계산과 화면이 갈리는 자리")이 무엇인지는 드러났습니다.',
         },
         {
           type: 'risk',
@@ -170,7 +180,7 @@ export default ({ manifest, helpers, diagrams }) => {
         {
           path: 'scripts.manifest.json',
           label: 'manifest (계층)',
-          range: [1, 176],
+          range: manifestRange('"styles"', '"applicationLayers"'),
           description: 'styles 와 localScripts — 로드 순서의 원본',
         },
         {
@@ -255,7 +265,7 @@ export default ({ manifest, helpers, diagrams }) => {
         {
           path: 'scripts.manifest.json',
           label: 'manifest (의존)',
-          range: [177, 326],
+          range: manifestRange('"scriptDependencies"', '"vendorScripts"'),
           description: 'scriptDependencies 와 moduleBoundaries 선언',
         },
         {
@@ -344,7 +354,7 @@ export default ({ manifest, helpers, diagrams }) => {
         {
           path: 'scripts.manifest.json',
           label: 'manifest (경계)',
-          range: [327, 579],
+          range: manifestRange('"moduleBoundaries"', '"vendorScripts"'),
           description: 'moduleBoundaries 선언',
         },
       ],

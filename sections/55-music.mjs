@@ -3,8 +3,13 @@
 // learning-tools 계층에 속하지만 파일이 넷이고 4,800줄이라 50-learning.mjs 에서 떼어 둔다.
 // 카테고리는 같으므로 사이드바에서는 learning-tools 안의 "악보" 묶음으로 이어 붙는다.
 
-export default ({ helpers }) => {
+import { linesLabel } from '../lib/source-metrics.mjs';
+
+export default ({ helpers, rootDir }) => {
   const { mod, sec } = helpers;
+  // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs).
+  const modelLines = linesLabel(rootDir, 'src/js/music-model.js');
+  const editorLines = linesLabel(rootDir, 'src/js/music-editor.js');
 
   return [
     sec({
@@ -24,14 +29,14 @@ export default ({ helpers }) => {
           body:
             'music-model.js 는 음악 규칙(틱·음높이·조표·마디 채움)만 알고 DOM·오디오·VexFlow 를 참조하지 않습니다. ' +
             'music-xml.js 는 MusicXML 과의 변환, music-audio.js 는 소리, music-editor.js 는 화면과 조작입니다. ' +
-            '모델이 순수하기 때문에 음악 규칙 24개를 node --test 로 브라우저 없이 검증합니다.',
+            '모델이 순수하기 때문에 음악 규칙 29개를 node --test 로 브라우저 없이 검증합니다.',
         },
         {
           title: '앱 본체에 남긴 자국',
           body:
             'file-loaders.js 에 확장자 분기 2줄, documents.js 에 폴더 우클릭 "+Ms" 항목, command-palette.js 에 명령 1개, ' +
             'app.js 에 사이드바 버튼과 인쇄 분기, lazy.js 에 vexflow 묶음, i18n.js 에 문구 2개. ' +
-            '4,800줄짜리 기능을 붙이면서 기존 파일에는 이만큼만 손댔습니다.',
+            '기능 하나를 통째로 붙이면서 기존 파일에는 이만큼만 손댔습니다.',
         },
         {
           title: '이름을 music* 로 통일한 이유',
@@ -48,15 +53,24 @@ export default ({ helpers }) => {
       ],
       features: [
         { title: '입력', body: '오선 클릭, 도·레·미 버튼, 숫자키 1~5(음길이)·R(쉼표)·.(점). 세 경로가 같은 삽입 함수로 모입니다.' },
-        { title: '소리', body: '피아노·기타·실로폰·하프·플루트·클라리넷 실제 녹음 6종 + 합성음 3종.' },
+        { title: '소리', body: '피아노·기타·실로폰·하프·플루트·클라리넷 실제 녹음 6종 + 합성음 3종. 음색은 처음 재생할 때만 샘플을 읽습니다.' },
         { title: '재생', body: '전체·마디 범위·반복, 속도 50/75/100%, 카운트인, 메트로놈.' },
         { title: '내보내기', body: 'WAV(OfflineAudioContext 렌더), MusicXML, 인쇄(같은 문서 안 인쇄용 층).' },
         { title: '되돌리기', body: 'MNEditHistory 소비자. 스냅샷은 악보 JSON 문자열이라 가볍고, 제목 타자는 한 단계로 묶습니다.' },
+        {
+          title: '조옮김',
+          body:
+            '노래 전체를 반음 단위로 올리고 내립니다. 조표만 바꾸는 "조표 선택"과 헷갈리기 쉬운 자리라, ' +
+            '두 단추의 title 에 무엇이 다른지 한 줄씩 적어 두었습니다. 음역을 벗어나는 음이 생겨도 막지 않고 물어보기만 합니다.',
+        },
+        { title: '대보표', body: '단선율과 피아노 대보표(높은음자리 + 낮은음자리)를 같은 모델로 다룹니다.' },
+        { title: '메모지 왕복', body: '악보를 메모 그림으로 보내고 되돌아옵니다. 이어진 탭의 내용이 그림과 다르면 그 갈림길만 사용자에게 묻습니다.' },
       ],
       files: [
         { path: 'docs/악보-설계.md', label: '악보-설계.md', description: '설계 문서 — 결정과 그 근거, P0~P4 단계' },
-        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '음악 규칙 24개' },
+        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '음악 규칙 29개' },
         { path: 'tests/music-xml.test.js', label: 'music-xml.test.js', description: 'MusicXML 왕복 7개' },
+        { path: 'tests/music-memo-roundtrip.test.js', label: 'music-memo-roundtrip.test.js', description: '메모 그림 ↔ 악보 탭 왕복 9개' },
       ],
       notes: [
         {
@@ -80,13 +94,14 @@ export default ({ helpers }) => {
           body:
             '설계 문서의 "범위" 절이 구현을 따라오지 못했습니다. 1차 제외로 적힌 화음·두 성부·대보표·붙임줄·이음줄·가사·셈여림·반복기호·MusicXML 이 ' +
             '모두 구현돼 있고(잇단음표만 남음), 저장 포맷도 문서의 version 2 가 아니라 4 입니다. ' +
+            '그 뒤로도 조옮김·대보표·기타 음색·메모지 왕복이 더 들어와, 문서와 구현의 거리가 좁혀지기는커녕 더 벌어졌습니다. ' +
             '문서를 읽고 "이건 아직 없겠구나" 판단하면 틀립니다. §1·§2 를 현재 구현에 맞추는 편이 좋습니다.',
         },
         {
           type: 'info',
           label: 'Info',
           body:
-            '단위 테스트 76개(모델 24 · 편집기 32 · 소리 13 · MusicXML 7)가 붙어 있습니다. ' +
+            '단위 테스트 95개(모델 29 · 편집기 37 · 소리 13 · MusicXML 7 · 메모 왕복 9)가 붙어 있습니다. ' +
             '다만 실제 조판과 소리는 브라우저가 있어야 확인되므로, 설계 문서도 각 단계마다 "남은 확인"으로 그 한계를 적어 두었습니다. ' +
             'tools/music-audio-check.html 이 그 수동 확인용 페이지입니다.',
         },
@@ -96,7 +111,7 @@ export default ({ helpers }) => {
     mod('music-model.js', {
       group: '악보',
       title: 'music-model.js — 악보 모델 (.msheet)',
-      subtitle: '순수 규칙 891줄 — DOM·오디오·VexFlow 를 모름',
+      subtitle: `순수 규칙 ${modelLines} — DOM·오디오·VexFlow 를 모름`,
       summary:
         '.msheet 의 데이터 모델과 음악 규칙 전부입니다. 음표·쉼표·마디 생성, 틱 계산, 마디 채움 검사, 조표 30종, ' +
         '{step, octave, alter} → MIDI → 주파수 변환, 오선 자리 ↔ 음높이 변환, 도돌이를 펼친 재생 타임라인, 줄바꿈 배치까지 여기 있습니다. ' +
@@ -129,7 +144,7 @@ export default ({ helpers }) => {
         { title: '줄바꿈 배치', body: 'musicPackLines 가 마디별 폭을 어림해 줄에 채우고 남는 폭을 비례 배분합니다.' },
       ],
       files: [
-        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '학교종 4마디 표본으로 규칙 24개 검증' },
+        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '학교종 4마디 표본으로 규칙 29개 검증' },
       ],
       notes: [
         {
@@ -158,7 +173,7 @@ export default ({ helpers }) => {
           type: 'info',
           label: 'Info',
           body:
-            '891줄 중 절반이 상수 표(조표 30종·음표 값·샘플 음역)입니다. 로직 자체는 크지 않고, ' +
+            `${modelLines} 중 절반이 상수 표(조표 30종·음표 값·샘플 음역)입니다. 로직 자체는 크지 않고, ` +
             '표가 커진 만큼 손으로 적은 예외가 줄었습니다.',
         },
       ],
@@ -295,7 +310,7 @@ export default ({ helpers }) => {
     mod('music-editor.js', {
       group: '악보',
       title: 'music-editor.js — 악보 편집기',
-      subtitle: '2,793줄 — 조판·도구상자·입력·재생 화면',
+      subtitle: `${editorLines} — 조판·도구상자·입력·재생 화면`,
       summary:
         '.msheet 열기·저장, VexFlow 조판, 도구상자, 오선 클릭 입력, 선택·이동·삭제, 미리듣기, 재생 화면, WAV·MusicXML 내보내기, ' +
         '인쇄, 되돌리기, 확대, 창 크기 변경 시 재조판을 담당합니다. 음악 규칙은 music-model.js, 소리는 MNMusicAudio 에 맡기고 ' +

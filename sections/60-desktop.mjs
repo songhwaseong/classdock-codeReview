@@ -1,16 +1,31 @@
 // EXE — desktop/launcher.cs 가 만드는 127.0.0.1 로컬 서버.
-// 7,257줄짜리 단일 C# 파일이라 기능 구간별로 잘라서 싣는다.
+// 7천 줄대 단일 C# 파일이라 기능 구간별로 잘라서 싣는다.
+//
+// 구간을 [시작줄, 끝줄] 로 적어 두면 그 파일이 자라는 순간 다른 코드를 가리킨다. 실제로
+// launcher.cs 가 7,118 → 7,861줄이 되면서 여기 걸려 있던 구간 21개가 전부 어긋났고,
+// "인증 판정" 을 눌러도 폴더 고르기 코드가 뜨는 상태가 됐다. 그래서 지금은 줄 번호가 아니라
+// 코드 안의 잘 안 변하는 문자열(함수 이름·라우팅 경로)을 앵커로 두고 생성 때 다시 찾는다.
+// 앵커를 못 찾으면 조용히 넘어가지 않고 생성 스크립트가 경고한다.
 
-const L = (label, range, description) => ({
-  path: 'desktop/launcher.cs',
-  label,
-  range,
-  description,
-});
+import { anchoredRange } from '../lib/source-metrics.mjs';
 
-export default ({ helpers, diagrams }) => {
+// 앵커를 찾지 못한 구간. 생성 스크립트가 이 목록을 경고로 찍는다.
+export const brokenAnchors = [];
+
+export default ({ helpers, diagrams, rootDir }) => {
   const { sec } = helpers;
   const CAT = 'EXE · 로컬 서버';
+
+  /**
+   * @param label       화면에 보일 구간 이름
+   * @param anchor      { from, to?, lines?, before?, after? } — lib/source-metrics.mjs 참고
+   * @param description 구간 설명
+   */
+  const L = (label, anchor, description) => {
+    const range = anchoredRange(rootDir, 'desktop/launcher.cs', anchor);
+    if (!range) brokenAnchors.push(`${label} — ${anchor.from}`);
+    return { path: 'desktop/launcher.cs', label, range: range ?? undefined, description };
+  };
 
   return [
     sec({
@@ -51,8 +66,8 @@ export default ({ helpers, diagrams }) => {
         { title: '메모리 감시', body: '자기 자신과 자식 프로세스(파이썬 커널·드라이버)의 메모리를 측정합니다. 수업용 PC 가 통째로 멈추는 것을 막기 위한 장치입니다.' },
       ],
       files: [
-        L('launcher.cs (상수·클래스)', [40, 200], '메모리 측정, 저장 경로, 상한 값 정의'),
-        L('launcher.cs (버퍼·세션 클래스)', [193, 400], 'WorkspaceFile · LimitedTextBuffer · PythonSession · PipJob · TerminalSession · PythonKernel'),
+        L('launcher.cs (상수·클래스)', { from: '프로세스 트리', before: 8, lines: 160 }, '메모리 측정, 저장 경로, 상한 값 정의'),
+        L('launcher.cs (버퍼·세션 클래스)', { from: 'class WorkspaceFile', before: 2, to: 'class PythonKernel' }, 'WorkspaceFile · LimitedTextBuffer · PythonSession · PipJob · TerminalSession · PythonKernel'),
         { path: 'desktop/main.go', label: 'main.go', description: 'C# 컴파일러가 없을 때의 Go 폴백 런처' },
       ],
       notes: [
@@ -116,9 +131,9 @@ export default ({ helpers, diagrams }) => {
         { title: '실행별 토큰', body: 'CreateLocalAuthToken() 으로 실행마다 새 토큰을 만들어 HTML 에 심습니다.' },
       ],
       files: [
-        L('launcher.cs (Main)', [1004, 1100], '포트 후보 결정과 단일 인스턴스 처리'),
-        L('launcher.cs (설정 상수)', [130, 205], '포트 기록·앱 모드·저장 루트·Pyodide·npm 폴더'),
-        L('launcher.cs (앱 모드 API)', [1560, 1610], '/launcher-config · /reopen-app-mode'),
+        L('launcher.cs (Main)', { from: 'static void Main()', before: 9, lines: 106 }, '포트 후보 결정과 단일 인스턴스 처리'),
+        L('launcher.cs (설정 상수)', { from: 'static readonly object WorkspaceLock', before: 4, lines: 80 }, '포트 기록·앱 모드·저장 루트·Pyodide·npm 폴더'),
+        L('launcher.cs (앱 모드 API)', { from: 'method == "GET" && path == "/launcher-config"', before: 2, lines: 56 }, '/launcher-config · /reopen-app-mode'),
         { path: 'desktop/start-server-hidden.vbs', label: 'start-server-hidden.vbs', description: '콘솔 없이 서버만 띄우는 상시 실행' },
         { path: 'desktop/stop-server.cmd', label: 'stop-server.cmd', description: '서버 종료' },
       ],
@@ -178,8 +193,8 @@ export default ({ helpers, diagrams }) => {
         { title: '테스트', body: 'tests/local-server-security.test.js 가 인증·경로 검증·보안 헤더·실행 상한을 검사합니다.' },
       ],
       files: [
-        L('launcher.cs (인증 판정)', [758, 881], 'TokenEquals · HasAllowedLocalHost · HasAllowedLocalOrigin · RequiresLocalAuthToken'),
-        L('launcher.cs (요청 처리 진입)', [1180, 1295], '인증 적용과 tile-proxy 예외'),
+        L('launcher.cs (인증 판정)', { from: 'static bool TokenEquals', before: 4, to: 'static bool IsImageMemoExtension', after: -1 }, 'TokenEquals · HasAllowedLocalHost · HasAllowedLocalOrigin · RequiresLocalAuthToken'),
+        L('launcher.cs (요청 처리 진입)', { from: '지도 스냅샷의 sandbox iframe', before: 40, lines: 116 }, '인증 적용과 tile-proxy 예외'),
         { path: 'tests/local-server-security.test.js', label: 'local-server-security.test.js', description: '로컬 API 보안 계약 테스트' },
         { path: 'src/js/state-sync.js', label: 'state-sync.js', description: '프런트에서 토큰을 붙이는 쪽' },
       ],
@@ -189,6 +204,15 @@ export default ({ helpers, diagrams }) => {
           label: 'Good',
           body:
             'DNS rebinding 을 명시적으로 의식하고 Host 헤더까지 검증합니다. loopback 서버에서 흔히 빠뜨리는 방어이고, 주석에 이유도 남아 있습니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '이 리뷰의 계약 카드는 launcher.cs 의 라우팅과 생성 시 대조합니다 — 런처에 있는데 카드가 없는 경로, ' +
+            '카드가 적었는데 런처에 없는 경로, 두 카드가 겹쳐 맡은 경로를 각각 경고합니다. ' +
+            '전역 공개 API 와 달리 엔드포인트에는 manifest 같은 정답 목록이 없어 라우팅 사슬 자체를 목록으로 삼았습니다. ' +
+            '이 검사가 없던 동안 지도 엔드포인트 10개가 조용히 빠진 채로 남아 있었습니다.',
         },
         {
           type: 'good',
@@ -248,8 +272,8 @@ export default ({ helpers, diagrams }) => {
         { title: '이미지 메모', body: '/image-memo-list · /image-memo-file · /image-memo-delete 로 캡처 이미지를 관리합니다.' },
       ],
       files: [
-        L('launcher.cs (저장 루트)', [1620, 1740], '/save-root · /open-save-folder · /open-file-folder · /choose-save-folder'),
-        L('launcher.cs (파일 쓰기)', [1830, 1920], '/image-memo-* · /save-file-exists · /save-file'),
+        L('launcher.cs (저장 루트)', { from: 'method == "GET" && path == "/save-root"', before: 6, lines: 126 }, '/save-root · /open-save-folder · /open-file-folder · /choose-save-folder'),
+        L('launcher.cs (파일 쓰기)', { from: 'method == "GET" && path == "/image-memo-list"', before: 14, lines: 104 }, '/image-memo-* · /save-file-exists · /save-file'),
         { path: 'tests/native-folder-terminal.test.js', label: 'native-folder-terminal.test.js', description: '실제 경로 전달과 Shell 직접 호출' },
       ],
       notes: [
@@ -301,8 +325,8 @@ export default ({ helpers, diagrams }) => {
         { title: '복구 가능한 교체', body: '새 설치를 stage에 만든 뒤 기존 캐시를 .old-*로 옮겨 교체하고, 실패하면 이전 폴더를 복구합니다.' },
       ],
       files: [
-        L('launcher.cs (npm 라우팅)', [2038, 2095], '/js-npm-status·list·bundle·install-start·install-poll·install-cancel·remove'),
-        L('launcher.cs (npm 구현)', [5415, 5820], '입력 검증·Node 탐색·프로세스·캐시·폴링'),
+        L('launcher.cs (npm 라우팅)', { from: 'method == "GET" && path == "/js-npm-status"', before: 14, lines: 62 }, '/js-npm-status·list·bundle·install-start·install-poll·install-cancel·remove'),
+        L('launcher.cs (npm 구현)', { from: 'static string JsNpmStatus()', before: 60, lines: 405 }, '입력 검증·Node 탐색·프로세스·캐시·폴링'),
         { path: 'desktop/npm_package_runner.js', label: 'npm_package_runner.js', description: '--ignore-scripts 설치와 esbuild Worker 번들 생성' },
         { path: 'tests/js-npm-desktop.test.js', label: 'js-npm-desktop.test.js', description: '토큰·제한·EXE 리소스 계약' },
       ],
@@ -369,10 +393,10 @@ export default ({ helpers, diagrams }) => {
         { title: '설치 진행 표시', body: 'tests/python-pip-install-progress.test.js 가 라벨 축약과 경과 시간 표시를 검사합니다.' },
       ],
       files: [
-        L('launcher.cs (가용성)', [1438, 1460], '/can-run-python · /python-diagnostics · /python-rescan'),
-        L('launcher.cs (pip)', [2090, 2150], '/pip-install · /pip-install-start'),
-        L('launcher.cs (실행)', [2295, 2355], '/run-python · /run-python-bundle'),
-        L('launcher.cs (진단·자동완성)', [1920, 2010], '/can-complete · /python-import-index · /complete · /definition'),
+        L('launcher.cs (가용성)', { from: 'path == "/can-run-python"', before: 2, lines: 24 }, '/can-run-python · /python-diagnostics · /python-rescan'),
+        L('launcher.cs (pip)', { from: 'method == "POST" && path == "/pip-install-start"', before: 26, lines: 60 }, '/pip-install · /pip-install-start'),
+        L('launcher.cs (실행)', { from: 'method == "POST" && path == "/run-python"', before: 4, lines: 60 }, '/run-python · /run-python-bundle'),
+        L('launcher.cs (진단·자동완성)', { from: '로컬 파이썬 + Jedi 사용 가능 여부', before: 3, to: 'method == "POST" && path == "/definition"', after: 14 }, '/can-complete · /python-import-index · /complete · /definition'),
         { path: 'tests/python-pip-install-progress.test.js', label: 'pip-install-progress.test.js', description: '설치 진행 라벨·경과 시간' },
       ],
       notes: [
@@ -423,8 +447,8 @@ export default ({ helpers, diagrams }) => {
         { title: '커널 파일 접근', body: '/python-kernel-file 로 커널 작업폴더의 산출물을 가져옵니다.' },
       ],
       files: [
-        L('launcher.cs (커널)', [2145, 2235], '/python-kernel-start-bundle'),
-        L('launcher.cs (터미널)', [2230, 2290], '/terminal-session-open · /terminal-complete'),
+        L('launcher.cs (커널)', { from: 'method == "POST" && path == "/python-kernel-start-bundle"', before: 12, lines: 90 }, '/python-kernel-start-bundle'),
+        L('launcher.cs (터미널)', { from: 'method == "POST" && path == "/terminal-session-open"', before: 4, to: 'method == "POST" && path == "/terminal-complete"', after: 12 }, '/terminal-session-open · /terminal-complete'),
         { path: 'desktop/python_kernel.py', label: 'python_kernel.py', description: '실제 커널 프로세스' },
         { path: 'tests/python-terminal-shared.test.js', label: 'python-terminal-shared.test.js', description: '공유 터미널 계약' },
       ],
@@ -483,8 +507,8 @@ export default ({ helpers, diagrams }) => {
         { title: '메모리 보고', body: '/mem 이 프로세스 트리 메모리를 알려 줍니다.' },
       ],
       files: [
-        L('launcher.cs (변환)', [1315, 1440], '/convert-pptx · /convert-media · /install-ffmpeg'),
-        L('launcher.cs (SQLite)', [1460, 1545], '/sqlite-preview · /sqlite-disk-preview · /sqlite-exec'),
+        L('launcher.cs (변환)', { from: 'method == "POST" && path == "/convert-pptx"', before: 4, to: 'method == "POST" && path == "/install-ffmpeg"', after: 14 }, '/convert-pptx · /convert-media · /install-ffmpeg'),
+        L('launcher.cs (SQLite)', { from: 'method == "POST" && path == "/sqlite-preview"', before: 1, to: 'method == "POST" && path == "/sqlite-exec"', after: 16 }, '/sqlite-preview · /sqlite-disk-preview · /sqlite-exec'),
         { path: 'tests/sqlite-editor-safety.test.js', label: 'sqlite-editor-safety.test.js', description: 'DB 편집 안전 조건' },
       ],
       notes: [
@@ -540,8 +564,8 @@ export default ({ helpers, diagrams }) => {
         { title: '폴백', body: '연결 실패 시 학생은 파일 제출로 돌아갑니다.' },
       ],
       files: [
-        L('launcher.cs (제출 수신)', [7120, 7257], '/exam-hello 와 제출 리스너'),
-        L('launcher.cs (수신 개폐)', [1935, 1965], '/exam-receive-start · /exam-receive-stop'),
+        L('launcher.cs (제출 수신)', { from: 'method == "GET" && path == "/exam-hello"', before: 40, lines: 137 }, '/exam-hello 와 제출 리스너'),
+        L('launcher.cs (수신 개폐)', { from: 'method == "POST" && path == "/exam-receive-start"', before: 2, to: 'method == "POST" && path == "/exam-receive-stop"', after: 12 }, '/exam-receive-start · /exam-receive-stop'),
         { path: 'docs/시험지-온라인제출-설계.md', label: '온라인제출-설계.md', description: '설계 문서' },
       ],
       notes: [
