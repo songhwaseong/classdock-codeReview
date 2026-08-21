@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
 import { collectLauncherRoutes, checkEndpointContracts } from './lib/endpoint-check.mjs';
+import { anchorKey, collectRefs, resolveLineAnchor } from './lib/line-anchor.mjs';
 
 import { createHelpers } from './lib/section.mjs';
 import {
@@ -38,8 +39,10 @@ import buildPython from './sections/30-python.mjs';
 import buildJavaScript from './sections/35-javascript.mjs';
 import buildEditors from './sections/40-editors.mjs';
 import buildMap from './sections/45-map.mjs';
+import buildTimeline from './sections/47-timeline.mjs';
 import buildLearning from './sections/50-learning.mjs';
 import buildMusic from './sections/55-music.mjs';
+import buildRemoteTerminal from './sections/57-remote-terminal.mjs';
 import buildDesktop, { brokenAnchors } from './sections/60-desktop.mjs';
 import buildTools from './sections/70-build-tools.mjs';
 import buildTests from './sections/80-tests.mjs';
@@ -233,8 +236,10 @@ const reviewSections = [
   ...buildJavaScript(context),
   ...buildEditors(context),
   ...buildMap(context),
+  ...buildTimeline(context),
   ...buildLearning(context),
   ...buildMusic(context),
+  ...buildRemoteTerminal(context),
   ...buildDesktop(context),
   ...buildTools(context),
   ...buildTests(context),
@@ -462,17 +467,19 @@ const uncoveredApis = (manifest.moduleBoundaries ?? [])
 //
 // contracts.js 는 브라우저용 파일이라 import 할 수 없다. 이미 읽어 둔 원문을 window 만 있는
 // 빈 컨텍스트에서 실행해 배열을 꺼낸다 — 리뷰 폴더 안의 자기 파일이라 신뢰 문제는 없다.
-const readContracts = () => {
+const readSidecar = (source, name, globalName) => {
   try {
     const sandbox = { window: {} };
     vm.createContext(sandbox);
-    vm.runInContext(contractsProse, sandbox, { filename: 'contracts.js' });
-    return Array.isArray(sandbox.window.MN_CONTRACTS) ? sandbox.window.MN_CONTRACTS : null;
+    vm.runInContext(source, sandbox, { filename: name });
+    const value = sandbox.window[globalName];
+    return Array.isArray(value) ? value : null;
   } catch (error) {
-    console.warn(`[경고] contracts.js 를 읽지 못해 엔드포인트 대조를 건너뜁니다: ${error.message}`);
+    console.warn(`[경고] ${name} 를 읽지 못했습니다: ${error.message}`);
     return null;
   }
 };
+const readContracts = () => readSidecar(contractsProse, 'contracts.js', 'MN_CONTRACTS');
 const launcherRoutes = collectLauncherRoutes(rootDir);
 const contractList = readContracts();
 const endpointReport =
@@ -516,10 +523,72 @@ const currentGroups = [...new Set(hydrated.map((section) => section.group).filte
 const newGroups = currentGroups.filter((group) => !GLOSSARY_CURATED.groups.includes(group));
 const proseGrowth = (curationProse.length - GLOSSARY_CURATED.proseChars) / GLOSSARY_CURATED.proseChars;
 
+// ── 곁다리 파일의 "파일 위치" 앵커 해석 ────────────────────────────────
+//
+// 지목 주석·흐름 단계·계약 카드는 { file, at } 으로 자리를 적고, 여기서 줄 번호로 바꾼다.
+// 구간(range)이 이미 쓰고 있는 방식과 같다 — 손으로 적은 줄 번호는 소스가 자라는 순간
+// 조용히 다른 코드를 가리키기 때문이다. 자세한 배경은 lib/line-anchor.mjs 에 적어 두었다.
+//
+// 화면에는 코드가 멀쩡히 뜨므로 눈으로는 드러나지 않는다. 그래서 세 가지를 모두 경고한다 —
+// 앵커를 못 찾은 것, 같은 줄이 여럿이라 고를 수 없는 것, 그리고 찾긴 했지만 어느 섹션에도
+// 실리지 않아 눌러도 아무 일이 없는 것(이 검사가 없던 동안 15곳이 죽은 채로 있었다).
+const sidecarRefs = [
+  ...collectRefs(readSidecar(commentsProse, 'review-comments.js', 'MN_REVIEW_COMMENTS') ?? [], '지목 주석'),
+  ...collectRefs(readSidecar(flowsProse, 'flows.js', 'MN_FLOWS') ?? [], '흐름 단계'),
+  ...collectRefs(contractList ?? [], '계약 카드'),
+];
+
+// 실린 구간을 파일별로 모아 둔다. 앵커가 이 밖으로 나가면 화면에서 눌러도 코드가 안 뜬다.
+const loadedRanges = new Map();
+for (const section of hydrated) {
+  for (const file of section.files) {
+    const from = (file.lineOffset || 0) + 1;
+    const list = loadedRanges.get(file.path) ?? [];
+    list.push([from, from + file.lineCount - 1]);
+    loadedRanges.set(file.path, list);
+  }
+}
+const isLoaded = (file, line) => (loadedRanges.get(file) ?? []).some(([a, b]) => line >= a && line <= b);
+
+// 앵커가 가리키는 파일만 원본에서 다시 읽는다(섹션에 실린 구간이 아니라 파일 전체가 기준이다).
+const anchorSourcePaths = [...new Set(sidecarRefs.filter((ref) => typeof ref.at === 'string').map((ref) => ref.file))];
+const anchorSources = new Map(
+  await Promise.all(
+    anchorSourcePaths.map(async (relativePath) => [
+      relativePath,
+      await readFile(path.join(rootDir, relativePath), 'utf8')
+        .then((text) => text.split(/\r?\n/))
+        .catch(() => null),
+    ]),
+  ),
+);
+const sourceLinesOf = (relativePath) => anchorSources.get(relativePath) ?? null;
+
+const lineAnchors = {};
+const anchorFailures = [];
+const anchorOutOfRange = [];
+for (const ref of sidecarRefs) {
+  const label = `${ref.source} — ${ref.title ?? ref.label ?? ref.file}`;
+  if (typeof ref.at !== 'string') {
+    // 숫자를 그대로 둔 자리(파일 첫 줄 등)도 구간 검사는 받는다.
+    if (!isLoaded(ref.file, ref.line)) anchorOutOfRange.push(`${label} — ${ref.file}:${ref.line}`);
+    continue;
+  }
+  const resolved = resolveLineAnchor(sourceLinesOf(ref.file), ref);
+  if (resolved.error) {
+    anchorFailures.push(`${label} — ${ref.file}: ${resolved.error}\n    at: ${ref.at}`);
+    continue;
+  }
+  lineAnchors[anchorKey(ref.file, ref.at, ref.below)] = resolved.line;
+  if (!isLoaded(ref.file, resolved.line)) anchorOutOfRange.push(`${label} — ${ref.file}:${resolved.line}`);
+}
+
 const payload = {
   generatedAt: new Date().toISOString().slice(0, 10),
   root: path.basename(rootDir),
   sections: hydrated,
+  // 곁다리 파일의 { file, at } 앵커 → 줄 번호. app.js 가 이 표로 자리를 찾는다.
+  lineAnchors,
   // 본문의 용어에 툴팁·링크를 걸기 위한 색인. 렌더러가 화면에서 쓰는 최소 정보만 담는다.
   glossary: GLOSSARY_TERMS.map((item) => ({
     id: item.id,
@@ -628,6 +697,18 @@ if (brokenAnchors.length) {
   console.warn(`\n[경고] launcher.cs 에서 찾지 못한 구간 앵커 ${brokenAnchors.length}개 — 그 구간은 코드 없이 실립니다:`);
   for (const item of brokenAnchors) console.warn(`  ${item}`);
   console.warn('  sections/60-desktop.mjs 의 앵커 문자열을 현재 소스에 맞게 고치세요.');
+}
+if (anchorFailures.length) {
+  console.warn(`\n[경고] 코드 앵커를 찾지 못한 파일 위치 ${anchorFailures.length}개 — 눌러도 코드가 뜨지 않습니다:`);
+  for (const item of anchorFailures) console.warn(`  ${item}`);
+  console.warn('  review-comments.js · flows.js · contracts.js 의 at 문자열을 현재 소스에 맞게 고치세요.');
+}
+if (anchorOutOfRange.length) {
+  console.warn(
+    `\n[경고] 어느 섹션에도 실리지 않은 줄을 가리키는 파일 위치 ${anchorOutOfRange.length}개 — 앵커는 맞지만 눌러도 코드가 뜨지 않습니다:`,
+  );
+  for (const item of anchorOutOfRange) console.warn(`  ${item}`);
+  console.warn('  그 구간을 섹션에 싣거나, 이미 실린 자리로 앵커를 옮기세요.');
 }
 if (nearLimitFiles.size) {
   console.warn(

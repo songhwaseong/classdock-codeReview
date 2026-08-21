@@ -133,8 +133,9 @@ export default ({ helpers, rootDir }) => {
         {
           title: '전수가 아니라 표본',
           body:
-            '단위 테스트 102개 중 73개, E2E 37개 중 12개를 리뷰에 싣습니다. ' +
-            '기능별 대표를 고른 것이며, 생성 스크립트가 매번 이 비율을 찍어 격차가 벌어지는지 보여 줍니다.',
+            '전수가 아니라 기능별 대표만 싣습니다. 비율은 이 문장에 적지 않습니다 — 테스트가 늘 때마다 조용히 낡는 숫자라, ' +
+            '생성 스크립트가 매번 "단위 n/N · E2E n/N" 을 찍어 격차가 벌어지는지 보여 주는 쪽으로 두었습니다. ' +
+            '(예전에 여기 적혀 있던 "102개 중 73개" 는 테스트가 117개가 되는 동안 그대로 남아 있었습니다.)',
         },
       ],
       features: [
@@ -155,9 +156,19 @@ export default ({ helpers, rootDir }) => {
             'S/M/L 이 처음 크기 기준으로 안정적으로 왕복하는지를 봅니다.',
         },
         { title: 'JavaScript 실행', body: 'js-runtime.test.js 가 Worker 프로토콜·입력·자동채점·지속 커널·라이브러리 실행 경계를 폭넓게 검증합니다.' },
+        {
+          title: '보안 계약을 테스트로 못 박기',
+          body:
+            'remote-terminal.test.js 는 화면 동작보다 "지켜야 하는 성질"을 검사합니다 — SSH API 가 토큰으로 보호되는지, ' +
+            '비밀번호가 저장소·명령행·환경변수가 아닌 일회성 named pipe 로만 가는지, 신뢰된 키로만 접속하는지. ' +
+            '되돌리기 어려운 실수를 코드 리뷰가 아니라 테스트가 잡게 한 사례입니다.',
+        },
       ],
       files: [
         { path: 'tests/core.test.js', label: 'core.test.js', description: '가장 큰 단위 테스트' },
+        { path: 'tests/timeline.test.js', label: 'timeline.test.js', description: '연대표 날짜·정렬·배치·왕복' },
+        { path: 'tests/timeline-xlsx.test.js', label: 'timeline-xlsx.test.js', description: '엑셀 칸 값·시트 그림 읽기' },
+        { path: 'tests/remote-terminal.test.js', label: 'remote-terminal.test.js', description: 'SSH 토큰·비밀번호 전달·지문 계약' },
         { path: 'tests/office-replace.test.js', label: 'office-replace.test.js', description: '문단·서식·표·패키지 순수 편집' },
         { path: 'tests/whiteboard-education-toolbox.test.js', label: 'whiteboard-education-toolbox.test.js', description: '수학·과학 도구상자' },
         { path: 'tests/whiteboard-focus-tools.test.js', label: 'whiteboard-focus-tools.test.js', description: '집중 도구 정규화·영역 판정' },

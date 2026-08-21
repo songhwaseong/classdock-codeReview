@@ -14,9 +14,36 @@ const state = {
 };
 
 const data = window.MN_REVIEW_DATA;
-const comments = window.MN_REVIEW_COMMENTS ?? [];
-const flows = window.MN_FLOWS ?? [];
-const contracts = window.MN_CONTRACTS ?? [];
+
+// 곁다리 파일의 "파일 위치"는 줄 번호가 아니라 코드 문자열({ file, at })로 적혀 있다.
+// 생성 스크립트가 만들어 둔 표로 여기서 한 번에 줄 번호로 바꾼다 — 아래 코드는 예전처럼
+// item.line 만 본다. 표에 없으면(=앵커가 깨졌으면) 0 으로 두어 단추를 내주지 않는다.
+// 왜 줄 번호를 직접 적지 않는지는 lib/line-anchor.mjs 에 적어 두었다.
+const lineAnchors = data.lineAnchors ?? {};
+// 키 구분자는 lib/line-anchor.mjs 의 KEY_SEPARATOR 와 반드시 같아야 한다.
+// 코드에 절대 나오지 않는 NUL 을 쓴다 — 공백으로 두면 앵커 문자열 안의 공백과 섞인다.
+const ANCHOR_KEY_SEPARATOR = '\u0000';
+const resolveRefLines = (node) => {
+  if (Array.isArray(node)) {
+    node.forEach(resolveRefLines);
+    return node;
+  }
+  if (!node || typeof node !== 'object') return node;
+  if (typeof node.file === 'string' && typeof node.at === 'string' && node.line == null) {
+    const key = node.file + ANCHOR_KEY_SEPARATOR + node.at + ANCHOR_KEY_SEPARATOR + (node.below ?? 0);
+    node.line = lineAnchors[key] ?? 0;
+  }
+  Object.values(node).forEach(resolveRefLines);
+  return node;
+};
+
+// 앵커로 적은 자리에만 줄 번호를 붙여 보여 준다. 숫자를 그대로 적어 둔 자리(파일 첫 줄 등)의
+// 표시 문자열은 손으로 쓴 그대로 둔다.
+const refLabel = (item, base) => (item.at && item.line > 0 ? `${base}:${item.line}` : base);
+
+const comments = resolveRefLines(window.MN_REVIEW_COMMENTS ?? []);
+const flows = resolveRefLines(window.MN_FLOWS ?? []);
+const contracts = resolveRefLines(window.MN_CONTRACTS ?? []);
 
 const $ = (id) => document.getElementById(id);
 
@@ -720,10 +747,12 @@ const renderFlows = (section) => {
           ${flow.steps
             .map(
               (step) => `
-            <button type="button" class="flow-step" data-file="${escapeHtml(step.file)}" data-line="${step.line}">
+            <button type="button" class="flow-step" data-file="${escapeHtml(step.file)}" data-line="${
+              step.line || 1
+            }"${step.line ? '' : ' disabled'}>
               <span>
                 <span class="flow-step-label">${prose(step.label)}</span>
-                <span class="flow-step-loc">${escapeHtml(step.location)}</span>
+                <span class="flow-step-loc">${escapeHtml(refLabel(step, step.location))}</span>
                 <span class="flow-step-body">${prose(step.body)}</span>
               </span>
             </button>`,
@@ -744,11 +773,13 @@ const renderContracts = (section) => {
   }
   contractList.innerHTML = list
     .map((item) => {
-      const source = item.file
-        ? `<button type="button" data-file="${escapeHtml(item.file)}" data-line="${item.line ?? 1}">${escapeHtml(
-            item.source,
-          )}</button>`
-        : escapeHtml(item.source);
+      const sourceLabel = escapeHtml(refLabel(item, item.source));
+      const source =
+        item.file && item.line !== 0
+          ? `<button type="button" data-file="${escapeHtml(item.file)}" data-line="${
+              item.line ?? 1
+            }">${sourceLabel}</button>`
+          : sourceLabel;
       return `
         <article class="contract">
           <div class="contract-head">

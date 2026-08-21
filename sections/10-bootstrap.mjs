@@ -9,6 +9,11 @@ export default ({ manifest, helpers, rootDir }) => {
   const coreLines = linesLabel(rootDir, 'src/js/core.js');
   const stateLines = linesLabel(rootDir, 'src/js/state.js');
   const coreTestLines = linesLabel(rootDir, 'tests/core.test.js');
+  // 지연 vendor 통계도 손으로 적지 않는다 — 묶음이 늘 때마다 문장이 조용히 낡는 자리였다.
+  const lazyVendors = (manifest.vendorScripts ?? []).filter((item) => item.lazy);
+  const lazyBundleNames = [...new Set(lazyVendors.map((item) => item.lazy))];
+  // Worker 전달용(js*) 은 실행 묶음이 아니라 소스 문자열로만 쓰인다.
+  const runBundleNames = lazyBundleNames.filter((name) => !/^js[A-Z]/.test(name));
 
   return [
     sec({
@@ -203,9 +208,10 @@ export default ({ manifest, helpers, rootDir }) => {
 
     mod('lazy.js', {
       title: 'lazy.js — 지연 vendor 로더 (MNLazy)',
-      subtitle: '시작 비용 7.2MB 제거',
+      subtitle: `시작 비용 제거 — vendor ${lazyVendors.length}개를 필요할 때로 미룸`,
       summary:
-        '예전에는 vendor 18개(약 7.2MB)를 시작할 때 전부 실행했습니다. .txt 하나를 열어도 엑셀·한글·PPT·맞춤법 사전이 함께 파싱돼 저사양 교실 PC 의 첫 화면이 늦었습니다. ' +
+        `예전에는 vendor 를 시작할 때 전부 실행했습니다(지금 지연 대상만 세어도 ${lazyVendors.length}개입니다). ` +
+        '.txt 하나를 열어도 엑셀·한글·PPT·맞춤법 사전이 함께 파싱돼 저사양 교실 PC 의 첫 화면이 늦었습니다. ' +
         'MNLazy 는 묶음(bundle)을 정의하고 "그 형식을 열 때·그 버튼을 누를 때" 처음 싣습니다. PDF 만은 앱의 중심 기능이라 지금도 시작 시 함께 싣습니다.',
       usage: [
         {
@@ -223,7 +229,16 @@ export default ({ manifest, helpers, rootDir }) => {
       ],
       features: [
         { title: '중복 방지', body: '파일 단위·묶음 단위로 진행 중 Promise 를 재사용합니다. 동시에 여러 번 요청해도 로드는 한 번입니다.' },
-        { title: '묶음 12종', body: 'spellcheck, jszip, zip, xlsx, yaml, exceljs, hwp, officeCrypt, capture, pptx, docx — 라벨이 사용자에게 보이는 로딩 문구가 됩니다.' },
+        {
+          title: `실행 묶음 ${runBundleNames.length}종`,
+          body: `${runBundleNames.join(', ')} — 라벨이 사용자에게 보이는 로딩 문구가 됩니다. 목록은 manifest 에서 생성 때 세므로 묶음이 늘어도 이 문장은 낡지 않습니다.`,
+        },
+        {
+          title: '가장 늦게 들어온 묶음',
+          body:
+            'leaflet(지도)과 xterm(원격 터미널)입니다. 둘 다 "그 기능을 실제로 열 때" 만 실행되므로, ' +
+            '지도와 SSH 가 들어오면서 늘어난 시작 비용은 0 입니다. 새 기능이 vendor 를 데려와도 첫 화면이 느려지지 않는 구조가 여기서 지켜집니다.',
+        },
         { title: 'manifest 와 쌍방 검사', body: 'check-source.js 가 BUNDLES 의 파일 목록과 manifest 의 lazy vendor 목록이 정확히 같은지 양방향으로 확인합니다.' },
         { title: '실행 순서 보장', body: 'files 배열의 순서가 곧 실행 순서입니다. pptx 묶음은 jquery → jszip → divs2slides → pptxjs 순서가 필수입니다.' },
       ],

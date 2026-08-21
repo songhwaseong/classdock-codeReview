@@ -40,7 +40,7 @@ const targetedComments = [
   {
     sectionId: 'loading-contract',
     file: 'tools/check-source.js',
-    line: 13,
+    at: "const manifestScripts = manifest.localScripts.map((file) => \"src/js/\" + file);",
     type: '계약',
     title: 'HTML 과 manifest 를 문자열로 통째 비교',
     body:
@@ -49,7 +49,7 @@ const targetedComments = [
   {
     sectionId: 'loading-contract',
     file: 'tools/check-source.js',
-    line: 20,
+    at: "if (layerScripts.join(\"\\n\") !== manifest.localScripts.join(\"\\n\")) {",
     type: '계약',
     title: '계층이 모든 파일을 정확히 한 번씩',
     body:
@@ -58,7 +58,7 @@ const targetedComments = [
   {
     sectionId: 'dependency-map',
     file: 'tools/check-source.js',
-    line: 24,
+    at: "for (const [script, dependencies] of Object.entries(manifest.scriptDependencies || {})) {",
     type: '계약',
     title: '의존 역전은 빌드 실패',
     body:
@@ -67,7 +67,7 @@ const targetedComments = [
   {
     sectionId: 'module-boundaries',
     file: 'tools/check-source.js',
-    line: 34,
+    at: "if (!scriptIndex.has(boundary.file)) throw new Error(`Module boundary is not a local script: ${boundary.file}`);",
     type: '주의',
     title: '경계 검사는 "언급 여부"만 본다',
     body:
@@ -78,7 +78,7 @@ const targetedComments = [
   {
     sectionId: 'state-sync',
     file: 'src/js/state-sync.js',
-    line: 12,
+    at: "var isLocal = (location.protocol === \"http:\" || location.protocol === \"https:\") &&",
     type: '분기',
     title: '서버가 없으면 즉시 손을 뗀다',
     body:
@@ -87,7 +87,8 @@ const targetedComments = [
   {
     sectionId: 'state-sync',
     file: 'src/js/state-sync.js',
-    line: 28,
+    at: "window.fetch = function (input, init) {",
+    below: 1,
     type: '위험',
     title: '전역 fetch 를 덮어쓴다',
     body:
@@ -105,7 +106,8 @@ const targetedComments = [
   {
     sectionId: 'state',
     file: 'src/js/state.js',
-    line: 3,
+    at: "\"use strict\";",
+    below: 2,
     type: '위험',
     title: '검사되지 않는 100개짜리 계약',
     body:
@@ -114,7 +116,7 @@ const targetedComments = [
   {
     sectionId: 'lazy',
     file: 'src/js/lazy.js',
-    line: 20,
+    at: "// 묶음 정의 — files 는 \"반드시 이 순서로\" 실행해야 하는 vendor 파일 목록이다.",
     type: '설계',
     title: 'files 배열 순서 = 실행 순서',
     body:
@@ -123,7 +125,7 @@ const targetedComments = [
   {
     sectionId: 'lazy',
     file: 'src/js/lazy.js',
-    line: 54,
+    at: "let jszipBundleQueue = Promise.resolve();",
     type: '설계',
     title: '모드 판별을 DOM 존재로',
     body:
@@ -132,7 +134,7 @@ const targetedComments = [
   {
     sectionId: 'lazy',
     file: 'src/js/lazy.js',
-    line: 118,
+    at: "loadedFiles.set(file, tracked);",
     type: '동시성',
     title: '진행 중 Promise 재사용',
     body:
@@ -141,7 +143,7 @@ const targetedComments = [
   {
     sectionId: 'history',
     file: 'src/js/history.js',
-    line: 22,
+    at: "text: 300,      // 문자열 스냅샷 — 가벼워서 깊게 쌓아도 된다",
     type: '설계',
     title: '상한을 한곳에 모은 이유',
     body:
@@ -150,7 +152,7 @@ const targetedComments = [
   {
     sectionId: 'history',
     file: 'src/js/history.js',
-    line: 30,
+    at: "function create(options){",
     type: '설계',
     title: 'isEqual 을 선택이 아니라 필수로',
     body:
@@ -170,7 +172,7 @@ const targetedComments = [
   {
     sectionId: 'file-loaders',
     file: 'src/js/file-loaders.js',
-    line: 8,
+    at: "function isLikelyTextBytes(bytes){",
     type: '안전',
     title: '텍스트 판별은 보수적으로',
     body:
@@ -179,7 +181,8 @@ const targetedComments = [
   {
     sectionId: 'documents',
     file: 'src/js/documents.js',
-    line: 426,
+    at: "navNodes.push({ nodeId: d.nodeId, type: \"doc\", docId: id, parentId: d.parentId });",
+    below: 1,
     type: '구조',
     title: '문서 생명주기의 시작점',
     body:
@@ -188,7 +191,8 @@ const targetedComments = [
   {
     sectionId: 'documents',
     file: 'src/js/documents.js',
-    line: 456,
+    at: "if (!d){ state=null; viewer=null; byId(\"activeFileName\").textContent=\"\"; byId(\"activeFileName\").removeAttribute(\"data-cat\"); byId(\"activeDocEncoding\").hidden=true; byId(\"activeDocStatus\").hidden=true; updateOriginalSaveBadge(null); byId(\"tools\").hidden=true; byId(\"officeTools\").hidden=true; updateModeBadges(); renderTabs(); updateDocEmptyState(); updateSidebarActive(); return; }",
+    below: 1,
     type: '구조',
     title: '지연 렌더가 실제로 일어나는 곳',
     body:
@@ -197,7 +201,7 @@ const targetedComments = [
   {
     sectionId: 'viewer-base',
     file: 'src/js/viewer-base.js',
-    line: 4,
+    at: "async function loadOffice(file, ext, options={}){",
     type: '설계',
     title: 'render 클로저 — 지연 렌더 계약의 정의 지점',
     body:
@@ -206,7 +210,8 @@ const targetedComments = [
   {
     sectionId: 'code-viewer',
     file: 'src/js/code-viewer.js',
-    line: 3533,
+    at: "if (oldPath && oldPath !== path) forgetFsHandle(oldPath);",
+    below: 2,
     type: '핵심',
     title: '앱 전체의 텍스트 저장 창구',
     body:
@@ -217,7 +222,7 @@ const targetedComments = [
   {
     sectionId: 'python-run-context',
     file: 'src/js/python-run-context.js',
-    line: 16,
+    at: "const PYODIDE_VER = \"0.27.7\";",
     type: '위험',
     title: 'Pyodide 버전이 두 곳에 있다',
     body:
@@ -226,7 +231,7 @@ const targetedComments = [
   {
     sectionId: 'python-run-context',
     file: 'src/js/python-run-context.js',
-    line: 19,
+    at: "const RUN_BUNDLE_CAP = 50 * 1024 * 1024;   // 옆 파일 포함 실행 시 합계 상한(초과하면 단일 파일 실행)",
     type: '상한',
     title: '번들 상한 50MB',
     body:
@@ -235,7 +240,7 @@ const targetedComments = [
   {
     sectionId: 'python-runtime',
     file: 'src/js/python-runtime.js',
-    line: 3,
+    at: "async function runPythonSource(src, ui, runCtx, keepEditorFocus, options){",
     type: '위험',
     title: '한 함수에 5개 실행 모드',
     body:
@@ -244,7 +249,7 @@ const targetedComments = [
   {
     sectionId: 'python-terminal',
     file: 'src/js/python-terminal.js',
-    line: 3,
+    at: "// Python 편집기의 실행 결과와 분리된 모달 터미널을 제공한다.",
     type: '설계',
     title: '터미널은 앱에 하나뿐',
     body:
@@ -253,7 +258,7 @@ const targetedComments = [
   {
     sectionId: 'notebook-tools',
     file: 'src/js/notebook-tools.js',
-    line: 11,
+    at: "async function buildNotebookWorkspaceBundle(ownerDoc){",
     type: '성능',
     title: '압축 추출을 문서당 한 번만',
     body:
@@ -264,7 +269,7 @@ const targetedComments = [
   {
     sectionId: 'js-libraries',
     file: 'src/js/js-libraries.js',
-    line: 44,
+    at: "function jsLibraryState(value){",
     type: '안전',
     title: '저장 상태를 다시 정규화한다',
     body: 'localStorage의 선택 목록을 그대로 실행하지 않고 알려진 내장 ID·개수·파일 크기·전역 이름을 다시 검사합니다. 오래된 상태와 수동 변조가 실행 상한을 우회하지 못하게 하는 경계입니다.',
@@ -272,7 +277,7 @@ const targetedComments = [
   {
     sectionId: 'js-libraries',
     file: 'src/js/js-libraries.js',
-    line: 130,
+    at: "async function jsLibraryVendorSource(file){",
     type: '설계',
     title: '내장 소스의 두 공급 경로',
     body: '단일 HTML에서는 MNLazy.source()로 인라인 원문을 꺼내고 개발 HTML에서는 vendor 파일을 fetch합니다. 같은 라이브러리가 두 배포 모드에서 동일하게 평가되는지 테스트가 계속 잡아야 합니다.',
@@ -280,7 +285,7 @@ const targetedComments = [
   {
     sectionId: 'js-libraries',
     file: 'src/js/js-libraries.js',
-    line: 251,
+    at: "async function jsNpmInstallStream(spec, globalName, hooks){",
     type: '상태',
     title: '설치 작업은 증분 폴링',
     body: '450ms 간격으로 오프셋 이후 로그만 가져오고 일시적 네트워크 오류는 세 번 재시도합니다. UI 상태와 디스크 캐시의 수명이 달라 취소·재실행 뒤 목록 재동기화가 중요합니다.',
@@ -288,7 +293,7 @@ const targetedComments = [
   {
     sectionId: 'js-runtime',
     file: 'src/js/js-runtime.js',
-    line: 471,
+    at: "function jsWorkerMain(formatValue){",
     type: '보안',
     title: 'Worker는 완전한 보안 샌드박스가 아니다',
     body: 'DOM과 메인 전역은 분리되지만 Worker가 가진 fetch·네트워크 권한까지 제거하지는 않습니다. 사용자 코드와 추가 패키지는 신뢰한 코드만 실행한다는 제품 경계를 분명히 해야 합니다.',
@@ -296,7 +301,7 @@ const targetedComments = [
   {
     sectionId: 'js-runtime',
     file: 'src/js/js-runtime.js',
-    line: 500,
+    at: "// 사용자 코드도 Worker 전역의 postMessage 를 부를 수 있다. 실행 프로토콜은 미리 붙잡은",
     type: '보안',
     title: '사용자 메시지와 제어 메시지 분리',
     body: '실행마다 임의 토큰을 붙여 사용자 코드가 postMessage로 완료·입력 응답을 위조하지 못하게 합니다. 같은 메시지 채널을 공유하는 Worker 실행기에서 필요한 방어입니다.',
@@ -304,7 +309,7 @@ const targetedComments = [
   {
     sectionId: 'js-runtime',
     file: 'src/js/js-runtime.js',
-    line: 597,
+    at: "// 워커에는 화면이 없다. 그냥 ReferenceError 가 나면 초보자가 원인을 못 찾으므로 이유를 알려준다.",
     type: '경계',
     title: 'DOM 전역은 막지만 네트워크는 남는다',
     body: 'window·document 같은 화면 전역은 사용할 수 없게 명확한 오류를 내지만 이는 기능 호환성 경계입니다. 외부 통신 차단과는 별개라는 점을 보안 설명과 혼동하면 안 됩니다.',
@@ -312,7 +317,7 @@ const targetedComments = [
   {
     sectionId: 'js-runtime',
     file: 'src/js/js-runtime.js',
-    line: 680,
+    at: "// 라이브러리는 사용자 코드와 별도 eval 로 실행한다. 사용자 코드 앞에 문자열로 붙이지 않으므로",
     type: '설계',
     title: '라이브러리를 별도로 평가하는 이유',
     body: '라이브러리 문자열을 사용자 코드 앞에 합치지 않고 간접 eval로 먼저 실행해 사용자 오류 줄 번호가 번들 크기만큼 밀리지 않게 합니다.',
@@ -320,7 +325,7 @@ const targetedComments = [
   {
     sectionId: 'js-runtime',
     file: 'src/js/js-runtime.js',
-    line: 738,
+    at: "function startJsWorkerRun(source, options){",
     type: '상한',
     title: '시간 제한은 메모리 제한이 아니다',
     body: '시간 초과 시 Worker를 종료할 수 있지만 그 전에 거대한 배열·문자열을 할당해 브라우저 메모리를 압박하는 것은 막지 못합니다. 출력·시간 상한과 메모리 안전은 별개입니다.',
@@ -328,7 +333,7 @@ const targetedComments = [
   {
     sectionId: 'js-runtime',
     file: 'src/js/js-runtime.js',
-    line: 822,
+    at: "async function runJsGrading(source, tests, hooks){",
     type: '격리',
     title: '채점은 테스트마다 새 Worker',
     body: '각 테스트가 사용자 코드를 처음부터 독립 실행해 앞 테스트의 전역 변수·타이머가 다음 판정에 새지 않습니다. 실행 비용보다 채점 재현성을 택했습니다.',
@@ -336,7 +341,7 @@ const targetedComments = [
   {
     sectionId: 'js-runtime',
     file: 'src/js/js-runtime.js',
-    line: 872,
+    at: "const _jsKernels = new Map();                 // kernelId → { worker, seq, jobs }",
     type: '상태',
     title: '노트북만 지속형 커널',
     body: '일반 실행과 달리 문서별 Worker를 살려 셀 사이 전역 상태를 이어 갑니다. top-level await 폴백에서 만든 지역 변수는 다음 셀로 이어지지 않는 예외가 있습니다.',
@@ -344,7 +349,7 @@ const targetedComments = [
   {
     sectionId: 'js-editor',
     file: 'src/js/js-editor.js',
-    line: 13,
+    at: "function buildJsLibraryPicker(bar, button, storageKey, options){",
     type: '구조',
     title: '편집기보다 라이브러리 선택기가 먼저',
     body: 'JavaScript 전용 화면은 Python 편집기의 저장·초안·채점 UI를 재사용하고, 이 모듈은 라이브러리 상태와 실행 옵션을 연결하는 얇은 어댑터로 남습니다.',
@@ -352,7 +357,7 @@ const targetedComments = [
   {
     sectionId: 'js-editor',
     file: 'src/js/js-editor.js',
-    line: 228,
+    at: "npmInstall.addEventListener(\"click\", async () => {",
     type: '보안',
     title: 'npm 설치 전 명시적 확인',
     body: '패키지 이름과 버전, 로컬 코드 실행 위험을 다시 보여 줍니다. 설치 스크립트를 막아도 패키지 본문은 실행되므로 확인 절차가 생략돼서는 안 됩니다.',
@@ -360,7 +365,7 @@ const targetedComments = [
   {
     sectionId: 'js-editor',
     file: 'src/js/js-editor.js',
-    line: 330,
+    at: "function renderJsRunnable(context){",
     type: '구조',
     title: '실행 화면은 얇은 어댑터',
     body: '입력·출력·중지·채점 UI를 묶되 실제 실행·오류 해석·Worker 수명은 js-runtime.js로 넘깁니다. 신규 언어 지원이 문서 생명주기를 복제하지 않은 핵심 지점입니다.',
@@ -370,7 +375,7 @@ const targetedComments = [
   {
     sectionId: 'office-replace',
     file: 'src/js/office-replace.js',
-    line: 515,
+    at: "/* 행·열 한 동작을 document.xml 편집으로 만든다.",
     type: '설계',
     title: 'Word 와 PPT 의 유일한 차이',
     body:
@@ -379,7 +384,7 @@ const targetedComments = [
   {
     sectionId: 'office-replace',
     file: 'src/js/office-replace.js',
-    line: 664,
+    at: "const propsXml = propsMatch[2];",
     type: '설계',
     title: '평문에서 찾고 run 경계에서 되쓴다',
     body:
@@ -388,7 +393,8 @@ const targetedComments = [
   {
     sectionId: 'office-replace',
     file: 'src/js/office-replace.js',
-    line: 697,
+    at: "function officeSetWordPropertyAttributes(ownerXml, ownerName, propsName, childName, updates){",
+    below: 1,
     type: '설계',
     title: '바꾼 파트만 갈아끼운 새 zip',
     body:
@@ -408,7 +414,7 @@ const targetedComments = [
   {
     sectionId: 'batch-replace',
     file: 'src/js/batch-replace.js',
-    line: 84,
+    at: "function batchIsTargetDoc(doc, isTextSearchable, isLocked){",
     type: '안전',
     title: '저장 실패 시 화면도 바꾸지 않는다',
     body:
@@ -437,7 +443,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-js-npm',
     file: 'desktop/launcher.cs',
-    line: 851,
+    at: "if (path == \"/exam-receive-start\" || path == \"/exam-receive-stop\") return true;",
     type: '보안',
     title: 'npm 경로도 공통 인증 대상',
     body: '/js-npm-* 엔드포인트를 토큰 필요 접두사 목록에 묶었습니다. 새 하위 경로를 추가할 때 이 접두사 밖으로 새면 로컬 웹페이지가 설치·삭제 API를 호출할 수 있으므로 계약 테스트가 필요합니다.',
@@ -445,15 +451,15 @@ const targetedComments = [
   {
     sectionId: 'launcher-js-npm',
     file: 'desktop/launcher.cs',
-    line: 2062,
+    at: "byte[] bundle;",
     type: '보안',
     title: '설치 시작은 확인 헤더를 한 번 더 요구',
     body: '일반 토큰 외에 사용자가 설치 위험을 확인했다는 헤더를 검사합니다. 인증된 앱 화면에서의 오동작과 원치 않는 자동 설치를 구분하는 두 번째 문턱입니다.',
   },
   {
     sectionId: 'launcher-js-npm',
-    file: 'desktop/launcher.cs',
-    line: 5640,
+    file: 'desktop/npm_package_runner.js',
+    at: "if (installedBytes > MAX_PROJECT_BYTES) throw new Error(\"설치 파일이 250MB 제한을 넘었습니다.\");",
     type: '위험',
     title: '250MB 상한은 설치 뒤에 확인된다',
     body: '캐시 결과가 제한을 넘으면 지우지만 npm이 다운로드·압축 해제하는 동안의 순간 디스크 사용량까지 사전에 막지는 못합니다. 신뢰하지 않는 패키지 설치에서 남는 자원 고갈 표면입니다.',
@@ -461,7 +467,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-js-npm',
     file: 'desktop/npm_package_runner.js',
-    line: 73,
+    at: "const install = cp.spawnSync(process.execPath, [npmCli, \"install\", \"--ignore-scripts\", \"--no-audit\", \"--no-fund\",",
     type: '보안',
     title: 'install·postinstall 스크립트 차단',
     body: 'npm install --ignore-scripts를 사용해 설치 단계의 임의 명령 실행을 줄입니다. 다만 완성된 패키지 본문은 Worker에서 실제 실행되므로 패키지 신뢰 문제 자체가 사라지는 것은 아닙니다.',
@@ -469,7 +475,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-js-npm',
     file: 'desktop/npm_package_runner.js',
-    line: 80,
+    at: "const installedBytes = folderBytes(stage);",
     type: '상한',
     title: '설치 크기는 사후 측정',
     body: 'node_modules를 만든 뒤 재귀 합계를 재고 250MB를 넘으면 실패시킵니다. 최종 캐시는 제한되지만 설치 도중의 임시 사용량은 별도입니다.',
@@ -477,7 +483,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-js-npm',
     file: 'desktop/npm_package_runner.js',
-    line: 99,
+    at: "esbuild.buildSync({",
     type: '호환성',
     title: 'Node 패키지를 browser IIFE로 변환',
     body: 'esbuild의 browser 플랫폼으로 Worker용 단일 번들을 만듭니다. Node 내장 모듈·DOM 전용 패키지·동적 로딩처럼 이 대상과 맞지 않는 패키지는 설치돼도 번들 또는 실행 단계에서 실패합니다.',
@@ -485,7 +491,7 @@ const targetedComments = [
   {
     sectionId: 'desktop-overview',
     file: 'desktop/launcher.cs',
-    line: 118,
+    at: "const uint JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000;",
     type: '보안',
     title: '실행마다 새로 만드는 토큰',
     body:
@@ -494,7 +500,7 @@ const targetedComments = [
   {
     sectionId: 'desktop-overview',
     file: 'desktop/launcher.cs',
-    line: 152,
+    at: "// 일반적인 수업용 데이터 분석은 허용하면서, 실수로 큰 배열을 반복 생성해 PC 전체가 멈추는 일을 줄인다.",
     type: '상한',
     title: '커널 셀만 10분인 이유',
     body:
@@ -503,7 +509,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-security',
     file: 'desktop/launcher.cs',
-    line: 788,
+    at: "return headers != null && headers.TryGetValue(\"X-ClassDock-Image-Memo\", out value) && value == \"1\";",
+    below: 1,
     type: '보안',
     title: '상수 시간 비교',
     body:
@@ -512,7 +519,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-security',
     file: 'desktop/launcher.cs',
-    line: 808,
+    at: "// loopback에만 바인딩하더라도 DNS rebinding 등으로 다른 Host가 들어오는 요청은 받지 않는다.",
     type: '보안',
     title: 'DNS rebinding 차단',
     body:
@@ -521,7 +528,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-security',
     file: 'desktop/launcher.cs',
-    line: 829,
+    at: "return string.Equals(origin.Trim(), \"http://\" + host.Trim(), StringComparison.OrdinalIgnoreCase);",
+    below: 1,
     type: '위험',
     title: '기본값이 "토큰 불필요" 인 구조',
     body:
@@ -530,7 +538,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-security',
     file: 'desktop/launcher.cs',
-    line: 1229,
+    at: "if (!HasAllowedLocalOrigin(headers) && !path.StartsWith(\"/tile-proxy\", StringComparison.Ordinal))",
+    below: 1,
     type: '안전',
     title: '인증 실패 요청은 본문을 읽지 않는다',
     body:
@@ -539,7 +548,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-boot',
     file: 'desktop/launcher.cs',
-    line: 1010,
+    at: "dir = Path.GetDirectoryName(dir);",
+    below: 1,
     type: '설계',
     title: '랜덤 포트가 아닌 이유',
     body:
@@ -548,7 +558,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-boot',
     file: 'desktop/launcher.cs',
-    line: 1027,
+    at: "int remembered = ReadInstancePort();",
+    below: 1,
     type: '동시성',
     title: '뮤텍스를 고른 이유',
     body:
@@ -557,7 +568,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-boot',
     file: 'desktop/launcher.cs',
-    line: 1075,
+    at: "listener.Start();",
     type: '성능',
     title: 'TEMP 청소를 별도 스레드로',
     body:
@@ -566,7 +577,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-save',
     file: 'desktop/launcher.cs',
-    line: 1901,
+    at: "WriteResponse(stream, \"200 OK\", \"text/plain; charset=utf-8\",",
     type: '위험',
     title: '경로가 헤더 문자열',
     body:
@@ -575,7 +586,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-convert-sqlite',
     file: 'desktop/launcher.cs',
-    line: 1493,
+    at: "string json = SqlitePreview(body);",
+    below: 9,
     type: '안전',
     title: '경로가 아니라 내용 해시로 확인',
     body:
@@ -584,7 +596,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-convert-sqlite',
     file: 'desktop/launcher.cs',
-    line: 1523,
+    at: "string json = SqliteDiskPreview(headers);",
+    below: 17,
     type: '위험',
     title: '임의 SQL 실행 — .bak 이 유일한 안전망',
     body:
@@ -593,7 +606,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-terminal-kernel',
     file: 'desktop/launcher.cs',
-    line: 2236,
+    at: "else if (method == \"GET\" && path.StartsWith(\"/python-session-poll\", StringComparison.Ordinal))",
+    below: 1,
     type: '위험',
     title: '사실상 로컬 셸',
     body:
@@ -602,16 +616,16 @@ const targetedComments = [
   {
     sectionId: 'launcher-python',
     file: 'desktop/launcher.cs',
-    line: 2319,
+    at: "string json = RunPython(body);",
     type: '보안',
     title: '임의 Python 실행의 입구',
     body:
-      '작업폴더를 만들고 프로세스를 띄웁니다. 토큰이 유일한 경계이므로, 토큰 생성·전달 경로(launcher.cs:118 → HTML 주입 → state-sync.js 의 fetch 래핑)가 이 앱의 보안 축입니다.',
+      '작업폴더를 만들고 프로세스를 띄웁니다. 토큰이 유일한 경계이므로, 토큰 생성·전달 경로(launcher.cs:120 → HTML 주입 → state-sync.js 의 fetch 래핑)가 이 앱의 보안 축입니다.',
   },
   {
     sectionId: 'launcher-exam-lan',
     file: 'desktop/launcher.cs',
-    line: 1938,
+    at: "try { ok = EnsureJedi(); } catch { ok = false; }",
     type: '위험',
     title: 'LAN 노출은 여기서 시작된다',
     body:
@@ -622,7 +636,7 @@ const targetedComments = [
   {
     sectionId: 'tool-build-offline',
     file: 'build-offline.js',
-    line: 15,
+    at: "const sha384 = (bytes) => \"sha384-\" + crypto.createHash(\"sha384\").update(bytes).digest(\"base64\");",
     type: '함정',
     title: '</script 이스케이프',
     body:
@@ -631,7 +645,7 @@ const targetedComments = [
   {
     sectionId: 'tool-build-offline',
     file: 'build-offline.js',
-    line: 24,
+    at: "const actual = raw === item.sha384 ? raw : sha384(normalizedTextBytes(bytes));",
     type: '함정',
     title: '해시를 두 번 계산하는 이유',
     body:
@@ -640,7 +654,7 @@ const targetedComments = [
   {
     sectionId: 'tool-check-release',
     file: 'tools/check-release.js',
-    line: 22,
+    at: "function executableScriptSources(markup) {",
     type: '설계',
     title: '실행되는 script 만 골라낸다',
     body:
@@ -649,7 +663,7 @@ const targetedComments = [
   {
     sectionId: 'tests-contract',
     file: 'tests/release-contract.test.js',
-    line: 12,
+    at: "const jsGuide = fs.readFileSync(path.join(root, \"docs\", \"JS-파일별-기능.md\"), \"utf8\");",
     type: '설계',
     title: '문서를 테스트가 읽는다',
     body:
@@ -658,7 +672,7 @@ const targetedComments = [
   {
     sectionId: 'tests-contract',
     file: 'tests/release-contract.test.js',
-    line: 17,
+    at: "test(\"배포 라이브러리는 로컬 고정본과 SHA-384 무결성 값을 사용한다\", () => {",
     type: '계약',
     title: 'vendor 고정본 4중 검사',
     body:

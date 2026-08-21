@@ -523,16 +523,41 @@ export default ({ manifest, helpers, rootDir }) => {
           title: '대용량 CSV',
           body: 'CSV 는 페이지 단위 보기로 처리하고 필요할 때 XLSX 로 변환합니다. core.js 의 detectCsvDelimiter·indexCsvRows 가 뒤를 받칩니다.',
         },
+        {
+          title: '셀 안 그림은 라이브러리가 안 준다',
+          body:
+            'Excel 365 의 "셀에 배치" 그림은 drawing 이 아니라 Rich Value 메타데이터로 저장됩니다. ' +
+            'SheetJS 도 ExcelJS 도 이것을 셀 값으로 내주지 않아, spreadsheetPackageImageInfo 가 xlsx(=ZIP) 안의 OOXML 관계를 직접, 좁게 읽습니다 — ' +
+            'xl/metadata.xml 의 vm 인덱스 → rvStructures·rvData → richValueRels 를 타고 원본 바이트와 셀 주소를 잇습니다. ' +
+            'XML 파서를 새로 들이지 않고 필요한 태그만 훑는 방식이라, 못 읽으면 parseError 로 조용히 내려앉고 표는 그대로 열립니다.',
+        },
+        {
+          title: 'IMAGE 수식은 해석만 하고 받아 오지 않는다',
+          body:
+            '=IMAGE("https://…") 는 원격 주소를 가리키는 수식입니다. spreadsheetImageFormulaInfo 는 인자(출처·대체텍스트·크기·높이·너비)를 파싱만 하고 ' +
+            '네트워크는 건드리지 않습니다. 화면에는 자리와 대체텍스트를 두고 "오프라인·보안 정책상 자동 접속하지 않습니다" 라고 원본 주소와 함께 알립니다. ' +
+            '문서를 여는 것만으로 바깥에 요청이 나가지 않는다는 이 앱의 원칙이 표 안에서도 지켜지는 자리입니다.',
+        },
+        {
+          title: '못 지키는 것은 편집을 막는다',
+          body:
+            'ExcelJS 는 Rich Value 그림과 IMAGE 수식을 아직 보존하지 못합니다. 그대로 편집·저장하면 셀 그림이 사라집니다. ' +
+            'imageProtectedWorkbook 이 그런 파일을 읽기 전용으로 돌리고 원본 바이트 다운로드만 허용합니다 — ' +
+            '"저장은 됐는데 그림이 없어졌다" 는 되돌릴 수 없는 사고라, 기능을 내주는 대신 막는 쪽을 골랐습니다.',
+        },
       ],
       features: [
         { title: '수식', body: '셀 수식 계산과 자동 채우기.' },
         { title: '서식', body: '조건부 서식, 병합, 드롭다운(데이터 유효성).' },
         { title: '차트·피벗', body: 'spreadsheet-chart.js 로 SVG 차트를, 자체 미니 피벗을 제공합니다.' },
+        { title: '셀 그림', body: 'Rich Value(셀에 배치) · IMAGE 수식 · 일반 삽입 그림 세 갈래를 모두 인식하고, 그림 끝까지 시트 표시 범위를 넓힙니다.' },
+        { title: '그림 시트 복원', body: '원본 열 폭·행 높이·자동 줄바꿈을 화면 픽셀로 되살려 그림이 원래 칸에 앉게 합니다.' },
         { title: '컨텍스트 메뉴', body: 'tests/e2e/spreadsheet-context-menu.spec.js 가 우클릭 동작을 검증합니다.' },
       ],
       files: [
-        { path: 'tests/xlsx-edit.test.js', label: 'xlsx-edit.test.js', description: '편집·수식·병합·차트·저장 왕복' },
+        { path: 'tests/xlsx-edit.test.js', label: 'xlsx-edit.test.js', description: '편집·수식·병합·차트·셀 그림·저장 왕복 38개' },
         { path: 'tests/e2e/spreadsheet-undo.spec.js', label: 'spreadsheet-undo.spec.js', description: '표 되돌리기 화면 흐름' },
+        { path: 'tests/e2e/spreadsheet-image-layout.spec.js', label: 'spreadsheet-image-layout.spec.js', description: '셀 그림이 원래 칸 크기로 앉는지' },
       ],
       notes: [
         {
@@ -564,6 +589,14 @@ export default ({ manifest, helpers, rootDir }) => {
           type: 'info',
           label: 'Info',
           body: '읽기(SheetJS)와 쓰기(exceljs)가 다른 라이브러리입니다. 두 라이브러리의 해석 차이가 왕복 손실로 나타날 수 있어 xlsx-edit.test.js 의 왕복 검증이 중요합니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '라이브러리가 못 하는 일을 만났을 때 세 갈래로 나눠 답했습니다 — 읽을 수 있으면 직접 읽고(Rich Value), ' +
+            '읽어도 되면 안 되는 것은 해석만 하고(IMAGE 수식), 되쓸 수 없는 것은 편집을 막습니다(imageProtectedWorkbook). ' +
+            '"라이브러리가 지원할 때까지 기다린다"도 "일단 되는 데까지 저장한다"도 아닌 답이고, 셋 다 실패 방향이 안전한 쪽입니다.',
         },
       ],
     }),

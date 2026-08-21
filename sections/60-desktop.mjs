@@ -42,10 +42,11 @@ export default ({ helpers, diagrams, rootDir }) => {
       diagram: diagrams.runtime,
       usage: [
         {
-          title: '단일 파일 C#',
+          title: '거의 단일 파일 C#',
           body:
             'launcher.cs 하나에 서버·라우팅·프로세스 관리·파일 IO·보안이 모두 있습니다. .NET Framework 의 csc.exe 로 빌드하며, ' +
-            'C# 컴파일러가 없으면 build.bat 이 Go 폴백(main.go)으로 떨어집니다 — 다만 Go 빌드에는 PowerPoint 변환이 없습니다.',
+            'C# 컴파일러가 없으면 build.bat 이 Go 폴백(main.go)으로 떨어집니다 — 다만 Go 빌드에는 PowerPoint 변환과 SSH 원격 터미널이 없습니다. ' +
+            '2026-08-21 에 SSH 백엔드가 desktop/ssh_terminal.cs 로 갈라져, EXE 소스가 두 파일이 됐습니다 — launcher.cs 쪽에는 라우팅만 남습니다.',
         },
         {
           title: '내장 리소스',
@@ -131,7 +132,7 @@ export default ({ helpers, diagrams, rootDir }) => {
         { title: '실행별 토큰', body: 'CreateLocalAuthToken() 으로 실행마다 새 토큰을 만들어 HTML 에 심습니다.' },
       ],
       files: [
-        L('launcher.cs (Main)', { from: 'static void Main()', before: 9, lines: 106 }, '포트 후보 결정과 단일 인스턴스 처리'),
+        L('launcher.cs (Main)', { from: 'public static void Run()', before: 9, lines: 106 }, '포트 후보 결정과 단일 인스턴스 처리'),
         L('launcher.cs (설정 상수)', { from: 'static readonly object WorkspaceLock', before: 4, lines: 80 }, '포트 기록·앱 모드·저장 루트·Pyodide·npm 폴더'),
         L('launcher.cs (앱 모드 API)', { from: 'method == "GET" && path == "/launcher-config"', before: 2, lines: 56 }, '/launcher-config · /reopen-app-mode'),
         { path: 'desktop/start-server-hidden.vbs', label: 'start-server-hidden.vbs', description: '콘솔 없이 서버만 띄우는 상시 실행' },
@@ -474,6 +475,178 @@ export default ({ helpers, diagrams, rootDir }) => {
     }),
 
     sec({
+      id: 'launcher-map',
+      category: CAT,
+      group: '지도',
+      title: '지도 타일·장소 검색 라우팅',
+      subtitle: '브라우저가 지도 서버를 직접 부르지 않게 하는 여덟 경로',
+      summary:
+        '지도 문서가 바깥을 보는 지점은 배경 타일과 장소 검색 둘뿐이고, EXE 로 돌 때는 둘 다 이 라우팅을 거칩니다. ' +
+        '런처 한 곳에서 목적지 허용 목록·요청 간격·API 키·디스크 캐시를 통제하므로, 브라우저 쪽에는 키도 호스트 목록도 남지 않습니다.',
+      usage: [
+        {
+          title: '타일은 목적지 허용 목록으로 막는다',
+          body:
+            '/tile-proxy 는 임의 주소를 받아 오는 통로가 될 수 있어 TileProxyHosts 허용 목록으로 목적지를 좁힙니다. ' +
+            '이 목록은 map-viewer.js 의 배경지도 호스트와 항상 같아야 하고, tests/map-viewer.test.js 가 양쪽을 대조합니다. ' +
+            '지도 스냅샷의 sandbox iframe(Origin: null)이 부르는 유일한 경로이기도 해서 인증 판정에서도 여기만 예외로 둡니다.',
+        },
+        {
+          title: '능력 프로브를 따로 둔 이유가 코드에 있다',
+          body:
+            '/can-proxy-tiles 는 "파일 저장이 되는가" 와 다른 질문입니다 — Go 폴백 런처는 저장은 못 해도 타일은 받습니다. ' +
+            '그 판단이 라우팅 바로 위 주석에 적혀 있어, 나중에 "프로브가 둘이나 필요한가" 라는 질문이 나올 때 답이 코드 옆에 남아 있습니다.',
+        },
+        {
+          title: '장소 검색은 런처가 예의를 지킨다',
+          body:
+            '/geocode 가 식별 User-Agent, 초당 1건(GeocodeMinIntervalMs 1100ms — 정책은 1000ms 이지만 여유를 둡니다), 검색 캐시를 적용합니다. ' +
+            '공급자를 CLASSDOCK_GEOCODER_URL 로 Nominatim 호환 서버로 바꿀 수 있고, 카카오를 골랐는데 키가 없으면 ' +
+            '502 가 아니라 428 Precondition Required 로 갈라 화면이 "키를 넣으세요" 를 정확히 띄울 수 있게 합니다.',
+        },
+        {
+          title: '카카오 REST 키는 브라우저에 두지 않는다',
+          body:
+            '/map-search-key 로 넣고 DELETE 로 지우며, 화면은 /map-search-key-status 로 "있다/없다" 만 봅니다. ' +
+            '키 값 자체는 런처가 들고 Authorization 헤더를 붙입니다. 배포본에 키가 실려 학생 PC 마다 퍼지는 문제를 구조로 막은 자리입니다. ' +
+            '고른 공급자(/map-search-provider)는 파일로 남겨 앱 모드처럼 브라우저 프로필이 갈려도 따라옵니다.',
+        },
+      ],
+      features: [
+        { title: '타일 대리 수신', body: '/tile-proxy — 화면에 실제로 표시된 타일만 받아 서버 디스크에 캐시합니다. 사전 다운로드는 하지 않습니다.' },
+        { title: '캐시 관리', body: '/tile-cache-status · /tile-cache-clear — 400MB 상한. 넘치면 80% 까지 쓸어 냅니다.' },
+        { title: '장소 검색', body: '/geocode — 이름 → 좌표, 좌표 → 주소. 공급자는 OSM(Nominatim) 또는 카카오.' },
+        { title: '키 보관', body: '/map-search-key(POST·DELETE) · /map-search-key-status · /map-search-provider.' },
+      ],
+      files: [
+        L('launcher.cs (지도 라우팅)', { from: 'method == "GET" && path.StartsWith("/tile-proxy?"', before: 2, to: 'method == "POST" && path == "/tile-cache-clear"', after: 10 }, '/tile-proxy · /geocode · /map-search-* · /tile-cache-*'),
+        L('launcher.cs (타일 캐시)', { from: 'static readonly string[] TileProxyHosts', before: 2, to: 'static bool ClearTileCache()', after: 0 }, '허용 호스트 목록 · 메모리/디스크 캐시 · 400MB 정리'),
+        L('launcher.cs (타일 대리 수신)', { from: 'static bool TryProxyMapTile', before: 2, lines: 62 }, '호스트 허용 판정과 실패 시 오래된 캐시 내주기'),
+        { path: 'tests/map-viewer.test.js', label: 'map-viewer.test.js', description: '허용 호스트·캐시 상한·토큰 요구를 두 런처와 함께 대조' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '"인터넷이 필요한 지점"이 여덟 경로로 모여 있습니다. 지도 기능이 아무리 커져도 바깥과 닿는 면은 여기만 보면 되고, ' +
+            '허용 목록·요청 간격·키가 모두 이 한 파일에 있습니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '이 구간은 오랫동안 어느 섹션에도 실리지 않아, 지도 계약 카드 네 장의 "파일 위치" 를 눌러도 코드가 뜨지 않았습니다. ' +
+            '엔드포인트 대조(102/102)는 통과하고 있었는데, 계약이 가리키는 코드가 화면에 없는 것은 그 검사가 보지 않는 종류의 빈틈이었습니다.',
+        },
+      ],
+    }),
+
+    sec({
+      id: 'launcher-ssh',
+      category: CAT,
+      group: '원격 터미널',
+      title: 'SSH 원격 터미널 백엔드',
+      subtitle: 'Windows OpenSSH + ConPTY — desktop/ssh_terminal.cs',
+      summary:
+        'launcher.cs 는 /ssh-* 아홉 경로를 받아 ClassDockSshTerminal 로 넘기기만 하고, 실제 구현은 별도 파일 desktop/ssh_terminal.cs 에 있습니다. ' +
+        'SSH 프로토콜을 직접 구현하지 않고 Windows 에 설치된 OpenSSH 클라이언트(ssh.exe)를 ConPTY 에 붙여, ' +
+        '원격 PTY 의 ANSI 입출력을 브라우저 xterm.js 와 중계합니다. 암호 협상·키 교환은 OpenSSH 가 지고, 이 파일은 바이트를 나릅니다.',
+      usage: [
+        {
+          title: '비밀번호는 일회성 named pipe 로만',
+          body:
+            '디스크·명령행·환경변수 어디에도 두지 않습니다. 난수 이름(classdock_ssh_askpass_<GUID>)의 파이프 서버를 열고 ' +
+            'SSH_ASKPASS 를 ClassDock.exe 자신으로 지정한 뒤 SSH_ASKPASS_REQUIRE=force 로 강제합니다. ' +
+            'OpenSSH 가 비밀번호를 물을 때 ClassDock.exe 가 다시 실행되고, TryRunAskPassHelper 가 파이프에서 읽어 표준출력으로 흘리고 끝납니다. ' +
+            '넘긴 바이트는 Array.Clear 로 지웁니다. 명령행은 작업 관리자에서 보이고 환경변수는 자식 프로세스로 새므로 둘 다 피한 구조입니다.',
+        },
+        {
+          title: 'known_hosts 를 따로 가진다',
+          body:
+            'ssh 인자에 UserKnownHostsFile=<LocalAppData>/ClassDock/ssh/known_hosts 와 GlobalKnownHostsFile=NUL 을 줍니다. ' +
+            '사용자가 평소 쓰는 OpenSSH 설정(-F NUL 로 config 도 무시)과 완전히 갈라, ClassDock 이 신뢰한 키만으로 접속합니다. ' +
+            'StrictHostKeyChecking=yes 라 목록에 없으면 붙지 않고, Open() 은 그 전에 TrustedFingerprint 가 비었으면 ssh-host-key-not-trusted 로 먼저 막습니다.',
+        },
+        {
+          title: 'ssh 인자를 고정한다',
+          body:
+            'BuildSshArguments 가 PubkeyAuthentication=no · PreferredAuthentications=password,keyboard-interactive · ' +
+            'ClearAllForwardings=yes · ConnectTimeout=15 · ServerAliveInterval=30 을 못 박습니다. ' +
+            '설계 문서가 1차 범위에서 뺀 것(개인키·포트 포워딩)을 문서로만 적어 두지 않고 인자로 닫아 둔 형태입니다.',
+        },
+        {
+          title: '입력값을 문자 단위로 검사한다',
+          body:
+            'ValidateHost 는 영숫자·점·하이픈·콜론만, ValidateUser 는 영숫자·점·밑줄·하이픈만 받고 둘 다 첫 글자가 - 이면 거부합니다. ' +
+            '호스트나 계정이 -oProxyCommand=... 같은 모양으로 들어와 ssh 옵션으로 해석되는 것을 막는 자리입니다. ' +
+            '호스트 키 알고리즘은 5종 허용 목록, 키는 base64 로 풀어 길이까지 확인합니다.',
+        },
+        {
+          title: '세션은 4개까지',
+          body:
+            'MaxSessions 4 · 세션당 출력 버퍼 4MB · 입력 한 번에 256KB 상한입니다. ' +
+            '버퍼가 넘치면 앞을 버리고 폴링 응답에 reset 을 실어 화면이 "잘렸다"는 것을 알 수 있게 합니다. ' +
+            'SweepSessions 가 쓰지 않는 세션을 정리하고, ShutdownAll 이 앱 종료 때 전부 닫습니다.',
+        },
+      ],
+      features: [
+        { title: '능력 확인', body: 'CapabilityJson — ConPTY API 3종(Create·Resize·Close)과 ssh.exe 존재를 확인하고, 없으면 이유를 문장으로 돌려줍니다.' },
+        { title: '지문 읽기', body: 'ScanHostKey — ssh-keyscan 으로 공개키를 읽습니다. 최신 KEX 를 지원하지 않는 구형이면 ssh.exe 협상으로 폴백합니다.' },
+        { title: '지문 저장', body: 'TrustHostKey — 같은 호스트의 다른 키가 이미 있으면 replace 없이는 ssh-host-key-changed 로 거부합니다.' },
+        { title: '세션 개폐', body: 'Open · Input · Poll · Resize · Stop. Poll 은 오프셋 이후 증분만 base64 로 내려 줍니다.' },
+        { title: '크기 전달', body: 'ResizePseudoConsole 로 원격 PTY 크기를 바꿉니다. 20~300열 · 5~120행으로 클램프합니다.' },
+      ],
+      files: [
+        { path: 'desktop/ssh_terminal.cs', label: 'ssh_terminal.cs', description: 'SSH 터미널 백엔드 전체 — ConPTY 상호운용, askpass, known_hosts, 세션' },
+        L('launcher.cs (SSH 라우팅)', { from: 'method == "GET" && path == "/ssh-capability"', before: 2, to: 'path.StartsWith("/ssh-session-stop"', after: 6 }, '/ssh-* 아홉 경로'),
+        { path: 'docs/원격터미널-설계.md', label: '원격터미널-설계.md', description: '1·2·3차 설계' },
+        { path: 'tests/remote-terminal.test.js', label: 'remote-terminal.test.js', description: '토큰·비밀번호 전달·지문·ConPTY 계약' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            'SSH 를 직접 구현하지 않은 것이 이 기능에서 가장 중요한 판단입니다. ' +
+            '암호 협상·키 교환·알고리즘 폐기 대응은 틀리면 곧바로 보안 사고가 되는 영역인데, 그 부분을 OS 에 딸려 오는 OpenSSH 에 맡기고 ' +
+            'ClassDock 은 프로세스를 띄우고 바이트를 나르는 일만 합니다. 라이브러리 하나를 아낀 것이 아니라 책임 하나를 넘긴 것입니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '별도 파일로 뗐습니다. launcher.cs 가 이미 7천 줄대인데 여기에 862줄을 더 붙이지 않고 ClassDockSshTerminal 정적 클래스로 갈라, ' +
+            'launcher.cs 쪽에는 라우팅 아홉 갈래만 남겼습니다. 이 레포에서 EXE 코드가 두 파일로 나뉜 첫 사례입니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '앱 전체에서 가장 강력한 원격 실행 경로입니다. 경계는 실행별 토큰 하나이고, ' +
+            'RequiresLocalAuthToken 의 path.StartsWith("/ssh-") 한 줄이 아홉 경로를 모두 덮습니다. ' +
+            '새 /ssh-* 경로가 자동으로 보호되는 장점과, 이 한 줄이 지워지면 아홉이 동시에 열리는 단점이 같은 구조에서 나옵니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'ClassDock.exe 가 자기 자신을 SSH_ASKPASS 로 지정해 다시 실행됩니다. ' +
+            '즉 EXE 진입점에 "CLASSDOCK_SSH_ASKPASS_PIPE 가 있으면 helper 로 동작하고 끝낸다"는 갈래가 생겼습니다. ' +
+            '환경변수 하나로 프로그램의 정체가 바뀌는 구조라, 진입점을 손볼 때 이 갈래를 함께 보지 않으면 앱이 뜨지 않거나 helper 가 서버를 띄우는 사고가 납니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            'ConPTY(CreatePseudoConsole)는 Windows 10 1809 부터 있습니다. ' +
+            'GetProcAddress 로 세 함수의 존재를 직접 확인해 판정하므로 버전 문자열을 읽지 않습니다 — ' +
+            '"버전이 몇이냐" 대신 "그 API 가 있느냐" 를 묻는 형태입니다.',
+        },
+      ],
+    }),
+
+    sec({
       id: 'launcher-convert-sqlite',
       category: CAT,
       group: '변환 · DB',
@@ -595,8 +768,9 @@ export default ({ helpers, diagrams, rootDir }) => {
       title: 'EXE 빌드와 Go 폴백',
       subtitle: 'csc.exe 우선, 없으면 go build',
       summary:
-        'build.bat 은 세 단계입니다 — ① 오프라인 HTML 을 app.html 로 복사 ② csc.exe 로 launcher.cs 를 컴파일하며 app.html·python_kernel.py·npm_package_runner.js 를 리소스로 넣기 ' +
-        '③ 결과를 프로젝트 루트의 ClassDock.exe 로 출력. C# 컴파일러가 없으면 Go 폴백(main.go)으로 빌드하는데, 이때는 PowerPoint 변환 기능이 빠집니다.',
+        'build.bat 은 세 단계입니다 — ① 오프라인 HTML 을 app.html 로 복사 ② csc.exe 로 launcher.cs 와 ssh_terminal.cs 를 함께 컴파일하며 ' +
+        'app.html·python_kernel.py·npm_package_runner.js 를 리소스로 넣기 ③ 결과를 프로젝트 루트의 ClassDock.exe 로 출력. ' +
+        'C# 컴파일러가 없으면 Go 폴백(main.go)으로 빌드하는데, 이때는 PowerPoint 변환과 SSH 원격 터미널이 빠집니다.',
       usage: [
         {
           title: '선행 조건',
@@ -616,11 +790,13 @@ export default ({ helpers, diagrams, rootDir }) => {
       ],
       features: [
         { title: '리소스 내장', body: '/resource:app.html, /resource:python_kernel.py, /resource:npm_package_runner.js 로 exe 안에 넣습니다.' },
+        { title: '소스 두 벌', body: '컴파일 대상이 launcher.cs 하나에서 launcher.cs + ssh_terminal.cs 둘로 늘었습니다. 리소스가 아니라 함께 컴파일되는 소스입니다.' },
         { title: 'winexe', body: '/target:winexe 라 콘솔 창이 뜨지 않습니다.' },
         { title: 'build-dotnet.bat', body: 'Go 폴백 없이 C# 만 강제하는 변형입니다.' },
       ],
       files: [
         { path: 'desktop/build.bat', label: 'build.bat', description: '기본 빌드(Go 폴백 포함)' },
+        { path: 'desktop/ssh_terminal.cs', label: 'ssh_terminal.cs', description: 'launcher.cs 와 함께 컴파일되는 두 번째 C# 소스' },
         { path: 'desktop/build-dotnet.bat', label: 'build-dotnet.bat', description: 'C# 전용 빌드' },
         { path: 'desktop/main.go', label: 'main.go', description: 'Go 폴백 런처' },
         { path: 'desktop/console_windows.go', label: 'console_windows.go', description: 'Go 빌드의 콘솔 숨김' },
