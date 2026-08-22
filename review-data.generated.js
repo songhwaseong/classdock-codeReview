@@ -1,7 +1,7 @@
 // 자동 생성 파일입니다. 직접 수정하지 마세요.
 // 다시 만들기: node code-review/generate-review-data.mjs
 window.MN_REVIEW_DATA = {
-  "generatedAt": "2026-08-21",
+  "generatedAt": "2026-08-22",
   "root": "my",
   "sections": [
     {
@@ -1019,13 +1019,13 @@ window.MN_REVIEW_DATA = {
       "category": "개요",
       "group": "코드 낱말 사전",
       "title": "코드 낱말 사전",
-      "subtitle": "실제 코드에 나오는 문법 낱말 77개",
-      "summary": "이 리뷰의 코드 조각에서 실제로 쓰는 문법 낱말 77개를 모았습니다. 변수명·함수명·라이브러리 API는 수만 개로 불어나므로 제외하고, JavaScript·C#·Python의 선언·조건·반복·비동기·예외·특수값만 설명합니다. 관련 코드에서 색칠된 낱말에 마우스를 올리면 짧은 뜻이 뜨고, 누르면 이 사전의 해당 카드로 이동합니다.",
+      "subtitle": "실제 코드에 나오는 문법 낱말 78개",
+      "summary": "이 리뷰의 코드 조각에서 실제로 쓰는 문법 낱말 78개를 모았습니다. 변수명·함수명·라이브러리 API는 수만 개로 불어나므로 제외하고, JavaScript·C#·Python의 선언·조건·반복·비동기·예외·특수값만 설명합니다. 관련 코드에서 색칠된 낱말에 마우스를 올리면 짧은 뜻이 뜨고, 누르면 이 사전의 해당 카드로 이동합니다.",
       "diagram": null,
       "usage": [
         {
-          "title": "선언·구조 (13개)",
-          "body": "const, let, var, function, def, class, struct, extends, static, public, readonly, using, global"
+          "title": "선언·구조 (14개)",
+          "body": "const, let, var, function, def, class, struct, extends, static, public, readonly, sealed, using, global"
         },
         {
           "title": "조건·반복 (14개)",
@@ -1099,6 +1099,11 @@ window.MN_REVIEW_DATA = {
           "id": "cw-readonly",
           "title": "`readonly` — 초기화 뒤 변경 금지",
           "body": "C# · C#에서 필드를 선언하거나 생성할 때 값을 정한 뒤에는 다시 바꿀 수 없게 합니다."
+        },
+        {
+          "id": "cw-sealed",
+          "title": "`sealed` — 상속 금지",
+          "body": "C# · C#에서 이 클래스를 물려받아 확장하지 못하게 막습니다. 내부에서만 쓰는 작은 자료 묶음을 실수로 늘리지 않으려고 붙입니다."
         },
         {
           "id": "cw-using",
@@ -1451,7 +1456,7 @@ window.MN_REVIEW_DATA = {
       "group": "코드 기호·기본 기능 사전",
       "title": "코드 기호·기본 기능 사전",
       "subtitle": "연산자·기호 25개와 기본 기능 55개",
-      "summary": "1차 코드 낱말 사전 다음으로 코드 읽기를 막는 연산자·기호 25개와 표준 기본 기능 55개, 모두 80개를 모았습니다. 프로젝트가 직접 만든 함수와 외부 라이브러리 API는 제외했습니다. 코드에서 기본 기능은 점선 밑줄로 표시되고, 연산자는 원래 모양을 유지하다가 마우스를 올렸을 때 반응합니다.",
+      "summary": "1차 코드 낱말 사전 다음으로 코드 읽기를 막는 연산자·기호 25개와 표준 기본 기능 55개, 모두 92개를 모았습니다. 프로젝트가 직접 만든 함수와 외부 라이브러리 API는 제외했습니다. 코드에서 기본 기능은 점선 밑줄로 표시되고, 연산자는 원래 모양을 유지하다가 마우스를 올렸을 때 반응합니다.",
       "diagram": null,
       "usage": [
         {
@@ -1459,12 +1464,12 @@ window.MN_REVIEW_DATA = {
           "body": "=, ===, !==, ==, !=, =>, ?., ??, ..., ++, --, //, &&, ||, !, +, -, *, /, %, <, >, <=, >=, +="
         },
         {
-          "title": "JavaScript 기본 기능 (28개)",
-          "body": "document, Math, String, addEventListener, window, Number, Array, Error, Set, JSON, console, querySelector, localStorage, Object, setTimeout, Map, clearTimeout, Date, Promise, Uint8Array, removeEventListener, querySelectorAll, Boolean, fetch, URL, requestAnimationFrame, Blob, getElementById"
+          "title": "JavaScript 기본 기능 (35개)",
+          "body": "document, Math, String, addEventListener, window, Number, Array, Error, Set, JSON, console, querySelector, TextEncoder, TextDecoder, DataView, AbortController, atob, btoa, ResizeObserver, localStorage, Object, setTimeout, Map, clearTimeout, Date, Promise, Uint8Array, removeEventListener, querySelectorAll, Boolean, fetch, URL, requestAnimationFrame, Blob, getElementById"
         },
         {
-          "title": "C# 기본 기능 (11개)",
-          "body": "Encoding, Environment, Path, Dictionary, Process, DateTime, StringBuilder, File, Directory, Thread, List"
+          "title": "C# 기본 기능 (16개)",
+          "body": "Encoding, Environment, Path, Dictionary, Process, DateTime, StringBuilder, File, Directory, Thread, List, Convert, Guid, IntPtr, Marshal, DllImport"
         },
         {
           "title": "Python 기본 기능 (16개)",
@@ -1658,6 +1663,41 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · CSS 선택자와 일치하는 첫 번째 DOM 요소를 찾습니다."
         },
         {
+          "id": "cr-TextEncoder",
+          "title": "`TextEncoder` — 문자열 → 바이트",
+          "body": "JavaScript · 문자열을 UTF-8 바이트 배열로 바꿉니다. 글자 수와 바이트 수가 다른 한글·이모지를 정확한 길이로 보낼 때 씁니다."
+        },
+        {
+          "id": "cr-TextDecoder",
+          "title": "`TextDecoder` — 바이트 → 문자열",
+          "body": "JavaScript · UTF-8 바이트 배열을 문자열로 되돌립니다. 여러 번 나눠 들어온 바이트를 이어 붙여 해석할 수도 있습니다."
+        },
+        {
+          "id": "cr-DataView",
+          "title": "`DataView` — 바이트를 숫자로 읽고 쓰기",
+          "body": "JavaScript · 바이트 배열의 특정 위치에 정수·실수를 넣거나 꺼냅니다. 바이트 순서(리틀·빅 엔디언)를 직접 고를 수 있어 통신 규약을 다룰 때 씁니다."
+        },
+        {
+          "id": "cr-AbortController",
+          "title": "`AbortController` — 요청 중단 신호",
+          "body": "JavaScript · 진행 중인 fetch 같은 작업을 바깥에서 취소하게 해 주는 신호 객체입니다. 응답이 오지 않는 요청에 시간 제한을 걸 때 씁니다."
+        },
+        {
+          "id": "cr-atob",
+          "title": "`atob` — Base64 → 글자",
+          "body": "JavaScript · Base64로 적힌 문자열을 원래 바이트 값의 문자열로 되돌립니다."
+        },
+        {
+          "id": "cr-btoa",
+          "title": "`btoa` — 글자 → Base64",
+          "body": "JavaScript · 바이트 값의 문자열을 Base64 표기로 바꿉니다."
+        },
+        {
+          "id": "cr-ResizeObserver",
+          "title": "`ResizeObserver` — 요소 크기 변화 감시",
+          "body": "JavaScript · 창 크기뿐 아니라 특정 요소의 크기가 바뀔 때마다 알려 줍니다. 패널을 끌어 넓힐 때 안쪽 화면을 다시 계산하는 데 씁니다."
+        },
+        {
           "id": "cr-localStorage",
           "title": "`localStorage` — 브라우저 문자열 저장소",
           "body": "JavaScript · 출처별로 문자열 데이터를 저장하며 창을 닫아도 남습니다."
@@ -1793,6 +1833,31 @@ window.MN_REVIEW_DATA = {
           "body": "C# · 값을 순서대로 담고 추가·삭제할 수 있는 제네릭 컬렉션입니다."
         },
         {
+          "id": "cr-Convert",
+          "title": "`Convert` — 형식 변환 모음",
+          "body": "C# · 문자열·숫자·바이트 배열·Base64 사이를 바꾸는 정적 기능을 모아 둔 형식입니다. 이 프로젝트에서는 바이트를 Base64 글자로 만들어 JSON 응답에 실을 때 가장 많이 나옵니다."
+        },
+        {
+          "id": "cr-Guid",
+          "title": "`Guid` — 겹치지 않는 식별자",
+          "body": "C# · 사실상 겹치지 않는 128비트 값을 만듭니다. 세션 번호나 일회용 이름처럼 남이 맞히면 안 되는 이름을 만들 때 씁니다."
+        },
+        {
+          "id": "cr-IntPtr",
+          "title": "`IntPtr` — 네이티브 핸들·주소",
+          "body": "C# · 운영체제가 돌려준 핸들이나 메모리 주소를 담는 값입니다. .NET 바깥(Windows API)과 주고받는 값이라 내용이 아니라 \"가리키는 것\"만 들고 있습니다."
+        },
+        {
+          "id": "cr-Marshal",
+          "title": "`Marshal` — 관리·비관리 메모리 다리",
+          "body": "C# · .NET 객체와 네이티브 메모리 사이에서 값을 옮기거나 메모리를 잡고 놓아 줍니다. Windows API 를 부를 때 짝으로 나옵니다."
+        },
+        {
+          "id": "cr-DllImport",
+          "title": "`DllImport` — Windows API 직접 호출",
+          "body": "C# · kernel32.dll 같은 네이티브 라이브러리의 함수를 C# 에서 바로 부르겠다고 선언하는 표식입니다(P/Invoke). .NET 이 감싸 주지 않는 기능 — 이 프로젝트에서는 가짜 터미널(ConPTY) — 을 쓸 때만 나옵니다."
+        },
+        {
           "id": "cr-os",
           "title": "`os` — 운영체제 기능 모듈",
           "body": "Python · 파일 경로·환경 변수·프로세스 등 운영체제와 상호작용하는 표준 모듈입니다."
@@ -1892,25 +1957,25 @@ window.MN_REVIEW_DATA = {
       "category": "개요",
       "group": "코드 메서드·실행 패턴 사전",
       "title": "코드 메서드·실행 패턴 사전",
-      "subtitle": "표준 메서드 81개와 실행 패턴 15개",
-      "summary": "3차 표준 API 확장 범위로, 실제 코드에 나오는 표준 메서드 81개와 여러 줄에 걸친 실행 패턴 15개를 모았습니다. 메서드는 객체 뒤에 점을 찍어 호출하는 경우에만 코드에서 연결하므로 프로젝트 함수와 같은 이름을 잘못 잡지 않습니다. 실행 패턴은 한 단어로 판별할 수 없어 검색과 사전 카드로 제공합니다.",
+      "subtitle": "표준 메서드 88개와 실행 패턴 15개",
+      "summary": "3차 표준 API 확장 범위로, 실제 코드에 나오는 표준 메서드 88개와 여러 줄에 걸친 실행 패턴 15개를 모았습니다. 메서드는 객체 뒤에 점을 찍어 호출하는 경우에만 코드에서 연결하므로 프로젝트 함수와 같은 이름을 잘못 잡지 않습니다. 실행 패턴은 한 단어로 판별할 수 없어 검색과 사전 카드로 제공합니다.",
       "diagram": null,
       "usage": [
         {
-          "title": "배열·문자열 메서드 (37개)",
-          "body": "map, filter, reduce, forEach, find, findIndex, some, every, includes, set, delete, keys, entries, add, has, push, pop, shift, unshift, slice, splice, join, split, replace, match, matchAll, startsWith, endsWith, trim, toLowerCase, toUpperCase, sort, reverse, flatMap, indexOf, get, values"
+          "title": "배열·문자열 메서드 (38개)",
+          "body": "map, filter, reduce, forEach, find, findIndex, some, every, includes, set, delete, keys, entries, add, has, push, pop, shift, unshift, slice, splice, join, split, padStart, replace, match, matchAll, startsWith, endsWith, trim, toLowerCase, toUpperCase, sort, reverse, flatMap, indexOf, get, values"
         },
         {
-          "title": "DOM·이벤트 메서드 (17개)",
-          "body": "createElement, appendChild, append, remove, closest, matches, contains, setAttribute, getAttribute, removeAttribute, toggle, preventDefault, stopPropagation, focus, select, click, scrollIntoView"
+          "title": "DOM·이벤트 메서드 (21개)",
+          "body": "createElement, appendChild, append, remove, closest, matches, contains, setAttribute, getAttribute, removeAttribute, toggle, preventDefault, observe, disconnect, abort, toDataURL, stopPropagation, focus, select, click, scrollIntoView"
         },
         {
           "title": "비동기·파일 메서드 (7개)",
           "body": "then, catch, finally, arrayBuffer, text, createObjectURL, revokeObjectURL"
         },
         {
-          "title": "C# 표준 메서드 (11개)",
-          "body": "ReadAllText, ReadAllBytes, WriteAllBytes, Exists, Combine, GetFullPath, Start, WaitForExit, Kill, Dispose, ToString"
+          "title": "C# 표준 메서드 (13개)",
+          "body": "ReadAllText, ReadAllBytes, WriteAllBytes, Exists, Combine, StartsWith, TryGetValue, GetFullPath, Start, WaitForExit, Kill, Dispose, ToString"
         },
         {
           "title": "Python 표준 메서드 (9개)",
@@ -2038,6 +2103,11 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · Python · 문자열을 지정한 구분 기준으로 잘라 문자열 목록으로 만듭니다."
         },
         {
+          "id": "cm-padStart",
+          "title": "`padStart` — 앞을 채워 자릿수 맞추기",
+          "body": "JavaScript · 문자열이 정해진 길이가 될 때까지 앞을 채웁니다. \"8\" 을 \"08\" 로 만드는 날짜·시각 표기에 씁니다."
+        },
+        {
           "id": "cm-replace",
           "title": "`replace` — 문자열 일부 바꾸기",
           "body": "JavaScript · Python · 찾은 문자열이나 패턴을 다른 문자열로 바꾼 새 문자열을 만듭니다."
@@ -2158,6 +2228,26 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 링크 이동이나 폼 제출처럼 이벤트에 딸린 브라우저 기본 동작을 막습니다."
         },
         {
+          "id": "cm-observe",
+          "title": "`observe` — 감시 시작",
+          "body": "JavaScript · ResizeObserver 같은 감시자에게 \"이 요소를 지켜보라\"고 등록합니다. 이벤트와 달리 요소 자체의 변화를 봅니다."
+        },
+        {
+          "id": "cm-disconnect",
+          "title": "`disconnect` — 감시 해제",
+          "body": "JavaScript · 감시자가 보고 있던 대상을 모두 놓습니다. 탭을 닫을 때 이것을 부르지 않으면 사라진 화면을 계속 지켜봅니다."
+        },
+        {
+          "id": "cm-abort",
+          "title": "`abort` — 진행 중 작업 취소",
+          "body": "JavaScript · AbortController 로 만든 신호를 켜서 그 신호를 받은 fetch 등을 중단시킵니다."
+        },
+        {
+          "id": "cm-toDataURL",
+          "title": "`toDataURL` — 캔버스를 그림 글자로",
+          "body": "JavaScript · 캔버스에 그린 내용을 data: 로 시작하는 문자열 그림으로 바꿉니다. 파일 없이 문서 안에 사진을 담는 길입니다."
+        },
+        {
           "id": "cm-stopPropagation",
           "title": "`stopPropagation` — 이벤트 전파 중단",
           "body": "JavaScript · 이벤트가 부모 요소 쪽으로 더 전달되는 것을 막습니다."
@@ -2241,6 +2331,16 @@ window.MN_REVIEW_DATA = {
           "id": "cm-Combine",
           "title": "`Combine` — 경로 조각 합치기",
           "body": "C# · 운영체제에 맞는 구분자를 사용해 여러 경로 조각을 하나로 합칩니다."
+        },
+        {
+          "id": "cm-StartsWith",
+          "title": "`StartsWith` — 앞부분 일치 검사",
+          "body": "C# · 문자열이 지정한 글자로 시작하는지 봅니다. 런처의 라우팅이 /ssh- 처럼 접두사 하나로 여러 경로를 한꺼번에 판정하는 자리가 전부 이것입니다."
+        },
+        {
+          "id": "cm-TryGetValue",
+          "title": "`TryGetValue` — 있으면 꺼내기",
+          "body": "C# · 사전에서 키를 찾아 값이 있으면 꺼내고 없으면 false 를 돌려줍니다. 없는 키로 예외를 내지 않고 갈라 쓰는 방식입니다."
         },
         {
           "id": "cm-GetFullPath",
@@ -2448,7 +2548,7 @@ window.MN_REVIEW_DATA = {
         },
         {
           "title": "학습 도구 (15개)",
-          "body": "newWhiteboard, whiteboardStencilGroup, removeEntry, whiteboardFocusAllowsPoint, normalizeWhiteboardTextSize, whiteboardClipboardItem, normalizeWhiteboardFocusState, whiteboardCanFlipItem, expandWhiteboardFormulaTemplate, setWhiteboardInternalClipboard, whiteboardPresetResizeItem, whiteboardEducationCatalog, whiteboardFlashlightGeometry, whiteboardFocusGeometry, whiteboardFormulaDictionary"
+          "body": "newWhiteboard, whiteboardStencilGroup, removeEntry, whiteboardFocusAllowsPoint, normalizeWhiteboardTextSize, whiteboardClipboardItem, connect, normalizeWhiteboardFocusState, whiteboardCanFlipItem, expandWhiteboardFormulaTemplate, setWhiteboardInternalClipboard, whiteboardPresetResizeItem, whiteboardEducationCatalog, whiteboardFlashlightGeometry, whiteboardFocusGeometry"
         },
         {
           "title": "EXE·로컬 서버 (15개)",
@@ -2920,6 +3020,11 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:48에서 정의되며, 코드에서 호출 형태 11회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:48. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
         },
         {
+          "id": "pf-js-connect-1beuqrd",
+          "title": "`connect` — 프로젝트 처리",
+          "body": "JavaScript · 학습 도구 · src/js/remote-terminal.js:410에서 정의되며, 코드에서 호출 형태 9회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/remote-terminal.js:410. 대표 파일 역할: xterm.js 화면 · 도킹 · 폴링 · 실패 분류"
+        },
+        {
           "id": "pf-js-normalizewhiteboardfocusstate-16dcpp6",
           "title": "`normalizeWhiteboardFocusState` — 변환·정규화",
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:638에서 정의되며, 코드에서 호출 형태 8회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:638. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
@@ -2958,11 +3063,6 @@ window.MN_REVIEW_DATA = {
           "id": "pf-js-whiteboardfocusgeometry-16w5iie",
           "title": "`whiteboardFocusGeometry` — 프로젝트 처리",
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:659에서 정의되며, 코드에서 호출 형태 6회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:659. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
-        },
-        {
-          "id": "pf-js-whiteboardformuladictionary-nwg34k",
-          "title": "`whiteboardFormulaDictionary` — 프로젝트 처리",
-          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:166에서 정의되며, 코드에서 호출 형태 6회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:166. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
         },
         {
           "id": "pf-cs-writeresponse-ss96kb",
@@ -14558,6 +14658,17 @@ window.MN_REVIEW_DATA = {
       "short": "C#에서 필드를 선언하거나 생성할 때 값을 정한 뒤에는 다시 바꿀 수 없게 합니다."
     },
     {
+      "id": "cw-sealed",
+      "name": "sealed",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "선언·구조",
+      "label": "상속 금지",
+      "short": "C#에서 이 클래스를 물려받아 확장하지 못하게 막습니다."
+    },
+    {
       "id": "cw-using",
       "name": "using",
       "languages": [
@@ -15791,6 +15902,90 @@ window.MN_REVIEW_DATA = {
       "type": "identifier"
     },
     {
+      "id": "cr-TextEncoder",
+      "name": "TextEncoder",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "문자열 → 바이트",
+      "short": "문자열을 UTF-8 바이트 배열로 바꿉니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-TextDecoder",
+      "name": "TextDecoder",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "바이트 → 문자열",
+      "short": "UTF-8 바이트 배열을 문자열로 되돌립니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-DataView",
+      "name": "DataView",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "바이트를 숫자로 읽고 쓰기",
+      "short": "바이트 배열의 특정 위치에 정수·실수를 넣거나 꺼냅니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-AbortController",
+      "name": "AbortController",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "요청 중단 신호",
+      "short": "진행 중인 fetch 같은 작업을 바깥에서 취소하게 해 주는 신호 객체입니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-atob",
+      "name": "atob",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "Base64 → 글자",
+      "short": "Base64로 적힌 문자열을 원래 바이트 값의 문자열로 되돌립니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-btoa",
+      "name": "btoa",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "글자 → Base64",
+      "short": "바이트 값의 문자열을 Base64 표기로 바꿉니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-ResizeObserver",
+      "name": "ResizeObserver",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "요소 크기 변화 감시",
+      "short": "창 크기뿐 아니라 특정 요소의 크기가 바뀔 때마다 알려 줍니다.",
+      "type": "identifier"
+    },
+    {
       "id": "cr-localStorage",
       "name": "localStorage",
       "languages": [
@@ -16112,6 +16307,66 @@ window.MN_REVIEW_DATA = {
       "kind": "C# 기본 기능",
       "label": "가변 순서 목록",
       "short": "값을 순서대로 담고 추가·삭제할 수 있는 제네릭 컬렉션입니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-Convert",
+      "name": "Convert",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "형식 변환 모음",
+      "short": "문자열·숫자·바이트 배열·Base64 사이를 바꾸는 정적 기능을 모아 둔 형식입니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-Guid",
+      "name": "Guid",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "겹치지 않는 식별자",
+      "short": "사실상 겹치지 않는 128비트 값을 만듭니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-IntPtr",
+      "name": "IntPtr",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "네이티브 핸들·주소",
+      "short": "운영체제가 돌려준 핸들이나 메모리 주소를 담는 값입니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-Marshal",
+      "name": "Marshal",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "관리·비관리 메모리 다리",
+      "short": ".NET 객체와 네이티브 메모리 사이에서 값을 옮기거나 메모리를 잡고 놓아 줍니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-DllImport",
+      "name": "DllImport",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "Windows API 직접 호출",
+      "short": "kernel32.dll 같은 네이티브 라이브러리의 함수를 C# 에서 바로 부르겠다고 선언하는 표식입니다(P/Invoke).",
       "type": "identifier"
     },
     {
@@ -16588,6 +16843,18 @@ window.MN_REVIEW_DATA = {
       "type": "method"
     },
     {
+      "id": "cm-padStart",
+      "name": "padStart",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "배열·문자열 메서드",
+      "label": "앞을 채워 자릿수 맞추기",
+      "short": "문자열이 정해진 길이가 될 때까지 앞을 채웁니다.",
+      "type": "method"
+    },
+    {
       "id": "cm-replace",
       "name": "replace",
       "languages": [
@@ -16879,6 +17146,54 @@ window.MN_REVIEW_DATA = {
       "type": "method"
     },
     {
+      "id": "cm-observe",
+      "name": "observe",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "DOM·이벤트 메서드",
+      "label": "감시 시작",
+      "short": "ResizeObserver 같은 감시자에게 \"이 요소를 지켜보라\"고 등록합니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-disconnect",
+      "name": "disconnect",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "DOM·이벤트 메서드",
+      "label": "감시 해제",
+      "short": "감시자가 보고 있던 대상을 모두 놓습니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-abort",
+      "name": "abort",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "DOM·이벤트 메서드",
+      "label": "진행 중 작업 취소",
+      "short": "AbortController 로 만든 신호를 켜서 그 신호를 받은 fetch 등을 중단시킵니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-toDataURL",
+      "name": "toDataURL",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "DOM·이벤트 메서드",
+      "label": "캔버스를 그림 글자로",
+      "short": "캔버스에 그린 내용을 data: 로 시작하는 문자열 그림으로 바꿉니다.",
+      "type": "method"
+    },
+    {
       "id": "cm-stopPropagation",
       "name": "stopPropagation",
       "languages": [
@@ -17080,6 +17395,30 @@ window.MN_REVIEW_DATA = {
       "kind": "C# 표준 메서드",
       "label": "경로 조각 합치기",
       "short": "운영체제에 맞는 구분자를 사용해 여러 경로 조각을 하나로 합칩니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-StartsWith",
+      "name": "StartsWith",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 표준 메서드",
+      "label": "앞부분 일치 검사",
+      "short": "문자열이 지정한 글자로 시작하는지 봅니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-TryGetValue",
+      "name": "TryGetValue",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 표준 메서드",
+      "label": "있으면 꺼내기",
+      "short": "사전에서 키를 찾아 값이 있으면 꺼내고 없으면 false 를 돌려줍니다.",
       "type": "method"
     },
     {
@@ -19473,6 +19812,26 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 2
     },
     {
+      "id": "pf-js-connect-1beuqrd",
+      "name": "connect",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "학습 도구",
+      "label": "프로젝트 처리",
+      "short": "src/js/remote-terminal.js:410에서 정의되며, 코드에서 호출 형태 9회·사용 파일 2개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/remote-terminal.js",
+          "line": 410
+        }
+      ],
+      "callCount": 9,
+      "usedFileCount": 2
+    },
+    {
       "id": "pf-js-normalizewhiteboardfocusstate-16dcpp6",
       "name": "normalizeWhiteboardFocusState",
       "languages": [
@@ -19627,26 +19986,6 @@ window.MN_REVIEW_DATA = {
         {
           "path": "src/js/whiteboard.js",
           "line": 659
-        }
-      ],
-      "callCount": 6,
-      "usedFileCount": 2
-    },
-    {
-      "id": "pf-js-whiteboardformuladictionary-nwg34k",
-      "name": "whiteboardFormulaDictionary",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "학습 도구",
-      "label": "프로젝트 처리",
-      "short": "src/js/whiteboard.js:166에서 정의되며, 코드에서 호출 형태 6회·사용 파일 2개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/whiteboard.js",
-          "line": 166
         }
       ],
       "callCount": 6,

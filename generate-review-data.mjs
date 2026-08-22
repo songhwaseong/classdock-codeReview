@@ -503,6 +503,26 @@ const unusedTerms = GLOSSARY_TERMS.filter(
   (item) => !item.match.some((keyword) => glossaryProse.includes(keyword)),
 ).map((item) => item.term);
 
+// 코드 사전 3종도 같은 검사를 받는다 — "사전에는 있는데 실린 코드에는 더 이상 안 나오는 낱말".
+// 용어 사전에만 이 검사가 있던 동안 코드 사전은 조용히 낡았다: 원격 터미널·연대표가 들어오면서
+// TextEncoder·DataView·IntPtr·DllImport 같은 표준 기능이 코드에 나오는데 사전에는 없었고,
+// 반대 방향(빠진 낱말)은 여기서도 자동으로 못 맞히므로 최소한 이 방향만이라도 잡아 둔다.
+const loadedCodeSeen = new Set();
+let loadedCode = '';
+for (const section of hydrated) {
+  for (const file of section.files) {
+    const key = `${file.path}:${file.lineOffset || 0}`;
+    if (loadedCodeSeen.has(key)) continue;
+    loadedCodeSeen.add(key);
+    loadedCode += `\n${file.code}`;
+  }
+}
+// 연산자·기호와 여러 줄 패턴은 코드에서 낱말로 셀 수 없으므로 제외하고, 식별자만 본다.
+const unusedCodeNames = [...CODE_WORDS, ...CODE_REFERENCES, ...CODE_PATTERNS]
+  .filter((item) => item.type !== 'operator' && item.type !== 'pattern' && /^[A-Za-z_][A-Za-z0-9_]*$/.test(item.name))
+  .filter((item) => !loadedCode.includes(item.name))
+  .map((item) => item.name);
+
 // 반대 방향 — "리뷰에 새로 자주 나오게 됐는데 사전에 없는 말". 낱말 자체는 자동으로 맞힐 수 없다
 // (05-glossary.mjs 머리말의 설명 참고). 대신 "다시 훑을 때가 됐다"는 신호만 정확하게 낸다.
 // 리뷰 산문(사전 섹션 제외, 사람이 쓴 문장만) 길이와 주제 묶음을 마지막 큐레이션 시점과 견준다.
@@ -727,6 +747,11 @@ if (uncoveredDocs.length) {
 if (unusedTerms.length) {
   console.warn(`\n[경고] 리뷰 본문에 나오지 않는 사전 항목 ${unusedTerms.length}개:`);
   console.warn(`  ${unusedTerms.join(', ')}`);
+}
+if (unusedCodeNames.length) {
+  console.warn(`\n[경고] 실린 코드에 나오지 않는 코드 사전 항목 ${unusedCodeNames.length}개:`);
+  console.warn(`  ${unusedCodeNames.join(', ')}`);
+  console.warn('  sections/06-code-words.mjs · 07-code-symbols.mjs · 08-code-patterns.mjs 를 확인하세요.');
 }
 if (newGroups.length) {
   console.warn(
