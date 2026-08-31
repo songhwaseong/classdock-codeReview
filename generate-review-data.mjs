@@ -40,6 +40,7 @@ import buildJavaScript from './sections/35-javascript.mjs';
 import buildEditors from './sections/40-editors.mjs';
 import buildMap from './sections/45-map.mjs';
 import buildTimeline from './sections/47-timeline.mjs';
+import buildConcept from './sections/48-concept.mjs';
 import buildLearning from './sections/50-learning.mjs';
 import buildMusic from './sections/55-music.mjs';
 import buildRemoteTerminal from './sections/57-remote-terminal.mjs';
@@ -87,15 +88,23 @@ if (!rootDir) {
 // 아니라 whiteboard.js 였다 — 한 주 만에 2,785 → 4,930줄로 자라 여유를 670줄만 남겼다.
 // 상한에 부딪히는 파일은 대개 "지금 가장 큰 파일"이 아니라 "지금 가장 빨리 자라는 파일"이다.
 //
-// 7,000 은 그 관찰을 반영한 값이다 — 상위 세 파일이 모두 30% 이상 더 자라도 통째로 실린다.
-// 상한을 올려도 지금 실리는 양은 변하지 않는다(넘는 파일이 없다). 대신 아래에서 상한의 90% 를
-// 넘긴 파일을 미리 알려, 잘린 뒤가 아니라 잘리기 전에 알아채게 한다.
+// 그 뒤 7,000 으로 올렸는데, 이번에는 map-viewer.js 가 9일 만에 4,809 → 6,541줄로 자라 여유를
+// 458줄만 남기고 다가왔다(90% 알림이 실제로 먼저 떴다). 두 번 다 같은 모양이다 — 상한을 넘길
+// 뻔한 파일은 그때그때 가장 활발히 개발 중인 기능이고, 그 기능은 몇 주 만에 바뀐다.
+//
+// 9,500 은 그 두 번째 관찰까지 반영한 값이다. 지금 가장 큰 map-viewer.js 에 45% 여유이고,
+// 최근 성장 속도(주당 약 1,300줄)로 두 달 치다. 상한을 올려도 지금 실리는 양은 변하지 않는다
+// (넘는 파일이 없다). 대신 아래에서 상한의 90% 를 넘긴 파일을 미리 알려, 잘린 뒤가 아니라
+// 잘리기 전에 알아채게 한다.
 //
 // 상한에 걸리는 파일을 구간(range)으로 나눌 수 있는지는 파일마다 다르다. spreadsheet-viewer.js 는
 // 1,372줄부터 끝까지가 renderXlsx 함수 하나, map-viewer.js 는 뒤쪽 절반이 mountMapEditor 함수
-// 하나여서 구간을 어디로 잡아도 함수 중간을 끊는다. 반면 desktop/launcher.cs(7천 줄대)는 최상위
-// 선언이 여럿이라 기능별 구간으로 나눠 싣는다 — 그쪽은 range 가 자연스러운 경계를 갖는다.
-const MAX_LINES = 7000;
+// 하나(3,094줄)여서 구간을 어디로 잡아도 함수 중간을 끊는다. 반면 desktop/launcher.cs(8천 줄대)는
+// 최상위 선언이 여럿이라 기능별 구간으로 나눠 싣는다 — 그쪽은 range 가 자연스러운 경계를 갖는다.
+//
+// 다만 상한을 올리는 것은 미루는 조치일 뿐이다. map-viewer.js 는 이제 이 프로젝트에서 가장 큰
+// 파일이고 한 함수가 그 절반이라, 다음 번에는 상한이 아니라 그 함수를 손봐야 한다.
+const MAX_LINES = 9500;
 // 상한의 90% 를 넘긴 파일은 "아직 안 잘렸지만 곧 잘린다". 잘린 뒤에 아는 것과 그 전에 아는 것은
 // 다르므로 따로 센다.
 const MAX_LINES_WARN_AT = Math.round(MAX_LINES * 0.9);
@@ -237,6 +246,7 @@ const reviewSections = [
   ...buildEditors(context),
   ...buildMap(context),
   ...buildTimeline(context),
+  ...buildConcept(context),
   ...buildLearning(context),
   ...buildMusic(context),
   ...buildRemoteTerminal(context),

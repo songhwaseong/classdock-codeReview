@@ -181,7 +181,7 @@ const targetedComments = [
   {
     sectionId: 'documents',
     file: 'src/js/documents.js',
-    at: "navNodes.push({ nodeId: d.nodeId, type: \"doc\", docId: id, parentId: d.parentId });",
+    at: "if (d.sourceKey && !docsBySourceKey.has(d.sourceKey)) docsBySourceKey.set(d.sourceKey, d);",
     below: 1,
     type: '구조',
     title: '문서 생명주기의 시작점',

@@ -622,6 +622,34 @@ POST /ssh-session-stop?id=…`,
       '비밀번호는 이 요청에서만 지나가고 런처는 디스크·명령행·환경변수 대신 일회성 named pipe 로 ssh.exe 에 건넵니다. ' +
       '실제 구현은 launcher.cs 가 아니라 desktop/ssh_terminal.cs 에 있습니다.',
   },
+  {
+    sectionIds: ['launcher-ssh', 'remote-terminal-overview', 'remote-terminal'],
+    kind: 'POST',
+    title: '/ssh-upload-* · /ssh-key-pick-* — 파일 올리기와 개인키 고르기',
+    endpoints: [
+      '/ssh-upload-start', '/ssh-upload-poll', '/ssh-upload-cancel',
+      '/ssh-upload-pick', '/ssh-upload-pick-status',
+      '/ssh-key-pick', '/ssh-key-pick-status',
+    ],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && path == \"/ssh-upload-start\")",
+    when: '원격 터미널에서 로컬 파일을 서버로 올릴 때, 개인키 파일을 골라 붙을 때',
+    tags: ['토큰 필요', '로컬 동작 헤더 필요', '증분 폴링', '탐색기 대화상자'],
+    snippet: `POST /ssh-upload-pick          → 파일 고르기 창을 연다(비동기)
+GET  /ssh-upload-pick-status   → 사용자가 고른 결과를 되묻는다
+POST /ssh-upload-start         ← 올릴 파일과 원격 경로 → {"id",…}
+GET  /ssh-upload-poll?id=…     → 진행률 증분
+POST /ssh-upload-cancel?id=…
+
+POST /ssh-key-pick             → 개인키 파일 고르기 창
+GET  /ssh-key-pick-status      → 고른 결과`,
+    note:
+      '파일 고르기를 "열기 → 되묻기" 두 걸음으로 나눈 것은 저장 폴더 고르기(/choose-save-folder)가 먼저 쓴 방식입니다 — ' +
+      '탐색기 대화상자는 사용자가 닫을 때까지 돌아오지 않으므로 요청을 붙잡아 둘 수 없습니다. ' +
+      '창을 여는 쪽은 토큰만으로 부족하고 로컬 동작 헤더까지 요구합니다(HasLocalActionHeader) — ' +
+      '다른 페이지가 몰래 파일 선택 창을 띄우는 것을 막기 위한 한 겹입니다. 올리기 진행률은 세션 출력과 같은 오프셋 증분 방식입니다.',
+  },
 
   // ── EXE 로컬 서버 — 변환·DB ──────────────────────────
 
@@ -684,6 +712,88 @@ POST /ssh-session-stop?id=…`,
 // 교실 제출은 LAN 접근이 필요하므로 목적이 다른 리스너를 따로 연다.
 // 학생 쪽: 주소 + 6자리 코드 → 실패하면 파일 제출로 폴백`,
     note: 'LAN 리스너는 loopback 이 아니므로 Host·Origin 검증이 그대로 적용되지 않습니다. 이 경로의 입력 검증은 별도로 봐야 합니다.',
+  },
+
+  {
+    sectionIds: ['module-boundaries', 'exchange-rate'],
+    kind: 'API',
+    title: 'MNExchangeRate — 환율 해석 코어',
+    source: 'src/js/exchange-rate.js',
+    file: 'src/js/exchange-rate.js',
+    at: 'const MNExchangeRate = (function(){',
+    when: '환율 창이 런처에서 받아 온 원본 JSON 을 표·계산에 쓸 모양으로 바꿀 때',
+    tags: ['소비자 1개', 'DOM·fetch 없음', '출처 2종', '고시 단위 보존'],
+    snippet: `// 런처는 받아만 오고 뜻풀이는 여기서 한다 — 런처가 둘(C#·Go)이라
+// 파싱을 그쪽에 두면 같은 규칙을 두 언어로 두 번 적고 두 번 틀린다.
+// 지도의 /geocode 가 먼저 쓴 방식이며 이것이 두 번째 적용이다.
+MNExchangeRate.normalize(raw, "koreaexim");  // 매매기준율 + 송금 보낼 때·받을 때
+MNExchangeRate.normalize(raw, "ecb");        // 유로 기준 교차환율, 송금 값 없음
+// JPY(100) 처럼 고시 단위가 있는 통화는 고시값과 1단위값을 함께 들고 있다.
+// 빈 칸·null 은 0원이 아니라 "값 없음" — Number("")===0 이 조용히 통과하는 자리다.`,
+    note:
+      '두 출처의 성질이 달라 표에 무엇을 보여 줄지가 갈립니다. 수출입은행은 영업일 11시 무렵 이후에만 그날 값이 있고, ' +
+      'ECB 는 휴일이면 직전 영업일 값을 알아서 주지만 송금 값이 없습니다. 그 구분을 화면이 아니라 이 모듈이 합니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'music-eartest', 'music-overview'],
+    kind: 'API',
+    title: 'MNMusicEarTest — 음감 테스트',
+    source: 'src/js/music-eartest.js',
+    file: 'src/js/music-eartest.js',
+    at: 'const MNMusicEarTest = (() => {',
+    when: '악보 편집기에서 "소리만 듣고 음이름 맞히기" 연습을 열 때',
+    tags: ['소비자 1개', 'create() 하나', '다시 듣기 1회', '문제 생성은 모델에'],
+    snippet: `const ear = MNMusicEarTest.create(options);   // → { el, press(), answerOctave(), … }
+// 편집기는 자리(el)만 내주고 입력은 두 문으로 넘긴다 —
+// 자판·MIDI·도레미 버튼 세 갈래를 편집기가 이미 갖고 있기 때문이다.
+// 문제를 만드는 규칙은 여기가 아니라 music-model.js(musicEarQuestions)에 순수 함수로 있다.`,
+    note:
+      '따라치기와 형제지만 규칙이 정반대인 곳이 셋입니다 — 악보를 보여 주지 않고, 틀려도 진도가 나가고, 다시 듣기를 제한합니다. ' +
+      '그 셋이 파일을 나눈 이유이며 첫머리 주석에 적혀 있습니다.',
+  },
+
+  // ── EXE 로컬 서버 — 환율 ─────────────────────────────
+
+  {
+    sectionIds: ['launcher-security', 'exchange-rate', 'exchange-rate-ui'],
+    kind: 'GET',
+    title: '/can-proxy-rates · /exchange-rate — 환율 대리 조회',
+    endpoints: ['/can-proxy-rates', '/exchange-rate'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path.StartsWith(\"/exchange-rate?\", StringComparison.Ordinal))",
+    when: '환율 창이 고시환율·참고환율을 조회할 때',
+    tags: ['토큰 필요', '능력 프로브', '응답 캐시', '원본 JSON 그대로'],
+    snippet: `GET /can-proxy-rates    → 이 런처가 환율을 대신 받아 주는가(지도의 /can-proxy-tiles 와 같은 꼴)
+GET /exchange-rate?…    → 출처 원본 JSON 그대로
+//                        캐시에서 준 응답에는 X-ClassDock-Rate-Cached: 1 이 붙는다
+
+// 브라우저가 직접 못 부르는 이유 — 수출입은행 API 는 CORS 를 열어 주지 않는다.
+// 런처는 파싱하지 않는다. 해석은 MNExchangeRate 한 곳에서만 한다.`,
+    note:
+      '능력마다 프로브를 따로 두는 규칙이 여기서도 지켜집니다 — 타일(/can-proxy-tiles)·저장(/can-save-file)과 나란히 ' +
+      '환율은 /can-proxy-rates 를 씁니다. 런처가 있다고 모든 능력이 있는 것은 아니기 때문입니다.',
+  },
+  {
+    sectionIds: ['launcher-security', 'exchange-rate-ui'],
+    kind: 'POST',
+    title: '/exchange-rate-key — 수출입은행 인증키 보관',
+    endpoints: ['/exchange-rate-key', '/exchange-rate-key-status'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path == \"/exchange-rate-key-status\")",
+    when: '설정에서 수출입은행 인증키를 넣거나 지울 때',
+    tags: ['토큰 필요', 'DPAPI 암호화', '키를 브라우저에 두지 않음'],
+    snippet: `GET    /exchange-rate-key-status  → { hasKey, remembered, … }  (상태만, 키는 안 준다)
+POST   /exchange-rate-key         → 검증 후 보관
+DELETE /exchange-rate-key         → 지운다
+
+// 저장: ProtectedData.Protect(CurrentUser) + 이 용도 전용 엔트로피
+// 카카오 지도 키와 같은 방식이되 엔트로피를 따로 둔다 — 한 키가 새도 다른 키는 못 푼다.`,
+    note:
+      'API 키를 프런트에 두지 않는 규칙의 두 번째 적용입니다(첫 번째는 카카오 지도 키). ' +
+      'localStorage 에 뒀다면 오프라인 HTML·작업공간 백업·개발자 도구로 그대로 새어 나갑니다. ' +
+      'tests/exchange-rate.test.js 가 "인증키는 런처 밖으로 나가지 않는다" 를 소스 대조로 검사합니다.',
   },
 
   // ── EXE 로컬 서버 — 지도 ─────────────────────────────

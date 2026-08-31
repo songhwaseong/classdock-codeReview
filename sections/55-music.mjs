@@ -1,6 +1,6 @@
-// 6. learning-tools — 악보 문서(.msheet). 모델·MusicXML·소리·편집기 네 파일.
+// 6. learning-tools — 악보 문서(.msheet). 모델·MusicXML·소리·편집기·음감 테스트 다섯 파일.
 //
-// learning-tools 계층에 속하지만 파일이 넷이고 4,800줄이라 50-learning.mjs 에서 떼어 둔다.
+// learning-tools 계층에 속하지만 파일이 다섯이고 분량이 커서 50-learning.mjs 에서 떼어 둔다.
 // 카테고리는 같으므로 사이드바에서는 learning-tools 안의 "악보" 묶음으로 이어 붙는다.
 
 import { linesLabel } from '../lib/source-metrics.mjs';
@@ -10,6 +10,8 @@ export default ({ helpers, rootDir }) => {
   // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs).
   const modelLines = linesLabel(rootDir, 'src/js/music-model.js');
   const editorLines = linesLabel(rootDir, 'src/js/music-editor.js');
+  const xmlLines = linesLabel(rootDir, 'src/js/music-xml.js');
+  const audioLines = linesLabel(rootDir, 'src/js/music-audio.js');
 
   return [
     sec({
@@ -17,7 +19,7 @@ export default ({ helpers, rootDir }) => {
       category: '6. learning-tools',
       group: '악보',
       title: '악보 문서 개요 (.msheet)',
-      subtitle: '모델·MusicXML·소리·편집기 4개 파일 — 새 문서 종류를 붙이는 표준 경로',
+      subtitle: '모델·MusicXML·소리·편집기·음감 테스트 5개 파일 — 새 문서 종류를 붙이는 표준 경로',
       summary:
         '오선을 클릭해 음표를 놓고, 놓는 즉시 그 음을 듣고, 전체나 고른 마디만 재생하고, 들은 것과 같은 소리를 WAV 로 저장합니다. ' +
         '자체 확장자 .msheet(JSON)로 저장·재편집하고 MusicXML(.musicxml/.mxl)로 주고받습니다. ' +
@@ -25,11 +27,12 @@ export default ({ helpers, rootDir }) => {
         '앱 본체에 들어간 변경은 한 줄짜리 분기 몇 개뿐입니다.',
       usage: [
         {
-          title: '네 파일의 경계',
+          title: '다섯 파일의 경계',
           body:
             'music-model.js 는 음악 규칙(틱·음높이·조표·마디 채움)만 알고 DOM·오디오·VexFlow 를 참조하지 않습니다. ' +
-            'music-xml.js 는 MusicXML 과의 변환, music-audio.js 는 소리, music-editor.js 는 화면과 조작입니다. ' +
-            '모델이 순수하기 때문에 음악 규칙 29개를 node --test 로 브라우저 없이 검증합니다.',
+            'music-xml.js 는 MusicXML 과의 변환, music-audio.js 는 소리, music-editor.js 는 화면과 조작, ' +
+            'music-eartest.js 는 음감 테스트 화면입니다. ' +
+            '모델이 순수하기 때문에 음악 규칙 62개를 node --test 로 브라우저 없이 검증합니다 — 문제 만들기(musicEarQuestions)까지 이쪽에 있습니다.',
         },
         {
           title: '앱 본체에 남긴 자국',
@@ -65,11 +68,38 @@ export default ({ helpers, rootDir }) => {
         },
         { title: '대보표', body: '단선율과 피아노 대보표(높은음자리 + 낮은음자리)를 같은 모델로 다룹니다.' },
         { title: '메모지 왕복', body: '악보를 메모 그림으로 보내고 되돌아옵니다. 이어진 탭의 내용이 그림과 다르면 그 갈림길만 사용자에게 묻습니다.' },
+        {
+          title: '가사 여러 절',
+          body:
+            '1~6절. 1절은 예전과 같은 note.lyric 자리에 그대로 두고 2절부터를 배열에 담아, 옛 .msheet·옛 판 앱·MusicXML 어디로 가도 1절은 반드시 살아남습니다. ' +
+            '음표마다 창을 여는 대신 "이어치기"로 죽 쳐 넣거나 한 줄을 붙여 넣어 음절 단위로 배분합니다.',
+        },
+        {
+          title: '마디 번호 · 연습 기호',
+          body:
+            '합주에서 "32마디부터", "B부터"가 되게 합니다. 연습 기호는 도돌이 시작·1번 괄호·수동 줄바꿈처럼 "음악이 새로 시작하는 곳"에 자동으로 매기고, ' +
+            '한 줄에 넣을 마디 수를 고정해 인쇄본마다 마디 위치가 달라지지 않게 합니다.',
+        },
+        {
+          title: '이조 악기 파트',
+          body: 'B♭ 클라리넷·E♭ 알토색소폰 같은 파트보를 손으로 옮겨 적지 않아도 됩니다.',
+        },
+        {
+          title: '파트 연습 음원',
+          body: '합창·합주 파트 연습용 음원을 파트마다·템포마다 일괄로 저장합니다.',
+        },
+        {
+          title: '따라치기 · 음감 테스트',
+          body:
+            '따라치기는 악보를 교본 삼아 그대로 쳐 보는 연습이고, 음감 테스트는 반대로 악보를 감추고 소리만 듣고 음이름을 맞힙니다. ' +
+            '형제 기능이지만 규칙이 정반대라 파일을 나눴습니다.',
+        },
       ],
       files: [
-        { path: 'docs/악보-설계.md', label: '악보-설계.md', description: '설계 문서 — 결정과 그 근거, P0~P4 단계' },
-        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '음악 규칙 29개' },
-        { path: 'tests/music-xml.test.js', label: 'music-xml.test.js', description: 'MusicXML 왕복 7개' },
+        { path: 'docs/악보-설계.md', label: '악보-설계.md', description: '1차 설계 문서 — 결정과 그 근거, P0~P4 단계' },
+        { path: 'docs/악보-확장-설계.md', label: '악보-확장-설계.md', description: '2차 설계 문서(2026-08-30) — 실무용 4종. 먼저 기존 구현을 훑고 시작합니다' },
+        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '음악 규칙 62개' },
+        { path: 'tests/music-xml.test.js', label: 'music-xml.test.js', description: 'MusicXML 왕복 10개' },
         { path: 'tests/music-memo-roundtrip.test.js', label: 'music-memo-roundtrip.test.js', description: '메모 그림 ↔ 악보 탭 왕복 9개' },
       ],
       notes: [
@@ -89,19 +119,45 @@ export default ({ helpers, rootDir }) => {
             '새 문서 종류마다 저장 로직을 새로 쓰지 않는다는 원칙이 .mnote 에 이어 두 번째로 지켜졌습니다.',
         },
         {
+          type: 'good',
+          label: 'Good',
+          body:
+            '2차 설계 문서가 "먼저 조사한 것 — 이미 있는 기능" 으로 시작합니다. 넣으려던 기능(코드 기호 → 자동 반주)이 ' +
+            '이미 구현돼 있다는 것을 확인하고 설계에서 뺐습니다. 설계 문서가 대개 "무엇을 만들 것인가"만 적는 것과 달리 ' +
+            '"무엇이 이미 있는가"를 먼저 적었고, 그 조사가 실제로 범위를 줄였습니다. 이 코드베이스에서 문서가 일한 가장 좋은 사례입니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '가사 여러 절을 넣으면서 1절을 예전 자리(note.lyric)에 그대로 남겼습니다. ' +
+            '옛 .msheet 로도, 옛 판 앱으로도, MusicXML 로 내보내도 1절은 반드시 살아남습니다. ' +
+            '데이터를 확장할 때 "옛 독자가 무엇을 읽게 되는가"를 먼저 정한 형태이며, 설계 문서에 그 결정과 이유가 표로 남아 있습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '설계 문서가 "구현하며 접었다"·"구현하며 추가했다" 를 그대로 적습니다. ' +
+            '가사 보기 상태(lyricVerseView)를 두려다 접은 이유 — 인쇄도 그림도 화면에 그린 그 SVG 를 쓰므로 상태를 하나 더 두면 ' +
+            '렌더를 한 벌 더 돌려야 한다 — 가 남아 있습니다. 계획대로 되지 않은 부분을 지우지 않고 남긴 문서라 다음 사람이 같은 길을 다시 밟지 않습니다.',
+        },
+        {
           type: 'risk',
           label: 'Risk',
           body:
-            '설계 문서의 "범위" 절이 구현을 따라오지 못했습니다. 1차 제외로 적힌 화음·두 성부·대보표·붙임줄·이음줄·가사·셈여림·반복기호·MusicXML 이 ' +
-            '모두 구현돼 있고(잇단음표만 남음), 저장 포맷도 문서의 version 2 가 아니라 4 입니다. ' +
-            '그 뒤로도 조옮김·대보표·기타 음색·메모지 왕복이 더 들어와, 문서와 구현의 거리가 좁혀지기는커녕 더 벌어졌습니다. ' +
-            '문서를 읽고 "이건 아직 없겠구나" 판단하면 틀립니다. §1·§2 를 현재 구현에 맞추는 편이 좋습니다.',
+            '1차 설계 문서(악보-설계.md)의 "범위" 절이 구현을 따라오지 못한 상태 그대로입니다. ' +
+            '1차 제외로 적힌 화음·두 성부·대보표·붙임줄·이음줄·가사·셈여림·반복기호·MusicXML 이 모두 구현돼 있고, ' +
+            '저장 포맷도 문서의 version 2 가 아니라 12 입니다. 그 문서만 읽고 "이건 아직 없겠구나" 판단하면 틀립니다. ' +
+            '다만 2차 문서(악보-확장-설계.md)는 이 문제를 정면으로 다뤘습니다 — §0 을 "먼저 조사한 것"으로 시작해 기존 구현을 표로 훑고, ' +
+            '넣으려던 기능 하나(코드 기호 자동 반주)가 이미 있다는 것을 확인해 설계에서 뺐습니다. ' +
+            '2차가 만든 이 습관을 1차 문서 §1·§2 에도 한 번 적용하면 됩니다.',
         },
         {
           type: 'info',
           label: 'Info',
           body:
-            '단위 테스트 95개(모델 29 · 편집기 37 · 소리 13 · MusicXML 7 · 메모 왕복 9)가 붙어 있습니다. ' +
+            '단위 테스트 163개(모델 62 · 편집기 63 · 소리 19 · MusicXML 10 · 메모 왕복 9)가 붙어 있습니다. ' +
             '다만 실제 조판과 소리는 브라우저가 있어야 확인되므로, 설계 문서도 각 단계마다 "남은 확인"으로 그 한계를 적어 두었습니다. ' +
             'tools/music-audio-check.html 이 그 수동 확인용 페이지입니다.',
         },
@@ -133,7 +189,7 @@ export default ({ helpers, rootDir }) => {
         {
           title: '버전 이전',
           body:
-            'musicParse 는 version 1~4 를 모두 읽고 항상 4 로 정규화해 돌려줍니다. ' +
+            'musicParse 는 version 1~12 를 모두 읽고 항상 12 로 정규화해 돌려줍니다. 3주 사이에 버전이 8단계 올랐는데도 옛 악보가 그대로 열립니다. ' +
             'v1 의 기본 음색이던 triangle 은 자동으로 piano 로 옮겨, 옛 악보도 설정을 건드리지 않고 개선된 소리를 듣습니다.',
         },
       ],
@@ -144,7 +200,7 @@ export default ({ helpers, rootDir }) => {
         { title: '줄바꿈 배치', body: 'musicPackLines 가 마디별 폭을 어림해 줄에 채우고 남는 폭을 비례 배분합니다.' },
       ],
       files: [
-        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '학교종 4마디 표본으로 규칙 29개 검증' },
+        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '학교종 4마디 표본으로 규칙 62개 검증' },
       ],
       notes: [
         {
@@ -182,7 +238,7 @@ export default ({ helpers, rootDir }) => {
     mod('music-xml.js', {
       group: '악보',
       title: 'music-xml.js — MusicXML 가져오기·내보내기',
-      subtitle: '표준 포맷과의 다리 558줄',
+      subtitle: `표준 포맷과의 다리 ${xmlLines}`,
       summary:
         'MusicXML(.musicxml)과 압축형(.mxl)을 읽어 .msheet 모델로 옮기고, 편집한 악보를 표준 score-partwise 로 내보냅니다. ' +
         '.mxl 은 제품에 이미 들어 있는 JSZip 을 지연 로드해 풀기 때문에 새 의존이 늘지 않습니다. ' +
@@ -230,7 +286,7 @@ export default ({ helpers, rootDir }) => {
     mod('music-audio.js', {
       group: '악보',
       title: 'music-audio.js — 소리 엔진 (MNMusicAudio)',
-      subtitle: '샘플 6종·예약 스케줄러·WAV 저장 581줄',
+      subtitle: `샘플 6종·예약 스케줄러·WAV 저장 ${audioLines}`,
       summary:
         '실제 악기 녹음 6종과 오실레이터 합성음 3종으로 음을 울리고, AudioContext 시계에 미리 예약해 템포를 지키고, ' +
         '같은 예약 함수를 OfflineAudioContext 에 태워 WAV 로 렌더합니다. 전역 경계 MNMusicAudio 로 노출되며 ' +
@@ -373,8 +429,71 @@ export default ({ helpers, rootDir }) => {
           body:
             '테스트 32개가 대부분 소스 문자열 매칭입니다(whiteboard-context-menu-phase2.test.js 와 같은 방식). ' +
             '접점이 사라진 것은 잡지만 조판·조작이 실제로 동작하는지는 잡지 못합니다. ' +
-            '설계 문서가 E2E 를 P2 이후로 예고했는데 아직 없습니다 — 새 악보 → 음표 3개 → 저장 → 다시 열기 한 개만 있어도 ' +
-            '이 파일의 회귀 위험이 크게 줄어듭니다.',
+            '설계 문서가 E2E 를 P2 이후로 예고했는데, 2차 확장에서 네 개가 붙었습니다(가사·마디 번호·이조 파트·파트 연습 음원). ' +
+            '다만 그것들은 새 기능을 겨눈 것이라, "새 악보 → 음표 3개 → 저장 → 다시 열기" 라는 기본 왕복은 여전히 비어 있습니다.',
+        },
+      ],
+    }),
+
+    mod('music-eartest.js', {
+      group: '악보',
+      title: 'music-eartest.js — 음감 테스트',
+      subtitle: '소리만 듣고 음이름 맞히기 — 따라치기의 거울상',
+      summary:
+        '악보를 감추고 소리만 들려준 뒤 음이름을 맞히는 연습 모드입니다. ' +
+        '문제를 만드는 규칙은 music-model.js 에 순수 함수로 있고, 이 파일은 그 문제를 소리로 내고 답을 받아 채점만 합니다. ' +
+        'MNMusicEarTest.create(options) 하나로 화면 한 조각과 조작 몇 개를 돌려주는 형태라, 편집기가 자리만 내주면 됩니다.',
+      usage: [
+        {
+          title: '따라치기와 규칙이 정반대인 세 곳',
+          body:
+            '① 악보를 보여 주지 않습니다 — 따라치기는 악보가 교본이지만 여기서는 악보가 곧 정답표입니다. ' +
+            '② 틀려도 진도가 나갑니다 — 정답을 바로 들려주는 것이 학습 신호이고, 악보 위 위치를 잃을 일도 없습니다. ' +
+            '③ 다시 듣기를 한 번으로 제한합니다 — 몇 번이고 다시 들으면 시행착오 게임이 됩니다. ' +
+            '형제 기능인데도 파일을 나눈 이유가 이 세 줄에 적혀 있습니다.',
+        },
+        {
+          title: '입력 경로를 새로 만들지 않았다',
+          body:
+            '자판·MIDI·도레미 버튼 세 갈래 입력을 편집기가 이미 갖고 있으므로, 이 파일은 press()·answerOctave() 두 문으로만 받습니다. ' +
+            '입력 장치를 다시 다루지 않아 파일이 작게 유지됩니다.',
+        },
+        {
+          title: '시간 상수에 이유가 붙어 있다',
+          body:
+            '간섭음이 끝나고 문제 음까지 750ms, 정답을 보여 주고 다음 문제까지 1,200ms, 시작 버튼에서 첫 소리까지 450ms(패널이 먼저 보이게). ' +
+            '넷 다 숫자 옆에 왜 그 값인지가 적혀 있습니다.',
+        },
+      ],
+      features: [
+        { title: '문제 만들기', body: 'music-model.js 의 musicEarQuestions 가 만듭니다 — 순수 함수라 브라우저 없이 검증됩니다.' },
+        { title: '간섭음', body: '문제 음 앞에 다른 음을 들려줘 직전 음을 기준 삼는 것을 막습니다.' },
+        { title: '다시 듣기 1회', body: '문제마다 한 번만. 시행착오로 맞히는 것을 막습니다.' },
+        { title: '옥타브 답', body: '음이름과 옥타브를 따로 받습니다.' },
+      ],
+      files: [],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '"형제 기능인데 왜 합치지 않았는가"를 파일 첫머리에 세 줄로 적었습니다. 규칙이 정반대인 지점을 나열한 것이라, ' +
+            '나중에 "둘을 합치자"는 제안이 나왔을 때 무엇을 포기하게 되는지가 바로 보입니다. 분리 자체보다 그 근거를 남긴 것이 값입니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '문제 생성을 모델에 두고 이 파일은 소리·채점만 맡았습니다. "무엇을 물을 것인가"는 음악 규칙이고 ' +
+            '"어떻게 들려줄 것인가"는 화면이라는 구분이며, 덕분에 문제 만들기가 단위 테스트로 덮입니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '이 파일 자체를 겨눈 테스트가 없습니다. 문제 생성은 모델 쪽에서 덮이지만, ' +
+            '채점·다시 듣기 제한·간섭음 순서 같은 이 파일의 규칙은 검증되지 않습니다. ' +
+            'create() 가 화면 조각을 돌려주는 구조라 순수부(채점·상태 전이)를 조금만 밖으로 빼면 그대로 테스트할 수 있습니다.',
         },
       ],
     }),

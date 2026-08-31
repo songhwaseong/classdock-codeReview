@@ -1,6 +1,10 @@
-// 테스트 — node --test 단위·계약 테스트 94개와 Playwright 화면 흐름 36개.
+// 테스트 — node --test 단위·계약 테스트와 Playwright 화면 흐름.
+//
+// 개수·줄 수는 문장에 적지 않고 생성 때 잰다. 여기 적어 두었던 "94개(14,891줄) + E2E 36개" 가
+// 테스트가 124개·56개가 되는 동안 그대로 남아 있었다 — 그것도 같은 파일 안에 "예전에도 이랬다" 는
+// 반성이 적힌 채로. 세 번째는 없도록 lib/source-metrics.mjs 의 testMetrics 로 잰다.
 
-import { linesLabel } from '../lib/source-metrics.mjs';
+import { linesLabel, testMetrics } from '../lib/source-metrics.mjs';
 
 export default ({ helpers, rootDir }) => {
   const { sec } = helpers;
@@ -8,6 +12,7 @@ export default ({ helpers, rootDir }) => {
   // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs 의 이유 참고).
   const coreLines = linesLabel(rootDir, 'src/js/core.js');
   const coreTestLines = linesLabel(rootDir, 'tests/core.test.js');
+  const tests = testMetrics(rootDir);
 
   return [
     sec({
@@ -15,7 +20,7 @@ export default ({ helpers, rootDir }) => {
       category: CAT,
       group: '개요',
       title: '테스트 전략',
-      subtitle: '단위·계약 94개(14,891줄) + E2E 36개, 외부 프레임워크 없음',
+      subtitle: `단위·계약 ${tests.unitCount}개(${tests.unitLinesLabel}줄) + E2E ${tests.e2eCount}개, 외부 프레임워크 없음`,
       summary:
         '테스트 러너도 외부 프레임워크를 쓰지 않습니다 — Node 내장 러너(node --test)와 Playwright 둘뿐입니다. ' +
         '브라우저 전역 스크립트라는 구조 때문에 "DOM 없이 검증할 수 있는 것"을 최대한 늘리는 방향으로 짜여 있고, ' +
@@ -41,8 +46,8 @@ export default ({ helpers, rootDir }) => {
         },
       ],
       features: [
-        { title: '단위·계약 94개', body: '총 14,891줄. JavaScript 실행·라이브러리·EXE npm 계약 테스트 3개가 새로 추가됐습니다.' },
-        { title: 'E2E 36개', body: 'tools/e2e-server.js 위에서 돕니다.' },
+        { title: `단위·계약 ${tests.unitCount}개`, body: `총 ${tests.unitLinesLabel}줄. 브라우저 없이 도는 순수부 검증이 이 프로젝트 안전망의 대부분입니다.` },
+        { title: `E2E ${tests.e2eCount}개`, body: 'tools/e2e-server.js 위에서 돕니다.' },
         { title: '도메인 밀도', body: 'Python 관련 안전망에 더해 JavaScript 런타임 801줄, 라이브러리 65줄, EXE npm 계약 33줄이 추가됐습니다.' },
         {
           title: '기능과 함께 늘어나는가',
@@ -206,7 +211,7 @@ export default ({ helpers, rootDir }) => {
             '2026-08-11~12 의 우클릭 메뉴 테스트 3개는 사실상 전부 이 방식입니다. ' +
             '브라우저 없이 배선을 확인할 수 있다는 장점 때문에 늘어난 것으로 보이지만, ' +
             '리팩터링을 막고(이름·서식만 바꿔도 실패) 실제 회귀는 놓치는(문자열이 같으면 통과) 성질이 함께 커집니다. ' +
-            'E2E 37개가 이미 있으므로, 배선 확인은 그쪽으로 옮기는 편이 방향에 맞습니다.',
+            `E2E 가 이미 ${tests.e2eCount}개 있으므로, 배선 확인은 그쪽으로 옮기는 편이 방향에 맞습니다.`,
         },
       ],
     }),
@@ -270,7 +275,7 @@ export default ({ helpers, rootDir }) => {
       category: CAT,
       group: 'E2E',
       title: 'Playwright 화면 흐름 테스트',
-      subtitle: '36개, EXE 없는 브라우저 상태만',
+      subtitle: `${tests.e2eCount}개, EXE 없는 브라우저 상태만`,
       summary:
         '파일 열기·탭 전환·저장 같은 핵심 흐름부터 열 편집 클립보드, 코드 따라치기, 되돌리기, 사이드바 서랍, 탭 드래그 분할, ' +
         '메모 펼치기, 팔레트 항목 노출까지 실제 화면 동작을 검증합니다. tools/e2e-server.js 위에서 돌므로 항상 "EXE 가 없는 상태"입니다.',

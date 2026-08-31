@@ -42,7 +42,7 @@ window.MN_FLOWS = [
         label: '문서 생성',
         location: 'documents.js',
         file: 'src/js/documents.js',
-        at: "navNodes.push({ nodeId: d.nodeId, type: \"doc\", docId: id, parentId: d.parentId });",
+        at: "if (d.sourceKey && !docsBySourceKey.has(d.sourceKey)) docsBySourceKey.set(d.sourceKey, d);",
         below: 1,
         body: 'makeDoc 이 kind 별 컨테이너를 만들고 docsBySourceKey 에 등록해 중복 열기를 O(1)로 검사합니다.',
       },
@@ -830,7 +830,7 @@ window.MN_FLOWS = [
         label: '예약',
         location: 'music-audio.js',
         file: 'src/js/music-audio.js',
-        at: "for (const event of (events || [])){",
+        at: "function scheduleInto(target, destination, events, offset, timbre, sampleBuffers, synthSettings){",
         body: 'scheduleInto 가 25ms 마다 앞으로 200ms 안에 시작할 음만 AudioContext.currentTime 기준으로 예약합니다. 메인 스레드가 밀려도 템포는 흔들리지 않습니다.',
       },
       {
