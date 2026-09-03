@@ -3,6 +3,18 @@
 import { statSync } from 'node:fs';
 import path from 'node:path';
 
+import { sourceLines, formatLines } from '../lib/source-metrics.mjs';
+
+// manifest 에 실린 src/js 전체 줄 수. "전역 스크립트로 6만 줄" 이라고 적어 두었던 문장이
+// 실제 118,000줄이 될 때까지 그대로 남아 있었다 — 산출물 크기와 같은 이유로 여기서도 잰다.
+const scriptTotalLines = (rootDir, manifest) => {
+  const total = manifest.localScripts.reduce(
+    (sum, file) => sum + (sourceLines(rootDir, `src/js/${file}`) ?? 0),
+    0,
+  );
+  return total ? formatLines(total) : null;
+};
+
 // 산출물 크기는 손으로 적지 않는다. 19MB 로 적어 둔 문장이 실제 30MB 가 될 때까지
 // 아무도 눈치채지 못했다(악보 MP3 샘플이 들어오며 커졌다). 있으면 재고, 없으면 그 사실을 적는다.
 const artifactSize = (rootDir, name) => {
@@ -19,6 +31,7 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
   const vendorCount = manifest.vendorScripts.length;
   const offlineSize = artifactSize(rootDir, 'classdock-offline.html');
   const exeSize = artifactSize(rootDir, 'ClassDock.exe');
+  const scriptLines = scriptTotalLines(rootDir, manifest);
 
   return [
     sec({
@@ -64,7 +77,8 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
           type: 'good',
           label: 'Good',
           body:
-            '"검사 가능한 구조 계약"을 다층으로 쌓았습니다. 번들러·타입 시스템 없이 전역 스크립트로 6만 줄을 유지하려면 이런 도구가 필수인데, 실제로 갖춰 놓았습니다.',
+            '"검사 가능한 구조 계약"을 다층으로 쌓았습니다. 번들러·타입 시스템 없이 전역 스크립트로 ' +
+            `${scriptLines ? `${scriptLines}줄` : '10만 줄대'}(파일 ${manifest.localScripts.length}개)을 유지하려면 이런 도구가 필수인데, 실제로 갖춰 놓았습니다.`,
         },
         {
           type: 'risk',
@@ -110,6 +124,13 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
       features: [
         { title: '태그 존재 확인', body: 'requireTag 가 예상한 태그가 없으면 즉시 실패시킵니다. HTML 구조가 바뀌면 조용히 잘못 만들지 않습니다.' },
         { title: '무결성 실패', body: 'verifyVendorIntegrity 가 해시 불일치를 예외로 던집니다.' },
+        {
+          title: '새로 들어온 고정본',
+          body:
+            'vendor/sql-formatter.min.js 가 DB 클라이언트의 SQL 정렬용으로 더해졌습니다. ' +
+            'MNLazy 의 sqlFormat 묶음으로 지연 로드되므로 시작 비용은 늘지 않고, 라이선스 사본도 vendor/licenses 에 함께 들어왔습니다 — ' +
+            '이 레포가 vendor 를 더할 때 지켜 온 두 가지(해시 고정 · 라이선스 동봉)를 그대로 따랐습니다.',
+        },
         {
           title: '산출물 크기',
           body:

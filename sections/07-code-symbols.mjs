@@ -15,7 +15,7 @@ const operator = (key, name, languages, label, body) =>
 const builtin = (name, languages, kind, label, body) => entry(name, name, languages, kind, label, body);
 
 const ENTRIES = [
-  // 연산자·문법 기호 25개
+  // 연산자·문법 기호 — 개수는 적지 않는다. 항목을 더할 때마다 주석만 낡는다.
   operator('assign', '=', ['js', 'cs', 'py'], '값 대입', '오른쪽에서 계산한 값을 왼쪽 변수나 속성에 넣습니다. 같음을 비교하는 기호가 아니라 저장하는 기호입니다.'),
   operator('strict-equal', '===', ['js'], '엄격한 같음', 'JavaScript에서 값과 자료형이 모두 같은지 비교합니다. 자동 형 변환을 하지 않습니다.'),
   operator('strict-not-equal', '!==', ['js'], '엄격한 다름', 'JavaScript에서 값이나 자료형 중 하나라도 다른지 비교합니다. 자동 형 변환을 하지 않습니다.'),
@@ -42,7 +42,7 @@ const ENTRIES = [
   operator('greater-equal', '>=', ['js', 'cs', 'py'], '크거나 같음', '왼쪽 값이 오른쪽 값보다 크거나 같은지 비교합니다.'),
   operator('add-assign', '+=', ['js', 'cs', 'py'], '더한 뒤 대입', '기존 값에 오른쪽 값을 더한 결과를 다시 같은 변수에 저장합니다.'),
 
-  // JavaScript 기본 기능 28개
+  // JavaScript 기본 기능
   builtin('document', ['js'], 'JavaScript 기본 기능', '현재 웹 문서', '현재 페이지의 DOM 문서를 나타냅니다. 요소를 찾고 만들고 수정하는 출발점입니다.'),
   builtin('Math', ['js'], 'JavaScript 기본 기능', '수학 함수 모음', '반올림·절댓값·최솟값·최댓값·난수 같은 수학 계산 함수를 모아 둔 내장 객체입니다.'),
   builtin('String', ['js'], 'JavaScript 기본 기능', '문자열 변환·도구', '값을 문자열로 바꾸거나 문자열 관련 정적 기능을 제공하는 내장 함수입니다.'),
@@ -79,7 +79,7 @@ const ENTRIES = [
   builtin('Blob', ['js'], 'JavaScript 기본 기능', '바이너리 데이터 덩어리', '파일처럼 다룰 수 있는 메모리 안의 바이트 데이터와 형식 정보를 묶습니다.'),
   builtin('getElementById', ['js'], 'JavaScript 기본 기능', 'ID로 요소 찾기', '문서에서 지정한 id를 가진 DOM 요소 하나를 찾습니다.'),
 
-  // C# 기본 기능 11개
+  // C# 기본 기능
   builtin('Encoding', ['cs'], 'C# 기본 기능', '문자 인코딩 변환', '문자열과 UTF-8 같은 바이트 인코딩을 서로 변환하는 .NET 형식입니다.'),
   builtin('Environment', ['cs'], 'C# 기본 기능', '실행 환경 정보', '운영체제·환경 변수·현재 폴더·프로세스 종료 등 실행 환경 기능을 제공합니다.'),
   builtin('Path', ['cs'], 'C# 기본 기능', '파일 경로 조립', '경로 문자열을 결합하고 파일명·확장자·폴더를 안전하게 나누는 .NET 기능입니다.'),
@@ -97,7 +97,7 @@ const ENTRIES = [
   builtin('Marshal', ['cs'], 'C# 기본 기능', '관리·비관리 메모리 다리', '.NET 객체와 네이티브 메모리 사이에서 값을 옮기거나 메모리를 잡고 놓아 줍니다. Windows API 를 부를 때 짝으로 나옵니다.'),
   builtin('DllImport', ['cs'], 'C# 기본 기능', 'Windows API 직접 호출', 'kernel32.dll 같은 네이티브 라이브러리의 함수를 C# 에서 바로 부르겠다고 선언하는 표식입니다(P/Invoke). .NET 이 감싸 주지 않는 기능 — 이 프로젝트에서는 가짜 터미널(ConPTY) — 을 쓸 때만 나옵니다.'),
 
-  // Python 기본 기능 16개
+  // Python 기본 기능
   builtin('os', ['py'], 'Python 기본 기능', '운영체제 기능 모듈', '파일 경로·환경 변수·프로세스 등 운영체제와 상호작용하는 표준 모듈입니다.'),
   builtin('len', ['py'], 'Python 기본 기능', '길이 구하기', '문자열·목록·사전 같은 값에 들어 있는 항목 수를 돌려줍니다.'),
   builtin('int', ['py'], 'Python 기본 기능', '정수 변환·형식', '값을 정수로 바꾸거나 정수 값을 만드는 기본 형식입니다.'),
@@ -114,6 +114,32 @@ const ENTRIES = [
   builtin('io', ['py'], 'Python 기본 기능', '메모리 입출력 모듈', '문자열·바이트를 파일처럼 읽고 쓰는 스트림 기능을 제공합니다.'),
   builtin('getattr', ['py'], 'Python 기본 기능', '이름으로 속성 읽기', '객체에서 문자열로 지정한 이름의 속성을 읽고, 없을 때 기본값을 사용할 수 있습니다.'),
   builtin('open', ['py'], 'Python 기본 기능', '파일 열기', '파일을 읽거나 쓰기 위한 객체를 열며 with와 함께 쓰면 자동으로 닫힙니다.'),
+
+  // 2026-09-03 보완 — 같은 갈래인데 짝만 빠져 있던 것들.
+  // len·range·isinstance 는 있는데 list·dict·sorted 가 없었고, setTimeout·clearTimeout 은
+  // 있는데 setInterval·clearInterval 이 없었다. JSON 은 걸리는데 stringify 는 안 걸리던 것과 같은 결이다.
+  builtin('list', ['py'], 'Python 기본 기능', '목록 변환·형식', '값을 차례가 있는 목록으로 만들거나, 반복 가능한 값을 한 번에 펼쳐 담습니다.'),
+  builtin('dict', ['py'], 'Python 기본 기능', '사전 변환·형식', '키와 값을 짝지어 담는 자료형입니다. 이 앱의 워커가 응답을 만들 때 기본 단위가 되는 형식입니다.'),
+  builtin('set', ['py'], 'Python 기본 기능', '중복 없는 모음', '같은 값을 한 번만 담는 모음입니다. "이미 처리했는가"를 빠르게 확인할 때 씁니다.'),
+  builtin('tuple', ['py'], 'Python 기본 기능', '바뀌지 않는 묶음', '만든 뒤에는 원소를 바꿀 수 없는 값 묶음입니다. 고정된 목록(허용 모드·객체 종류)을 상수로 둘 때 씁니다.'),
+  builtin('bytes', ['py'], 'Python 기본 기능', '바이트 열', '글자가 아니라 바이트 그대로를 담는 값입니다. 인코딩을 정하기 전의 원본 데이터가 이 형태입니다.'),
+  builtin('float', ['py'], 'Python 기본 기능', '실수 변환·형식', '값을 소수점이 있는 수로 바꾸거나 실수 값을 만듭니다.'),
+  builtin('sorted', ['py'], 'Python 기본 기능', '정렬한 새 목록', '원본을 그대로 두고 정렬된 새 목록을 돌려줍니다. key로 정렬 기준을 따로 줄 수 있습니다.'),
+  builtin('max', ['py'], 'Python 기본 기능', '가장 큰 값', '여러 값이나 모음에서 가장 큰 것을 고릅니다. 상한을 씌울 때도 씁니다.'),
+  builtin('min', ['py'], 'Python 기본 기능', '가장 작은 값', '여러 값이나 모음에서 가장 작은 것을 고릅니다. 하한을 씌우거나 상한과 짝지어 값을 범위 안으로 누를 때 씁니다.'),
+  builtin('sum', ['py'], 'Python 기본 기능', '합계', '모음 안 숫자를 모두 더합니다. 셀 수·바이트 수처럼 예산을 셀 때 나옵니다.'),
+  builtin('abs', ['py'], 'Python 기본 기능', '절댓값', '음수 부호를 떼고 크기만 남깁니다.'),
+  builtin('round', ['py'], 'Python 기본 기능', '반올림', '소수를 지정한 자리에서 반올림합니다.'),
+  builtin('any', ['py'], 'Python 기본 기능', '하나라도 참인가', '모음 중 하나라도 참이면 True입니다. 조건을 만족하는 것이 있는지 볼 때 씁니다.'),
+  builtin('all', ['py'], 'Python 기본 기능', '모두 참인가', '모음이 전부 참일 때만 True입니다. 비어 있으면 True라는 점이 함정입니다.'),
+  builtin('repr', ['py'], 'Python 기본 기능', '디버깅용 표현', '사람이 읽기 좋은 str과 달리 "코드에 가까운" 표현을 돌려줍니다. 따옴표·이스케이프가 그대로 보여 값의 실제 모양을 확인할 때 씁니다.'),
+
+  builtin('crypto', ['js'], 'JavaScript 기본 기능', '난수·암호 기능', '브라우저가 제공하는 암호용 난수 생성기입니다. randomUUID로 겹치지 않는 이름을, getRandomValues로 예측할 수 없는 바이트를 만듭니다 — Math.random과 달리 남이 맞힐 수 없어야 하는 값에 씁니다.'),
+  builtin('setInterval', ['js'], 'JavaScript 기본 기능', '되풀이 실행 예약', '정해진 간격마다 함수를 계속 실행하도록 예약합니다. setTimeout과 달리 취소하기 전까지 멈추지 않습니다.'),
+  builtin('clearInterval', ['js'], 'JavaScript 기본 기능', '되풀이 실행 취소', 'setInterval로 걸어 둔 되풀이를 멈춥니다. 화면을 닫을 때 이것을 부르지 않으면 보이지 않는 타이머가 계속 돕니다.'),
+  builtin('MutationObserver', ['js'], 'JavaScript 기본 기능', 'DOM 변화 감시', '화면 요소가 추가·삭제되거나 속성이 바뀌는 것을 지켜보다 알려 줍니다. 남이 바꾼 DOM에 반응해야 할 때 씁니다.'),
+  builtin('WeakMap', ['js'], 'JavaScript 기본 기능', '약한 참조 키 모음', '키로 쓴 객체가 다른 곳에서 모두 사라지면 그 항목도 함께 정리되는 Map입니다. 요소마다 딸린 정보를 붙여 두면서 누수를 만들지 않으려고 씁니다.'),
+  builtin('structuredClone', ['js'], 'JavaScript 기본 기능', '깊은 복사', '중첩된 객체를 통째로 복사합니다. JSON을 거치는 방식과 달리 Map·Set·날짜·순환 참조도 그대로 옮깁니다.'),
 ];
 
 const LANGUAGE_LABEL = { js: 'JavaScript', cs: 'C#', py: 'Python' };

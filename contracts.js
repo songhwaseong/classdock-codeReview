@@ -650,6 +650,30 @@ GET  /ssh-key-pick-status      → 고른 결과`,
       '창을 여는 쪽은 토큰만으로 부족하고 로컬 동작 헤더까지 요구합니다(HasLocalActionHeader) — ' +
       '다른 페이지가 몰래 파일 선택 창을 띄우는 것을 막기 위한 한 겹입니다. 올리기 진행률은 세션 출력과 같은 오프셋 증분 방식입니다.',
   },
+  {
+    sectionIds: ['launcher-ssh', 'remote-files-ui', 'remote-terminal-overview'],
+    kind: 'POST',
+    title: '/ssh-file-* — 원격 파일 미리보기와 다운로드',
+    endpoints: ['/ssh-file-', '/ssh-file-job', '/ssh-file-content'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && path.StartsWith(\"/ssh-file-\", StringComparison.Ordinal))",
+    when: '원격 파일 패널에서 경로를 확인하고 미리 보고 내려받을 때',
+    tags: ['토큰 필요', '로컬 동작 헤더 필요(POST)', '읽기 전용 SFTP v3', '요청 서명으로 재시도 묶음'],
+    snippet: `POST /ssh-file-<op>        op: connect · inspect · preview · save-pick · download
+                           cancel · release · disconnect
+     ← 길이 접두 본문: 요청 id(16바이트 hex) + 인자 2~3개
+GET  /ssh-file-job?id=…    진행 상태
+GET  /ssh-file-content?id= 미리보기 바이트
+
+// 같은 요청 id 로 다시 오면 서명(op + 인자)이 처음과 같을 때만 그 작업을 돌려준다.
+// 다르면 거절 — 폴링 재시도가 다른 작업으로 바뀌지 않는다.
+// PTY 를 붙이지 않은 별도 ssh 프로세스에서 SFTP subsystem 만 쓴다. 원격 셸 명령은 없다.`,
+    note:
+      'POST 는 실행별 토큰에 더해 X-ClassDock-Action: 1 을 요구하고 없으면 403 입니다 — 이 앱에서 토큰 위에 조건을 하나 더 얹은 드문 경로입니다. ' +
+      'GET 두 개(/ssh-file-job · /ssh-file-content)는 접두사가 아니라 이름으로 토큰 목록에 적혀 있어, 새 GET 경로를 더할 때 이 목록을 함께 고쳐야 합니다. ' +
+      '미리보기 캐시는 100MB 상한이고 화면에 바이트를 넘기면 즉시 해제합니다.',
+  },
 
   // ── EXE 로컬 서버 — 변환·DB ──────────────────────────
 
@@ -750,6 +774,53 @@ MNExchangeRate.normalize(raw, "ecb");        // 유로 기준 교차환율, 송�
     note:
       '따라치기와 형제지만 규칙이 정반대인 곳이 셋입니다 — 악보를 보여 주지 않고, 틀려도 진도가 나가고, 다시 듣기를 제한합니다. ' +
       '그 셋이 파일을 나눈 이유이며 첫머리 주석에 적혀 있습니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'context-menu', 'python-editor'],
+    kind: 'API',
+    title: 'MNContextMenu — 여러 층 우클릭 메뉴',
+    source: 'src/js/context-menu.js',
+    file: 'src/js/context-menu.js',
+    at: 'const MNContextMenu = (() => {',
+    when: '항목이 많아 한 줄로 쌓을 수 없는 우클릭 메뉴를 열 때',
+    tags: ['소비자 1개', 'open() 하나', '겉모습은 부르는 쪽 CSS', 'Escape 는 한 층씩'],
+    snippet: `const close = MNContextMenu.open(x, y, items, { base:"text-context", onClose, autoFocus });
+// 반환값이 이 메뉴를 닫는 함수다. MNContextMenu.close() · isOpen() 도 있다.
+
+// 항목 = { label, title, action, disabled, children, active, separator }
+//   children 이 있으면 부모가 되고 action 은 무시한다 — 층을 여는 일이 곧 동작이다.
+//   disabled 에 함수를 주면 메뉴를 그릴 때 불러 판정한다.
+
+// base 는 클래스 접두사다: base + "-menu" / "-sub" / "-parent" / "-sep".
+// 이미 있는 메뉴를 옮겨도 보이는 모습이 바뀌지 않게 하려고 인자로 받는다.`,
+    note:
+      '같은 코드가 docx 편집기와 악보 편집기에 한 벌씩 있어 "세 번째 복사본을 막으려고" 만든 모듈입니다. ' +
+      '그런데 아직 그 둘을 흡수하지 않아 소비자가 python-editor.js 하나뿐입니다 — 지금은 같은 기능이 세 벌인 상태입니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'grid-selection', 'spreadsheet-viewer', 'db-client'],
+    kind: 'API',
+    title: 'MNGridSelection — 표 칸 고르기 셈',
+    source: 'src/js/grid-selection.js',
+    file: 'src/js/grid-selection.js',
+    at: 'const MNGridSelection = (() => {',
+    when: '표에서 칸을 끌어 고르고, 고른 것을 클립보드로 옮기고 되읽을 때',
+    tags: ['소비자 2개', 'DOM 을 모름', '칸 하나 = 정수 하나', 'TSV 왕복'],
+    snippet: `// 선택 셈 — 칸 하나를 \`행 * 열수 + 열\` 키로 눌러 Set 에 담는다.
+// 흩어진 선택이 특별한 경우가 되지 않는다.
+gridSelectionRangeBetween(anchor, focus)          // 정규화된 사각 범위
+gridSelectionCombineKeys(keys, range, mode, cols) // replace | add | subtract
+gridSelectionRangeCovered(keys, range, cols)      // 이미 다 고른 범위인가(= Ctrl 끌기는 빼기)
+gridSelectionBoundsFromKeys(keys, cols)           // { row1..col2, contiguous, count }
+gridSelectionDragHitPoint(kind, point, …)         // 머리에서 시작한 끌기의 축 유지
+
+// 클립보드 — 내보내기와 되읽기를 짝으로 둔다(규칙이 갈라지면 두 표 사이가 어긋난다)
+gridSelectionToText(keys, cols, cellText)  // 고르지 않은 칸은 빈칸으로
+gridClipboardTable(text)                   // 엑셀·시트에서 온 글자를 2차원 배열로
+gridPastePlan(grid, anchor, size, spots)   // 넘친 행·열은 버리고 그 수만 돌려준다`,
+    note:
+      '스프레드시트 뷰어 안에 있던 셈을 DB 결과 표가 같은 규칙을 써야 하게 되면서 뗀 모듈입니다. ' +
+      '키가 열 수에 묶여 있으므로 표를 다시 그릴 때 담아 둔 선택을 비우는 책임은 소비자에게 있습니다.',
   },
 
   // ── EXE 로컬 서버 — 환율 ─────────────────────────────
@@ -884,5 +955,135 @@ POST /tile-cache-clear  → 디스크 캐시 삭제
     note:
       '조회조차 토큰을 요구합니다 — 같은 PC 의 아무 웹페이지나 "이 사람이 어느 지역을 봤는지"를 셀 수 있으면 안 되기 때문입니다. ' +
       'tests/map-viewer.test.js 가 이 토큰 요구를 검사하고, C# 런처와 Go 런처가 같은 상한·같은 정리 시점을 쓰는지도 함께 대조합니다.',
+  },
+
+  // ── EXE 로컬 서버 — DB 클라이언트 ────────────────────
+
+  {
+    sectionIds: ['launcher-db', 'db-overview', 'db-client'],
+    kind: 'POST',
+    title: '/db-capability · /db-session-open · /db-session-close — 접속 수명',
+    endpoints: ['/db-', '/db-capability', '/db-session-open', '/db-session-close'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path == \"/db-capability\")",
+    when: '접속 화면을 열 때(능력 확인), 연결 단추를 누를 때, 탭을 닫거나 연결을 끊을 때',
+    tags: ['토큰 필요', '동시 4접속', '유휴 30분 정리', '비밀번호는 stdin 으로만'],
+    snippet: `GET  /db-capability   → { python, driver, version }
+POST /db-session-open ← 길이 접두 본문 7개
+     host · port · database · user · password · readOnly · autoCommit
+     → { ok, id, readOnly, autoCommit, label, info }
+POST /db-session-close?id=…
+
+// 비밀번호는 프로세스 인수가 아니라 워커 기동 직후 stdin 의 첫 connect 요청에만 실린다.
+// 파이썬을 못 찾으면 501 "no-python" — 화면이 설치 안내와 "다시 검사"를 띄운다.`,
+    note:
+      'endpoints 의 "/db-" 는 RequiresLocalAuthToken 의 접두사 한 줄입니다. 이 한 줄이 /db-* 열여덟 경로를 GET·POST 양쪽에서 덮습니다 — ' +
+      '새 경로가 자동으로 보호되는 장점과, 이 줄이 지워지면 전부 동시에 열리는 단점이 같은 구조에서 나옵니다(/ssh- 와 같은 모양).',
+  },
+  {
+    sectionIds: ['launcher-db', 'db-overview', 'db-client'],
+    kind: 'GET',
+    title: '/db-schema · /db-table · /db-object · /db-dependencies · /db-use — 스키마 읽기',
+    endpoints: ['/db-schema', '/db-table', '/db-object', '/db-dependencies', '/db-use'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path.StartsWith(\"/db-schema?\", StringComparison.Ordinal))",
+    when: '트리를 그릴 때, 테이블을 고를 때, 컬럼을 펼칠 때, 정의 창·ERD 를 열 때, 객체를 지우기 전에',
+    tags: ['토큰 필요', '런처는 아는 mode 만 넘김', '메타데이터 제한 60초'],
+    snippet: `GET  /db-schema?id=&mode=      tables(기본) · columns(자동완성) · erd(관계 일괄)
+GET  /db-table?id=&name=&mode=  table(정의+200행) · columns · count · ddl · info
+GET  /db-object?id=&kind=&name= 프로시저·함수·이벤트·트리거의 CREATE 문
+GET  /db-dependencies?id=…      지우기 전에 무엇이 이 객체를 쓰는지
+POST /db-use?id=&name=          현재 데이터베이스 전환`,
+    note:
+      '런처는 아는 mode·kind 만 워커에 넘깁니다. 값을 그대로 통과시키면 워커의 분기 하나가 곧 API 하나가 되어, ' +
+      '무엇이 열려 있는지 C# 쪽만 읽어서는 알 수 없게 됩니다.',
+  },
+  {
+    sectionIds: ['launcher-db', 'db-overview', 'db-client'],
+    kind: 'POST',
+    title: '/db-query · /db-query-poll · /db-query-cancel · /db-page — 실행',
+    endpoints: ['/db-query', '/db-query-poll', '/db-query-cancel', '/db-page'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && path.StartsWith(\"/db-query?\", StringComparison.Ordinal))",
+    when: '실행·전체 실행·실행 계획, 실행 중 취소, 결과의 "더 보기"',
+    tags: ['토큰 필요', '시작만 하고 폴링', '기본 60초 · 최대 600초', '1000행 · 12000셀'],
+    snippet: `POST /db-query?id=        ← SQL + 제한 시간 → { job }
+GET  /db-query-poll?job=  → { running } 또는 { statements:[…] }
+POST /db-query-cancel?job=
+GET  /db-page?id=&set=&offset=&limit=   워커가 들고 있는 결과의 다음 쪽
+
+// 취소는 실행 중인 작업 id 가 일치할 때만 워커에 간다(DbSession.ActiveJobId).
+// 그렇지 않으면 대기 중인 덤프를 취소했을 때 앞서 돌던 쿼리가 끊긴다.`,
+    note:
+      '워커는 취소에 응답하지 않습니다(fire and forget). 실행 중인 쿼리는 stdin 을 읽지 못해 취소를 리더 스레드가 즉시 처리해야 하는데, ' +
+      '거기서 응답까지 내보내면 실행 중인 쿼리의 응답과 순서가 뒤섞이기 때문입니다. 취소 결과는 취소당한 쿼리 자신의 응답(cancelled)으로 드러납니다.',
+  },
+  {
+    sectionIds: ['launcher-db', 'db-overview', 'db-client'],
+    kind: 'POST',
+    title: '/db-cell · /db-apply · /db-tx — 표 고치기와 트랜잭션',
+    endpoints: ['/db-cell', '/db-apply', '/db-tx'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && path.StartsWith(\"/db-cell?\", StringComparison.Ordinal))",
+    when: '잘려 온 값을 고치려 열 때, 담아 둔 변경을 적용할 때, 커밋·롤백·자동 커밋 전환',
+    tags: ['토큰 필요', '한 묶음 500건', '런처는 SQL 을 짓지 않음', '읽기 전용은 서버가 막음'],
+    snippet: `POST /db-cell?id=   표의 값은 500자에서 잘려 있을 수 있어 원본을 다시 읽는다
+POST /db-apply?id=  ← 길이 접두 평평한 줄
+     database · table · 건수 · (갈래, 값…) × n   갈래: update · delete · insert
+POST /db-tx?id=&op= commit · rollback · autocommit(&on=0|1) · state
+
+// 런처는 갈래 이름만 알아보고 나머지는 JSON 값으로 옮긴다. 문장은 언제나 워커가
+// 자리표시자로 짓는다 — UPDATE … SET \`col\` = %s WHERE \`pk\` = %s`,
+    note:
+      '⚠ 프런트가 싣는 차례와 런처가 읽는 차례가 어긋나면 값이 엉뚱한 칸으로 들어갑니다. 형식이 스스로 그 사실을 알려 주지 못하는 구조라 ' +
+      'tests/db-client.test.js 가 두 쪽을 나란히 놓고 봅니다. 셀 편집은 읽기 전용 접속에서 편집 가능 판정 이전에 잠깁니다 — ' +
+      '쿼리 경로에만 읽기 전용을 걸어 두면 셀 편집이 뒷문이 되기 때문입니다.',
+  },
+  {
+    sectionIds: ['launcher-db', 'db-overview', 'db-dump', 'db-import'],
+    kind: 'POST',
+    title: '/db-dump · /db-dump-poll · /db-import — 덤프와 적재',
+    endpoints: ['/db-dump', '/db-dump-poll', '/db-import'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && path.StartsWith(\"/db-dump?\", StringComparison.Ordinal))",
+    when: '고른 객체를 .sql 로 내보낼 때, CSV·엑셀을 테이블에 넣을 때',
+    tags: ['토큰 필요', '객체 500개', '행 10,000 · 셀 100,000 · 본문 8MB', '무진행 120초'],
+    snippet: `POST /db-dump?id=   ← 파일 이름 · 모드 · 옵션 6 · DB · 대상 수 · (종류, 이름) × n
+                    → { job, path }   경로는 런처가 만든다
+GET  /db-dump-poll?job=   진행 보고 또는 결과 (취소는 /db-query-cancel 을 함께 씀)
+POST /db-import?id= ← 테이블 · 열 목록 · 모드 · (값, NULL 여부) × n
+
+// 파일 경로는 런처만 만든다: SafeRelPath → TryResolveSaveRootPath.
+// 워커가 경로를 지으면 저장 위치 정책이 뚫린다.`,
+    note:
+      '덤프와 적재 모두 쿼리와 같은 작업 목록에 들어가고 폴링·취소 경로를 함께 씁니다. ' +
+      '덤프는 총 실행 시간이 아니라 "진행 보고가 끊긴 시간"(DbDumpIdleMs 120초)으로 재므로, 살아 있는 덤프는 몇십 분이 걸려도 끊기지 않습니다.',
+  },
+  {
+    sectionIds: ['launcher-diagnostics', 'diagnostics'],
+    kind: 'POST',
+    title: '/diagnostics/events · /diagnostics/session · /diagnostics/clear · /diagnostics/open-folder',
+    endpoints: [
+      '/diagnostics/', '/diagnostics/events', '/diagnostics/session',
+      '/diagnostics/clear', '/diagnostics/open-folder',
+    ],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path.StartsWith(\"/diagnostics/events\", StringComparison.Ordinal))",
+    when: '앱이 사건을 모아 넘길 때, 사용자가 기록 폴더를 열거나 지울 때',
+    tags: ['토큰 필요', '세션 단위 파일', '묶어 보내기'],
+    snippet: `POST /diagnostics/events       모아 둔 사건 묶음을 넘긴다
+GET  /diagnostics/events       남아 있는 기록을 되읽는다
+GET/POST /diagnostics/session  지금 세션 식별자
+POST /diagnostics/clear        기록 삭제
+POST /diagnostics/open-folder  탐색기로 기록 폴더 열기`,
+    note:
+      '기록에 무엇이 담기는지가 이 기능의 안전선입니다 — 사용자가 그 파일을 첨부해 보내는 것이 원래 용도이기 때문입니다. ' +
+      '비밀번호·SQL 본문이 섞이지 않는지는 지금 수동 검증 항목으로만 남아 있습니다.',
   },
 ];

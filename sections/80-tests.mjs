@@ -4,7 +4,7 @@
 // 테스트가 124개·56개가 되는 동안 그대로 남아 있었다 — 그것도 같은 파일 안에 "예전에도 이랬다" 는
 // 반성이 적힌 채로. 세 번째는 없도록 lib/source-metrics.mjs 의 testMetrics 로 잰다.
 
-import { linesLabel, testMetrics } from '../lib/source-metrics.mjs';
+import { linesLabel, testMetrics, largestTests } from '../lib/source-metrics.mjs';
 
 export default ({ helpers, rootDir }) => {
   const { sec } = helpers;
@@ -13,6 +13,12 @@ export default ({ helpers, rootDir }) => {
   const coreLines = linesLabel(rootDir, 'src/js/core.js');
   const coreTestLines = linesLabel(rootDir, 'tests/core.test.js');
   const tests = testMetrics(rootDir);
+  // "가장 큰 단위 테스트" 도 순위를 재서 쓴다 — core.test.js 가 1등이라고 적어 두었더니
+  // db-client.test.js · map-viewer.test.js 가 앞질렀는데도 문장이 그대로 남아 있었다.
+  const biggest = largestTests(rootDir, 3);
+  const biggestLabel = biggest.length
+    ? biggest.map((item) => `${item.file} ${item.lines.toLocaleString('en-US')}줄`).join(' · ')
+    : '';
 
   return [
     sec({
@@ -84,9 +90,31 @@ export default ({ helpers, rootDir }) => {
             '값이 CSS 파일과 테스트 두 곳에 있게 되므로, 화면을 고칠 때마다 테스트를 함께 고치는 비용이 붙습니다.',
         },
         {
+          type: 'good',
+          label: 'Good',
+          body:
+            'EXE 백엔드가 붙은 상태의 E2E 가 처음 생겼습니다 — tests/e2e/backup-exe-server.spec.js 가 ' +
+            '실제로 도는 ClassDock.exe 에 붙어 /workspace-save · /app-state 경로의 백업 왕복을 확인합니다. ' +
+            '오래 이 리뷰가 "가장 큰 공백" 으로 지목해 온 자리가 한 칸 메워졌습니다.',
+        },
+        {
           type: 'risk',
           label: 'Risk',
-          body: 'EXE 백엔드가 붙은 상태의 E2E 가 없습니다. 로컬 저장·터미널·커널·PowerPoint 변환은 자동 회귀 검증 밖입니다.',
+          body:
+            '다만 그 EXE E2E 는 기본으로 건너뜁니다. 이 PC 의 실제 ClassDock 데이터를 지우고 덮어쓰기 때문에 ' +
+            'MN_EXE_URL 을 직접 준 사람만 돌릴 수 있고, 파일 첫머리에 그 경고가 ⚠ 로 붙어 있습니다. ' +
+            '안전한 선택이지만 결과적으로 CI 나 npm run verify 에서는 절대 돌지 않으므로, ' +
+            '"검사가 있다" 와 "검사가 돈다" 사이의 거리는 그대로 남아 있습니다. ' +
+            '터미널·커널·PowerPoint 변환·DB 워커는 여전히 자동 회귀 검증 밖입니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            'C# 을 실제로 컴파일해 돌리는 테스트도 생겼습니다 — tests/ssh-files.test.js 가 tests/fixtures/ssh-files.cs 를 빌드해 ' +
+            '모의 SFTP 스트림에 물립니다. 소스를 문자열로 읽어 패턴을 확인하던 방식과 달리 실제 동작을 보는 검사이고, ' +
+            'ssh-session-retention·ssh-shell-integration 도 같은 방식의 픽스처를 씁니다. ' +
+            'EXE 쪽 자동 검증의 다른 갈래가 열린 셈입니다.',
         },
         {
           type: 'good',
@@ -109,8 +137,18 @@ export default ({ helpers, rootDir }) => {
         'office-replace 는 순수 계산과 실제 파일 왕복을 나눠 검증하며, data-convert 는 8개 형식 변환과 손실 리포트를 봅니다.',
       usage: [
         {
-          title: '가장 큰 테스트',
-          body: `core.test.js ${coreTestLines}. core.js ${coreLines}에 대응하며 이 프로젝트에서 가장 넓은 안전망입니다.`,
+          title: '가장 큰 테스트 셋',
+          body:
+            `${biggestLabel}. ` +
+            '오래 1등이던 core.test.js 는 3위로 내려왔습니다 — 새 기능이 들어올 때 테스트를 함께 쓰는 방침이 유지되면 ' +
+            '"가장 큰 테스트" 는 계속 바뀝니다. 그래서 이 순위도 문장에 적지 않고 생성 때 잽니다.',
+        },
+        {
+          title: '기능 하나가 테스트 1등이 되는 일',
+          body:
+            'db-client.test.js 한 파일이 core.test.js 를 넘어섰습니다. DB 클라이언트가 되돌릴 수 없는 쓰기·원격 서버·비밀번호를 ' +
+            '한꺼번에 다루는 기능이라 "지켜야 하는 성질" 이 많고, 그것을 전부 순수 함수와 소스 대조로 내려놓았기 때문입니다. ' +
+            `core.test.js ${coreTestLines} 가 core.js ${coreLines} 을 덮는 것과는 성격이 다른 밀도입니다.`,
         },
         {
           title: '왕복 검증',
@@ -123,10 +161,11 @@ export default ({ helpers, rootDir }) => {
           body: 'tests/fixtures/build-doc.js 와 build-pdf.js 가 테스트용 문서를 만듭니다. 바이너리 픽스처를 레포에 넣지 않고 코드로 생성합니다.',
         },
         {
-          title: '가장 빠르게 자란 테스트',
+          title: '큰 테스트가 나오는 조건',
           body:
-            'Word 편집 확장과 함께 office-replace.test.js 가 1,123줄까지 늘어 core.test.js 다음으로 큰 단위 테스트가 됐습니다. ' +
-            '표 병합·목록 번호·그림 관계처럼 손으로 확인하기 어려운 XML 조작이 순수 함수로 나와 있어서 가능했던 증가입니다.',
+            '앞선 자리는 전부 "손으로 확인하기 어려운 계산이 순수 함수로 나와 있는" 기능들입니다 — ' +
+            'DB 클라이언트의 문장 나누기·편집 판정, 지도의 거리·축척·타일 계약, Word 편집의 XML 조작. ' +
+            '순수부를 먼저 떼는 습관이 그대로 테스트 규모로 돌아온 것이고, 화면부터 만들었다면 어느 쪽도 불가능했을 크기입니다.',
         },
         {
           title: '가장 빠르게 늘어난 묶음',
@@ -170,7 +209,17 @@ export default ({ helpers, rootDir }) => {
         },
       ],
       files: [
-        { path: 'tests/core.test.js', label: 'core.test.js', description: '가장 큰 단위 테스트' },
+        { path: 'tests/core.test.js', label: 'core.test.js', description: '가장 넓은 단위 테스트' },
+        { path: 'tests/db-client.test.js', label: 'db-client.test.js', description: '지금 가장 큰 단위 테스트 — 문장 나누기·보안 계약·편집 판정·덤프' },
+        { path: 'tests/db-import.test.js', label: 'db-import.test.js', description: 'CSV·엑셀 적재의 열 짝짓기·한도' },
+        { path: 'tests/diagnostics.test.js', label: 'diagnostics.test.js', description: '진단 로그의 제거 규칙과 임시 기록 위치' },
+        { path: 'tests/backup-storage.test.js', label: 'backup-storage.test.js', description: '백업 저장소 계약' },
+        { path: 'tests/remote-files.test.js', label: 'remote-files.test.js', description: '원격 파일 경로·디코딩·표 파싱' },
+        { path: 'tests/remote-files-ui.test.js', label: 'remote-files-ui.test.js', description: '원격 파일 패널 배선과 요청 서명' },
+        { path: 'tests/remote-terminal-workspaces.test.js', label: 'remote-terminal-workspaces.test.js', description: '작업공간별 독립 세션' },
+        { path: 'tests/ssh-files.test.js', label: 'ssh-files.test.js', description: 'C# 을 실제로 컴파일해 모의 SFTP 로 돌리는 실행 테스트' },
+        { path: 'tests/music-eartest.test.js', label: 'music-eartest.test.js', description: '음감 테스트 문제 생성·횟수' },
+        { path: 'tests/music-line-playback.test.js', label: 'music-line-playback.test.js', description: '오선지 선택 재생·일시정지' },
         { path: 'tests/timeline.test.js', label: 'timeline.test.js', description: '연대표 날짜·정렬·배치·왕복' },
         { path: 'tests/timeline-xlsx.test.js', label: 'timeline-xlsx.test.js', description: '엑셀 칸 값·시트 그림 읽기' },
         { path: 'tests/remote-terminal.test.js', label: 'remote-terminal.test.js', description: 'SSH 토큰·비밀번호 전달·지문 계약' },
@@ -306,6 +355,9 @@ export default ({ helpers, rootDir }) => {
         { path: 'tests/e2e/critical-flows.spec.js', label: 'critical-flows.spec.js', description: '핵심 사용자 흐름' },
         { path: 'tests/e2e/lazy-vendor.spec.js', label: 'lazy-vendor.spec.js', description: '지연 로드 검증' },
         { path: 'tests/e2e/save-target-badge.spec.js', label: 'save-target-badge.spec.js', description: '원본/사본 배지' },
+        { path: 'tests/e2e/backup-exe-server.spec.js', label: 'backup-exe-server.spec.js', description: '실제 EXE 에 붙는 유일한 E2E — MN_EXE_URL 을 줘야 돕니다' },
+        { path: 'tests/e2e/backup-roundtrip.spec.js', label: 'backup-roundtrip.spec.js', description: '브라우저 IndexedDB 경로의 백업 왕복' },
+        { path: 'tests/e2e/db-no-python.spec.js', label: 'db-no-python.spec.js', description: '파이썬 없는 PC 의 안내 — 런처 응답을 흉내 내 화면 계약만 봅니다' },
         { path: 'tests/e2e/helpers.js', label: 'helpers.js', description: '공통 헬퍼' },
       ],
       notes: [
@@ -341,8 +393,17 @@ export default ({ helpers, rootDir }) => {
         {
           title: '가장 큰 공백 — EXE 경로',
           body:
-            '로컬 저장, 지속형 터미널, 노트북 커널, PowerPoint 변환, ffmpeg, SQLite 실행, 시험지 LAN 수신은 자동 화면 테스트가 없습니다. ' +
-            'local-server-security.test.js 가 보안 계약 일부를 보지만 기능 동작은 아닙니다.',
+            '지속형 터미널, 노트북 커널, PowerPoint 변환, ffmpeg, SQLite 실행, DB 워커, 시험지 LAN 수신은 자동 화면 테스트가 없습니다. ' +
+            'local-server-security.test.js 가 보안 계약 일부를 보지만 기능 동작은 아닙니다. ' +
+            '백업 왕복만 backup-exe-server.spec.js 로 덮였는데, 그마저도 실제 데이터를 지우는 검사라 기본으로 건너뜁니다.',
+        },
+        {
+          title: '새로 생긴 공백 — DB 워커의 실제 동작',
+          body:
+            'db_worker.py 2,400줄대가 자동 검증 밖입니다. tests/fixtures 의 프로브 넷(db-cell-edit · db-dump · db-multi-result · db-dependency)이 ' +
+            '드라이버 없이 워커 로직을 두드리긴 하지만, 실제 MySQL 에 붙어 트랜잭션·읽기 전용·암묵적 커밋이 서버에서 어떻게 도는지는 ' +
+            '설계 문서의 수동 검증 목록으로만 남아 있습니다. 되돌릴 수 없는 쓰기를 다루는 코드 중 자동 안전망이 가장 얇은 자리입니다. ' +
+            '도커로 MySQL 하나를 띄워 붙이는 통합 테스트가 이 공백에 가장 잘 맞습니다.',
         },
         {
           title: '두 번째 공백 — 대형 파일 상호작용',

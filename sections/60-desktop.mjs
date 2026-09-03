@@ -7,7 +7,7 @@
 // 코드 안의 잘 안 변하는 문자열(함수 이름·라우팅 경로)을 앵커로 두고 생성 때 다시 찾는다.
 // 앵커를 못 찾으면 조용히 넘어가지 않고 생성 스크립트가 경고한다.
 
-import { anchoredRange } from '../lib/source-metrics.mjs';
+import { anchoredRange, linesLabel } from '../lib/source-metrics.mjs';
 
 // 앵커를 찾지 못한 구간. 생성 스크립트가 이 목록을 경고로 찍는다.
 export const brokenAnchors = [];
@@ -15,6 +15,8 @@ export const brokenAnchors = [];
 export default ({ helpers, diagrams, rootDir }) => {
   const { sec } = helpers;
   const CAT = 'EXE · 로컬 서버';
+  // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs 의 이유 참고).
+  const workerLines = linesLabel(rootDir, 'desktop/db_worker.py');
 
   /**
    * @param label       화면에 보일 구간 이름
@@ -598,10 +600,17 @@ export default ({ helpers, diagrams, rootDir }) => {
         { title: '크기 전달', body: 'ResizePseudoConsole 로 원격 PTY 크기를 바꿉니다. 20~300열 · 5~120행으로 클램프합니다.' },
       ],
       files: [
-        { path: 'desktop/ssh_terminal.cs', label: 'ssh_terminal.cs', description: 'SSH 터미널 백엔드 전체 — ConPTY 상호운용, askpass, known_hosts, 세션' },
-        L('launcher.cs (SSH 라우팅)', { from: 'method == "GET" && path == "/ssh-capability"', before: 2, to: 'path.StartsWith("/ssh-session-stop"', after: 6 }, '/ssh-* 아홉 경로'),
+        { path: 'desktop/ssh_terminal.cs', label: 'ssh_terminal.cs', description: 'SSH 터미널 백엔드 — ConPTY 상호운용, askpass, known_hosts, 세션, scp 업로드' },
+        { path: 'desktop/ssh_files.cs', label: 'ssh_files.cs', description: '읽기 전용 SFTP v3 백엔드 — 같은 정적 클래스를 partial 로 나눠 쓴다' },
+        { path: 'desktop/ssh_shell_integration.bash', label: 'ssh_shell_integration.bash', description: 'Bash 세션에 현재 폴더 알림만 얹는 시작 스크립트(EXE 내장 리소스)' },
+        L('launcher.cs (SSH 라우팅)', { from: 'method == "GET" && path == "/ssh-capability"', before: 2, to: 'path.StartsWith("/ssh-session-stop"', after: 6 }, '접속·세션·크기 전달'),
+        L('launcher.cs (개인키·파일 고르기)', { from: 'method == "POST" && path == "/ssh-key-pick"', before: 2, to: 'method == "GET" && path == "/ssh-upload-pick-status"', after: 10 }, '/ssh-key-pick-* · /ssh-upload-pick-*'),
+        L('launcher.cs (파일 올리기)', { from: 'method == "POST" && path == "/ssh-upload-start"', before: 2, to: 'path.StartsWith("/ssh-upload-cancel"', after: 10 }, '/ssh-upload-start · -poll · -cancel'),
+        L('launcher.cs (원격 파일 라우팅)', { from: 'method == "POST" && path.StartsWith("/ssh-file-"', before: 2, to: 'path.StartsWith("/ssh-file-content?"', after: 8 }, '/ssh-file-* — 토큰 위에 헤더를 하나 더 요구한다'),
         { path: 'docs/원격터미널-설계.md', label: '원격터미널-설계.md', description: '1·2·3차 설계' },
+        { path: 'docs/원격파일-미리보기-다운로드-설계.md', label: '원격파일-미리보기-다운로드-설계.md', description: '원격 파일 설계와 검증 기록' },
         { path: 'tests/remote-terminal.test.js', label: 'remote-terminal.test.js', description: '토큰·비밀번호 전달·지문·ConPTY 계약' },
+        { path: 'tests/ssh-files.test.js', label: 'ssh-files.test.js', description: '모의 SFTP 스트림으로 프로토콜·디스크 동작 검증' },
       ],
       notes: [
         {
@@ -616,16 +625,29 @@ export default ({ helpers, diagrams, rootDir }) => {
           type: 'good',
           label: 'Good',
           body:
-            '별도 파일로 뗐습니다. launcher.cs 가 이미 7천 줄대인데 여기에 862줄을 더 붙이지 않고 ClassDockSshTerminal 정적 클래스로 갈라, ' +
-            'launcher.cs 쪽에는 라우팅 아홉 갈래만 남겼습니다. 이 레포에서 EXE 코드가 두 파일로 나뉜 첫 사례입니다.',
+            '별도 파일로 뗐습니다. launcher.cs 에 다 붙이지 않고 ClassDockSshTerminal 정적 클래스로 갈라 라우팅만 남겼고, ' +
+            '원격 파일이 붙을 때도 같은 방식으로 ssh_files.cs 를 더했습니다. 이 레포에서 EXE 코드가 여러 파일로 나뉜 첫 사례이자, ' +
+            '그 방식이 두 번째로 이어진 자리입니다 — 반대로 DB 는 라우팅과 세션 관리가 launcher.cs 안에 남아 있어 관행이 아직 고르지 않습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '원격 파일 쪽 POST 는 실행별 토큰에 더해 X-ClassDock-Action: 1 헤더를 요구합니다(HasLocalActionHeader). ' +
+            '없으면 403 입니다. 폼 전송 같은 단순 요청으로는 붙일 수 없는 헤더라 토큰 위에 한 겹이 더 남고, ' +
+            '원격 파일을 로컬 디스크로 내려받는 경로의 무게에 맞춰 경계를 한 단계 올린 판단입니다. ' +
+            '/run-python·/ssh-session-* 에는 없는 조건이라, 이 앱에서 경계 수준이 경로마다 갈리기 시작한 지점이기도 합니다.',
         },
         {
           type: 'risk',
           label: 'Risk',
           body:
             '앱 전체에서 가장 강력한 원격 실행 경로입니다. 경계는 실행별 토큰 하나이고, ' +
-            'RequiresLocalAuthToken 의 path.StartsWith("/ssh-") 한 줄이 아홉 경로를 모두 덮습니다. ' +
-            '새 /ssh-* 경로가 자동으로 보호되는 장점과, 이 한 줄이 지워지면 아홉이 동시에 열리는 단점이 같은 구조에서 나옵니다.',
+            'RequiresLocalAuthToken 의 path.StartsWith("/ssh-") 한 줄이 POST 전부를 덮습니다. ' +
+            '경로 수는 원격 파일·개인키 고르기가 붙으며 아홉에서 열일곱으로 늘었는데 그 한 줄은 그대로였습니다 — ' +
+            '접두사 방식이 값을 한 증거이자, 한 줄에 걸린 무게가 두 배가 됐다는 뜻이기도 합니다. ' +
+            'GET 쪽은 접두사가 아니라 경로를 하나씩 적어 두는데(/ssh-capability · /ssh-key-pick-status · /ssh-upload-pick-status · ' +
+            '/ssh-session-poll · /ssh-upload-poll · /ssh-file-job · /ssh-file-content), 새 GET 경로를 더할 때 이 목록을 잊으면 조용히 열립니다.',
         },
         {
           type: 'risk',
@@ -711,6 +733,175 @@ export default ({ helpers, diagrams, rootDir }) => {
     }),
 
     sec({
+      id: 'launcher-db',
+      category: CAT,
+      group: '변환 · DB',
+      title: 'DB 클라이언트 백엔드 — 상주 Python 워커',
+      subtitle: `desktop/db_worker.py ${workerLines} + launcher.cs 의 /db-* 라우팅 19갈래`,
+      summary:
+        '브라우저는 TCP 로 MySQL 에 붙을 수 없으므로 접속은 런처가 띄운 Python 워커가 pymysql 로 맺습니다. ' +
+        'SQLite 미리보기처럼 한 번 실행하고 끝내는 구조가 아니라 접속 하나당 프로세스 하나가 상주합니다 — ' +
+        '트랜잭션·임시 테이블·세션 변수·USE 로 바꾼 스키마가 요청 사이에 유지돼야 하고, 실행 중인 쿼리를 취소할 커넥션이 남아 있어야 하기 때문입니다. ' +
+        '규약은 새로 만들지 않고 노트북 커널(python_kernel.py)의 것을 그대로 씁니다 — stdin 으로 base64(JSON) 한 줄, stdout 으로 한 줄.',
+      usage: [
+        {
+          title: '런처에 JSON 파서가 없다',
+          body:
+            '워커는 응답 한 줄을 "+"(성공) 또는 "-"(실패) 다음에 base64(JSON) 으로 냅니다. ' +
+            '런처는 첫 글자로 성공 여부만 판단하고 본문은 열어 보지 않은 채 그대로 브라우저에 넘깁니다. ' +
+            'C# 쪽에 JSON 파서를 들이지 않으려고 고른 모양이고, 결과적으로 워커가 응답 스키마를 바꿔도 런처를 고칠 일이 없습니다.',
+        },
+        {
+          title: '진행 보고가 있어도 "요청 하나에 응답 하나"',
+          body:
+            '오래 걸리는 작업은 최종 응답 앞에 "*" + base64(JSON) 진행 줄을 흘릴 수 있습니다. ' +
+            '런처는 그 줄을 DbQueryJob.Progress 에 담고 계속 읽으므로 규약 자체는 그대로입니다. ' +
+            '이때 제한 시간이 총 실행 시간이 아니라 줄 하나를 기다리는 시간이 되는 것이 핵심입니다 — ' +
+            '살아 있는 덤프는 몇십 분이 걸려도 끊기지 않고(DbDumpIdleMs 120초), 조용히 멈춘 워커는 제때 끊깁니다.',
+        },
+        {
+          title: '취소만 응답을 내지 않는다',
+          body:
+            '실행 중인 쿼리는 stdin 을 읽지 못하므로 취소는 리더 스레드가 즉시 처리해야 하는데, 여기서 응답까지 내보내면 ' +
+            '실행 중인 쿼리의 응답과 순서가 뒤섞입니다. 그래서 cancel 은 fire-and-forget 이고, 취소 결과는 ' +
+            '취소당한 쿼리 자신의 응답(cancelled)으로 드러납니다. 세션에 잠금이 둘(ExecLock·StdinLock)인 이유도 이것입니다.',
+        },
+        {
+          title: '취소가 남의 작업을 죽이지 않게',
+          body:
+            'DbSession.ActiveJobId 를 두고 실행 중인 작업 id 가 일치할 때만 워커에 cancel 을 보냅니다. ' +
+            '같은 세션의 작업은 ExecLock 으로 직렬화되므로, 이 검사가 없으면 대기 중인 덤프를 취소했을 때 ' +
+            '앞서 돌던 쿼리가 끊깁니다. 실행권을 얻기 전에 취소된 작업은 아예 워커에 보내지 않습니다.',
+        },
+        {
+          title: '입력 검사는 C# 이 하고 값은 JSON 으로만 넘어간다',
+          body:
+            'DbCheckField 가 호스트·데이터베이스·계정의 허용 문자와 길이를 검사합니다(DbHostRe). ' +
+            '통과한 값도 워커에는 JSON 필드로만 넘겨 명령행에 닿지 않게 합니다. ' +
+            '비밀번호는 검사 대상이 아니라 그대로 지나가되, 프로세스 인수가 아니라 기동 직후 stdin 의 첫 connect 요청에만 실립니다 — ' +
+            'SqliteExec 가 SQL 을 stdin 으로 넘기는 방식과 같습니다.',
+        },
+        {
+          title: '경로를 만드는 곳은 런처 한 곳',
+          body:
+            '덤프 파일의 경로는 프런트도 워커도 만들지 않습니다. 프런트가 이름만 보내면 런처가 ' +
+            'SafeRelPath → TryResolveSaveRootPath 로 저장 폴더 안으로 풀어 절대 경로를 워커에 넘깁니다. ' +
+            '워커가 경로를 지으면 저장 위치 정책이 그대로 뚫리기 때문입니다.',
+        },
+      ],
+      features: [
+        { title: '동시 4접속', body: 'MaxDbSessions 4 — 원격 터미널의 동시 세션 상한과 같은 기조입니다. 유휴 30분(DbIdleMinutes)이면 스스로 정리합니다.' },
+        { title: '제한 시간 셋', body: '메타데이터 조회 60초(DbMetadataTimeoutMs), 쿼리 기본 60초·최대 600초, 덤프는 무진행 120초.' },
+        { title: '한도를 두 곳이 같은 값으로', body: 'MaxDbDumpObjects 500 · MaxDbImportRows 10,000 · MaxDbImportCells 100,000 이 워커의 상수와 짝입니다. 본문 크기(8MB)는 런처가 한 번 더 막습니다 — 행·셀을 세기 전에 거대한 본문을 읽어 들이지 않으려고.' },
+        { title: '워커가 하는 일', body: '접속·스키마·테이블 정의·DDL·의존 관계·ERD 관계·쿼리 실행·페이징·셀 재조회·묶음 적용·트랜잭션·덤프·적재. 오류 분류(classify_error)도 워커 몫입니다.' },
+        { title: '내장 리소스', body: 'db_worker.py 를 /resource: 로 exe 에 넣고 기동할 때 임시 경로에 풀어 실행합니다. python_kernel.py 와 같은 방식입니다.' },
+      ],
+      files: [
+        { path: 'desktop/db_worker.py', label: 'db_worker.py', description: 'MySQL 워커 전체 — 접속·쿼리·편집 판정·트랜잭션·덤프·적재' },
+        L('launcher.cs (DB 라우팅)', { from: 'method == "GET" && path == "/db-capability"', before: 2, to: 'path.StartsWith("/db-session-close"', after: 6 }, '/db-* 19갈래'),
+        L('launcher.cs (DB 세션 기동)', { from: 'static string StartDbSession(byte[] body)', before: 6, to: 'static string DbMetadataRequest(string sessionId, string requestJson)', after: 6 }, '입력 검사 · 워커 기동 · handshake'),
+        { path: 'docs/DB클라이언트-설계.md', label: 'DB클라이언트-설계.md', description: '로컬 API 목록과 한도가 적힌 설계 문서' },
+        { path: 'tests/db-client.test.js', label: 'db-client.test.js', description: '토큰·비밀번호 전달·읽기 전용·묶음 적용 계약' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '새 규약을 만들지 않고 있던 것 둘을 이어 붙였습니다 — 상주 프로세스와 base64 JSON 라인은 노트북 커널에서, ' +
+            '"시작만 시키고 폴링으로 받기" 는 pip 설치에서 가져왔습니다. ' +
+            'EXE 안에서 프로세스를 다루는 방식이 커널·터미널·워커 셋으로 늘었는데도 읽는 사람이 배울 규칙은 늘지 않았습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '워커의 stderr 를 프런트에 그대로 흘리지 않고 LimitedTextBuffer 에 담아 둡니다. ' +
+            '드라이버 예외 문자열에 접속 문자열이 섞여 나오는 경우가 있어서인데, 그 판단이 설계 문서의 보안 원칙에 이유와 함께 적혀 있습니다. ' +
+            '대신 워커가 분류한 코드와 다듬은 메시지만 나가고, SQL 오류 원문만은 학습 정보라 함께 보냅니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '런처가 여는 원격 실행 경로가 하나 더 늘었습니다 — 이쪽은 "학교 DB 서버에서 그 계정 권한으로 무엇이든" 입니다. ' +
+            '경계는 RequiresLocalAuthToken 의 path.StartsWith("/db-") 한 줄이고, 이 한 줄이 19개 경로를 GET·POST 양쪽에서 덮습니다. ' +
+            'SSH 와 똑같은 구조라 장단점도 같습니다 — 새 경로가 자동으로 보호되는 대신, 지워지면 19개가 동시에 열립니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'launcher.cs 가 이 기능으로 1,200줄 넘게 늘어 9,800줄대가 됐습니다. SSH 는 ssh_terminal.cs 로, 원격 파일은 ssh_files.cs 로 ' +
+            '갈라 냈는데 DB 는 라우팅과 세션 관리가 모두 launcher.cs 안에 있습니다. ' +
+            '워커 쪽 로직이 Python 으로 빠져 C# 쪽이 얇긴 하지만, 클래스 둘(DbSession·DbQueryJob)과 헬퍼 20여 개가 한 파일에 더 얹힌 상태입니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '워커는 접속을 연 사용자의 권한 그대로 동작합니다. 앱이 권한을 대신 넓히거나 관리자 계정을 권하지 않는다는 원칙이 문서에 적혀 있고, ' +
+            '읽기 전용도 앱이 아니라 서버가(SET SESSION TRANSACTION READ ONLY) 겁니다. ' +
+            '런처는 SQL 을 짓지도 고치지도 않고 바이트를 나르기만 하는 자리에 머물러 있습니다.',
+        },
+      ],
+    }),
+
+    sec({
+      id: 'launcher-diagnostics',
+      category: CAT,
+      group: '진단',
+      title: '진단 로그 — /diagnostics/*',
+      subtitle: '무슨 일이 있었는지 나중에 물어볼 수 있게',
+      summary:
+        '교실 PC 에서 난 문제를 재현 없이 짚기 위한 기록 장치입니다. 브라우저 쪽 diagnostics.js 가 사건을 모으고 ' +
+        '런처가 세션별 파일로 남깁니다. /diagnostics/events 로 보내고 /diagnostics/session 으로 지금 세션을 묻고, ' +
+        '/diagnostics/open-folder 로 그 폴더를 열고, /diagnostics/clear 로 지웁니다.',
+      usage: [
+        {
+          title: '왜 로그를 서버에 두나',
+          body:
+            '브라우저 콘솔은 창을 닫으면 사라지고, 앱 모드로 열린 창에는 개발자 도구를 열기도 어렵습니다. ' +
+            '"어제 그 PC 에서 저장이 안 됐다" 는 신고를 받았을 때 볼 것이 남아 있어야 하므로, 세션마다 파일로 떨굽니다. ' +
+            '폴더를 여는 엔드포인트가 따로 있는 것도 같은 이유입니다 — 사용자가 그 파일을 첨부해 보낼 수 있어야 합니다.',
+        },
+        {
+          title: '지우는 길을 함께 둔다',
+          body:
+            '/diagnostics/clear 가 기록을 지웁니다. 무엇이 남는지 사용자가 알고 지울 수 있어야 한다는 기조는 ' +
+            'DB 클라이언트의 실행 이력 패널에 지우기 버튼을 둔 것과 같습니다.',
+        },
+      ],
+      features: [
+        { title: '세션 단위', body: '앱 실행 한 번이 세션 하나입니다. /diagnostics/session 이 지금 세션 식별자를 돌려줍니다.' },
+        { title: '묶어 보내기', body: '사건마다 요청을 보내지 않고 diagnostics.js 가 모았다가 /diagnostics/events 로 한 번에 넘깁니다.' },
+        { title: '폴더 열기', body: '/diagnostics/open-folder 가 탐색기로 기록 폴더를 엽니다.' },
+      ],
+      files: [
+        L('launcher.cs (진단 라우팅)', { from: 'method == "GET" && path.StartsWith("/diagnostics/events"', before: 4, to: 'method == "POST" && path == "/diagnostics/open-folder"', after: 10 }, '/diagnostics/* 다섯 갈래'),
+        { path: 'src/js/diagnostics.js', label: 'diagnostics.js', description: '브라우저 쪽 수집기 — 10-bootstrap 의 diagnostics 섹션에서 함께 봅니다' },
+        { path: 'tests/diagnostics.test.js', label: 'diagnostics.test.js', description: '수집·묶기·전송 계약' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '교실 배포 소프트웨어에 실제로 필요한 기능입니다. 사용자가 재현 방법을 설명하지 못하는 환경이라, ' +
+            '"무슨 일이 있었는지" 를 나중에 물어볼 수 있게 해 두는 것이 지원 비용을 가장 크게 줄입니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '기록에 무엇이 담기는지가 이 기능의 안전선입니다 — 사용자가 그 파일을 첨부해 보내는 것이 원래 용도이기 때문입니다. ' +
+            '거르는 일은 브라우저 쪽 diagnostics.js 의 scrubString·privateKey 가 하고 런처는 받은 것을 그대로 적습니다. ' +
+            '즉 서버 쪽에는 두 번째 방어선이 없어, 앞으로 다른 코드가 /diagnostics/events 를 직접 부르면 거르는 단계를 건너뜁니다.',
+        },
+      ],
+    }),
+
+    sec({
       id: 'launcher-exam-lan',
       category: CAT,
       group: '시험지',
@@ -768,8 +959,8 @@ export default ({ helpers, diagrams, rootDir }) => {
       title: 'EXE 빌드와 Go 폴백',
       subtitle: 'csc.exe 우선, 없으면 go build',
       summary:
-        'build.bat 은 세 단계입니다 — ① 오프라인 HTML 을 app.html 로 복사 ② csc.exe 로 launcher.cs 와 ssh_terminal.cs 를 함께 컴파일하며 ' +
-        'app.html·python_kernel.py·npm_package_runner.js 를 리소스로 넣기 ③ 결과를 프로젝트 루트의 ClassDock.exe 로 출력. ' +
+        'build.bat 은 세 단계입니다 — ① 오프라인 HTML 을 app.html 로 복사 ② csc.exe 로 launcher.cs · ssh_terminal.cs · ssh_files.cs 를 함께 컴파일하며 ' +
+        'app.html·python_kernel.py·db_worker.py·npm_package_runner.js·ssh_shell_integration.bash 를 리소스로 넣기 ③ 결과를 프로젝트 루트의 ClassDock.exe 로 출력. ' +
         'C# 컴파일러가 없으면 Go 폴백(main.go)으로 빌드하는데, 이때는 PowerPoint 변환과 SSH 원격 터미널이 빠집니다.',
       usage: [
         {
@@ -789,14 +980,16 @@ export default ({ helpers, diagrams, rootDir }) => {
         },
       ],
       features: [
-        { title: '리소스 내장', body: '/resource:app.html, /resource:python_kernel.py, /resource:npm_package_runner.js 로 exe 안에 넣습니다.' },
-        { title: '소스 두 벌', body: '컴파일 대상이 launcher.cs 하나에서 launcher.cs + ssh_terminal.cs 둘로 늘었습니다. 리소스가 아니라 함께 컴파일되는 소스입니다.' },
+        { title: '리소스 내장 다섯 개', body: 'app.html · python_kernel.py · db_worker.py · npm_package_runner.js · ssh_shell_integration.bash. 앞의 넷은 실행 대상이고 마지막은 원격 Bash 에 물릴 시작 스크립트입니다.' },
+        { title: '소스 세 벌', body: '컴파일 대상이 launcher.cs → +ssh_terminal.cs → +ssh_files.cs 로 늘었습니다. 리소스가 아니라 함께 컴파일되는 소스입니다.' },
+        { title: '두 배치의 리소스가 다르다', body: 'build.bat 에는 ssh_shell_integration.bash 가 들어 있고 build-dotnet.bat 에는 없습니다.' },
         { title: 'winexe', body: '/target:winexe 라 콘솔 창이 뜨지 않습니다.' },
         { title: 'build-dotnet.bat', body: 'Go 폴백 없이 C# 만 강제하는 변형입니다.' },
       ],
       files: [
         { path: 'desktop/build.bat', label: 'build.bat', description: '기본 빌드(Go 폴백 포함)' },
         { path: 'desktop/ssh_terminal.cs', label: 'ssh_terminal.cs', description: 'launcher.cs 와 함께 컴파일되는 두 번째 C# 소스' },
+        { path: 'desktop/ssh_files.cs', label: 'ssh_files.cs', description: '세 번째 C# 소스 — 읽기 전용 SFTP' },
         { path: 'desktop/build-dotnet.bat', label: 'build-dotnet.bat', description: 'C# 전용 빌드' },
         { path: 'desktop/main.go', label: 'main.go', description: 'Go 폴백 런처' },
         { path: 'desktop/console_windows.go', label: 'console_windows.go', description: 'Go 빌드의 콘솔 숨김' },
@@ -811,7 +1004,16 @@ export default ({ helpers, diagrams, rootDir }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            'Go 폴백은 기능이 다른 산출물을 같은 파일명으로 만듭니다. 빌드 로그를 보지 않으면 어느 쪽으로 빌드됐는지 알 수 없어, PowerPoint 변환이 조용히 사라질 수 있습니다.',
+            'Go 폴백은 기능이 다른 산출물을 같은 파일명으로 만듭니다. 빌드 로그를 보지 않으면 어느 쪽으로 빌드됐는지 알 수 없어, PowerPoint 변환이 조용히 사라질 수 있습니다. ' +
+            '빠지는 기능은 이제 셋입니다 — PowerPoint 변환·SSH 원격 터미널에 원격 파일과 DB 클라이언트까지, C# 쪽에만 있는 코드가 계속 늘고 있습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '두 빌드 배치의 /resource: 목록이 서로 다릅니다 — build.bat 은 ssh_shell_integration.bash 를 넣고 build-dotnet.bat 은 넣지 않습니다. ' +
+            'C# 전용 빌드로 만든 EXE 는 원격 터미널의 현재 폴더 자동 채우기가 조용히 동작하지 않는다는 뜻입니다. ' +
+            '컴파일 명령줄이 두 파일에 손으로 복사돼 있어 한쪽만 고치기 쉬운 구조이고, 이 목록을 대조하는 검사는 없습니다.',
         },
         {
           type: 'risk',

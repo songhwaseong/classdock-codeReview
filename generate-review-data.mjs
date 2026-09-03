@@ -44,6 +44,7 @@ import buildConcept from './sections/48-concept.mjs';
 import buildLearning from './sections/50-learning.mjs';
 import buildMusic from './sections/55-music.mjs';
 import buildRemoteTerminal from './sections/57-remote-terminal.mjs';
+import buildDbClient from './sections/58-db-client.mjs';
 import buildDesktop, { brokenAnchors } from './sections/60-desktop.mjs';
 import buildTools from './sections/70-build-tools.mjs';
 import buildTests from './sections/80-tests.mjs';
@@ -250,6 +251,7 @@ const reviewSections = [
   ...buildLearning(context),
   ...buildMusic(context),
   ...buildRemoteTerminal(context),
+  ...buildDbClient(context),
   ...buildDesktop(context),
   ...buildTools(context),
   ...buildTests(context),
