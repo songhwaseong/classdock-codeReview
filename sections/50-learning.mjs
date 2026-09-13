@@ -1,4 +1,4 @@
-// 6. learning-tools — 수업·과제·펫·메모와 최종 이벤트 배선.
+// 8. learning-tools — 수업·과제·펫·메모와 최종 이벤트 배선.
 
 export default ({ manifest, helpers }) => {
   const { mod, sec } = helpers;
@@ -7,7 +7,7 @@ export default ({ manifest, helpers }) => {
   return [
     sec({
       id: 'learning-overview',
-      category: '6. learning-tools',
+      category: '8. learning-tools',
       group: '계층 개요',
       title: 'learning-tools 계층 개요',
       subtitle: `${layer.scripts.length}개 파일 — 이 앱을 "교실 도구"로 만드는 계층`,

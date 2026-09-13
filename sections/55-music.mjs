@@ -1,4 +1,4 @@
-// 6. learning-tools — 악보 문서(.msheet). 모델·MusicXML·소리·편집기·음감 테스트 다섯 파일.
+// 8. learning-tools — 악보 문서(.msheet). 모델·MusicXML·소리·편집기·음감 테스트 다섯 파일.
 //
 // learning-tools 계층에 속하지만 파일이 다섯이고 분량이 커서 50-learning.mjs 에서 떼어 둔다.
 // 카테고리는 같으므로 사이드바에서는 learning-tools 안의 "악보" 묶음으로 이어 붙는다.
@@ -16,7 +16,7 @@ export default ({ helpers, rootDir }) => {
   return [
     sec({
       id: 'music-overview',
-      category: '6. learning-tools',
+      category: '8. learning-tools',
       group: '악보',
       title: '악보 문서 개요 (.msheet)',
       subtitle: '모델·MusicXML·소리·편집기·음감 테스트 5개 파일 — 새 문서 종류를 붙이는 표준 경로',

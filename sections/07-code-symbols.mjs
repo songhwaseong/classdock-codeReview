@@ -140,6 +140,18 @@ const ENTRIES = [
   builtin('MutationObserver', ['js'], 'JavaScript 기본 기능', 'DOM 변화 감시', '화면 요소가 추가·삭제되거나 속성이 바뀌는 것을 지켜보다 알려 줍니다. 남이 바꾼 DOM에 반응해야 할 때 씁니다.'),
   builtin('WeakMap', ['js'], 'JavaScript 기본 기능', '약한 참조 키 모음', '키로 쓴 객체가 다른 곳에서 모두 사라지면 그 항목도 함께 정리되는 Map입니다. 요소마다 딸린 정보를 붙여 두면서 누수를 만들지 않으려고 씁니다.'),
   builtin('structuredClone', ['js'], 'JavaScript 기본 기능', '깊은 복사', '중첩된 객체를 통째로 복사합니다. JSON을 거치는 방식과 달리 Map·Set·날짜·순환 참조도 그대로 옮깁니다.'),
+
+  // 2026-09-13 보완 — 자바 실행기·실시간 교통·경로 방식 영상이 launcher.cs 에 들어오며 C# 쪽 빈자리가 커졌다.
+  // Encoding·Path·File 은 있는데, 그 코드에서 가장 자주 나오는 StringComparison(새 구간에서만 53회)·
+  // Interlocked(17)·Regex·Uri·TimeSpan·CultureInfo 가 하나도 없었다. 09-03 에 Math 는 걸리는데 max 는
+  // 안 걸리던 것과 같은 결이다. JavaScript 쪽 RegExp 도 정규식 리터럴(/…/)만 보고 생성자 꼴을 놓쳤던 자리다.
+  builtin('StringComparison', ['cs'], 'C# 기본 기능', '문자열 비교 규칙', '문자열을 비교할 때 대소문자를 가릴지, 사용자 PC 의 언어 설정을 따를지를 정하는 값입니다. 이 앱은 경로·명령 이름처럼 기계가 읽는 글자에는 Ordinal(글자 코드 그대로)을 붙여 PC 언어에 따라 결과가 달라지지 않게 합니다.'),
+  builtin('Interlocked', ['cs'], 'C# 기본 기능', '잠금 없는 원자적 계산', '여러 스레드가 함께 쓰는 숫자를 잠금 없이 한 번에 읽고 쓰는 도구입니다(Exchange·Add·Read). 설치·변환 작업이 진행률을 올리고 요청 스레드가 그 값을 읽는 자리에서, 반쯤 쓰인 값을 읽지 않게 합니다.'),
+  builtin('Regex', ['cs'], 'C# 기본 기능', '정규식', '.NET 의 정규식 형식입니다. 이 앱의 런처는 JSON·XML 파서를 들이지 않는 대신 필요한 값 몇 개를 정규식으로 뽑고, 파일 이름·라이브러리 좌표·자바 식별자를 정규식으로 검사합니다.'),
+  builtin('Uri', ['cs'], 'C# 기본 기능', '주소 해석·이스케이프', '웹 주소를 조각으로 해석하거나(Uri.TryCreate) 값을 주소에 넣을 수 있게 이스케이프합니다(Uri.EscapeDataString). 사용자 입력을 바깥 서버 주소에 끼울 때 이것을 거치지 않으면 & 나 / 가 주소 구조를 바꿉니다.'),
+  builtin('TimeSpan', ['cs'], 'C# 기본 기능', '시간 간격', '"12초", "6시간" 같은 길이를 나타내는 값입니다. DateTime 끼리 빼면 이 값이 나오고, 캐시 수명·만료 비교에 씁니다.'),
+  builtin('CultureInfo', ['cs'], 'C# 기본 기능', '언어·지역 설정', '숫자·날짜를 글자로 바꾸거나 읽을 때 따를 지역 규칙입니다. 이 앱은 InvariantCulture 를 붙여, 소수점이 쉼표인 PC 에서도 응답 헤더·JSON 의 숫자가 같은 모양으로 나오게 합니다.'),
+  builtin('RegExp', ['js'], 'JavaScript 기본 기능', '정규식 만들기', '글자로 적은 패턴에서 정규식을 만듭니다. /…/ 리터럴과 달리 실행 중에 이름·검색어를 끼워 넣을 수 있는데, 그때 사용자 글자 속의 . * ( 같은 기호를 먼저 이스케이프하지 않으면 뜻이 바뀝니다.'),
 ];
 
 const LANGUAGE_LABEL = { js: 'JavaScript', cs: 'C#', py: 'Python' };

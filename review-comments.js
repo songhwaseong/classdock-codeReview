@@ -191,12 +191,15 @@ const targetedComments = [
   {
     sectionId: 'documents',
     file: 'src/js/documents.js',
-    at: "if (!d){ state=null; viewer=null; byId(\"activeFileName\").textContent=\"\"; byId(\"activeFileName\").removeAttribute(\"data-cat\"); byId(\"activeDocEncoding\").hidden=true; byId(\"activeDocStatus\").hidden=true; updateOriginalSaveBadge(null); byId(\"tools\").hidden=true; byId(\"officeTools\").hidden=true; updateModeBadges(); renderTabs(); updateDocEmptyState(); updateSidebarActive(); return; }",
-    below: 1,
+    // 예전 앵커는 setActiveDoc 첫머리(if (!d){ … return; })에서 한 줄 아래였고, 그 자리는 render 가 아니라
+    // updateDocEmptyState() 였다. 제목과 다른 코드를 가리키던 것을 2026-09-13 에 소스가 바뀌어 앵커가 깨지면서 발견했다.
+    at: "function ensureRendered(d){",
+    below: 12,
     type: '구조',
     title: '지연 렌더가 실제로 일어나는 곳',
     body:
-      'setActiveDoc 이 아직 그려지지 않은 문서면 render() 를 부릅니다. 폴더째 열어도 첫 화면이 빠른 이유가 여기 있고, 반대로 "열었는데 안 보인다"류 버그도 이 경로에서 납니다.',
+      'ensureRendered 가 아직 그려지지 않은 문서면 render() 를 한 번만 부릅니다(setActiveDoc 이 탭을 바꿀 때 호출). 진행 중인 첫 렌더는 _renderPromise 로 공유해 빠르게 탭을 오가도 두 번 그리지 않습니다. ' +
+      '폴더째 열어도 첫 화면이 빠른 이유가 여기 있고, 반대로 "열었는데 안 보인다"류 버그도 이 경로에서 납니다.',
   },
   {
     sectionId: 'viewer-base',
@@ -443,7 +446,8 @@ const targetedComments = [
   {
     sectionId: 'launcher-js-npm',
     file: 'desktop/launcher.cs',
-    at: "if (path == \"/exam-receive-start\" || path == \"/exam-receive-stop\") return true;",
+    at: "if (path.StartsWith(\"/js-npm-\", StringComparison.Ordinal)) return true;",
+    nth: 1,
     type: '보안',
     title: 'npm 경로도 공통 인증 대상',
     body: '/js-npm-* 엔드포인트를 토큰 필요 접두사 목록에 묶었습니다. 새 하위 경로를 추가할 때 이 접두사 밖으로 새면 로컬 웹페이지가 설치·삭제 API를 호출할 수 있으므로 계약 테스트가 필요합니다.',
@@ -451,7 +455,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-js-npm',
     file: 'desktop/launcher.cs',
-    at: "byte[] bundle;",
+    at: "if (!headers.TryGetValue(\"x-classdock-npm-confirm\", out confirmed) || confirmed != \"1\")",
     type: '보안',
     title: '설치 시작은 확인 헤더를 한 번 더 요구',
     body: '일반 토큰 외에 사용자가 설치 위험을 확인했다는 헤더를 검사합니다. 인증된 앱 화면에서의 오동작과 원치 않는 자동 설치를 구분하는 두 번째 문턱입니다.',
@@ -491,7 +495,7 @@ const targetedComments = [
   {
     sectionId: 'desktop-overview',
     file: 'desktop/launcher.cs',
-    at: "const uint JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000;",
+    at: "static readonly string LocalAuthToken = CreateLocalAuthToken();",
     type: '보안',
     title: '실행마다 새로 만드는 토큰',
     body:
@@ -500,7 +504,7 @@ const targetedComments = [
   {
     sectionId: 'desktop-overview',
     file: 'desktop/launcher.cs',
-    at: "// 일반적인 수업용 데이터 분석은 허용하면서, 실수로 큰 배열을 반복 생성해 PC 전체가 멈추는 일을 줄인다.",
+    at: "// 지속형 노트북 커널은 프로세스가 살아 있어 일반 실행의 WaitForExit 제한을 타지 않는다.",
     type: '상한',
     title: '커널 셀만 10분인 이유',
     body:
@@ -509,8 +513,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-security',
     file: 'desktop/launcher.cs',
-    at: "return headers != null && headers.TryGetValue(\"X-ClassDock-Image-Memo\", out value) && value == \"1\";",
-    below: 1,
+    at: "static bool TokenEquals(string value)",
     type: '보안',
     title: '상수 시간 비교',
     body:
@@ -528,8 +531,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-security',
     file: 'desktop/launcher.cs',
-    at: "return string.Equals(origin.Trim(), \"http://\" + host.Trim(), StringComparison.OrdinalIgnoreCase);",
-    below: 1,
+    at: "static bool RequiresLocalAuthToken(string method, string path)",
     type: '위험',
     title: '기본값이 "토큰 불필요" 인 구조',
     body:
@@ -538,8 +540,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-security',
     file: 'desktop/launcher.cs',
-    at: "if (!HasAllowedLocalOrigin(headers) && !path.StartsWith(\"/tile-proxy\", StringComparison.Ordinal))",
-    below: 1,
+    at: "// 인증 실패 요청은 본문을 읽지 않는다. 큰 무단 요청으로 메모리·I/O를 점유하는 것을 막는다.",
     type: '안전',
     title: '인증 실패 요청은 본문을 읽지 않는다',
     body:
@@ -548,8 +549,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-boot',
     file: 'desktop/launcher.cs',
-    at: "dir = Path.GetDirectoryName(dir);",
-    below: 1,
+    at: "int[] candidatePorts = new int[] { 17645, 18645, 19645, 27645, 37645, 47645 };",
     type: '설계',
     title: '랜덤 포트가 아닌 이유',
     body:
@@ -558,8 +558,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-boot',
     file: 'desktop/launcher.cs',
-    at: "int remembered = ReadInstancePort();",
-    below: 1,
+    at: "SingleInstanceMutex = new Mutex(true, SingleInstanceMutexName, out createdNew);",
     type: '동시성',
     title: '뮤텍스를 고른 이유',
     body:
@@ -568,7 +567,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-boot',
     file: 'desktop/launcher.cs',
-    at: "listener.Start();",
+    at: "Thread tempSweeper = new Thread(delegate() { try { SweepOrphanTempEntries(); } catch { } });",
     type: '성능',
     title: 'TEMP 청소를 별도 스레드로',
     body:
@@ -577,7 +576,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-save',
     file: 'desktop/launcher.cs',
-    at: "WriteResponse(stream, \"200 OK\", \"text/plain; charset=utf-8\",",
+    at: "else if (method == \"POST\" && path == \"/save-file\")",
     type: '위험',
     title: '경로가 헤더 문자열',
     body:
@@ -586,8 +585,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-convert-sqlite',
     file: 'desktop/launcher.cs',
-    at: "string json = SqlitePreview(body);",
-    below: 9,
+    at: "ValidateDbFingerprint(headers, full, false, false);",
     type: '안전',
     title: '경로가 아니라 내용 해시로 확인',
     body:
@@ -596,8 +594,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-convert-sqlite',
     file: 'desktop/launcher.cs',
-    at: "string json = SqliteDiskPreview(headers);",
-    below: 17,
+    at: "string backup = NextDbBackupPath(full);",
     type: '위험',
     title: '임의 SQL 실행 — .bak 이 유일한 안전망',
     body:
@@ -606,8 +603,7 @@ const targetedComments = [
   {
     sectionId: 'launcher-terminal-kernel',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"GET\" && path.StartsWith(\"/python-session-poll\", StringComparison.Ordinal))",
-    below: 1,
+    at: "else if (method == \"POST\" && path == \"/terminal-session-open\")",
     type: '위험',
     title: '사실상 로컬 셸',
     body:
@@ -620,12 +616,12 @@ const targetedComments = [
     type: '보안',
     title: '임의 Python 실행의 입구',
     body:
-      '작업폴더를 만들고 프로세스를 띄웁니다. 토큰이 유일한 경계이므로, 토큰 생성·전달 경로(launcher.cs:120 → HTML 주입 → state-sync.js 의 fetch 래핑)가 이 앱의 보안 축입니다.',
+      '작업폴더를 만들고 프로세스를 띄웁니다. 토큰이 유일한 경계이므로, 토큰 생성·전달 경로(launcher.cs 의 LocalAuthToken = CreateLocalAuthToken() → HTML 주입 → state-sync.js 의 fetch 래핑)가 이 앱의 보안 축입니다.',
   },
   {
     sectionId: 'launcher-exam-lan',
     file: 'desktop/launcher.cs',
-    at: "try { ok = EnsureJedi(); } catch { ok = false; }",
+    at: "else if (method == \"POST\" && path == \"/exam-receive-start\")",
     type: '위험',
     title: 'LAN 노출은 여기서 시작된다',
     body:

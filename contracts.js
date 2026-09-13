@@ -311,8 +311,7 @@ MNBoardTools.transformedItem(item, transform, measure);// 대칭·회전·평행
     endpoints: ['/ping', '/mem', '/heartbeat', '/heartbeat-close'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"POST\" && path.StartsWith(\"/app-state\", StringComparison.Ordinal))",
-    below: 3,
+    at: "else if (path == \"/ping\")",
     when: '프런트가 로컬 서버 존재를 확인할 때, 메모리 사용을 볼 때',
     tags: ['토큰 불필요', '/ping', '/mem'],
     note: '/mem 은 자기 자신과 자식 프로세스(파이썬 커널·드라이버)의 메모리를 함께 측정합니다.',
@@ -341,7 +340,7 @@ MNBoardTools.transformedItem(item, transform, measure);// 대칭·회전·평행
     endpoints: ['/save-file', '/can-save-file'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "WriteResponse(stream, \"200 OK\", \"text/plain; charset=utf-8\",",
+    at: "else if (method == \"POST\" && path == \"/save-file\")",
     when: '브라우저 권한 팝업 없이 저장 루트 아래에 파일을 쓸 때',
     tags: ['토큰 필요', 'X-Save-Path(퍼센트 인코딩)', '본문 = 내용'],
     snippet: `POST /save-file
@@ -358,8 +357,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     endpoints: ['/save-file-exists'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "if (!DeleteImageMemo(rel))",
-    below: 3,
+    at: "else if (method == \"POST\" && path == \"/save-file-exists\")",
     when: '새 문서를 처음 저장하기 전',
     tags: ['토큰 필요'],
     note: '저장 루트의 기존 파일과 겹치는지 미리 확인해 덮어쓰기를 막습니다.',
@@ -371,8 +369,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     endpoints: ['/save-root', '/choose-save-folder', '/choose-save-folder-status'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "BrowserHandoffUntil = DateTime.UtcNow.AddSeconds(45);",
-    below: 2,
+    at: "else if (method == \"GET\" && path == \"/save-root\")",
     when: '설정에서 자동 저장 폴더를 보거나 바꿀 때',
     tags: ['토큰 필요', '기본값: 내 문서\\ClassDock'],
     note: '폴더 선택창은 버튼을 누른 브라우저 창을 소유자로 지정해 뒤에 숨지 않게 합니다.',
@@ -384,7 +381,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     endpoints: ['/open-save-folder', '/open-file-folder'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"GET\" && path == \"/save-root\")",
+    at: "else if (method == \"POST\" && path == \"/open-save-folder\")",
     when: '헤더의 "저장 폴더" 버튼',
     tags: ['토큰 필요', 'X-Save-Path'],
     note: '가능하면 방금 저장한 파일을 하이라이트하고, 없으면 상위 폴더 → 저장 루트 순으로 폴백합니다.',
@@ -400,7 +397,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     ],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"GET\" && path == \"/choose-save-folder-status\")",
+    at: "else if (method == \"GET\" && path.StartsWith(\"/source-folder-entry?\", StringComparison.Ordinal))",
     when: '터미널 작업폴더를 실제 경로로 지정하거나 선택 루트 아래 파일을 읽을 때',
     tags: ['토큰 필요', '실행 중 발급 ID', 'capability/list/entry/file/remove'],
     note: '브라우저 API 가 숨기는 절대경로를 넘기되, 선택한 루트 밖에는 닿지 못하도록 실행 중 발급한 ID 로만 후속 요청을 받습니다.',
@@ -412,8 +409,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     endpoints: ['/image-memo-list', '/image-memo-file', '/image-memo-delete'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "QueryValue(path, \"recursive\") == \"1\");",
-    below: 3,
+    at: "else if (method == \"GET\" && path == \"/image-memo-list\")",
     when: '캡처 이미지를 자동 저장·조회·삭제할 때',
     tags: ['토큰 필요', 'list/file/delete'],
     note: 'EXE 가 없으면 브라우저 임시 저장 후 복구로 폴백합니다.',
@@ -428,7 +424,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     endpoints: ['/workspace-load', '/workspace-save', '/workspace-clear', '/workspace-remove'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "bool replace = path.IndexOf(\"replace=1\", StringComparison.OrdinalIgnoreCase) >= 0;",
+    at: "else if (method == \"POST\" && path.StartsWith(\"/workspace-save\", StringComparison.Ordinal))",
     when: '재실행 시 파일·폴더·탭 상태를 복원하거나 저장할 때',
     tags: ['토큰 필요', 'replace 파라미터', '동일 포맷을 IndexedDB 와 공유'],
     note: '프런트는 저장·삭제를 Promise 큐로 직렬화합니다. 여러 탭을 동시에 닫을 때의 경합을 막습니다.',
@@ -440,7 +436,7 @@ X-Save-Path: src%2Fmain.py        // 저장 루트 기준 상대경로
     endpoints: ['/app-state'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "catch (PowerPointMissingException)",
+    at: "else if (method == \"GET\" && path.StartsWith(\"/app-state\", StringComparison.Ordinal))",
     when: 'localStorage 가 바뀔 때(디바운스), 창을 닫기 직전',
     tags: ['토큰 필요', 'app-state.json'],
     snippet: `// localStorage 는 origin(127.0.0.1:포트)별로 갈린다.
@@ -475,6 +471,91 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     note: '설치 스크립트는 --ignore-scripts 로 차단하지만 패키지 본문은 Worker 안에서 실제 실행됩니다. 신뢰 여부와 250MB 사후 검사 시점은 별도 위험 경계입니다.',
   },
 
+  // ── EXE 로컬 서버 — Java ─────────────────────────────
+
+  {
+    sectionIds: ['launcher-java', 'java-overview', 'java-runtime'],
+    kind: 'GET/POST',
+    title: '/can-run-java · /java-diagnostics · /java-rescan · /java-install — JDK 찾기와 원클릭 설치',
+    endpoints: ['/java-', '/can-run-java', '/java-diagnostics', '/java-rescan', '/java-install', '/java-install-status'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (path == \"/can-run-java\")",
+    when: '▶ 를 눌렀는데 JDK 가 없을 때의 안내 화면, JDK 환경 창, 사용자가 직접 설치한 뒤의 "다시 검사"',
+    tags: ['/can-run-java·/java-diagnostics·/java-install-status 토큰 불필요(GET)', '/java-rescan·/java-install 토큰 필요', 'Temurin 21 · SHA-256'],
+    snippet: `GET  /can-run-java         → "yes" | "no"
+GET  /java-diagnostics     → { 찾은 곳, 버전, minimum, 설치될 곳 }
+POST /java-rescan          탐색 캐시를 비우고 다시 찾기 → 진단 JSON
+POST /java-install         이미 있으면 "already", 아니면 "started"
+GET  /java-install-status  → { state: metadata|downloading|verifying|extracting|done|error,
+                              received, total, extracted, entries, version, error }`,
+    note:
+      '설치는 배포처 메타데이터에서 주소와 SHA-256 을 함께 받아 대조합니다 — 고정 리다이렉트 주소로 바로 받으면 "무엇을 받았는지" 확인할 방법이 없어서 한 번을 더 거칩니다. ' +
+      '다만 jar·npm 설치와 달리 서버가 확인 헤더를 요구하지 않고 화면의 확인 창에 맡깁니다.',
+  },
+  {
+    sectionIds: ['launcher-java', 'java-libraries'],
+    kind: 'GET/POST',
+    title: '/java-lib-* — jar 카탈로그·Maven Central 검색·설치·삭제',
+    endpoints: [
+      '/java-lib-', '/java-lib-catalog', '/java-lib-list', '/java-lib-search', '/java-lib-resolve', '/java-lib-members',
+      '/java-lib-install-start', '/java-lib-install-poll', '/java-lib-install-cancel', '/java-lib-delete',
+    ],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path == \"/java-lib-catalog\")",
+    when: '자바 실행 바의 라이브러리 창에서 목록을 보고, 검색하고, 설치·삭제할 때',
+    tags: ['GET·POST 모두 토큰 필요', '설치 시작은 X-ClassDock-JavaLib-Confirm', '단일 jar · 실행당 20개'],
+    snippet: `GET  /java-lib-catalog               검증된 기본 목록(설치 여부 포함)
+GET  /java-lib-list                  이 PC 에 실제로 있는 jar 전부
+GET  /java-lib-search?q=             Maven Central 이름 검색(고정 HTTPS 주소만)
+GET  /java-lib-resolve?group=&artifact=  최신 버전·의존성 개수 확인
+GET  /java-lib-members?spec=         javap 멤버 표(처음 한 번만 돌리고 캐시)
+POST /java-lib-install-start  본문: id 또는 group:artifact:version → { id }
+GET  /java-lib-install-poll?id=&from=  증분 로그
+POST /java-lib-install-cancel?id=  ·  POST /java-lib-delete?id=`,
+    note:
+      '프런트가 보내는 것은 id·좌표뿐이고 URL·경로는 서버가 조립합니다. 카탈로그에 SHA-256 이 있으면 변조까지, 직접 좌표는 배포처 .sha1 로 깨짐까지만 거릅니다 — ' +
+      '그 차이를 설치 로그에 SHA-256 을 남겨 "카탈로그로 옮겨 적으라" 는 안내로 메웁니다.',
+  },
+  {
+    sectionIds: ['launcher-java', 'java-runtime', 'java-editor'],
+    kind: 'GET/POST',
+    title: '/java-session-* — 컴파일·대화형 실행·채점',
+    endpoints: ['/java-session-start', '/java-session-poll', '/java-session-input', '/java-session-eof', '/java-session-stop'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && path.StartsWith(\"/java-session-start\", StringComparison.Ordinal))",
+    when: '▶ 실행, 채점, JUnit 실행',
+    tags: ['토큰 필요', '실행 30분 · 컴파일 30초', 'JDK 없으면 501 no-java'],
+    snippet: `POST /java-session-start?libs=&lint=1&main=&junit=1&piped=1
+     본문: [길이][소스][길이][표준입력] + [개수]([길이][형제 소스])*
+     → { id }   (라이브러리를 못 찾으면 프로세스 없는 완료 세션으로 이유를 담아 돌려줌)
+GET  /java-session-poll?id=&so=&se=   이미 받은 길이 이후 증분(그대로면 unchanged)
+POST /java-session-input?id=          한 줄 입력(터미널처럼 에코)
+POST /java-session-eof?id=  ·  POST /java-session-stop?id=`,
+    note:
+      'piped=1(채점)은 입력을 한 번에 흘리고 닫고, 대화형은 /java-session-input 이 stdout 에 에코를 남깁니다. 두 길을 섞으면 에코 때문에 채점의 출력 비교가 어긋나므로 쿼리로 나눴습니다.',
+  },
+  {
+    sectionIds: ['launcher-java', 'java-runtime', 'java-editor'],
+    kind: 'POST',
+    title: '/java-check · /java-definition — 저장 검사와 표준 클래스 원문',
+    endpoints: ['/java-check', '/java-definition'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && path.StartsWith(\"/java-check\", StringComparison.Ordinal))",
+    when: '저장(또는 설정을 켠 자동 저장) 직후의 javac 검사, 표준 클래스 이름을 Ctrl+클릭할 때',
+    tags: ['토큰 필요', '세션을 남기지 않음', 'src.zip 원문 5MB 이하'],
+    snippet: `POST /java-check?libs=&lint=1   본문: 실행과 같은 봉투
+     → { ok, output, mainClass }  |  { ok:true, skipped:"libs" }  (jar 가 없으면 검사를 건너뜀)
+POST /java-definition           본문: { "qualified": "java.util.List" }
+     → { ok, qualified, name, fileName, entry, line, column, source }`,
+    note:
+      '저장 검사는 실행과 같은 CompileJavaSource 를 써서 "검사를 통과한 코드는 실행에서도 컴파일을 지난다" 를 보장하고, 폴링·세션 보관 없이 임시 폴더를 바로 지웁니다. ' +
+      '/java-definition 은 완전 이름을 식별자 정규식으로 검사하고 JDK 의 src.zip 안에서만 찾으므로 임의 파일을 읽는 통로가 되지 않습니다.',
+  },
+
   // ── EXE 로컬 서버 — Python ───────────────────────────
 
   {
@@ -496,8 +577,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     endpoints: ['/run-python', '/run-python-bundle'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"POST\" && path == \"/ssh-host-key-scan\")",
-    below: 1,
+    at: "else if (method == \"POST\" && path == \"/run-python\")",
     when: '실행 버튼, 채점, 진단, 단계 실행',
     tags: ['토큰 필요', '작업폴더 생성', '출력 상한 4MB', '결과 JSON 구간 6MB'],
     snippet: `// bundle 경로는 옆 파일까지 포함한 작업폴더를 %TEMP% 에 만든다.
@@ -514,8 +594,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     ],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "string id = StartPythonSession(body, false);",
-    below: 3,
+    at: "else if (method == \"GET\" && path.StartsWith(\"/python-session-poll\", StringComparison.Ordinal))",
     when: '실행 중 출력을 흘려 받을 때, 실행이 만든 파일을 회수할 때',
     tags: ['토큰 필요', '오프셋 기준 증분'],
     note: '폴링마다 누적 출력 전체(최대 1MB+)를 복사·전송하지 않기 위한 구조입니다.',
@@ -527,8 +606,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     endpoints: ['/pip-install', '/pip-install-start', '/pip-install-poll', '/pip-install-cancel'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "string json = PipInstall(body);",
-    below: 3,
+    at: "else if (method == \"POST\" && path == \"/pip-install-start\")",
     when: '없는 패키지를 설치할 때',
     tags: ['토큰 필요', 'PipJob', '진행률 증분'],
     note: '파이썬 세션과 같은 방식으로 버퍼에 흘려 담고 프런트가 증분만 받아 갑니다.',
@@ -540,8 +618,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     endpoints: ['/complete', '/definition', '/can-complete', '/python-import-index', '/python-project-sync'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "// 작업공간의 .py 를 임시 폴더에 미러링 → 다음 자동완성부터 Jedi 가 프로젝트 모듈을 안다.",
-    below: 1,
+    at: "else if (method == \"POST\" && path == \"/complete\")",
     when: '편집기에서 자동완성을 띄우거나 정의로 이동할 때',
     tags: ['토큰 필요', '/can-complete 로 사전 확인'],
     note: 'Jedi 가 없으면 1회 설치를 시도합니다. 프런트는 편집기 시작 시 백그라운드로 /can-complete 를 부릅니다.',
@@ -556,8 +633,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     ],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"GET\" && path.StartsWith(\"/pip-install-poll\", StringComparison.Ordinal))",
-    below: 1,
+    at: "else if (method == \"POST\" && path == \"/python-kernel-start-bundle\")",
     when: '노트북 셀을 같은 전역 공간에서 이어 실행할 때',
     tags: ['토큰 필요', '셀 10분 제한', 'python_kernel.py'],
     note: '지속형 프로세스라 일반 실행의 WaitForExit 제한을 타지 않습니다. 그래서 셀 단위로 별도 제한을 겁니다.',
@@ -572,8 +648,7 @@ GET  /js-npm-status          // Node/npm/esbuild 사용 가능 여부`,
     ],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"GET\" && path.StartsWith(\"/python-session-poll\", StringComparison.Ordinal))",
-    below: 1,
+    at: "else if (method == \"POST\" && path == \"/terminal-session-open\")",
     when: '지속형 PowerShell 터미널을 열고 명령을 보낼 때',
     tags: ['토큰 필요', '앱 전체에 하나', 'Set-Location 자동 이동'],
     note: '이 앱에서 가장 강력한 기능입니다. 토큰 검증이 이 경로에서 빠지면 피해가 가장 큽니다.',
@@ -684,8 +759,7 @@ GET  /ssh-file-content?id= 미리보기 바이트
     endpoints: ['/convert-pptx', '/can-convert'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"POST\" && path == \"/workspace-remove\")",
-    below: 8,
+    at: "else if (method == \"POST\" && path == \"/convert-pptx\")",
     when: 'PPTX 를 열 때, 설치된 PowerPoint 가 있으면',
     tags: ['토큰 필요', '/can-convert 로 사전 확인'],
     note: '실패하거나 EXE 가 없으면 pptx-viewer.js 의 근사 미리보기로 폴백합니다. 같은 파일이 환경에 따라 다르게 보입니다.',
@@ -697,10 +771,32 @@ GET  /ssh-file-content?id= 미리보기 바이트
     endpoints: ['/convert-media', '/can-convert-media', '/install-ffmpeg', '/ffmpeg-install-status'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "bool ok = Type.GetTypeFromProgID(\"PowerPoint.Application\") != null;",
+    at: "else if (path == \"/can-convert-media\")",
     when: '브라우저가 못 여는 영상(mkv·avi·wmv·flv)을 MP4 로 바꿀 때',
     tags: ['토큰 필요', '/can-convert-media', '/ffmpeg-install-status'],
     note: 'ffmpeg 는 필요할 때 설치하는 방식이라 첫 변환에 네트워크가 필요합니다.',
+  },
+  {
+    sectionIds: ['launcher-convert-sqlite', 'video-viewer'],
+    kind: 'GET/POST',
+    title: '/convert-media-path · /media-ticket · /media-stream — 경로 방식 변환과 Range 재생',
+    endpoints: ['/convert-media-path', '/convert-media-job', '/convert-media-cancel', '/media-ticket', '/media-stream'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path.StartsWith(\"/media-stream?\", StringComparison.Ordinal))",
+    when: 'EXE 로 연 폴더 안의 영상·오디오를 재생하거나, 브라우저가 못 여는 영상을 원본 옆 MP4 로 바꿀 때',
+    tags: ['POST 는 토큰 필요', '/convert-media-job 조회도 토큰', '/media-stream 만 표로 연다', '표 12시간 · 최대 512개', '작업 최대 64개 · 한 번에 하나'],
+    snippet: `POST /convert-media-path?id=&in=&out=&reencode=1   → { job }
+     id = 원본 폴더 ID, in/out = 그 폴더 기준 상대 경로 (out 은 .mp4 만, in 과 같으면 거절)
+GET  /convert-media-job?job=     → { state: queued|running|done|error|cancelled,
+                                     stage: remux|copy|hardware|encode, percent, durationUs,
+                                     doneUs, speedMilli, elapsedMs, name, error }
+POST /convert-media-cancel?job=  ffmpeg 프로세스를 끊고 .part 를 지운다
+POST /media-ticket?id=&path=     → { ticket }   파일이 실제로 열리는지 확인한 뒤 발급
+GET  /media-stream?t=            200 / 206 Partial Content (Range), 표가 없거나 만료면 403`,
+    note:
+      '<video> 는 요청 헤더를 붙일 수 없어 토큰 대신 파일 하나에만 쓰는 표를 주소에 담습니다. 표는 원본 폴더 ID + 상대 경로만 들고 있어 새어도 그 폴더 밖은 못 엽니다. ' +
+      '변환 결과가 이미 있으면 서버가 확인 없이 지우고 교체하므로, 덮어쓰기 판단은 지금 화면(일괄 변환만 존재 확인)에 달려 있습니다.',
   },
   {
     sectionIds: ['launcher-convert-sqlite', 'viewer-base'],
@@ -709,8 +805,7 @@ GET  /ssh-file-content?id= 미리보기 바이트
     endpoints: ['/sqlite-preview', '/sqlite-disk-preview', '/sqlite-exec'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (path == \"/python-diagnostics\")",
-    below: 1,
+    at: "else if (method == \"POST\" && path == \"/sqlite-preview\")",
     when: 'DB 파일을 미리 보거나 임의 SQL 을 실행할 때',
     tags: ['토큰 필요', 'X-Db-Path', 'SHA-256 일치 필요', '.bak 백업'],
     snippet: `// 최초 편집 활성화 조건:
@@ -729,7 +824,7 @@ GET  /ssh-file-content?id= 미리보기 바이트
     endpoints: ['/exam-receive-start', '/exam-receive-stop', '/exam-receive-status', '/exam-hello'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "try { ok = EnsureJedi(); } catch { ok = false; }",
+    at: "else if (method == \"POST\" && path == \"/exam-receive-start\")",
     when: '선생님이 교실 LAN 제출을 열고 닫고 접수 목록을 볼 때',
     tags: ['토큰 필요', '별도 리스너', '6자리 코드'],
     snippet: `// 앱 서버는 loopback 전용이라 다른 PC 가 접근할 수 없다.
@@ -899,7 +994,7 @@ GET /tile-proxy?u=<타일 URL>     → image/png|jpeg|webp
     endpoints: ['/geocode'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "WriteResponse(stream, \"502 Bad Gateway\", \"text/plain; charset=utf-8\", Encoding.UTF8.GetBytes(\"ssh-host-key-scan-failed: \" + FlattenMessage(ex)));",
+    at: "else if (method == \"GET\" && path.StartsWith(\"/geocode?\", StringComparison.Ordinal))",
     when: '지도에서 장소를 검색하거나, 찍은 자리의 주소·행정구역·주변 시설을 물을 때',
     tags: ['토큰 필요', '공급자 6종', 'OSM 초당 1건', '검색 캐시'],
     snippet: `GET /geocode?provider=<공급자>&q=<검색어>[&x&y&radius&page&category]
@@ -921,8 +1016,7 @@ GET /tile-proxy?u=<타일 URL>     → image/png|jpeg|webp
     endpoints: ['/map-search-key', '/map-search-key-status', '/map-search-provider'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "WriteResponse(stream, \"200 OK\", \"application/json; charset=utf-8\", Encoding.UTF8.GetBytes(ClassDockSshTerminal.TrustHostKey(body)));",
-    below: 2,
+    at: "else if (method == \"POST\" && path.StartsWith(\"/map-search-key\", StringComparison.Ordinal))",
     when: '설정에서 카카오 REST 키를 넣거나 지우거나, 검색 공급자를 바꿀 때',
     tags: ['토큰 필요', 'DPAPI 암호화', '키를 브라우저에 두지 않음'],
     snippet: `GET    /map-search-key-status  → { hasKey, remembered, persistentSupported, provider }
@@ -944,7 +1038,7 @@ GET/POST /map-search-provider  → "kakao" | "osm"
     endpoints: ['/tile-cache-status', '/tile-cache-clear'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "ClassDockSshTerminal.Resize(QueryValue(path, \"id\"), body);",
+    at: "else if (method == \"GET\" && path == \"/tile-cache-status\")",
     when: '"🗂️ 오프라인 지도" 창에서 받아 둔 양을 보거나 비울 때',
     tags: ['토큰 필요', '400MB 상한', '7일 만료'],
     snippet: `GET  /tile-cache-status → { files, bytes, maxBytes }
@@ -955,6 +1049,47 @@ POST /tile-cache-clear  → 디스크 캐시 삭제
     note:
       '조회조차 토큰을 요구합니다 — 같은 PC 의 아무 웹페이지나 "이 사람이 어느 지역을 봤는지"를 셀 수 있으면 안 되기 때문입니다. ' +
       'tests/map-viewer.test.js 가 이 토큰 요구를 검사하고, C# 런처와 Go 런처가 같은 상한·같은 정리 시점을 쓰는지도 함께 대조합니다.',
+  },
+  {
+    sectionIds: ['launcher-transit', 'map-live-transit', 'subway-live'],
+    kind: 'GET/POST/DELETE',
+    title: '/subway-position · /subway-key — 수도권 실시간 열차 위치',
+    endpoints: ['/can-proxy-subway', '/subway-position', '/subway-key', '/subway-key-status'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path.StartsWith(\"/subway-position?\", StringComparison.Ordinal))",
+    when: '지도에서 🚇 실시간 열차를 켜 두는 동안 15초마다, 설정의 "지하철 실시간" 에서 키를 넣고 지울 때',
+    tags: ['토큰 필요', '키 조작은 X-ClassDock-Action 도', '노선 16개 허용 목록', '캐시 12초 · 실패 시 1분'],
+    snippet: `GET    /can-proxy-subway            → "yes"
+GET    /subway-position?line=2호선  → 원본 JSON (캐시면 X-ClassDock-Subway-Cached: 1)
+                                     키 없음 428 subway-key-required · 목록 밖 노선 400
+GET    /subway-key-status           → { hasKey, remembered, persistentSupported }
+POST   /subway-key?remember=1       본문: 키 → 2호선으로 시험 조회 후 저장(DPAPI)
+DELETE /subway-key                  키와 그 키로 받은 캐시를 함께 지움`,
+    note:
+      '이 API 는 오류도 HTTP 200 으로 주므로 본문의 INFO-000/100/200 으로 가릅니다. INFO-200(열차 없음)은 정상 답입니다. ' +
+      '하루 1,000회 한도라 화면 15초 · 런처 12초 캐시가 곧 예산이며, 한도 소진은 따로 구분하지 않고 일반 실패로 보입니다.',
+  },
+  {
+    sectionIds: ['launcher-transit', 'map-live-transit', 'jeju-bus-api', 'jeju-bus-map'],
+    kind: 'GET',
+    title: '/jeju-bus-routes · route · shape · position — 제주 버스 (시범)',
+    endpoints: ['/can-proxy-jeju-bus', '/jeju-bus-'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path.StartsWith(\"/jeju-bus-\", StringComparison.Ordinal))",
+    when: '지도의 🚌 제주 버스 패널에서 노선을 검색·선택하고, 표시를 켜 둔 동안 30초마다',
+    tags: ['토큰 필요', '키 없음', 'C# 런처 전용', '위치 30초 · 정적 24시간 캐시', 'Retry-After'],
+    snippet: `GET /can-proxy-jeju-bus               → "yes"
+GET /jeju-bus-routes?keyword=201      노선 검색     (숫자·하이픈 12자)
+GET /jeju-bus-route?routeId=…         정류장 목록   (숫자 12자)
+GET /jeju-bus-shape?routeId=…         노선 경로 좌표
+GET /jeju-bus-position?routeId=…      실시간 차량 위치
+    응답 헤더: X-ClassDock-Bus-Fetched-At(원본 수신 시각) · X-ClassDock-Bus-Stale · Retry-After
+    &refresh=1 은 정적 조회만, 그래도 30초 안에는 상류를 다시 부르지 않음`,
+    note:
+      '원격 호스트(bus.jeju.go.kr/data/search/)·경로 네 개·POST 메서드를 고정하고 리다이렉트를 따라가지 않습니다. ' +
+      '연결한 경로는 공식 개발자 API 가 아니라 사이트 자신의 조회 경로라, 이용 조건 확인과 TAGO 공식 API 전환이 설계 문서에 후속 과제로 남아 있습니다.',
   },
 
   // ── EXE 로컬 서버 — DB 클라이언트 ────────────────────

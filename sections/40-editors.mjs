@@ -1,4 +1,4 @@
-// 5. document-editors — Office, 표, 이미지, 화이트보드, 지도 도구.
+// 7. document-editors — Office, 표, 이미지, 화이트보드, 지도 도구.
 //
 // 줄 수는 리뷰 문장에 적지 않고 생성 때 잰다 — 재는 함수는 lib/source-metrics.mjs 에 있다.
 // 손으로 적어 둔 "5,915줄" 이 수식 엔진을 떼어내 5,161줄이 된 뒤에도 그대로 남아 있었고,
@@ -24,7 +24,7 @@ export default ({ manifest, helpers, rootDir }) => {
   return [
     sec({
       id: 'editors-overview',
-      category: '5. document-editors',
+      category: '7. document-editors',
       group: '계층 개요',
       title: 'document-editors 계층 개요',
       subtitle: `${layer.scripts.length}개 파일 — 보기를 넘어 고치는 영역`,
@@ -601,6 +601,80 @@ export default ({ manifest, helpers, rootDir }) => {
       ],
     }),
 
+    mod('spreadsheet-tools.js', {
+      title: 'spreadsheet-tools.js — 엑셀 왕복 저장·편집용 순수 연산 (MNSpreadsheetTools)',
+      subtitle: '화면 파일에서 덜어 낸 두 번째 순수부 — 입력 해석·유효성·정렬·피벗·이름 함수·설정 보존',
+      summary:
+        'DOM 을 만들지 않는 표 편집 연산을 모았습니다. 셀에 친 글자를 숫자·백분율·날짜로 읽는 규칙, 데이터 유효성 쓰기와 검사, 조건부 서식 읽기, ' +
+        '행·열 구조 변경에 따른 수식 재작성, 안정 정렬, 중복 행 찾기, 피벗 표, 표(Table) 구조적 참조 펼치기, LAMBDA 기반 사용자 함수 등록, ' +
+        'workbook.xml 의 이름 정의 쓰기, 그리고 ClassDock 전용 시트 설정을 xlsx 안에 보관하는 일입니다. ' +
+        'spreadsheet-formula.js 가 수식 엔진을 떼어 낸 것과 같은 방식으로 spreadsheet-viewer.js 에서 덜어 냈습니다.',
+      usage: [
+        {
+          title: '입력 해석은 "텍스트로 남길 것" 부터',
+          body:
+            'inputValue 는 텍스트 서식(@)이면 손대지 않고, 작은따옴표로 시작하면 따옴표만 떼며, 0 으로 시작하는 번호(01012…)는 텍스트로 둡니다. ' +
+            '숫자로 읽을 때도 유효 자릿수가 15자리를 넘으면 텍스트로 남깁니다 — 학번·주민번호 같은 긴 번호가 부동소수로 뭉개지는 엑셀의 오래된 함정을 피합니다. ' +
+            '날짜는 2026-09-05 꼴이면서 실제로 있는 날일 때만 Date 로 바꿉니다.',
+        },
+        {
+          title: '표에 담기지 않는 설정은 xlsx 안에 따로 둔다',
+          body:
+            'writeSettings 가 시트별 보기 상태와 열 필터에서 고른 값처럼 xlsx 표준 구조로는 왕복하지 않는 ClassDock 전용 설정을 customXml/classdock-spreadsheet.json 파트로 넣고, ' +
+            '[Content_Types].xml 과 _rels/.rels 에 등록합니다. readSettings 는 type·version 이 맞고 2MB 이하일 때만 읽고, 아니면 빈 설정으로 조용히 내려앉습니다. ' +
+            '다시 열 때 틀 고정·숨긴 행열·표 목록은 이 파트가 아니라 xlsx 원래 값을 우선합니다 — 다른 프로그램에서 고친 내용을 옛 설정이 덮지 않게 한 순서입니다.',
+        },
+        {
+          title: '사용자 함수는 이름 정의(LAMBDA)로 저장한다',
+          body:
+            'customFunctionDefinition 이 함수 이름(셀 주소·기존 함수와 겹치지 않음)·입력값 이름(중복·셀 주소·R/C 금지)·본문 길이(1~10,000자)를 검사하고, ' +
+            '수식 엔진으로 실제 파싱해 지원하지 않는 함수를 부르지 않는지까지 본 뒤 LAMBDA(…) 이름 정의를 만듭니다. ' +
+            'writeDefinedNames 가 그것을 workbook.xml 에 쓰되, ExcelJS 가 인쇄 설정으로 만든 _xlnm. 시스템 이름은 건드리지 않습니다.',
+        },
+      ],
+      features: [
+        { title: '구조적 참조', body: 'Table1[열]·[@열]·Table1[@[열]] 을 시트 절대 참조로 펼치고, 표·열 이름이 바뀌면 수식 속 참조를 따라 고칩니다. 문자열 리터럴 안은 건드리지 않습니다.' },
+        { title: '피벗', body: '행 묶음·열 묶음·값 열·집계 방식으로 격자를 만듭니다. 상태를 들지 않는 함수라, 피벗 새로고침은 화면 쪽이 같은 인자로 다시 부르는 것입니다.' },
+        { title: '다중 정렬·중복 제거', body: '여러 기준을 순서대로 비교하는 안정 정렬, 선택 범위의 중복 행 찾기.' },
+        { title: '유효성', body: '목록·수 범위 규칙으로 입력을 검사합니다. 드롭다운 값이 원래 validation 과 같으면 원본을 그대로 돌려줘 오류 제목·문구 같은 원래 설정을 잃지 않습니다.' },
+      ],
+      files: [
+        { path: 'tests/xlsx-functions.test.js', label: 'xlsx-functions.test.js', description: 'LAMBDA·LET·이름 함수 등록과 저장 왕복' },
+        { path: 'tests/xlsx-compatibility.test.js', label: 'xlsx-compatibility.test.js', description: '입력 해석·구조 변경·유효성 보존 등 Excel 호환' },
+        { path: 'tests/xlsx-recalc-tables.test.js', label: 'xlsx-recalc-tables.test.js', description: '재계산 한 번에 표 목록 한 번' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            'xml 을 문자열로 고치는 자리에서 replace 의 두 번째 인자를 함수로 넘깁니다(xml.replace(previous[0], () => block)). ' +
+            '문자열로 넘기면 사용자가 지은 이름·설명에 들어 있는 $& · $1 이 치환 패턴으로 해석돼 workbook.xml 이 조용히 깨지는데, 그 함정을 피했습니다. 이름·설명 값도 XML 이스케이프를 거칩니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '못 알아듣는 것을 버리지 않는다는 방향이 일관됩니다 — 설정 파트가 깨졌거나 크면 빈 설정으로 열고, 조건부 서식 중 화면이 못 그리는 규칙은 kind:"unsupported" 로 원본(native)을 들고 있다가 ' +
+            '저장 때 그대로 되써 넣습니다. 행·열 구조가 바뀌면 그 원본 규칙의 수식도 remapStructure 로 함께 옮깁니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '코드 모양이 저장소의 나머지와 크게 다릅니다. 뒤쪽 절반이 세미콜론으로 이은 한 줄 함수·공백 없는 연산자라 사실상 압축본처럼 읽히고, 주석도 거의 없습니다. ' +
+            '같은 계층의 spreadsheet-formula.js 가 규약마다 이유를 적어 둔 것과 대조되어, "왜 이 비교는 대소문자를 무시하는가" 같은 질문에 코드가 답하지 않습니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '설정 파트의 관계 Type 을 https://classdock.local/relationships/spreadsheet-settings 라는 자체 URI 로 적습니다. Excel 은 모르는 관계를 무시하고 파일을 열지만, ' +
+            'Excel 에서 다시 저장하면 이 파트가 사라질 수 있어 "ClassDock 설정은 ClassDock 에서 저장할 때만 유지된다" 는 성질로 이해해야 합니다.',
+        },
+      ],
+    }),
+
     mod('spreadsheet-viewer.js', {
       title: 'spreadsheet-viewer.js — 표 편집기',
       subtitle: '프로젝트 최대 파일',
@@ -655,6 +729,8 @@ export default ({ manifest, helpers, rootDir }) => {
         { path: 'tests/xlsx-edit.test.js', label: 'xlsx-edit.test.js', description: '편집·수식·병합·차트·셀 그림·저장 왕복 38개' },
         { path: 'tests/e2e/spreadsheet-undo.spec.js', label: 'spreadsheet-undo.spec.js', description: '표 되돌리기 화면 흐름' },
         { path: 'tests/e2e/spreadsheet-image-layout.spec.js', label: 'spreadsheet-image-layout.spec.js', description: '셀 그림이 원래 칸 크기로 앉는지' },
+        { path: 'tests/xlsx-workspace.test.js', label: 'xlsx-workspace.test.js', description: '창 전체를 채우는 화면용 빈 칸이 원본 데이터·저장 범위에 섞이지 않는지' },
+        { path: 'tests/xlsx-save-target.test.js', label: 'xlsx-save-target.test.js', description: '복원한 XLSX 도 원본 저장 경로를 고르는지' },
       ],
       notes: [
         {
@@ -1084,6 +1160,8 @@ export default ({ manifest, helpers, rootDir }) => {
         { path: 'tests/e2e/undo-redo.spec.js', label: 'undo-redo.spec.js', description: '획 되돌리기·redo 무효화·단축키' },
         { path: 'tests/e2e/whiteboard-save.spec.js', label: 'whiteboard-save.spec.js', description: '화이트보드 저장 흐름' },
         { path: 'tests/e2e/whiteboard-toolbox-move.spec.js', label: 'whiteboard-toolbox-move.spec.js', description: '도구상자 창 이동' },
+        { path: 'tests/whiteboard-zoom.test.js', label: 'whiteboard-zoom.test.js', description: '배율과 화면 이동을 안전한 범위로 제한' },
+        { path: 'tests/e2e/whiteboard-hover-cursor.spec.js', label: 'whiteboard-hover-cursor.spec.js', description: '판서 위·빈 곳의 커서를 프레임마다 한 번만 정하기' },
       ],
       notes: [
         {

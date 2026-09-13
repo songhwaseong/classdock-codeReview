@@ -6,6 +6,11 @@
 //
 // 2026-09-03: partial·override·extern·volatile 을 더했다. sealed·readonly·static 과 같은
 // C# 한정자 갈래인데 넷만 빠져 있었다 — 원격 파일이 들어오며 ssh_files.cs 가 실리면서 드러났다.
+//
+// 2026-09-13: 자바 실습이 들어왔지만 Java 를 네 번째 언어로 넣지 않았다. 리뷰에 실리는 .java 파일이 없고,
+// 자바 코드는 java-snippets.js 안의 템플릿 문자열로만 나오는데 코드 뷰어는 파일 확장자로 언어를 정하고
+// 문자열 안은 낱말로 걸지 않는다(app.js getLang). 사전에 넣어도 걸릴 자리가 없어 "사전에는 있는데 코드에는
+// 없는 낱말" 경고만 늘어난다. .java 파일을 싣게 되면 그때 languages 에 'java' 를 더한다.
 
 const word = (name, languages, kind, label, body) => ({ name, languages, kind, label, body });
 

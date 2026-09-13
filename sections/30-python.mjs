@@ -39,7 +39,7 @@ export default ({ manifest, helpers }) => {
         { title: '실행 모드 5종', body: '일반 실행, 과제 자동채점(gradeTests), 진단(diagnose), 추적(trace), 노트북 셀(cellMode).' },
         { title: '옆 파일 함께 실행', body: '열린 프로젝트 파일을 번들로 묶어 import 가 되게 합니다. 합계 상한 50MB, 초과 시 단일 파일 실행.' },
         { title: '공유 터미널', body: '앱에 터미널을 하나만 두고 열린 .py 문서들이 세션·변수·명령 기록을 공유합니다.' },
-        { title: '한글 그래프', body: 'korean-font.js 의 NanumGothic 을 Pyodide 파일시스템에 넣어 Matplotlib 한글이 깨지지 않게 합니다.' },
+        { title: '한글 그래프', body: 'vendor/korean-font.js 의 NanumGothic 을 Pyodide 파일시스템에 넣어 Matplotlib 한글이 깨지지 않게 합니다. 글꼴은 파이썬을 처음 돌릴 때 MNLazy 의 kfont 묶음으로 싣습니다.' },
       ],
       files: [
         { path: 'src/js/python-run-context.js', label: 'python-run-context.js (상수)', range: [1, 60], description: '백엔드 판정과 실행 상한' },
@@ -210,7 +210,9 @@ export default ({ manifest, helpers }) => {
         },
         {
           title: '한글 폰트 주입',
-          body: 'Pyodide 경로에서 korean-font.js 의 데이터를 파일시스템에 써 넣고 Matplotlib 폰트로 등록합니다.',
+          body:
+            'Pyodide 경로에서 koreanFontGzB64 가 MNLazy.tryNeed("kfont") 로 vendor/korean-font.js 를 그때 싣고, ' +
+            '그 데이터를 파일시스템에 써 넣어 Matplotlib 폰트로 등록합니다. 메인 스레드 Pyodide 와 워커 초기화 두 곳이 같은 함수를 부릅니다.',
         },
       ],
       features: [
@@ -231,6 +233,13 @@ export default ({ manifest, helpers }) => {
           label: 'Good',
           body:
             'Python 예외를 한국어로 설명하는 기능(explainPythonError)이 있습니다. 교육용 도구에서 실제로 학습 효과가 큰 부분이고, 순수 함수라 core.js 에서 테스트됩니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '한글 글꼴(약 0.9MB, 앱 코드 중 가장 큰 파일)을 시작 로드에서 빼 kfont 지연 묶음으로 옮겼습니다. .txt 하나를 열어도 함께 파싱하던 비용이 사라졌습니다. ' +
+            'tryNeed 로 실어 글꼴을 못 실어도 파이썬은 그대로 돌고 한글 라벨만 깨지게 했고, 예전에 선언이 없던 python-runtime.js → lazy.js 의존도 manifest 에 들어갔습니다.',
         },
         {
           type: 'good',

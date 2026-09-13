@@ -1,4 +1,4 @@
-// 5. document-editors — 개념 관계도(.concept)와 암기 카드(.study). 두 파일.
+// 7. document-editors — 개념 관계도(.concept)와 암기 카드(.study). 두 파일.
 //
 // 두 문서는 같은 수업 흐름의 앞뒤라서 함께 읽는 편이 낫다 — 관계도로 개념을 정리하고,
 // 그 카드를 그대로 암기 카드로 넘긴다. study-doc.js 가 manifest 에서 concept-doc.js 에
@@ -18,7 +18,7 @@ export default ({ helpers, rootDir }) => {
   return [
     sec({
       id: 'concept-overview',
-      category: '5. document-editors',
+      category: '7. document-editors',
       group: '관계도 · 암기',
       title: '관계도 · 암기 카드 개요 (.concept / .study)',
       subtitle: '개념을 이어 그리고, 그 카드를 그대로 외우기로 넘긴다',
@@ -158,6 +158,10 @@ export default ({ helpers, rootDir }) => {
       ],
       files: [
         { path: 'tests/concept-doc.test.js', label: 'concept-doc.test.js', description: '모델·정렬·발표·확대 19개' },
+        { path: 'tests/concept-weight.test.js', label: 'concept-weight.test.js', description: '관계 강도 1~5 정규화와 구형 파일 호환' },
+        { path: 'tests/concept-cluster.test.js', label: 'concept-cluster.test.js', description: '약한 다리로 이어진 두 밀집 집단을 떨어뜨려 배치' },
+        { path: 'tests/e2e/concept-card-drag.spec.js', label: 'concept-card-drag.spec.js', description: '카드를 끌 때 닿은 관계선만 다시 그리기' },
+        { path: 'tests/e2e/concept-edge-select.spec.js', label: 'concept-edge-select.spec.js', description: '관계선 마우스 올림·선택 표시와 Ctrl+클릭 다중 선택' },
       ],
       notes: [
         {

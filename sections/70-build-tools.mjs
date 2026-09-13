@@ -54,7 +54,7 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
         {
           title: '생성 파일',
           body:
-            'classdock-offline.html, desktop/app.html, src/js/korean-font.js, vendor/korean-hunspell-worker.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
+            'classdock-offline.html, desktop/app.html, vendor/korean-font.js, vendor/korean-hunspell-worker.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
         },
         {
           title: '오프라인 원칙의 강제',

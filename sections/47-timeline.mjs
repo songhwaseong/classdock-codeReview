@@ -1,4 +1,4 @@
-// 5. document-editors — 연대표 문서(.timeline). timeline.js 한 파일.
+// 7. document-editors — 연대표 문서(.timeline). timeline.js 한 파일.
 //
 // document-editors 계층이지만 40-editors.mjs 가 이미 두껍고 이 파일 하나가 1,900줄대라
 // 지도(45-map.mjs)와 같은 방식으로 떼어 둔다. 카테고리는 같으므로 사이드바에서는
@@ -20,7 +20,7 @@ export default ({ helpers, rootDir }) => {
   return [
     sec({
       id: 'timeline-overview',
-      category: '5. document-editors',
+      category: '7. document-editors',
       group: '연대표',
       title: '연대표 문서 개요 (.timeline)',
       subtitle: '기원전부터 오늘까지 한 축에 — 그리고 같은 화면이 여행 일정표가 된다',

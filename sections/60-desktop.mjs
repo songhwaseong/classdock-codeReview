@@ -1,5 +1,5 @@
 // EXE — desktop/launcher.cs 가 만드는 127.0.0.1 로컬 서버.
-// 7천 줄대 단일 C# 파일이라 기능 구간별로 잘라서 싣는다.
+// 만 줄이 넘는 단일 C# 파일이라 기능 구간별로 잘라서 싣는다(정확한 줄 수는 생성 때 잰다).
 //
 // 구간을 [시작줄, 끝줄] 로 적어 두면 그 파일이 자라는 순간 다른 코드를 가리킨다. 실제로
 // launcher.cs 가 7,118 → 7,861줄이 되면서 여기 걸려 있던 구간 21개가 전부 어긋났고,
@@ -17,16 +17,26 @@ export default ({ helpers, diagrams, rootDir }) => {
   const CAT = 'EXE · 로컬 서버';
   // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs 의 이유 참고).
   const workerLines = linesLabel(rootDir, 'desktop/db_worker.py');
+  const launcherLines = linesLabel(rootDir, 'desktop/launcher.cs');
 
   /**
    * @param label       화면에 보일 구간 이름
    * @param anchor      { from, to?, lines?, before?, after? } — lib/source-metrics.mjs 참고
    * @param description 구간 설명
    */
+  /*
+   * 앵커를 못 찾으면 경고대로 "코드 없이" 싣는다([0, 0] → 빈 구간).
+   * 예전에는 range 를 undefined 로 넘겼는데, readSource 는 range 가 없으면 파일 전체를 싣는다.
+   * 2026-09-13 에 앵커 하나(class WorkspaceFile — 소스에서 클래스가 사라짐)가 깨지자 그 한 칸이
+   * launcher.cs 전체를 끌어와 "상한을 넘겨 꼬리가 잘린 파일" 경고까지 냈다. 원인은 앵커 하나였는데
+   * 경고는 두 개였고, 둘 중 더 무거워 보이는 쪽(잘림)은 증상이었다.
+   */
   const L = (label, anchor, description) => {
     const range = anchoredRange(rootDir, 'desktop/launcher.cs', anchor);
     if (!range) brokenAnchors.push(`${label} — ${anchor.from}`);
-    return { path: 'desktop/launcher.cs', label, range: range ?? undefined, description };
+    return range
+      ? { path: 'desktop/launcher.cs', label, range, description }
+      : { path: 'desktop/launcher.cs', label, range: [0, 0], description: `(앵커를 찾지 못해 코드 없이 실림) ${description}` };
   };
 
   return [
@@ -58,8 +68,10 @@ export default ({ helpers, diagrams, rootDir }) => {
         {
           title: '중요 클래스',
           body:
-            'WorkspaceFile(작업공간 항목), LimitedTextBuffer(출력 상한 버퍼), PythonSession(실행 세션), PipJob·NpmJob(설치 작업), ' +
-            'TerminalSession(지속 셸), PythonKernel(노트북 커널), SqliteProcessCapture. 각각 상태를 들고 폴링으로 프런트와 통신합니다.',
+            'LimitedTextBuffer(출력 상한 버퍼), PythonSession·JavaSession(실행 세션), PipJob·NpmJob·JavaLibJob(설치 작업), ' +
+            'TerminalSession(지속 셸), PythonKernel(노트북 커널), MediaConvertJob(경로 방식 MP4 변환), SqliteProcessCapture. 각각 상태를 들고 폴링으로 프런트와 통신합니다. ' +
+            '작업공간 항목을 담던 WorkspaceFile 은 2026-09-06 에 사라졌습니다 — 저장이 파일 전체를 객체 목록으로 읽어 다시 직렬화하던 방식에서 ' +
+            '레코드 위치만 기억하고 흘려 쓰는 WorkspaceBodyRecord·RewriteWorkspace 로 바뀌었기 때문입니다.',
         },
       ],
       features: [
@@ -70,7 +82,7 @@ export default ({ helpers, diagrams, rootDir }) => {
       ],
       files: [
         L('launcher.cs (상수·클래스)', { from: '프로세스 트리', before: 8, lines: 160 }, '메모리 측정, 저장 경로, 상한 값 정의'),
-        L('launcher.cs (버퍼·세션 클래스)', { from: 'class WorkspaceFile', before: 2, to: 'class PythonKernel' }, 'WorkspaceFile · LimitedTextBuffer · PythonSession · PipJob · TerminalSession · PythonKernel'),
+        L('launcher.cs (버퍼·세션 클래스)', { from: 'class LimitedTextBuffer', before: 2, to: 'class PythonKernel' }, 'LimitedTextBuffer · PythonSession · JavaSession · PipJob · NpmJob · TerminalSession · PythonKernel'),
         { path: 'desktop/main.go', label: 'main.go', description: 'C# 컴파일러가 없을 때의 Go 폴백 런처' },
       ],
       notes: [
@@ -89,7 +101,7 @@ export default ({ helpers, diagrams, rootDir }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '7,257줄 단일 파일입니다. 라우팅 하나가 else-if 사슬로 이어져 있어 엔드포인트를 추가할 때마다 그 사슬이 길어집니다. ' +
+            `${launcherLines} 단일 파일입니다. 라우팅 하나가 else-if 사슬로 이어져 있어 엔드포인트를 추가할 때마다 그 사슬이 길어집니다. ` +
             '메모리에 기록된 리팩터링 백로그에도 이 파일 분할이 첫 항목으로 올라 있습니다.',
         },
         {
@@ -135,6 +147,7 @@ export default ({ helpers, diagrams, rootDir }) => {
       ],
       files: [
         L('launcher.cs (Main)', { from: 'public static void Run()', before: 9, lines: 106 }, '포트 후보 결정과 단일 인스턴스 처리'),
+        L('launcher.cs (단일 인스턴스 확인)', { from: '// 포트 파일만으로는 두 프로세스가 동시에 시작하는 순간을 막을 수 없으므로', to: 'static bool IsOurServerAt(int port)', after: 20 }, 'OS 뮤텍스 획득 · 기록된 포트의 /ping 으로 우리 서버인지 확인'),
         L('launcher.cs (설정 상수)', { from: 'static readonly object WorkspaceLock', before: 4, lines: 80 }, '포트 기록·앱 모드·저장 루트·Pyodide·npm 폴더'),
         L('launcher.cs (앱 모드 API)', { from: 'method == "GET" && path == "/launcher-config"', before: 2, lines: 56 }, '/launcher-config · /reopen-app-mode'),
         { path: 'desktop/start-server-hidden.vbs', label: 'start-server-hidden.vbs', description: '콘솔 없이 서버만 띄우는 상시 실행' },
@@ -277,9 +290,27 @@ export default ({ helpers, diagrams, rootDir }) => {
       files: [
         L('launcher.cs (저장 루트)', { from: 'method == "GET" && path == "/save-root"', before: 6, lines: 126 }, '/save-root · /open-save-folder · /open-file-folder · /choose-save-folder'),
         L('launcher.cs (파일 쓰기)', { from: 'method == "GET" && path == "/image-memo-list"', before: 14, lines: 104 }, '/image-memo-* · /save-file-exists · /save-file'),
+        L('launcher.cs (작업공간 저장)', { from: '===== 최근 작업공간', to: 'static int RemoveWorkspaceFiles(byte[] body)', after: 30 }, '레코드 색인 · 흘려 쓰기(RewriteWorkspace) · 원자적 교체 · 512MB 상한'),
         { path: 'tests/native-folder-terminal.test.js', label: 'native-folder-terminal.test.js', description: '실제 경로 전달과 Shell 직접 호출' },
+        { path: 'tests/workspace-atomic-save.test.js', label: 'workspace-atomic-save.test.js', description: '실제 launcher.cs 복사본의 File.Replace·Move 에 실패를 주입해 csc 로 컴파일·실행 — 원본 보존과 임시 파일 정리' },
+        { path: 'tests/local-file-save.test.js', label: 'local-file-save.test.js', description: '실제 HTTP 저장 경로가 불완전 본문·교체 실패에서 원본을 보존하는지' },
       ],
       notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '작업공간 저장을 "전체 읽기 → 항목별 파싱 → 직렬화 → ToArray" 에서 레코드 위치만 기억하고 1MB 버퍼로 흘려 쓰는 RewriteWorkspace 로 바꿨습니다. ' +
+            '예전 방식은 최종 크기의 4~5배를 한꺼번에 잡아 상한을 올릴 수 없었다는 이유가 주석에 있고, 그 덕에 자동복원 상한이 256MB → 512MB 로 올라갔습니다. ' +
+            '교체는 임시 파일 → File.Replace 이고, 실패해도 원본을 지우거나 직접 덮어쓰는 우회를 하지 않습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '쓰는 쪽만 흘려 쓰기로 바뀌었고 읽는 쪽(LoadWorkspace)은 여전히 File.ReadAllBytes 로 workspace.bin 을 통째로 올려 응답으로 보냅니다. ' +
+            '상한을 512MB 로 올린 만큼, 복원할 때 런처와 브라우저가 각각 그 크기의 배열을 한 번에 잡는 순간이 생깁니다 — 저장에서 없앤 메모리 봉우리가 복원 쪽에 그대로 남았습니다.',
+        },
         {
           type: 'good',
           label: 'Good',
@@ -356,6 +387,104 @@ export default ({ helpers, diagrams, rootDir }) => {
           label: 'Risk',
           body:
             'install script를 막아도 패키지 본문은 사용자가 선택한 순간 Worker 안에서 실행됩니다. 내장 라이브러리와 달리 검증된 코드가 아니므로 UI의 신뢰 경고가 보안 경계의 일부입니다.',
+        },
+      ],
+    }),
+
+    sec({
+      id: 'launcher-java',
+      category: CAT,
+      group: 'Java',
+      title: 'Java — JDK 찾기·원클릭 설치·jar 라이브러리·컴파일 실행',
+      subtitle: '자바 계층의 실행기 전부가 여기 있다',
+      summary:
+        '브라우저에는 자바 실행기가 없으므로 .java 의 저장 검사·실행·채점·JUnit 이 모두 이 구간을 거칩니다. ' +
+        'JDK 를 앱 설치본 → JAVA_HOME → PATH → 레지스트리·표준 폴더 순으로 찾고, 없으면 Eclipse Temurin 21 을 받아 SHA-256 을 대조한 뒤 풉니다. ' +
+        '실행은 임시 폴더에 주 파일과 형제 .java 를 풀고 javac 로 컴파일한 다음 main 을 가진 타입을 명시해 java 로 띄웁니다. ' +
+        '실습용 jar 는 단일 jar 로 끝나는 검증된 카탈로그와 Maven Central 검색·설치로 공급합니다.',
+      usage: [
+        {
+          title: 'source-file 모드를 쓰지 않는다',
+          body:
+            'java Foo.java 한 줄 실행은 무조건 파일의 첫 타입을 실행하므로 보조 클래스를 앞에 둔 정상 코드가 실패합니다. 그래서 javac 로 컴파일한 뒤 ' +
+            'JavaLaunchClassName 이 고른 main 보유 타입(요청이 있으면 그 이름, 없으면 첫 main 보유 타입)을 package 까지 붙여 -cp 로 실행합니다. ' +
+            '파일 이름은 public 최상위 타입으로 짓습니다(javac 의 파일 이름 규칙).',
+        },
+        {
+          title: '경로는 받지 않는다',
+          body:
+            '실행 봉투는 [길이][소스][길이][표준입력] 뒤에 [개수]([길이][소스])* 로 형제 본문만 잇습니다. 형제 파일의 자리는 소스가 적은 package 와 선언 타입에서 정하고, ' +
+            '각 조각이 자바 식별자 정규식을 통과해야 폴더·파일 이름이 됩니다. 이미 있는 자리는 건너뛰어 형제가 주 파일을 덮을 수 없습니다.',
+        },
+        {
+          title: '대화형과 파이프를 나눈다',
+          body:
+            '대화형은 표준입력을 열어 두고 /java-session-input 으로 받습니다. 채점(?piped=1)은 리더와 감시 스레드를 먼저 세운 뒤 별도 스레드에서 입력을 쓰고 닫습니다 — ' +
+            '큰 입력과 큰 출력이 서로의 파이프를 기다리는 교착이 생겨도 중지 요청과 서버 제한 시간이 계속 작동하게 한 순서입니다.',
+        },
+        {
+          title: 'jar 는 검증하기 전에는 .part 로만',
+          body:
+            '카탈로그에 SHA-256 이 박혀 있으면 그것으로 대조해 변조까지 거르고, 없으면(직접 좌표) 배포처의 .sha1 로 맞춥니다. 기준을 하나도 얻지 못하면 설치를 접고, ' +
+            '통과하기 전에는 .part 이름으로만 존재해 반쯤 받은 jar 가 클래스패스에 얹히지 않습니다. 설치 시작은 토큰 외에 X-ClassDock-JavaLib-Confirm 헤더를 요구합니다.',
+        },
+      ],
+      features: [
+        { title: '상한', body: '실행 30분·컴파일 30초·프로세스 트리 메모리는 파이썬과 같은 상한. 형제 파일 60개·파일당 512KB. 라이브러리는 실행당 20개·설치 20개.' },
+        { title: 'JDK 설치', body: '배포처 메타데이터에서 주소와 SHA-256 을 받고, 디스크 여유를 먼저 확인하고, zip-slip 을 버리며 옆 폴더에 풀어 제자리로 옮깁니다.' },
+        { title: 'Lombok·JUnit', body: '고른 jar 를 -processorpath 에도 넣어 JDK 24+ 에서도 annotation processor 가 돌고, JUnit 은 console-standalone 으로 --scan-class-path 실행합니다.' },
+        { title: '정의 원문', body: '/java-definition 이 설치된 JDK 의 src.zip 에서 표준 클래스 원문(5MB 이하)과 선언 줄을 돌려줍니다.' },
+      ],
+      files: [
+        L('launcher.cs (Java 라우팅)', { from: 'else if (path == "/can-run-java")', before: 1, to: 'path.StartsWith("/java-session-stop"', after: 5 }, '/can-run-java · /java-* · /java-lib-* · /java-session-*'),
+        L('launcher.cs (JDK 탐색)', { from: 'const int JavaMinimumFeatureVersion = 11;', before: 1, to: 'static string JdkPortableRoot()', after: 5 }, '탐색 캐시·후보 순서(앱 설치본 → JAVA_HOME → PATH → 레지스트리)'),
+        L('launcher.cs (표준 클래스 원문)', { from: 'static string JavaDefinitionSource(byte[] body)', to: 'static readonly object JdkInstallLock', after: 0 }, 'src.zip 에서 선언 줄 찾기'),
+        L('launcher.cs (JDK 원클릭 설치)', { from: '===== JDK 원클릭 설치', to: 'static void ReplaceDirectory(string staging, string dest)', after: 18 }, '메타데이터·SHA-256·여유 공간·zip-slip·교체'),
+        L('launcher.cs (라이브러리 카탈로그)', { from: '===== 자바 실습용 라이브러리(jar) =====', to: 'static JavaLibrary FindJavaLibraryCatalogItem(string id)', after: 0 }, '단일 jar 카탈로그와 고정 SHA-256'),
+        L('launcher.cs (클래스패스·설치 규칙)', { from: 'static string JavaClassPath(string tempRoot, List<string> jars)', before: 3, to: 'class JavaLibJob', after: 0 }, '-cp · -processorpath · Maven Central 고정'),
+        L('launcher.cs (라이브러리 설치·검증)', { from: 'static string StartJavaLibraryInstall(byte[] body)', to: 'static string FetchJavaLibraryChecksum(JavaLibraryTarget target)', after: 0 }, '.part 로 받기 → SHA-256 또는 .sha1 대조 → 제자리'),
+        L('launcher.cs (실행 세션)', { from: '===== 자바(.java) 실행 세션', to: 'static string JavaDeclaredFileClassName(string source)', after: 6 }, '저장 검사·세션 시작·봉투 해석·형제 파일 쓰기'),
+        L('launcher.cs (컴파일·실행 프로세스)', { from: 'static string StartJavaSessionProcess(string java, string scriptPath, string sourceFileClassName,', before: 1, to: 'static bool CompileJavaSource(string javac, string scriptPath, string tempRoot, JavaSession session,', after: 40 }, 'javac → java -cp / JUnit, 감시·파이프 입력'),
+        { path: 'tests/java-local-detect.test.js', label: 'java-local-detect.test.js', description: '탐색 순서·JRE 제외·재검사 인증·진단' },
+        { path: 'tests/java-libraries-desktop.test.js', label: 'java-libraries-desktop.test.js', description: '카탈로그·경로 조립·클래스패스·processor 경로' },
+        { path: 'tests/launcher-arg-quoting.test.js', label: 'launcher-arg-quoting.test.js', description: '자바·파이썬 프로세스 인자 인용을 한 곳으로' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '프로세스 인자 인용을 QuoteProcessArgument 한 곳으로 모으고, 테스트가 "자바 실행·컴파일 인자에 손으로 붙인 따옴표가 남아 있지 않다" 를 검사합니다. ' +
+            '지금까지 새지 않은 이유가 "Windows 경로에 따옴표를 못 쓰고 클래스 이름은 정규식으로 뽑은 식별자라서" 라는, 코드 어디에도 적혀 있지 않은 약속이었다는 반성이 주석에 있습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '없는 라이브러리를 조용히 빼고 실행하지 않습니다. 실행이면 프로세스 없는 완료 세션을 만들어 출력 칸에 붉게 알리고, 저장 검사면 검사 자체를 건너뜁니다 — ' +
+            '없는 jar 때문에 난 import 오류를 학생 코드의 잘못으로 표시하면 고칠 수 없는 빨간 줄이 남기 때문입니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'JDK 원클릭 설치(/java-install)는 서버가 토큰만 요구하고 확인 헤더를 받지 않습니다. 화면(java-runtime.js)은 누르기 전에 확인 창을 띄우지만, ' +
+            '같은 파일의 jar 설치(X-ClassDock-JavaLib-Confirm)·npm 설치는 그 확인을 서버 쪽 헤더로 한 번 더 강제하는데 가장 큰(약 200MB) 실행 파일 묶음을 받는 이 경로만 화면에 맡깁니다. ' +
+            '받는 곳이 고정되고 SHA-256 을 대조하므로 위험은 작지만, "인터넷에서 실행될 코드를 받는 동작은 확인 헤더" 라는 규칙이 여기서 끊깁니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'JavaMinimumFeatureVersion 옆 주석이 "단일 파일 소스 실행이 들어온 버전" 이라고 최소 버전의 근거를 대는데, 지금 실행기는 source-file 모드를 쓰지 않고 javac 로 컴파일합니다. ' +
+            '근거가 사라진 상수라, 누군가 최소 버전을 바꿀 때 무엇을 기준으로 삼을지 코드가 답하지 못합니다(예제 쪽 기준은 설계 문서의 Java 11 문법입니다).',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '저장 검사(/java-check)도 고른 jar 를 -processorpath 로 넘기므로, Lombok 같은 annotation processor 코드가 저장할 때마다(자동 저장 검사를 켰다면 3초 간격으로) 로컬에서 실행됩니다. ' +
+            '카탈로그 jar 는 SHA-256 으로 고정돼 있어 문제가 되지 않지만, 직접 좌표로 받은 jar 는 .sha1 대조뿐이라 "고르는 순간 컴파일 때 코드가 돈다" 는 성질을 알고 있어야 합니다.',
         },
       ],
     }),
@@ -545,6 +674,91 @@ export default ({ helpers, diagrams, rootDir }) => {
     }),
 
     sec({
+      id: 'launcher-transit',
+      category: CAT,
+      group: '지도',
+      title: '실시간 교통 대리 수신 — 서울 지하철 · 제주 버스',
+      subtitle: '인증키를 브라우저에 두지 않고, 조회 한도와 남의 사이트 부담을 런처 한 곳에서 묶는다',
+      summary:
+        '지도의 실시간 열차·버스 층이 바깥을 보는 경로입니다. 지하철은 서울시 realtimePosition API 를 인증키로 부르고, 제주 버스는 제주 버스정보 사이트의 조회 네 가지를 부릅니다. ' +
+        '둘 다 원격 주소를 프런트에서 받지 않고 호스트·경로·메서드를 고정하며, 응답 크기 상한과 짧은 캐시를 두어 한 교실의 여러 화면이 같은 노선을 봐도 상류 호출을 한 번으로 묶습니다.',
+      usage: [
+        {
+          title: '지하철 API 는 https 를 받지 않는다',
+          body:
+            '그래서 브라우저에서 직접 부르면 https 로 연 화면에서 막히고, 무엇보다 인증키가 화면 코드에 드러납니다. 런처가 대신 받되, 키가 URL 에 평문으로 실리는 것은 ' +
+            '제공처 사정이라 어쩔 수 없다는 점(읽기 전용·무료 키)을 주석이 인정합니다.',
+        },
+        {
+          title: '오류도 HTTP 200 으로 온다',
+          body:
+            '본문의 code 로 가릅니다 — INFO-000 정상, INFO-100 키 오류, INFO-200 자료 없음. INFO-200 은 "지금 이 노선에 열차가 없다" 는 정상 답이라 그대로 내보내고, ' +
+            '키 저장 시 시험 조회도 심야의 INFO-200 을 "키는 멀쩡하다" 로 받아들입니다. 환율 API 에서 이미 한 번 겪은 함정이라는 기록이 있습니다.',
+        },
+        {
+          title: '키는 DPAPI 로 사용자 계정에 묶는다',
+          body:
+            '"기억하기" 를 고르면 ProtectedData(CurrentUser) 로 암호화해 LocalAppData 에 임시 파일 → 교체로 씁니다. 기억하지 않으면 파일을 지우고 메모리에만 둡니다. ' +
+            '키를 지우면 그 키로 받아 둔 캐시도 함께 비웁니다. 키 상태·저장·삭제는 토큰에 더해 X-ClassDock-Action 헤더를 요구합니다.',
+        },
+        {
+          title: '제주 버스: 같은 조회는 한 줄로 세운다',
+          body:
+            '조회 키(종류:값)를 16개 잠금 중 하나에 배정해, 같은 노선을 여러 화면이 동시에 물으면 앞 요청이 끝날 때까지 기다렸다가 그 결과를 받습니다. ' +
+            '캐시는 위치 30초·노선·정류장·경로 24시간이고 항목 100개를 넘으면 가장 오래 안 쓴 것부터 버립니다. 새로고침 요청도 30초 안에는 상류를 다시 부르지 않습니다.',
+        },
+        {
+          title: '실패하면 늦게, 그러나 마지막 위치는 알린다',
+          body:
+            '상류가 Retry-After 를 주면 30초~24시간 범위에서 따르고, 실패한 동안에는 2분 이내 위치 캐시를 X-ClassDock-Bus-Stale: 1 로 내줍니다. ' +
+            '원본 수신 시각은 X-ClassDock-Bus-Fetched-At 으로 보존해, 캐시를 다시 전달해도 새 관측으로 보이지 않게 합니다.',
+        },
+      ],
+      features: [
+        { title: '지하철 캐시', body: '노선마다 한 칸, 12초 신선 · 받기 실패 시 1분 이내 값. 하루 1,000회 한도라 캐시가 절약이 아니라 필수라는 주석이 있습니다.' },
+        { title: '노선 허용 목록', body: '노선 이름이 URL 경로에 들어가므로 16개 목록에 있는 것만 통과. 표·main.go 와 같은 목록인지 테스트가 봅니다.' },
+        { title: '응답 상한', body: '지하철 512KB · 제주 위치 2MB · 제주 노선·정류장·경로 5MB. 제한 시간 12초, 제주 요청은 리다이렉트를 따라가지 않습니다.' },
+        { title: '능력 프로브', body: '/can-proxy-subway · /can-proxy-jeju-bus. 지하철은 Go 폴백 런처에도 있고, 제주 버스는 C# 런처에만 있습니다.' },
+      ],
+      files: [
+        L('launcher.cs (교통 라우팅)', { from: 'else if (method == "GET" && path == "/can-proxy-jeju-bus")', before: 1, to: 'else if (method == "DELETE" && path == "/subway-key")', after: 10 }, '/jeju-bus-* · /subway-position · /subway-key*'),
+        L('launcher.cs (지하철 대리 수신)', { from: '===== 지하철 실시간 열차 위치 =====', to: '// 제주 사이트 시범 연결.', after: -1 }, '노선 목록·키 보관(DPAPI)·결과 코드·캐시'),
+        L('launcher.cs (제주 버스 대리 수신)', { from: '// 제주 사이트 시범 연결.', to: 'static bool TryProxyMapTile(string url, out byte[] data, out string mime)', after: -1 }, '조회 네 가지·잠금 16개·캐시 100개·Retry-After'),
+        { path: 'tests/subway-stations.test.js', label: 'subway-stations.test.js', description: '노선 목록이 표·main.go·launcher.cs 세 곳에서 같은지' },
+        { path: 'tests/jeju-bus-controller.test.js', label: 'jeju-bus-controller.test.js', description: '런처 캐시 시각·Retry-After 보존' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '두 대리 수신 모두 "원격 URL 을 입력받지 않는다" 를 지킵니다. 지하철은 노선 이름을 목록으로, 제주 버스는 조회 종류를 네 가지로·값을 숫자(노선 검색만 하이픈 허용) 12자로 좁히고, ' +
+            '제주 요청은 AllowAutoRedirect=false 로 리다이렉트를 통한 목적지 변경까지 막았습니다. /tile-proxy 가 허용 호스트 목록으로 막은 것과 같은 결의 방어입니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '제주 응답을 캐시에 넣기 전에 JavaScriptSerializer 로 파싱해 종류별 모양(정류장 목록 배열·차량 배열·노선 배열)을 확인합니다. 잘못된 JSON 이나 오류 페이지를 24시간 캐시하는 사고를 막습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '제주 버스 잠금은 네트워크 호출(최대 12초) 동안 잡혀 있고, 잠금이 16개뿐이라 해시가 같은 칸에 떨어진 서로 다른 노선도 그동안 기다립니다. ' +
+            'HTTP 요청마다 스레드를 쓰는 런처라 상류가 느린 날에는 대기 스레드가 쌓입니다. 한 교실 규모에서는 문제가 되지 않을 크기지만, 조회 키별 진행 중 작업을 공유하는 방식이 더 정확한 도구입니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '지하철 조회 예산은 화면 15초 · 런처 12초 캐시로 한 노선을 4시간 남짓 볼 수 있는 계산입니다(하루 1,000회). 여러 시간 연속으로 켜 두는 교실이나 여러 노선을 번갈아 보는 수업에서는 ' +
+            '오후에 한도가 떨어질 수 있고, 그때 화면은 "열차 정보를 받지 못했어요" 로만 보입니다 — 한도 소진을 구분하는 결과 코드 처리는 없습니다.',
+        },
+      ],
+    }),
+
+    sec({
       id: 'launcher-ssh',
       category: CAT,
       group: '원격 터미널',
@@ -676,9 +890,30 @@ export default ({ helpers, diagrams, rootDir }) => {
       subtitle: '설치된 PowerPoint, ffmpeg, DB 파일 직접 실행',
       summary:
         '/convert-pptx 는 설치된 PowerPoint 를 COM 으로 몰아 PPTX 를 PDF 로 정확히 변환합니다(근사 미리보기와 품질 차이가 가장 큰 지점). ' +
-        '/convert-media 는 ffmpeg 로 브라우저가 못 여는 영상을 MP4 로 바꾸고, 없으면 /install-ffmpeg 로 설치합니다. ' +
+        '영상은 두 길입니다 — 끌어다 놓아 연 파일은 /convert-media 로 본문을 주고받고, EXE 로 연 폴더 안의 파일은 바이트를 옮기지 않고 ' +
+        '/convert-media-path 로 경로만 넘겨 ffmpeg 가 디스크에서 직접 변환하며 /media-ticket · /media-stream 으로 Range 재생합니다. ffmpeg 가 없으면 /install-ffmpeg 로 설치합니다. ' +
         'SQLite 는 /sqlite-preview(작업공간 파일), /sqlite-disk-preview(디스크 원본), /sqlite-exec(임의 SQL) 세 갈래입니다.',
       usage: [
+        {
+          title: '수 GB 영상은 본문으로 옮기지 않는다',
+          body:
+            '수업 영상을 통째로 브라우저로 올리면 런처와 브라우저가 각각 그만큼 메모리를 쓰고, 2GB 를 넘으면 런처의 byte[] 상한에 걸려 아예 열리지 않습니다. ' +
+            '그래서 원본 폴더 안의 파일은 (폴더 ID + 상대 경로)만 들고 다니고, 변환은 작업(job)으로 띄워 700ms 폴링으로 단계·진행률·배속을 받습니다. ' +
+            '결과는 언제나 .mp4 이고 원본과 같은 경로를 막으며, 완성되기 전에는 .part 이름으로만 존재합니다.',
+        },
+        {
+          title: '<video> 는 헤더를 못 붙인다 — 그래서 표',
+          body:
+            '미디어 요소의 요청에는 X-ClassDock-Token 을 실을 수 없어, 토큰이 필요한 POST /media-ticket 으로 파일 하나에만 쓰는 표를 먼저 받고 ' +
+            'GET /media-stream?t= 가 그 표로 파일을 흘려보냅니다. 표는 실제 경로가 아니라 원본 폴더 ID + 상대 경로를 들고 있어 새어 나가도 그 폴더 밖은 열 수 없고, ' +
+            '12시간 뒤 만료되며 최대 512개까지만 둡니다. 응답에는 no-store · nosniff · no-referrer 를 붙여 주소가 다른 곳으로 흘러가지 않게 합니다.',
+        },
+        {
+          title: '멈춘 재생이 연결을 끊지 않게',
+          body:
+            '재생을 멈춰 두면 브라우저가 버퍼를 채운 뒤 몇 분씩 읽지 않아 Write 가 막힙니다. WriteFileStreamResponse 가 이 응답에서만 보내기 제한을 10분으로 늘렸다 되돌리고, ' +
+            '약속한 Content-Length 를 못 채우면 0 으로 메우지 않고 연결을 닫아 잘린 응답임을 알립니다.',
+        },
         {
           title: 'SQLite 안전 조건',
           body:
@@ -702,9 +937,15 @@ export default ({ helpers, diagrams, rootDir }) => {
         { title: '메모리 보고', body: '/mem 이 프로세스 트리 메모리를 알려 줍니다.' },
       ],
       files: [
-        L('launcher.cs (변환)', { from: 'method == "POST" && path == "/convert-pptx"', before: 4, to: 'method == "POST" && path == "/install-ffmpeg"', after: 14 }, '/convert-pptx · /convert-media · /install-ffmpeg'),
+        L('launcher.cs (변환)', { from: 'method == "POST" && path == "/convert-pptx"', before: 4, to: 'method == "POST" && path == "/install-ffmpeg"', after: 14 }, '/convert-pptx · /convert-media · /convert-media-path·job·cancel · /media-ticket · /media-stream · /install-ffmpeg'),
+        L('launcher.cs (Range 스트리밍)', { from: 'static void WriteFileStreamResponse(Stream stream, string full, string contentType, Dictionary<string, string> headers)', to: 'static void WriteCorsResponse(', after: -2 }, '206 Partial Content · 보내기 제한 10분 · 잘린 응답은 연결 닫기'),
+        L('launcher.cs (재생 표)', { from: 'static string MediaContentType(string path)', to: 'static long ParseTimecodeUs(string text)', after: -3 }, '/media-ticket 발급과 확인'),
+        L('launcher.cs (경로 방식 변환 작업)', { from: 'static bool RunFfmpegTracked(string cmd, string args, MediaConvertJob job)', before: 1, to: 'static string FindPython()', after: -2 }, '진행률 읽기 · 단계 재시작 · .part → 제자리 · 취소'),
+        { path: 'tests/video-convert-by-path.test.js', label: 'video-convert-by-path.test.js', description: '경로 방식 변환·재생 표의 런처·화면 계약' },
         L('launcher.cs (SQLite)', { from: 'method == "POST" && path == "/sqlite-preview"', before: 1, to: 'method == "POST" && path == "/sqlite-exec"', after: 16 }, '/sqlite-preview · /sqlite-disk-preview · /sqlite-exec'),
+        L('launcher.cs (SQLite 실행기)', { from: 'static string SqliteDiskPreview(Dictionary<string, string> headers)', to: 'static readonly System.Text.RegularExpressions.Regex NpmPackageNameRe', after: -2 }, '경로 해석 · SQLite 헤더 확인 · 내용 지문 대조 · .bak 백업 경로'),
         { path: 'tests/sqlite-editor-safety.test.js', label: 'sqlite-editor-safety.test.js', description: 'DB 편집 안전 조건' },
+        { path: 'tests/media-convert-desktop.test.js', label: 'media-convert-desktop.test.js', description: '호환 스트림 보존·GPU 실패 대체·취소와 실제 MP4 출력' },
       ],
       notes: [
         {
@@ -728,6 +969,29 @@ export default ({ helpers, diagrams, rootDir }) => {
           type: 'risk',
           label: 'Risk',
           body: 'PowerPoint COM 자동화는 사용자 PC 의 PowerPoint 를 실제로 띄웁니다. 변환 중 사용자가 PowerPoint 를 조작하면 충돌할 수 있습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '토큰을 못 쓰는 한 경로(/media-stream)를 "인증 예외" 로 열지 않고 좁은 열쇠로 대신했습니다. 표는 무작위 값·만료·개수 상한을 갖고, ' +
+            '열 때마다 원본 폴더 ID 와 상대 경로를 다시 풀어 확인하므로 발급 뒤 폴더 등록이 사라지면 표도 통하지 않습니다. ' +
+            'RequiresLocalAuthToken 옆 주석에 "GET /media-stream 만 예외인 이유" 가 적혀 있어 나중에 규칙을 넓히려는 사람이 멈출 자리가 있습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '경로 방식 변환은 결과 파일이 이미 있으면 묻지 않고 지웁니다(RunMediaConvertJob 의 File.Delete(job.OutPath)). 결과 이름은 화면이 "원본 이름.mp4" 로 정하므로, ' +
+            '수업.mkv 를 변환하면 같은 폴더에 원래 있던 다른 수업.mp4 가 교체됩니다. 일괄 변환은 먼저 /source-folder-entry 로 있는지 보고 건너뛰지만, 영상 탭 하나에서 누르는 단일 변환에는 그 확인이 없습니다 — ' +
+            '사용자의 원본 폴더를 고치는 경로라, 이름을 비켜 짓거나 덮어쓰기 전에 확인하는 쪽이 안전합니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '변환은 CPU 를 다 쓰므로 MediaConvLock 으로 한 번에 하나만 돌고, 뒤 작업은 queued 로 기다립니다(화면이 "앞선 변환이 끝나기를 기다리는 중" 으로 알림). ' +
+            '작업표는 끝난 뒤 6시간이 지나야 치우고 최대 64개라, 일괄 변환을 여러 번 걸면 too-many-convert-jobs 로 거절될 수 있습니다.',
         },
       ],
     }),

@@ -1,50 +1,52 @@
 # ClassDock 코드리뷰 맵
 
-`D:\my\myOffice` (ClassDock) 소스를 읽어 만든 정적 코드리뷰 사이트입니다.
+`D:\my` (ClassDock) 소스를 읽어 만든 정적 코드리뷰 사이트입니다.
 **`index.html` 을 브라우저로 열면 바로 뜹니다** — 서버도 빌드도 인터넷도 필요 없습니다.
 
 ## 무엇이 들어 있나
 
 | | 수 |
 |---|---|
-| 섹션 | 142개 (10개 대분류) |
-| 실린 소스 | 284개 파일 · 204,442줄 |
-| 리뷰 포인트 | 427개 (Good 201 / Risk 147 / Info 79) |
-| 용어 사전 | 100개 (7개 갈래) |
+| 섹션 | 157개 (12개 대분류) |
+| 실린 소스 | 341개 파일 · 196,251줄 (겹치는 구간은 한 번만, 파일 참조 481건) |
+| 리뷰 포인트 | 483개 (Good 229 / Risk 164 / Info 90) |
+| 용어 사전 | 120개 (8개 갈래) |
 | 코드 낱말 사전 | 82개 (JavaScript · C# · Python) |
-| 코드 기호·기본 기능 사전 | 113개 (기호 25 + 기본 기능 88) |
-| 코드 메서드·실행 패턴 사전 | 130개 (메서드 115 + 패턴 15) |
+| 코드 기호·기본 기능 사전 | 120개 (기호 25 + 기본 기능 95) |
+| 코드 메서드·실행 패턴 사전 | 154개 (메서드 139 + 패턴 15) |
 | 프로젝트 API 사전 | 150개 (공유·반복 호출 함수) |
-| 줄 앵커 주석 | 469개 (파일 개요 399 + 지목 70) |
+| 줄 앵커 주석 | 551개 (파일 개요 481 + 지목 70) |
 | 흐름 추적 | 17개 (총 113단계) |
-| 계약 | 58개 (전역 API 20 + EXE 엔드포인트 38) |
+| 계약 | 65개 (전역 API 20 + EXE 엔드포인트 45) |
 | 자동 생성 다이어그램 | 5개 (SVG) |
 
-기준 소스: `ClassDock` 2026-09-03 시점(`3434874`).
+기준 소스: `ClassDock` 2026-09-12 시점(`5ec344b`).
 
-대분류: 개요 · 1.bootstrap · 2.documents · 3.python·notebooks · 4.javascript ·
-5.document-editors · 6.learning-tools · EXE·로컬 서버 · 빌드·도구 · 테스트
+대분류: 개요 · 1.bootstrap · 2.documents · 3.python·notebooks · 4.javascript · 5.java ·
+6.snippet-gallery · 7.document-editors · 8.learning-tools · EXE·로컬 서버 · 빌드·도구 · 테스트
+
+번호는 `scripts.manifest.json` 의 `applicationLayers` 순서(= script 태그 순서)를 그대로 따릅니다.
+2026-09-13 에 `java`·`snippet-gallery` 계층이 끼어들면서 document-editors·learning-tools 가 5·6 → 7·8 로 밀렸습니다.
 
 ## 다시 만들기
 
 소스를 고친 뒤 리뷰 페이지에 반영하려면:
 
 ```bash
-MN_ROOT=D:/my/myOffice node generate-review-data.mjs
+MN_ROOT=D:/my node generate-review-data.mjs
 ```
 
 `MN_ROOT` 은 **`scripts.manifest.json` 이 들어 있는 폴더**를 가리켜야 합니다 — 그 파일이 있는지로
 소스 루트를 판정하기 때문입니다. 지정하지 않으면 부모 폴더 → 형제 폴더 `ClassDock` 순으로 찾아보고,
 거기에도 없으면 확인한 위치를 찍고 멈춥니다.
 
-이 리뷰 폴더는 소스 레포 밖에 있어 자동 탐색에 걸리지 않으므로 `MN_ROOT` 지정이 반드시 필요합니다.
-위 경로는 이 체크아웃 기준이며(`D:\my\code-review` 옆의 `D:\my\myOffice`), 소스를 다른 곳에 두었다면
-그 경로로 바꿔 주세요.
+이 리뷰 폴더(`D:\final\codeReview\classDock-codeReview`)는 소스 레포 밖에 있어 자동 탐색에 걸리지 않으므로
+`MN_ROOT` 지정이 반드시 필요합니다. 소스를 다른 곳에 두었다면 그 경로로 바꿔 주세요.
 
 PowerShell 에서는:
 
 ```bash
-$env:MN_ROOT="D:\my\myOffice"; node generate-review-data.mjs
+$env:MN_ROOT="D:\my"; node generate-review-data.mjs
 ```
 
 ## 파일 구성
@@ -59,10 +61,11 @@ $env:MN_ROOT="D:\my\myOffice"; node generate-review-data.mjs
 | `lib/section.mjs` | 섹션 정의 도우미(로딩 순서·의존·공개 API 자동 주입) |
 | `lib/project-functions.mjs` | 프로젝트 함수 선언·호출 분석과 상위 150개 선정 |
 | `lib/source-metrics.mjs` | 줄 수·함수 길이·구간 앵커·큰 파일/테스트 순위를 생성 때 재는 도우미 |
-| `lib/endpoint-check.mjs` | `launcher.cs` 라우팅과 EXE 계약 카드의 `endpoints` 대조 |
+| `lib/endpoint-check.mjs` | `launcher.cs` 라우팅과 EXE 계약 카드의 `endpoints` 대조(카드가 가리킨 줄이 그 경로인지는 `generate-review-data.mjs` 가 따로 봄) |
 | `lib/line-anchor.mjs` | 곁다리 파일의 `{ file, at }` 앵커를 줄 번호로 — 못 찾으면 경고 |
 | `sections/*.mjs` | **사람이 쓰는 리뷰 문장**. 여기를 고칩니다 |
-| `sections/45-map.mjs` | 지도(.map). document-editors 계층이지만 한 파일이 6,500줄대라 떼어 둠 |
+| `sections/36-java.mjs` | java 계층 4개 파일과 snippet-gallery 계층(예제 갤러리). 갤러리는 자바 예제가 들어오며 공용화돼 함께 읽음 |
+| `sections/45-map.mjs` | 지도(.map)와 실시간 교통 층(지하철·제주 버스 5개 파일). document-editors 계층이지만 map-viewer.js 가 커서 떼어 둠 |
 | `sections/47-timeline.mjs` | 연대표(.timeline). 같은 이유로 document-editors 에서 떼어 둠 |
 | `sections/48-concept.mjs` | 개념 관계도(.concept)·암기 카드(.study). 한 수업의 앞뒤라 함께 읽습니다 |
 | `sections/55-music.mjs` | 악보(.msheet) 5개 파일. learning-tools 계층이지만 분량이 커서 떼어 둠 |
@@ -80,7 +83,7 @@ $env:MN_ROOT="D:\my\myOffice"; node generate-review-data.mjs
   다이어그램도 따라 바뀌므로 그림이 코드와 어긋나지 않습니다.
 - **CDN 의존 0.** 원본 앱이 오프라인 우선이라 리뷰 산출물도 같은 원칙을 지켰습니다.
   Mermaid 같은 런타임 렌더러도, 웹폰트도 쓰지 않습니다.
-- **구간은 경계가 있을 때만.** `desktop/launcher.cs`(9천 줄대)는 기능별 구간으로 잘라 실었고,
+- **구간은 경계가 있을 때만.** `desktop/launcher.cs`(만 줄대)는 기능별 구간으로 잘라 실었고,
   줄 번호는 원본 기준 그대로입니다. 화면에도 `L786–L899 / 전체 8,651줄` 처럼 그때 잰 값으로 표시됩니다.
   줄 수는 화면에서 생성 시점 값으로 보여 주고, 리뷰 문장에는 적지 않습니다 — 소스가 자라면
   문장만 조용히 낡기 때문입니다(같은 이유로 산출물 크기도 생성 때 직접 잽니다).
@@ -125,6 +128,21 @@ $env:MN_ROOT="D:\my\myOffice"; node generate-review-data.mjs
   것, 그리고 **찾긴 했지만 어느 섹션에도 실리지 않아 눌러도 아무 일이 없는 것**. 마지막 검사가
   없던 동안 15곳이 죽은 채로 있었고, 엔드포인트 대조는 통과하고 있었습니다 — 계약이 가리키는
   코드가 화면에 없는 것은 그 검사가 보지 않는 종류의 빈틈이었기 때문입니다.
+- **앵커가 "있다" 와 "맞다" 는 다릅니다.** 2026-09-13 에 `documents.js` 앵커 두 곳이 깨져 고치다 보니,
+  그 앵커가 원래부터 제목과 다른 줄(렌더가 아니라 `updateDocEmptyState()`)을 가리키고 있었습니다.
+  같은 결을 전체에서 찾아보니 **계약 카드 22장 · 흐름 단계 15곳 · 지목 주석 16곳, 모두 53곳**이
+  엉뚱한 코드를 가리키고 있었습니다 — `/app-state` 카드가 PowerPoint 예외 처리를, `/tile-cache-*` 카드가
+  SSH 창 크기 변경을, "상수 시간 비교" 주석이 닫는 중괄호를, "임의 SQL 실행 — .bak" 주석이
+  "no-python" 응답을 가리키는 식입니다. 08-22 에 줄 번호를 앵커로 옮길 때 이미 틀린 숫자를 그대로
+  옮긴 것이라 위의 세 검사(찾았는가 · 하나인가 · 실렸는가)를 모두 통과하고 있었습니다.
+  모두 바로잡고, 정답이 있는 계약 카드에는 **네 번째 검사**를 붙였습니다 — 가리킨 줄의 위 3줄 · 아래 4줄
+  안에 그 카드의 `endpoints` 문자열이 없으면 경고합니다. 흐름·주석에는 그런 정답 목록이 없어 자동 검사를
+  붙이지 못했고, 이번에는 본문에 나오는 경로·식별자가 가리킨 줄 근처에 있는지 스크립트로 훑어 사람이 골랐습니다.
+- **깨진 구간 앵커가 파일 전체를 끌어왔습니다.** `sections/60-desktop.mjs` 의 `L()` 은 앵커를 못 찾으면
+  "그 구간은 코드 없이 실린다" 고 경고했지만, 실제로는 range 없이 넘겨 `readSource` 가 파일 전체를 실었습니다.
+  2026-09-13 에 `class WorkspaceFile`(소스에서 클래스가 사라짐) 하나가 깨지자 `launcher.cs` 1만 3천 줄이 통째로
+  실려 "상한을 넘겨 꼬리가 잘린 파일" 경고까지 떴습니다 — 원인은 앵커 하나였고 잘림은 증상이었습니다.
+  지금은 경고 문구대로 빈 구간(`[0, 0]`)으로 싣습니다.
 - **상한은 최대 파일이 아니라 성장 속도에 맞춥니다.** `MAX_LINES` 를 "최대 파일 + 8%"(5,600)로
   잡았을 때, 정작 상한에 다가온 것은 최대 파일이 아니라 한 주 만에 2,785 → 4,930줄이 된
   `whiteboard.js` 였습니다. 상한에 부딪히는 것은 대개 "지금 가장 큰 파일"이 아니라 "지금 가장 빨리
@@ -144,7 +162,9 @@ $env:MN_ROOT="D:\my\myOffice"; node generate-review-data.mjs
   커버리지 검사는 전부 통과하고 있었습니다. 지금은 매번 `140/140` 처럼 비율을 찍습니다 —
   2026-08-31 에는 환율 4개와 SSH 파일 올리기·개인키 고르기 7개, 모두 11개가 이 검사로 드러났습니다.
   2026-09-03 에는 DB 클라이언트 19개·진단 5개·원격 파일 3개, 모두 27개가 한꺼번에 드러났습니다.
-- **테스트는 전수가 아니라 표본.** 단위 110/136 · E2E 26/59 를 싣습니다. 기능별 대표를 고른
+  2026-09-13 에는 Java 23개·지하철·제주 버스 6개·경로 방식 영상 5개, 모두 34개였습니다(140/174 → 174/174).
+- **테스트는 전수가 아니라 표본.** 단위 140/168 · E2E 37/73 을 싣습니다. 2026-09-13 에는 이번 갱신 기간(09-04~09-12)에
+  생긴 테스트 중 기능을 대표하는 것(TAR 검증·설정 동기화·작업공간 복원·큰 파일 확인·관계도 강도·지도 반경 비교 등)을 그 기능 섹션에 붙였습니다. 기능별 대표를 고른
   것이라 미참조 테스트는 경고 대상이 아니고, 대신 생성 스크립트가 매번 이 비율을 찍습니다.
 - **용어 사전도 검사 대상.** `sections/05-glossary.mjs` 의 100개 항목은 짐작이 아니라 리뷰 산문의
   어휘 빈도로 골랐습니다(전역 850회, 계층 169회, 폴백 68회 …). 사전에는 있는데 리뷰 본문에는
@@ -164,6 +184,13 @@ $env:MN_ROOT="D:\my\myOffice"; node generate-review-data.mjs
   09-03 에는 두 신호가 함께 떴습니다(새 묶음 `DB 클라이언트`·`진단` · 산문 +18%). DB 클라이언트가
   들여온 어휘가 통째로 새로워서, 스키마 · 테이블·뷰 · 기본키 · 트랜잭션 · 커밋·롤백 · 자동 커밋 ·
   DDL · 드라이버 · 자리표시자 · 덤프 · SFTP 를 더해 89 → 100개가 됐고 `데이터베이스` 갈래가 생겼습니다.
+  09-13 에도 두 신호가 떴습니다(새 묶음 `java`·`snippet-gallery` · 산문 +14%). 빈도를 다시 세어 채점(70회) · 자동완성(39) ·
+  컴파일·javac · JDK · jar·클래스패스 · 표준입력·파이프 등 `코드 실행` 갈래 8개와, 능력 프로브 · Range · Retry-After ·
+  인증키 · OSM · Blob · 접근성 · 스레드 · 요청 취소 · fixture · ffmpeg 등을 더해 100 → 120개가 됐습니다.
+  이때 **09-03 에 만든 `데이터베이스` 갈래가 사전 화면에 한 번도 그려지지 않았다**는 것도 드러났습니다 — 용어는 목록에
+  들어갔지만 카드를 그리는 `THEMES` 목록에는 빠져 있어, 본문 툴팁은 뜨는데 링크를 누르면 내려갈 카드가 없었습니다.
+  "사전에는 있는데 본문에 없는 말" 검사는 match 만 보므로 이 빈틈을 못 잡았습니다. 지금은 `THEMES` 에 없는 갈래가
+  있으면 생성이 멈춥니다.
 - **용어 링크는 첫 등장에만.** 본문에 나오는 사전 용어에 툴팁과 링크를 자동으로 걸되, 한 화면에서
   용어당 첫 번째 등장 하나만 겁니다. `전역` 은 리뷰에 850번 나오므로 전부 걸면 밑줄 범벅이 됩니다.
 - **코드 낱말 사전은 실제 사용분만.** 코드 뷰어에서 쓰는 JavaScript·C#·Python 문법 낱말 78개를
@@ -186,6 +213,12 @@ $env:MN_ROOT="D:\my\myOffice"; node generate-review-data.mjs
   `volatile` 이 없었고, `Math` 는 걸리는데 `max`(1,480회)·`min`(883)·`floor`(178) 이 하나도
   안 걸렸습니다. `JSON` 은 걸리는데 `stringify` 는 안 걸리던 08-31 의 발견과 똑같은 결입니다 —
   낱말 78 → 82 · 기호·기본 기능 92 → 113 · 메서드 102 → 115 로 채웠습니다.
+  09-13 에는 C# 쪽이 같은 모양으로 비어 있었습니다 — `Encoding`·`Path`·`File` 은 있는데 자바 실행기·교통·영상 구간에서만
+  `StringComparison` 53회 · `string.IsNullOrEmpty` 51회 · `Add` 40회 · `Trim` 27회가 하나도 걸리지 않았습니다.
+  C# 기본 기능 6개(StringComparison·Interlocked·Regex·Uri·TimeSpan·CultureInfo)와 C# 메서드 18개, JavaScript 짝
+  7개(RegExp·lastIndexOf·toLocaleLowerCase·createElementNS 등)를 더해 기호·기본 기능 113 → 120 · 메서드 115 → 139 가 됐습니다.
+  자바 키워드는 넣지 않았습니다 — 리뷰에 실리는 .java 파일이 없고 자바 코드는 `java-snippets.js` 의 템플릿 문자열 안에만 있어,
+  코드 뷰어가 낱말을 걸 자리가 없기 때문입니다(`sections/06-code-words.mjs` 머리말).
   대조에 쓴 방법은 단순합니다: 실린 코드에서 표준 키워드·내장 이름·`.메서드(` 호출을 세어
   사전에 없는 것만 남기는 것. 자동 검사로 넣지 않은 이유는 후보에 프로젝트 변수명과
   테스트 프레임워크 API 가 섞여 사람이 골라야 하기 때문입니다.
@@ -200,7 +233,10 @@ $env:MN_ROOT="D:\my\myOffice"; node generate-review-data.mjs
   기능 영역은 파일 경로로 판정하는데, 새 파일이 이름 때문에 엉뚱한 영역으로 떨어질 수 있습니다 —
   `timeline.js` 는 이름에 `viewer` 가 없다는 이유로 `map-viewer.js` 와 달리 '앱 코어' 에 들어가
   `core.js`·`documents.js` 와 25칸을 다투고 있었습니다(몫을 나눠 둔 뜻이 사라지는 자리라
-  `categoryForPath` 에 `timeline`·`terminal` 을 더했습니다). 그래도 연대표 함수는 아직 한 개도
+  `categoryForPath` 에 `timeline`·`terminal` 을 더했습니다. 2026-09-13 에도 같은 일이 다시 있었습니다 —
+  `java-editor.js` 는 `editor` 규칙에 먼저 걸려 '편집기' 로, `java-runtime.js`·`subway-live.js`·`jeju-bus-*.js` 는
+  '앱 코어' 로 떨어지고 있어서, 자바를 편집기 규칙 앞에 두고 "JavaScript 실행" 칸을 "JavaScript·Java 실행" 으로
+  넓혔으며 `subway`·`jeju-bus` 를 지도와 같은 '문서·편집' 에 넣었습니다). 그래도 연대표 함수는 아직 한 개도
   실리지 않는데, 이 사전의 기준이 "여러 파일이 나눠 쓰는 함수"이고 연대표의 함수는 대부분
   자기 파일 안에서만 쓰이기 때문입니다 — 지도가 2개, 원격 터미널이 1개인 것과 같은 이유입니다.
 

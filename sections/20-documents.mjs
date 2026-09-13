@@ -388,6 +388,9 @@ export default ({ manifest, helpers, rootDir }) => {
         { path: 'tests/unknown-text-extension.test.js', label: 'unknown-text-extension.test.js', description: '알 수 없는 확장자 판정' },
         { path: 'tests/binary-model-extension.test.js', label: 'binary-model-extension.test.js', description: '학습 모델·NumPy 이진 보관 경로' },
         { path: 'tests/folder-new-document.test.js', label: 'folder-new-document.test.js', description: '폴더 안 새 문서의 문맥 상속' },
+        { path: 'tests/large-file-open-confirm.test.js', label: 'large-file-open-confirm.test.js', description: '큰 파일은 열기 전에 묻는다 — 상한은 메모리에서 몇 배로 부푸는가를 따른다' },
+        { path: 'tests/e2e/large-file-open.spec.js', label: 'large-file-open.spec.js', description: '상한을 넘는 파일에서 "열지 않기" 를 고르면 열리지 않는다' },
+        { path: 'tests/tar-parser.test.js', label: 'tar-parser.test.js', description: 'TAR 크기·체크섬·블록 경계 검증 — 무한 반복과 잘린 파일 추출 방지' },
       ],
       notes: [
         {
@@ -417,7 +420,7 @@ export default ({ manifest, helpers, rootDir }) => {
       features: [
         { title: '지연 렌더', body: '수백 쪽 PDF 도 첫 화면이 빨리 뜹니다. 스크롤에 따라 필요한 페이지만 그립니다.' },
         { title: '야간 모드', body: '캔버스 결과를 반전해 다크 테마에서 눈부심을 줄입니다.' },
-        { title: '한글 폰트', body: 'korean-font.js 의 NanumGothic 데이터와 연결됩니다.' },
+        { title: '한글 폰트', body: 'EXE 에서는 FontFace 로 부분 한글 글꼴을 믿고 싣기 어려워, PDF 에 박힌 글리프를 캔버스에 직접 그려 한글이 네모로 바뀌지 않게 합니다.' },
         { title: '시작 로드', body: 'PDF 는 앱의 중심 기능이라 MNLazy 지연 대상이 아니라 시작할 때 함께 싣습니다.' },
       ],
       notes: [
@@ -547,31 +550,6 @@ export default ({ manifest, helpers, rootDir }) => {
           type: 'info',
           label: 'Info',
           body: 'renderOptions 를 문서에 노출하는 것은 캐시 무효화를 위한 의도적 결합입니다. 주석에 이유가 남아 있어 실수로 지우기 어렵게 돼 있습니다.',
-        },
-      ],
-    }),
-
-    mod('korean-font.js', {
-      title: 'korean-font.js — Matplotlib 한글 폰트 데이터',
-      subtitle: '생성 파일, NanumGothic gzip+base64',
-      summary:
-        'Pyodide 의 Matplotlib 에서 한글 라벨이 깨지지 않도록 NanumGothic 을 gzip+base64 로 담아 둔 생성 파일입니다. ' +
-        '직접 수정하지 않으며, 파일 자체는 4줄이지만 내용은 폰트 바이너리입니다.',
-      features: [
-        { title: '생성 파일', body: 'vendor/NanumGothic.ttf 를 도구가 변환해 만듭니다. 손으로 고치면 다음 빌드에 덮어써집니다.' },
-        { title: '사용처', body: 'python-runtime.js 가 Pyodide 파일시스템에 써 넣고 Matplotlib 폰트로 등록합니다.' },
-      ],
-      notes: [
-        {
-          type: 'risk',
-          label: 'Risk',
-          body:
-            'manifest 의 scriptDependencies 에 python-runtime.js → korean-font.js 관계가 선언돼 있지 않습니다. 이름이나 순서를 바꿔도 check-source 가 잡지 못하고 런타임에서만 드러납니다.',
-        },
-        {
-          type: 'info',
-          label: 'Info',
-          body: '폰트를 JS 로 인라인한 이유는 단일 파일 오프라인 HTML 에서도 Matplotlib 한글이 나와야 하기 때문입니다.',
         },
       ],
     }),
@@ -714,6 +692,8 @@ export default ({ manifest, helpers, rootDir }) => {
         { path: 'tests/python-syntax-highlighting.test.js', label: 'python-syntax-highlighting.test.js', description: '데코레이터·f-string 등 토큰 강조' },
         { path: 'tests/python-definition-view.test.js', label: 'python-definition-view.test.js', description: '정의 보기 분할 뷰어' },
         { path: 'tests/scratch-save-name.test.js', label: 'scratch-save-name.test.js', description: '첫 저장 이름 지정 시 확장자·경로 유지' },
+        { path: 'tests/structured-diagnostic.test.js', label: 'structured-diagnostic.test.js', description: 'XML·HTML 오류를 줄 번호 요약과 한국어 풀이로 나눠 보여 주기' },
+        { path: 'tests/e2e/css-completion.spec.js', label: 'css-completion.spec.js', description: 'CSS 속성·값 자동완성' },
       ],
       notes: [
         {

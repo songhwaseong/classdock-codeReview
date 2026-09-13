@@ -1,4 +1,4 @@
-// 6. learning-tools — 원격 터미널(SSH)과 원격 파일.
+// 8. learning-tools — 원격 터미널(SSH)과 원격 파일.
 //
 // learning-tools 계층이지만 "문서"가 아니라 사이드바에서 열리는 독립 패널이고,
 // 브라우저 쪽보다 EXE 쪽(desktop/ssh_terminal.cs · ssh_files.cs)이 더 큰 드문 기능이라 따로 둔다.
@@ -19,7 +19,7 @@ export default ({ helpers, rootDir }) => {
   return [
     sec({
       id: 'remote-terminal-overview',
-      category: '6. learning-tools',
+      category: '8. learning-tools',
       group: '원격 터미널',
       title: '원격 터미널 개요 (SSH · 리눅스 실습)',
       subtitle: `브라우저 ${frontLines} + EXE ${backLines} · ${filesBackLines}(원격 파일) — 무게중심이 런처에 있는 유일한 기능`,

@@ -37,6 +37,7 @@ import buildBootstrap from './sections/10-bootstrap.mjs';
 import buildDocuments from './sections/20-documents.mjs';
 import buildPython from './sections/30-python.mjs';
 import buildJavaScript from './sections/35-javascript.mjs';
+import buildJava from './sections/36-java.mjs';
 import buildEditors from './sections/40-editors.mjs';
 import buildMap from './sections/45-map.mjs';
 import buildTimeline from './sections/47-timeline.mjs';
@@ -100,7 +101,7 @@ if (!rootDir) {
 //
 // 상한에 걸리는 파일을 구간(range)으로 나눌 수 있는지는 파일마다 다르다. spreadsheet-viewer.js 는
 // 1,372줄부터 끝까지가 renderXlsx 함수 하나, map-viewer.js 는 뒤쪽 절반이 mountMapEditor 함수
-// 하나(3,094줄)여서 구간을 어디로 잡아도 함수 중간을 끊는다. 반면 desktop/launcher.cs(8천 줄대)는
+// 하나(3,094줄)여서 구간을 어디로 잡아도 함수 중간을 끊는다. 반면 desktop/launcher.cs(만 줄대)는
 // 최상위 선언이 여럿이라 기능별 구간으로 나눠 싣는다 — 그쪽은 range 가 자연스러운 경계를 갖는다.
 //
 // 다만 상한을 올리는 것은 미루는 조치일 뿐이다. map-viewer.js 는 이제 이 프로젝트에서 가장 큰
@@ -222,7 +223,7 @@ const diagrams = {
       },
       {
         title: '생성 파일',
-        body: 'classdock-offline.html, desktop/app.html, src/js/korean-font.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
+        body: 'classdock-offline.html, desktop/app.html, vendor/korean-font.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
       },
       {
         title: 'EXE 단계',
@@ -244,6 +245,7 @@ const reviewSections = [
   ...buildDocuments(context),
   ...buildPython(context),
   ...buildJavaScript(context),
+  ...buildJava(context),
   ...buildEditors(context),
   ...buildMap(context),
   ...buildTimeline(context),
@@ -599,6 +601,22 @@ const sourceLinesOf = (relativePath) => anchorSources.get(relativePath) ?? null;
 const lineAnchors = {};
 const anchorFailures = [];
 const anchorOutOfRange = [];
+// 앵커가 "있다" 와 "맞다" 는 다르다. 위의 두 검사(찾았는가 · 화면에 실렸는가)를 모두 통과하고도
+// EXE 계약 카드 22장이 자기 엔드포인트가 아닌 줄을 가리키고 있었다(2026-09-13 에 발견 —
+// /app-state 가 PowerPoint 예외 처리를, /tile-cache-* 가 SSH 창 크기 변경을 가리키는 식).
+// 줄 번호를 앵커로 옮길 때 이미 틀려 있던 숫자를 그대로 옮긴 것이라 어떤 검사에도 걸리지 않았다.
+// 계약 카드에는 endpoints 라는 정답이 있으므로, 가리킨 줄 근처에 그 경로 문자열이 있는지까지 본다.
+// 접두사("/ssh-file-")도 함께 비교한다 — 한 벌을 StartsWith 한 줄로 분기하는 카드는 그 줄이 곧 제자리다.
+const ANCHOR_NEAR_ABOVE = 3;
+const ANCHOR_NEAR_BELOW = 4;
+const anchorOffTarget = [];
+const endpointNearLine = (ref, line) => {
+  const endpoints = ref.endpoints ?? [];
+  if (!endpoints.length) return true;
+  const lines = sourceLinesOf(ref.file) ?? [];
+  const around = lines.slice(Math.max(0, line - 1 - ANCHOR_NEAR_ABOVE), line + ANCHOR_NEAR_BELOW).join('\n');
+  return endpoints.some((endpoint) => around.includes(`"${endpoint}`));
+};
 for (const ref of sidecarRefs) {
   const label = `${ref.source} — ${ref.title ?? ref.label ?? ref.file}`;
   if (typeof ref.at !== 'string') {
@@ -613,6 +631,9 @@ for (const ref of sidecarRefs) {
   }
   lineAnchors[anchorKey(ref.file, ref.at, ref.below)] = resolved.line;
   if (!isLoaded(ref.file, resolved.line)) anchorOutOfRange.push(`${label} — ${ref.file}:${resolved.line}`);
+  else if (ref.endpoints && !endpointNearLine(ref, resolved.line)) {
+    anchorOffTarget.push(`${label} — ${ref.file}:${resolved.line}\n    → ${(sourceLinesOf(ref.file)?.[resolved.line - 1] ?? '').trim().slice(0, 100)}`);
+  }
 }
 
 const payload = {
@@ -741,6 +762,13 @@ if (anchorOutOfRange.length) {
   );
   for (const item of anchorOutOfRange) console.warn(`  ${item}`);
   console.warn('  그 구간을 섹션에 싣거나, 이미 실린 자리로 앵커를 옮기세요.');
+}
+if (anchorOffTarget.length) {
+  console.warn(
+    `\n[경고] 자기 엔드포인트가 아닌 줄을 가리키는 계약 카드 ${anchorOffTarget.length}개 — 코드는 뜨지만 엉뚱한 곳입니다(위 ${ANCHOR_NEAR_ABOVE}줄 · 아래 ${ANCHOR_NEAR_BELOW}줄 안에 endpoints 가 없음):`,
+  );
+  for (const item of anchorOffTarget) console.warn(`  ${item}`);
+  console.warn('  contracts.js 의 at 을 그 카드의 대표 경로 라우팅 줄로 옮기세요.');
 }
 if (nearLimitFiles.size) {
   console.warn(

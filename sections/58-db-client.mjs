@@ -1,4 +1,4 @@
-// 6. learning-tools — DB 클라이언트(.dbconn). db-client.js · db-dump.js · db-import.js.
+// 8. learning-tools — DB 클라이언트(.dbconn). db-client.js · db-dump.js · db-import.js.
 //
 // learning-tools 계층이지만 db-client.js 한 파일이 6천 줄대라 50-learning.mjs 에서 떼어 둔다.
 // 지도(45-map)·악보(55-music)와 같은 이유이고, 카테고리가 같으므로 사이드바에서는
@@ -24,7 +24,7 @@ export default ({ helpers, rootDir }) => {
   return [
     sec({
       id: 'db-overview',
-      category: '6. learning-tools',
+      category: '8. learning-tools',
       group: 'DB 클라이언트',
       title: 'DB 클라이언트 개요 (.dbconn)',
       subtitle: `브라우저 ${clientLines} + EXE 워커 ${workerLines} — 접속 하나가 문서 하나`,

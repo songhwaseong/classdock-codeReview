@@ -34,7 +34,7 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
           title: '소스의 원본',
           body:
             'src/js/*.js 와 src/styles.css 가 원본입니다. classdock-offline.html 과 desktop/app.html 은 생성물이라 직접 고치지 않습니다. ' +
-            'src/js/korean-font.js 도 도구가 만드는 파일입니다.',
+            'vendor/korean-font.js 도 vendor/NanumGothic.ttf 에서 만든 파생물입니다.',
         },
         {
           title: '모듈 시스템 없음',
@@ -291,7 +291,8 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
           type: 'info',
           label: 'Info',
           body:
-            'korean-font.js 는 의존 선언이 없지만 python-runtime.js 가 Matplotlib 한글 폰트로 씁니다. 생성 파일이라 선언에서 빠진 것으로 보이며, 이름을 바꾸면 검사에 걸리지 않고 깨집니다.',
+            'korean-font.js 는 전역 스크립트 목록에서 빠져 vendorScripts 의 kfont 지연 묶음(sha384 포함)으로 옮겨졌고, python-runtime.js → lazy.js 의존이 선언됐습니다. ' +
+            '예전에는 의존 선언 없이 전역으로 쓰여 이름을 바꾸면 검사에 걸리지 않고 깨졌지만, 지금은 manifest 가 그 관계를 들고 있습니다.',
         },
       ],
     }),

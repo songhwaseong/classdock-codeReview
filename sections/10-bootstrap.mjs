@@ -124,6 +124,7 @@ export default ({ manifest, helpers, rootDir }) => {
           }) ?? undefined,
           description: '서버측 토큰 검증',
         },
+        { path: 'tests/state-sync-storage.test.js', label: 'state-sync-storage.test.js', description: 'Storage 메서드 이름을 설정 키로 만들지 않고, 바뀐 설정을 묶어 서버로 보내는지' },
       ],
       notes: [
         {
@@ -223,6 +224,68 @@ export default ({ manifest, helpers, rootDir }) => {
           body:
             'bootstrap 계층 두 번째로 로드됩니다 — state-sync.js 가 토큰 붙은 fetch 를 먼저 마련해야 하고, ' +
             '그 뒤로는 최대한 앞에 있어야 다른 모듈의 초기화 오류를 받을 수 있기 때문입니다. 로딩 순서 자체가 이 모듈의 요구사항입니다.',
+        },
+      ],
+    }),
+
+    mod('download.js', {
+      title: 'download.js — 파일 내려받기 공용 (MNDownload)',
+      subtitle: '스무 곳에서 되풀이되던 여섯 줄 — 줄 수가 아니라 빠뜨리기 쉬운 한 줄 때문에 모았다',
+      summary:
+        'Blob 을 만들어 사용자에게 파일로 주는 코드를 한곳에 모았습니다. saveBlob·saveText 둘과 기본 해제 대기 시간 상수 하나만 내놓고, ' +
+        'Object.freeze 로 바꿔 끼울 수 없게 했습니다. 표·문서·관계도 → 그림·영상·칠판·지도 → 실행·수업·과제 순으로 세 번에 나눠 호출부를 옮겼고, ' +
+        '마지막 묶음에서 Object URL 을 놓아 주지 않던 자리 두 곳을 함께 고쳤습니다.',
+      usage: [
+        {
+          title: '되돌리기 쉬운 순서라 이유를 적었다',
+          body:
+            '<a> 를 문서에 붙였다가 뗍니다 — 붙지 않은 요소의 click() 을 무시하는 브라우저가 있기 때문입니다. ' +
+            '그리고 곧바로 revokeObjectURL 하지 않습니다 — 주소가 사라지면 브라우저가 아직 읽기 시작하지 않은 큰 파일을 놓칩니다. ' +
+            '둘 다 "정리" 하고 싶어지는 모양이라 파일 머리말에 이유를 남겼습니다.',
+        },
+        {
+          title: '큰 파일은 틈을 늘린다',
+          body: '기본 1초 뒤에 놓고, 큰 파일을 주는 쪽은 revokeAfterMs 로 늘립니다(영상 60초, PDF 4초).',
+        },
+        {
+          title: '실패는 값으로, 안내는 부르는 쪽이',
+          body:
+            '실패하면 false 를 돌려주고 예외를 밖으로 던지지 않습니다. 여기서 toast 를 띄우면 부르는 쪽의 안내와 두 번 겹치므로, 무슨 말을 할지는 호출부가 정합니다.',
+        },
+        {
+          title: '모든 Object URL 이 오는 곳은 아니다',
+          body:
+            'pdf.js 워커 주소처럼 앱이 살아 있는 동안 계속 걸어 두어야 하는 주소는 해제하면 안 되므로 이 길을 타지 않습니다. 테스트가 그 구분도 따로 봅니다.',
+        },
+      ],
+      features: [
+        { title: 'saveBlob(blob, name, options)', body: '주소 만들기 → <a> 붙이고 클릭 → 떼기 → 늦춰서 해제. 성공 여부를 불리언으로.' },
+        { title: 'saveText(text, name, mime, options)', body: 'mime 을 주지 않으면 UTF-8 일반 텍스트로 Blob 을 만들어 saveBlob 으로 넘깁니다.' },
+      ],
+      files: [
+        { path: 'tests/download-helper.test.js', label: 'download-helper.test.js', description: '반드시 해제·늦춘 해제·실패 시 false·공개 API 고정·걸어 두는 주소 제외' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '모은 이유를 "중복 제거" 가 아니라 "빠뜨리기 쉬운 해제" 로 적었고, 실제로 빠뜨린 자리가 옮기는 과정에서 드러났습니다. ' +
+            '호출부 옮기기를 세 커밋으로 나누고 첫 커밋은 공용 모듈만 들인 채 호출부를 그대로 둬, 어느 단계에서든 되돌릴 수 있게 했습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '테스트가 "공개 API 는 셋뿐이고 바꿔 끼울 수 없다" 를 고정합니다. 공용 모듈이 옵션을 하나씩 늘리며 호출부마다 다르게 쓰이는 흔한 퇴화를 처음부터 막았습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '스무 개 넘는 파일이 쓰는 전역인데 manifest 의 moduleBoundaries 에도 scriptDependencies 에도 선언이 없습니다. ' +
+            'bootstrap 계층 앞쪽에 있어 지금은 순서가 맞지만, check-source.js 가 "소비자가 나중에 로드되는가" 를 검사하지 못하므로 ' +
+            '누가 이 파일을 뒤로 옮기거나 이름을 바꿔도 빌드는 통과하고 내려받기 단추를 누를 때에야 드러납니다.',
         },
       ],
     }),
@@ -562,7 +625,10 @@ export default ({ manifest, helpers, rootDir }) => {
             '2026-08-12 에 환경(texEnvironment)·구분자(texDelimiter)·행렬 조판이 더해지며 이 파일이 4,000줄을 넘겼습니다.',
         },
       ],
-      files: [{ path: 'tests/core.test.js', label: 'core.test.js', description: '이 파일을 검증하는 테스트' }],
+      files: [
+        { path: 'tests/core.test.js', label: 'core.test.js', description: '이 파일을 검증하는 테스트' },
+        { path: 'tests/shared-escape-and-base64.test.js', label: 'shared-escape-and-base64.test.js', description: '흩어져 있던 escapeHtml·base64 를 공용 하나로 모은 뒤의 계약' },
+      ],
       notes: [
         {
           type: 'good',
@@ -694,6 +760,8 @@ export default ({ manifest, helpers, rootDir }) => {
       ],
       files: [
         { path: 'tests/workspaces.test.js', label: 'workspaces.test.js', description: '정규화·복원 순서·경로 인덱스·공유 문서 14개' },
+        { path: 'tests/workspace-membership.test.js', label: 'workspace-membership.test.js', description: '복원 중에는 작업공간 소속을 저장하지 않는다' },
+        { path: 'tests/e2e/workspace-tab-reorder.spec.js', label: 'workspace-tab-reorder.spec.js', description: '작업공간 탭을 끌어 순서를 바꾸면 다시 열어도 유지' },
       ],
       notes: [
         {
