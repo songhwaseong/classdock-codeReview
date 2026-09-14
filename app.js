@@ -3,6 +3,7 @@
 // review-comments.js(줄 앵커 주석), flows.js(흐름 추적), contracts.js(전역 API·EXE 엔드포인트).
 // 앱 본체와 마찬가지로 번들러 없이 전역 스크립트로만 돌아간다.
 
+
 const state = {
   activeSectionId: null,
   activeFileIndex: 0,
@@ -207,12 +208,12 @@ const UNLINKED_COMPOUND_OPERATORS = [
 // 긴 별칭을 먼저 둬야 '전역 스크립트'가 '전역'에 먼저 잘리지 않는다.
 const TERM_PATTERN = aliasToId.size
   ? new RegExp(
-      [...aliasToId.keys()]
-        .sort((a, b) => b.length - a.length)
-        .map((alias) => alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-        .join('|'),
-      'gi',
-    )
+    [...aliasToId.keys()]
+      .sort((a, b) => b.length - a.length)
+      .map((alias) => alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+      .join('|'),
+    'gi',
+  )
   : null;
 
 // 낱말 안쪽에서 잘못 걸리는 것을 막는다. 한글은 뒤에 조사가 붙으므로(‘전역이’, ‘폴백을’)
@@ -561,8 +562,7 @@ const renderNav = () => {
           const rows = list
             .map(
               (section) => `
-                <button type="button" class="nav-item${
-                  section.id === state.activeSectionId ? ' active' : ''
+                <button type="button" class="nav-item${section.id === state.activeSectionId ? ' active' : ''
                 }" data-section="${section.id}" title="${escapeHtml(section.subtitle ?? section.title)}">
                   ${highlight(section.title)}
                 </button>`,
@@ -745,19 +745,18 @@ const renderFlows = (section) => {
         <p>${prose(flow.summary)}</p>
         <div class="flow-steps">
           ${flow.steps
-            .map(
-              (step) => `
-            <button type="button" class="flow-step" data-file="${escapeHtml(step.file)}" data-line="${
-              step.line || 1
-            }"${step.line ? '' : ' disabled'}>
+          .map(
+            (step) => `
+            <button type="button" class="flow-step" data-file="${escapeHtml(step.file)}" data-line="${step.line || 1
+              }"${step.line ? '' : ' disabled'}>
               <span>
                 <span class="flow-step-label">${prose(step.label)}</span>
                 <span class="flow-step-loc">${escapeHtml(refLabel(step, step.location))}</span>
                 <span class="flow-step-body">${prose(step.body)}</span>
               </span>
             </button>`,
-            )
-            .join('')}
+          )
+          .join('')}
         </div>
       </article>`,
     )
@@ -776,9 +775,8 @@ const renderContracts = (section) => {
       const sourceLabel = escapeHtml(refLabel(item, item.source));
       const source =
         item.file && item.line !== 0
-          ? `<button type="button" data-file="${escapeHtml(item.file)}" data-line="${
-              item.line ?? 1
-            }">${sourceLabel}</button>`
+          ? `<button type="button" data-file="${escapeHtml(item.file)}" data-line="${item.line ?? 1
+          }">${sourceLabel}</button>`
           : sourceLabel;
       return `
         <article class="contract">
@@ -788,13 +786,12 @@ const renderContracts = (section) => {
           </div>
           <p class="contract-src">${source}</p>
           ${item.when ? `<p class="contract-when">${prose(item.when)}</p>` : ''}
-          ${
-            (item.tags ?? []).length
-              ? `<div class="contract-tags">${item.tags
-                  .map((tag) => `<span class="contract-tag">${escapeHtml(tag)}</span>`)
-                  .join('')}</div>`
-              : ''
-          }
+          ${(item.tags ?? []).length
+          ? `<div class="contract-tags">${item.tags
+            .map((tag) => `<span class="contract-tag">${escapeHtml(tag)}</span>`)
+            .join('')}</div>`
+          : ''
+        }
           ${item.snippet ? `<pre>${escapeHtml(item.snippet)}</pre>` : ''}
           ${item.note ? `<p class="contract-note">${prose(item.note)}</p>` : ''}
         </article>`;
