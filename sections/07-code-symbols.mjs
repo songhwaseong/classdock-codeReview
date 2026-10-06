@@ -151,6 +151,23 @@ const ENTRIES = [
   builtin('Uri', ['cs'], 'C# 기본 기능', '주소 해석·이스케이프', '웹 주소를 조각으로 해석하거나(Uri.TryCreate) 값을 주소에 넣을 수 있게 이스케이프합니다(Uri.EscapeDataString). 사용자 입력을 바깥 서버 주소에 끼울 때 이것을 거치지 않으면 & 나 / 가 주소 구조를 바꿉니다.'),
   builtin('TimeSpan', ['cs'], 'C# 기본 기능', '시간 간격', '"12초", "6시간" 같은 길이를 나타내는 값입니다. DateTime 끼리 빼면 이 값이 나오고, 캐시 수명·만료 비교에 씁니다.'),
   builtin('CultureInfo', ['cs'], 'C# 기본 기능', '언어·지역 설정', '숫자·날짜를 글자로 바꾸거나 읽을 때 따를 지역 규칙입니다. 이 앱은 InvariantCulture 를 붙여, 소수점이 쉼표인 PC 에서도 응답 헤더·JSON 의 숫자가 같은 모양으로 나오게 합니다.'),
+  // 2026-10-06 보완 — 일기장 암호·사진첩 내보내기·마이크 음 확인·세계 바람이 들어오며 실린 코드에 새 표준 기능이 생겼다.
+  // 실린 코드에서 표준 이름을 세어 사전에 없는 것만 남기는 방법(README 의 손 대조)으로 골랐다.
+  builtin('Path2D', ['js'], 'JavaScript 기본 기능', '다시 쓰는 캔버스 도형', 'SVG 경로 글자("M3 8 L12 5 …")로 캔버스 도형을 만들어 두고 여러 번 그립니다. 이 앱은 화면의 SVG 와 PNG 내보내기가 같은 경로 글을 쓰게 하는 데 씁니다(티어표의 왕관·보석).'),
+  builtin('createImageBitmap', ['js'], 'JavaScript 기본 기능', '그림 미리 풀기', '그림 파일(Blob)을 화면에 그리기 좋은 형태로 미리 풀어 둡니다. 사진을 줄여 담기 전에 가로·세로를 재고 캔버스에 옮겨 그릴 때 씁니다.'),
+  builtin('getRandomValues', ['js'], 'JavaScript 기본 기능', '암호학적 난수', 'crypto.getRandomValues — 예측할 수 없는 난수로 배열을 채웁니다. Math.random 과 달리 앞의 값으로 다음 값을 짐작할 수 없어, 뽑기·로또·암호의 salt·IV 에 씁니다.'),
+  builtin('subtle', ['js'], 'JavaScript 기본 기능', '브라우저 내장 암호', 'crypto.subtle — 해시(digest), 비밀번호에서 키 만들기(deriveKey), 암호화·복호화(encrypt·decrypt)를 브라우저가 직접 해 줍니다. 일기장 파일 암호가 모두 이것으로 돕니다. 보안 연결(https·localhost·file)에서만 쓸 수 있습니다.'),
+  builtin('DecompressionStream', ['js'], 'JavaScript 기본 기능', '압축 풀기 흐름', 'deflate·gzip 으로 줄인 바이트를 흘려 넣으면 풀린 바이트를 내줍니다. 라이브러리 없이 ZIP 안의 DEFLATE 항목을 읽을 때 씁니다. 풀린 크기는 스스로 제한하지 않으므로 읽는 쪽이 상한을 둬야 합니다.'),
+  builtin('VideoEncoder', ['js'], 'JavaScript 기본 기능', '영상 부호화(WebCodecs)', '캔버스 장면(VideoFrame)을 H.264 같은 압축 영상 조각으로 바꿉니다. 브라우저 안에서 MP4 를 굽는 사진첩·수업 리플레이가 쓰고, 조각을 파일로 묶는 일은 mp4-writer.js 가 합니다.'),
+  builtin('AudioEncoder', ['js'], 'JavaScript 기본 기능', '소리 부호화(WebCodecs)', '소리 표본을 AAC 같은 압축 소리 조각으로 바꿉니다. 사진첩이 배경음악을 MP4 에 넣을 때 씁니다. 지원하지 않는 브라우저면 소리 없이 저장한다고 알립니다.'),
+  builtin('OfflineAudioContext', ['js'], 'JavaScript 기본 기능', '들리지 않게 소리 굽기', '스피커로 내보내지 않고 소리 그래프를 실제 시간보다 빠르게 계산해 표본으로 돌려줍니다. 재생목록의 페이드·겹침을 MP4 에 넣을 소리로 미리 구울 때 씁니다.'),
+  builtin('getUserMedia', ['js'], 'JavaScript 기본 기능', '마이크·카메라 열기', 'navigator.mediaDevices.getUserMedia — 사용자 허락을 받아 마이크·카메라 흐름을 엽니다. 다 쓰면 트랙을 멈춰야 브라우저의 녹음 표시가 꺼집니다.'),
+  builtin('URLSearchParams', ['js'], 'JavaScript 기본 기능', '주소 물음 만들기', '"?a=1&b=2" 꼴의 물음을 이름·값으로 만들고 읽습니다. 값에 &·= 같은 글자가 있어도 알아서 이스케이프합니다.'),
+  builtin('HttpWebRequest', ['cs'], 'C# 기본 기능', 'HTTP 요청', '.NET Framework 의 HTTP 요청 형식입니다. 런처가 바깥 API 를 부를 때 쓰며, 제한 시간(Timeout)·리다이렉트 따라가기(AllowAutoRedirect)·바이트 구간(AddRange)을 요청마다 정합니다.'),
+  builtin('MemoryStream', ['cs'], 'C# 기본 기능', '메모리 안의 바이트 흐름', '파일 대신 메모리에 바이트를 쓰고 읽는 흐름입니다. 런처는 응답을 여기 모으며 한 조각마다 상한을 넘는지 봅니다 — 넘으면 끊어 큰 응답이 메모리를 다 쓰지 못하게 합니다.'),
+  builtin('Stopwatch', ['cs'], 'C# 기본 기능', '경과 시간 재기', '시작한 뒤 흐른 시간을 정확히 잽니다(ElapsedMilliseconds). 시험지 수신이 "한 연결은 20초 안에 다 보내야 한다" 를 지키는 데 씁니다.'),
+  builtin('ProtectedData', ['cs'], 'C# 기본 기능', 'DPAPI 암호화', 'Windows 사용자 계정에 묶어 바이트를 암호화·복호화합니다(Protect·Unprotect). 런처가 인증키를 디스크에 둘 때 씁니다.'),
+  builtin('BitConverter', ['cs'], 'C# 기본 기능', '바이트 ↔ 숫자', '바이트 배열과 정수·실수를 서로 바꿉니다. 이 PC 의 바이트 차례(IsLittleEndian)를 따르므로, 정해진 차례로 적힌 파일 형식(GRIB2 는 큰 쪽부터)을 읽을 때는 뒤집어야 합니다.'),
   builtin('RegExp', ['js'], 'JavaScript 기본 기능', '정규식 만들기', '글자로 적은 패턴에서 정규식을 만듭니다. /…/ 리터럴과 달리 실행 중에 이름·검색어를 끼워 넣을 수 있는데, 그때 사용자 글자 속의 . * ( 같은 기호를 먼저 이스케이프하지 않으면 뜻이 바뀝니다.'),
 ];
 

@@ -775,6 +775,7 @@ export default ({ helpers, diagrams, rootDir }) => {
         { title: '능력 프로브', body: '/can-proxy-subway · /can-proxy-jeju-bus. 지하철(위치·도착)은 Go 폴백 런처에도 있고, 버스는 C# 런처에만 있습니다.' },
       ],
       files: [
+        { path: 'tests/e2e/settings-connect.spec.js', label: 'settings-connect.spec.js', description: '설정 → 연결 탭 — 서비스별 키 상태 배지' },
         L('launcher.cs (버스 라우팅)', { from: 'else if (method == "GET" && (path == "/can-proxy-jeju-bus"', to: 'else if (method == "DELETE" && path == "/tago-key")', after: 10 }, '/jeju-bus-* · /jeju-bus-catalog* · /tago-key* — 항공·여객선·날씨·장날도 같은 분기'),
         L('launcher.cs (지하철 라우팅)', { from: 'else if (method == "GET" && path == "/can-proxy-subway")', to: 'else if (method == "DELETE" && path == "/subway-key")', after: 10 }, '/subway-position · /subway-arrival · /subway-key*'),
         L('launcher.cs (지하철 대리 수신)', { from: '===== 지하철 실시간 열차 위치 =====', to: '/* 버스 = TAGO(', after: -1 }, '노선 목록·키 보관(DPAPI)·결과 코드·캐시·역별 도착'),

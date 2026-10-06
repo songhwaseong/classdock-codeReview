@@ -464,6 +464,7 @@ export default ({ manifest, helpers, rootDir }) => {
         { title: 'useTable', body: '테스트에서 표를 직접 건네 전역 없이 검증합니다.' },
       ],
       files: [
+        { path: 'tests/map-subway-controls.test.js', label: 'map-subway-controls.test.js', description: '노선 고르기 — 일부라도 보이면 화면 유지, 다 밖이면 이동' },
         { path: 'tests/subway-live.test.js', label: 'subway-live.test.js', description: '이름 정규화·방향 판정 실측 재현·분기·회차·되돌림 방지·끊긴 열차 숨김' },
         { path: 'tests/fixtures/subway-live-moves.json', label: 'subway-live-moves.json', description: '방향 판정 비율을 재현하는 실측 이동 기록' },
       ],

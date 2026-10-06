@@ -199,6 +199,7 @@ export default ({ helpers, rootDir }) => {
         { title: '진단 꼬리', body: '출력 끝부분을 따로 들고 있다가 세션이 끝났을 때 원인 판정에 씁니다.' },
       ],
       files: [
+        { path: 'tests/remote-terminal-tools.test.js', label: 'remote-terminal-tools.test.js', description: '터미널 검색·내보내기 — 줄바꿈 이음, 한글·이모지 칸 폭, 이스케이프 코드 제외' },
         { path: 'docs/원격터미널-설계.md', label: '원격터미널-설계.md', description: '설계 문서' },
         { path: 'tests/remote-terminal.test.js', label: 'remote-terminal.test.js', description: '배선·도킹·보안 계약 10개' },
       ],

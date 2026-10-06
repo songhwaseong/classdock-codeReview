@@ -554,8 +554,8 @@ window.MN_REVIEW_DATA = {
       "category": "개요",
       "group": "용어 사전",
       "title": "용어 사전",
-      "subtitle": "초급자가 막히는 말 120개 — 이 리뷰에 실제로 나오는 것만",
-      "summary": "이 리뷰에 나오는 말 중 처음 보면 문장 전체를 놓치게 되는 120개를 모았습니다. 고를 때 짐작하지 않았습니다 — 리뷰 산문의 어휘 빈도를 세어, 자주 나오면서도 설명 없이는 넘어가기 어려운 말만 담았습니다. 마지막으로 센 2026-09-13(산문 26만 자) 기준으로 가장 많이 나오는 말은 \"전역\"(192회)·\"계층\"(189회)이고 그다음이 \"의존\"(104회), \"빌드\"(95회), \"채점\"(70회)입니다. 즉 이 다섯 개만 알아도 리뷰 문장의 체감 난이도가 크게 내려갑니다. 찾을 때는 Ctrl+K 로 용어를 바로 검색하세요.",
+      "subtitle": "초급자가 막히는 말 134개 — 이 리뷰에 실제로 나오는 것만",
+      "summary": "이 리뷰에 나오는 말 중 처음 보면 문장 전체를 놓치게 되는 134개를 모았습니다. 고를 때 짐작하지 않았습니다 — 리뷰 산문의 어휘 빈도를 세어, 자주 나오면서도 설명 없이는 넘어가기 어려운 말만 담았습니다. 마지막으로 센 2026-09-13(산문 26만 자) 기준으로 가장 많이 나오는 말은 \"전역\"(192회)·\"계층\"(189회)이고 그다음이 \"의존\"(104회), \"빌드\"(95회), \"채점\"(70회)입니다. 즉 이 다섯 개만 알아도 리뷰 문장의 체감 난이도가 크게 내려갑니다. 찾을 때는 Ctrl+K 로 용어를 바로 검색하세요.",
       "diagram": null,
       "usage": [
         {
@@ -563,28 +563,28 @@ window.MN_REVIEW_DATA = {
           "body": "이 프로젝트가 왜 이렇게 생겼는지를 설명하는 말들입니다. 여기부터 읽으면 나머지 섹션이 훨씬 수월합니다. — 전역 스크립트, 로딩 순서 · 로딩 계층, ES module, 의존, 공개 API · 경계, manifest, 계약, 폴백, 지연 로드, vendor, 번들러 · 프레임워크, 작업공간"
         },
         {
-          "title": "웹·브라우저 (16개)",
-          "body": "브라우저에서 도는 앱이라면 어디서나 나오는 기본 용어입니다. — DOM, 렌더, 이벤트 · 핸들러, 비동기 · Promise, localStorage, IndexedDB, iframe, contenteditable, fetch · XHR, 이스케이프 · 살균, SVG, 도구상자, 캔버스, Blob · Object URL, 접근성 · aria, 모달"
+          "title": "웹·브라우저 (18개)",
+          "body": "브라우저에서 도는 앱이라면 어디서나 나오는 기본 용어입니다. — DOM, 렌더, 이벤트 · 핸들러, 비동기 · Promise, localStorage, IndexedDB, iframe, contenteditable, fetch · XHR, 이스케이프 · 살균, SVG, 도구상자, 캔버스, Blob · Object URL, 접근성 · aria, 모달, 사전 요청 · preflight, data URL"
         },
         {
-          "title": "EXE·네트워크 (25개)",
-          "body": "EXE 와 로컬 서버 섹션을 읽기 전에 알아 두면 좋은 말들입니다. — EXE, 로컬 서버, 포트, 127.0.0.1 · localhost, 엔드포인트, GET · POST, Origin · 교차 출처, DNS rebinding, 인증 토큰, heartbeat, LAN, 프록시, 타일, 지오코딩, SSH, PTY · ConPTY, 호스트 키 지문 · known_hosts, 폴링, 세션, 고시환율 · 매매기준율, 능력 프로브, Range · 부분 응답, Retry-After · 요청 간격, API 키 · 인증키, OSM · OpenStreetMap"
+          "title": "EXE·네트워크 (28개)",
+          "body": "EXE 와 로컬 서버 섹션을 읽기 전에 알아 두면 좋은 말들입니다. — EXE, 로컬 서버, 포트, 127.0.0.1 · localhost, 엔드포인트, GET · POST, Origin · 교차 출처, DNS rebinding, 인증 토큰, heartbeat, LAN, 프록시, 타일, 지오코딩, SSH, PTY · ConPTY, 호스트 키 지문 · known_hosts, 폴링, 세션, 고시환율 · 매매기준율, 능력 프로브, Range · 부분 응답, Retry-After · 요청 간격, API 키 · 인증키, OSM · OpenStreetMap, 공공데이터포털 · 활용신청, TAGO, DPAPI"
         },
         {
-          "title": "빌드·테스트 (12개)",
-          "body": "코드를 만들고 검사하고 내보내는 과정에 쓰는 말입니다. — 빌드, 생성물, 런타임, npm · node, esbuild, 단위 테스트, E2E 테스트, 계약 테스트, 회귀, 커버리지, sha384 · 무결성, fixture"
+          "title": "빌드·테스트 (14개)",
+          "body": "코드를 만들고 검사하고 내보내는 과정에 쓰는 말입니다. — 빌드, 생성물, 런타임, npm · node, esbuild, 단위 테스트, E2E 테스트, 계약 테스트, 회귀, 커버리지, sha384 · 무결성, fixture, 오픈 라이선스 · CC0 · OFL · ODbL, 하네스"
         },
         {
-          "title": "코드 개념 (21개)",
-          "body": "어느 섹션에서든 불쑥 나오는 일반적인 프로그래밍 개념입니다. — 파싱 · 파서, 토크나이저, 정규식, 직렬화 · 역직렬화, 해시, 캐시, 스냅샷, diff, undo · redo 스택, 큐 · 락, 경쟁 상태, 워커, 순수 함수, 벡터 항목, 좌표계 · 좌표, base64, 기원전 · 천문학적 연도, 정규화, 색인, 스레드, 요청 취소 · 세대 번호"
+          "title": "코드 개념 (24개)",
+          "body": "어느 섹션에서든 불쑥 나오는 일반적인 프로그래밍 개념입니다. — 파싱 · 파서, 토크나이저, 정규식, 직렬화 · 역직렬화, 해시, 캐시, 스냅샷, diff, undo · redo 스택, 큐 · 락, 경쟁 상태, 워커, 순수 함수, 벡터 항목, 좌표계 · 좌표, base64, 기원전 · 천문학적 연도, 정규화, 색인, 스레드, 요청 취소 · 세대 번호, 암호 봉투 · AES-GCM · PBKDF2, GUID, 원자적 쓰기"
         },
         {
           "title": "코드 실행 (8개)",
           "body": "학생 코드를 실행·채점하는 섹션(Python·JavaScript·Java)을 읽을 때 필요한 말입니다. — JDK, 컴파일 · javac, jar · 클래스패스, Maven Central, 표준입력 · 파이프, 식별자, 채점 · 자동채점, 자동완성"
         },
         {
-          "title": "파일 형식 (15개)",
-          "body": "이 앱이 열고 저장하는 파일들의 속에 관한 말입니다. — OOXML, XML, JSON, YAML, CSV · TSV, Markdown, SQLite, HWP · HWPX, 자막 형식, ipynb, Pyodide, 인코딩 · UTF-8 · BOM, 마커 · 표시, 이조 악기 · 파트, ffmpeg · MP4"
+          "title": "파일 형식 (19개)",
+          "body": "이 앱이 열고 저장하는 파일들의 속에 관한 말입니다. — OOXML, XML, JSON, YAML, CSV · TSV, Markdown, SQLite, HWP · HWPX, 자막 형식, ipynb, Pyodide, 인코딩 · UTF-8 · BOM, 마커 · 표시, 이조 악기 · 파트, ffmpeg · MP4, ZIP · STORE · DEFLATE, 파일 판 · 형식 버전, 메타데이터 · EXIF, GRIB2 · GFS"
         },
         {
           "title": "데이터베이스 (11개)",
@@ -733,6 +733,16 @@ window.MN_REVIEW_DATA = {
           "body": "화면 위에 뜬 창이 닫힐 때까지 뒤쪽 화면을 조작하지 못하게 막는 대화상자입니다. 이 앱은 모달이 많아서 모든 모달이 Esc 로 닫히는지를 한 번에 전역으로 점검한 적이 있습니다."
         },
         {
+          "id": "term-124",
+          "title": "사전 요청 · preflight (CORS preflight (OPTIONS))",
+          "body": "다른 출처의 페이지가 사용자 정의 헤더를 붙이거나 특별한 메서드로 요청하려 하면, 브라우저가 먼저 OPTIONS 로 \"보내도 되는가\" 를 묻는 요청입니다. 서버가 허락하지 않으면 본 요청은 아예 나가지 않습니다. 이 앱의 런처는 /tile-proxy 와 시험지 수신 외에는 사전 요청을 허락하지 않으므로, X-ClassDock-Action 같은 헤더를 요구하는 것만으로 다른 사이트의 호출을 막을 수 있습니다."
+        },
+        {
+          "id": "term-125",
+          "title": "data URL (data: URL)",
+          "body": "파일 내용을 base64 글자로 바꿔 주소 자리에 그대로 넣는 방식입니다(data:image/png;base64,…). 따로 파일을 두지 않아도 되지만 크기가 약 1.33배로 늘고, JSON 안에 넣으면 문서를 저장할 때마다 그 글자를 통째로 다시 씁니다. 티어표·대진표가 카드 사진을 작게 줄여 이렇게 담고, 일기장·여행일지는 같은 이유로 ZIP 안 파일을 고릅니다."
+        },
+        {
           "id": "term-23",
           "title": "EXE (실행 파일)",
           "body": "윈도우에서 더블클릭하면 바로 도는 프로그램 파일입니다. 이 앱의 EXE 는 화면을 직접 그리지 않고, 작은 서버를 띄운 다음 브라우저로 앱 화면을 열어 줍니다. 그래서 브라우저 혼자서는 못 하는 일(진짜 디스크 저장, 로컬 Python 실행)이 가능해집니다."
@@ -858,6 +868,21 @@ window.MN_REVIEW_DATA = {
           "body": "누구나 고치고 가져다 쓸 수 있는 공개 지도 데이터입니다. 이 앱의 기본 배경 타일과 장소 검색(Nominatim), 지하철 역 좌표·순서 표(Overpass 조회)가 여기서 옵니다. 가져다 쓰는 대신 화면에 출처를 함께 보여야 하고, 짧은 간격으로 대량 호출하지 말아야 한다는 조건이 붙습니다."
         },
         {
+          "id": "term-121",
+          "title": "공공데이터포털 · 활용신청 (data.go.kr / service application)",
+          "body": "정부·공공기관의 자료를 API 로 내주는 사이트(data.go.kr)입니다. 키는 하나 받지만, 쓸 서비스(버스 위치·항공 운항·기상청 예보 …)마다 따로 \"활용신청\" 을 해서 승인받아야 그 서비스에 키가 통합니다. 그래서 이 앱은 \"키가 틀렸다\" 대신 \"어느 서비스를 신청하라\" 까지 알려 주고, 저장할 때 키를 특정 서비스로 시험하지 않습니다 — 항공만 신청한 정상 키를 거절하게 되기 때문입니다."
+        },
+        {
+          "id": "term-122",
+          "title": "TAGO (national public transit API)",
+          "body": "국토교통부 국가대중교통정보센터의 API 묶음입니다. 전국 도시의 버스 노선·정류장·위치·도착 예정, 여객선 운항 정보를 공공데이터포털 키로 줍니다. 이 앱의 버스 층은 처음엔 제주 사이트만 봤다가 TAGO 로 옮기며 전국으로 넓어졌고, 서울만은 TAGO 에 없어 서울시 API 를 따로 씁니다. 엔드포인트 이름(/jeju-bus-*)은 그때 것이 남은 것입니다."
+        },
+        {
+          "id": "term-123",
+          "title": "DPAPI (Windows Data Protection API)",
+          "body": "Windows 가 \"지금 로그인한 사용자\" 에게 묶어 데이터를 암호화해 주는 기능입니다. 같은 계정으로 로그인해야만 풀 수 있어, 키를 디스크에 두되 다른 사용자나 다른 PC 로 복사된 파일로는 읽히지 않게 합니다. 이 앱은 지하철·공공데이터포털·KOSIS·NEIS 키를 \"기억하기\" 를 고르면 DPAPI 로 감싸 LocalAppData 에 둡니다."
+        },
+        {
           "id": "term-34",
           "title": "빌드 (build)",
           "body": "사람이 쓴 소스를 실제로 배포할 형태로 가공하는 과정입니다. 이 앱에서는 여러 파일을 하나의 오프라인 HTML 로 합치거나, C# 소스를 EXE 로 만드는 일이 여기 해당합니다."
@@ -916,6 +941,16 @@ window.MN_REVIEW_DATA = {
           "id": "term-119",
           "title": "fixture (test fixture)",
           "body": "테스트가 매번 같은 조건에서 돌도록 미리 준비해 둔 입력 자료입니다. 이 앱은 실시간 지하철·제주 버스처럼 인터넷과 시간에 따라 바뀌는 기능을 한 번 실제로 받아 둔 응답을 fixture 로 저장해, 라이브 호출 없이도 같은 판정을 반복 검증합니다."
+        },
+        {
+          "id": "term-133",
+          "title": "오픈 라이선스 · CC0 · OFL · ODbL (open licenses)",
+          "body": "남이 만든 코드·글꼴·자료를 쓰는 조건입니다. CC0 는 조건 없음(공공 영역), OFL 은 글꼴용으로 고치면 원래 이름을 쓰지 말라는 조건, ODbL 은 OpenStreetMap 자료처럼 출처를 밝히고 고친 자료도 같은 조건으로 내라는 조건, CC BY 는 출처 표시입니다. 이 앱은 모든 것을 EXE 하나에 담으므로 전문과 저작자 표시를 THIRD_PARTY_NOTICES.txt 로 함께 싣고, 빠뜨리면 빌드가 실패하게 해 두었습니다."
+        },
+        {
+          "id": "term-134",
+          "title": "하네스 (test harness)",
+          "body": "테스트하려는 코드를 실제 화면·브라우저 없이 돌리도록 감싸 주는 받침 코드입니다. 이 앱은 module.exports 가 없는 전역 스크립트를 node 의 vm 으로 읽고, 필요한 DOM·Leaflet·오디오만 흉내 내 안쪽 함수를 시험합니다. 사진첩·일기장·버스 패널 테스트가 이렇게 돕니다. 하네스가 잘라 읽는 경계 표시를 함수 밖으로 옮기면 테스트가 통째로 깨지는 것도 이 방식의 함정입니다."
         },
         {
           "id": "term-45",
@@ -1021,6 +1056,21 @@ window.MN_REVIEW_DATA = {
           "id": "term-118",
           "title": "요청 취소 · 세대 번호 (AbortController / request generation)",
           "body": "사용자가 다른 것을 고른 뒤에 예전 요청의 답이 늦게 도착하면, 그 답이 새 화면을 덮어쓰는 사고가 납니다. AbortController 로 예전 요청을 취소하고, 요청마다 세대 번호를 붙여 \"지금 번호와 다른 답은 버린다\" 를 함께 쓰는 것이 이 앱의 대처입니다 — 취소가 늦어도 번호 검사가 막아 줍니다."
+        },
+        {
+          "id": "term-130",
+          "title": "암호 봉투 · AES-GCM · PBKDF2 (encryption envelope)",
+          "body": "파일 전체를 암호문으로 감싸고 머리에 \"어떻게 풀어야 하는지\"(반복 수·salt·IV)만 남기는 방식을 이 리뷰에서 봉투라 부릅니다. PBKDF2 는 비밀번호를 수십만 번 섞어 키를 만들어 무작위 대입을 느리게 하고, AES-GCM 은 그 키로 암호화하면서 한 바이트라도 바뀌면 풀기를 거절하는 인증까지 겸합니다. 일기장의 파일 암호가 이 구조입니다."
+        },
+        {
+          "id": "term-131",
+          "title": "GUID (globally unique identifier)",
+          "body": "사실상 겹치지 않는 128비트 무작위 번호입니다(예: 3f2a…-…). 이름을 사람이 짓지 않아도 충돌하지 않습니다. 사진첩 저장소는 파일 이름을 GUID 로만 받아 다시 써서 경로를 만들므로, 브라우저가 \"../\" 같은 글자를 보내도 폴더 밖으로 나갈 수 없습니다."
+        },
+        {
+          "id": "term-132",
+          "title": "원자적 쓰기 (atomic write)",
+          "body": "파일을 바꿀 때 \"다 바뀌었거나 하나도 안 바뀌었거나\" 둘 중 하나만 있게 하는 방법입니다. 보통 임시 파일에 다 쓴 뒤 이름 바꾸기(교체)로 한 번에 갈아 끼웁니다. 쓰는 도중 앱이 꺼져도 반쯤 쓰인 파일이 남지 않으므로, 저장소·키 파일·작업공간처럼 망가지면 되돌릴 수 없는 파일에 씁니다."
         },
         {
           "id": "term-101",
@@ -1136,6 +1186,26 @@ window.MN_REVIEW_DATA = {
           "id": "term-120",
           "title": "ffmpeg · MP4 (ffmpeg / MP4)",
           "body": "ffmpeg 는 거의 모든 영상·소리 형식을 읽고 바꿔 주는 명령줄 도구이고, MP4 는 브라우저가 가장 널리 재생하는 영상 형식입니다. 브라우저가 못 여는 mkv·avi 등을 이 앱은 ffmpeg 로 MP4 로 바꾸는데, 속의 영상·소리가 이미 호환되면 다시 인코딩하지 않고 그릇만 옮겨 담아 훨씬 빨리 끝냅니다."
+        },
+        {
+          "id": "term-126",
+          "title": "ZIP · STORE · DEFLATE (ZIP container)",
+          "body": "여러 파일을 하나로 묶는 그릇입니다. 안의 파일마다 그대로 담거나(STORE, 무압축) 줄여 담습니다(DEFLATE). 이미 압축된 사진·영상은 DEFLATE 로 줄일 게 없어, 일기장·여행일지는 STORE 로 직접 만들어 씁니다. 읽을 때는 파일에 적힌 크기를 믿지 말아야 합니다 — 작게 적어 놓고 풀면 수 GB 가 되는 \"압축 폭탄\" 이 있기 때문입니다."
+        },
+        {
+          "id": "term-127",
+          "title": "파일 판 · 형식 버전 (format version)",
+          "body": "파일 안에 \"이 파일은 몇 번째 모양으로 쓰였다\" 를 적어 두는 번호입니다(version). 새 필드가 생기면 판을 올리고, 옛 앱은 모르는 판을 거절해 새 값을 버린 채 덮어쓰는 사고를 막습니다. 대신 판을 자주 올리면 조금 옛 앱에서 새 파일이 열리지 않습니다. 모르는 필드를 읽은 그대로 들고 있다가 다시 쓰는 방식(복불복 문서가 쓰는 길)을 쓰면 판을 덜 올려도 됩니다."
+        },
+        {
+          "id": "term-128",
+          "title": "메타데이터 · EXIF (metadata / EXIF)",
+          "body": "내용 자체가 아니라 내용에 \"관한\" 정보입니다 — 만든 때, 크기, 형식 같은 것. 사진의 EXIF 에는 찍은 시각과 카메라 정보, 그리고 휴대폰이라면 찍은 자리의 GPS 좌표가 들어 있습니다. 그래서 사진 한 장이 집 주소를 드러낼 수 있습니다. 여행일지는 누른 사진에서만 EXIF 를 읽고, 영상 줄이기는 위치 메타데이터를 지웁니다."
+        },
+        {
+          "id": "term-129",
+          "title": "GRIB2 · GFS (GRIB2 / Global Forecast System)",
+          "body": "GFS 는 미국 해양대기청(NOAA)이 하루 네 번 내는 전 지구 기상 예보이고, GRIB2 는 그 같은 격자 기상 자료를 담는 이진 형식입니다. 필드(바람·기온·기압 …)가 한 파일에 줄줄이 압축돼 있어, 색인(.idx)으로 필요한 필드의 바이트 구간만 골라 받을 수 있습니다. 이 앱의 세계 바람은 런처가 그렇게 받아 직접 해독합니다."
         },
         {
           "id": "term-90",
@@ -1674,7 +1744,7 @@ window.MN_REVIEW_DATA = {
       "group": "코드 기호·기본 기능 사전",
       "title": "코드 기호·기본 기능 사전",
       "subtitle": "연산자·기호 25개와 기본 기능 55개",
-      "summary": "1차 코드 낱말 사전 다음으로 코드 읽기를 막는 연산자·기호 25개와 표준 기본 기능 55개, 모두 120개를 모았습니다. 프로젝트가 직접 만든 함수와 외부 라이브러리 API는 제외했습니다. 코드에서 기본 기능은 점선 밑줄로 표시되고, 연산자는 원래 모양을 유지하다가 마우스를 올렸을 때 반응합니다.",
+      "summary": "1차 코드 낱말 사전 다음으로 코드 읽기를 막는 연산자·기호 25개와 표준 기본 기능 55개, 모두 135개를 모았습니다. 프로젝트가 직접 만든 함수와 외부 라이브러리 API는 제외했습니다. 코드에서 기본 기능은 점선 밑줄로 표시되고, 연산자는 원래 모양을 유지하다가 마우스를 올렸을 때 반응합니다.",
       "diagram": null,
       "usage": [
         {
@@ -1682,12 +1752,12 @@ window.MN_REVIEW_DATA = {
           "body": "=, ===, !==, ==, !=, =>, ?., ??, ..., ++, --, //, &&, ||, !, +, -, *, /, %, <, >, <=, >=, +="
         },
         {
-          "title": "JavaScript 기본 기능 (42개)",
-          "body": "document, Math, String, addEventListener, window, Number, Array, Error, Set, JSON, console, querySelector, TextEncoder, TextDecoder, DataView, AbortController, atob, btoa, ResizeObserver, localStorage, Object, setTimeout, Map, clearTimeout, Date, Promise, Uint8Array, removeEventListener, querySelectorAll, Boolean, fetch, URL, requestAnimationFrame, Blob, getElementById, crypto, setInterval, clearInterval, MutationObserver, WeakMap, structuredClone, RegExp"
+          "title": "JavaScript 기본 기능 (52개)",
+          "body": "document, Math, String, addEventListener, window, Number, Array, Error, Set, JSON, console, querySelector, TextEncoder, TextDecoder, DataView, AbortController, atob, btoa, ResizeObserver, localStorage, Object, setTimeout, Map, clearTimeout, Date, Promise, Uint8Array, removeEventListener, querySelectorAll, Boolean, fetch, URL, requestAnimationFrame, Blob, getElementById, crypto, setInterval, clearInterval, MutationObserver, WeakMap, structuredClone, Path2D, createImageBitmap, getRandomValues, subtle, DecompressionStream, VideoEncoder, AudioEncoder, OfflineAudioContext, getUserMedia, URLSearchParams, RegExp"
         },
         {
-          "title": "C# 기본 기능 (22개)",
-          "body": "Encoding, Environment, Path, Dictionary, Process, DateTime, StringBuilder, File, Directory, Thread, List, Convert, Guid, IntPtr, Marshal, DllImport, StringComparison, Interlocked, Regex, Uri, TimeSpan, CultureInfo"
+          "title": "C# 기본 기능 (27개)",
+          "body": "Encoding, Environment, Path, Dictionary, Process, DateTime, StringBuilder, File, Directory, Thread, List, Convert, Guid, IntPtr, Marshal, DllImport, StringComparison, Interlocked, Regex, Uri, TimeSpan, CultureInfo, HttpWebRequest, MemoryStream, Stopwatch, ProtectedData, BitConverter"
         },
         {
           "title": "Python 기본 기능 (31개)",
@@ -2291,6 +2361,81 @@ window.MN_REVIEW_DATA = {
           "body": "C# · 숫자·날짜를 글자로 바꾸거나 읽을 때 따를 지역 규칙입니다. 이 앱은 InvariantCulture 를 붙여, 소수점이 쉼표인 PC 에서도 응답 헤더·JSON 의 숫자가 같은 모양으로 나오게 합니다."
         },
         {
+          "id": "cr-Path2D",
+          "title": "`Path2D` — 다시 쓰는 캔버스 도형",
+          "body": "JavaScript · SVG 경로 글자(\"M3 8 L12 5 …\")로 캔버스 도형을 만들어 두고 여러 번 그립니다. 이 앱은 화면의 SVG 와 PNG 내보내기가 같은 경로 글을 쓰게 하는 데 씁니다(티어표의 왕관·보석)."
+        },
+        {
+          "id": "cr-createImageBitmap",
+          "title": "`createImageBitmap` — 그림 미리 풀기",
+          "body": "JavaScript · 그림 파일(Blob)을 화면에 그리기 좋은 형태로 미리 풀어 둡니다. 사진을 줄여 담기 전에 가로·세로를 재고 캔버스에 옮겨 그릴 때 씁니다."
+        },
+        {
+          "id": "cr-getRandomValues",
+          "title": "`getRandomValues` — 암호학적 난수",
+          "body": "JavaScript · crypto.getRandomValues — 예측할 수 없는 난수로 배열을 채웁니다. Math.random 과 달리 앞의 값으로 다음 값을 짐작할 수 없어, 뽑기·로또·암호의 salt·IV 에 씁니다."
+        },
+        {
+          "id": "cr-subtle",
+          "title": "`subtle` — 브라우저 내장 암호",
+          "body": "JavaScript · crypto.subtle — 해시(digest), 비밀번호에서 키 만들기(deriveKey), 암호화·복호화(encrypt·decrypt)를 브라우저가 직접 해 줍니다. 일기장 파일 암호가 모두 이것으로 돕니다. 보안 연결(https·localhost·file)에서만 쓸 수 있습니다."
+        },
+        {
+          "id": "cr-DecompressionStream",
+          "title": "`DecompressionStream` — 압축 풀기 흐름",
+          "body": "JavaScript · deflate·gzip 으로 줄인 바이트를 흘려 넣으면 풀린 바이트를 내줍니다. 라이브러리 없이 ZIP 안의 DEFLATE 항목을 읽을 때 씁니다. 풀린 크기는 스스로 제한하지 않으므로 읽는 쪽이 상한을 둬야 합니다."
+        },
+        {
+          "id": "cr-VideoEncoder",
+          "title": "`VideoEncoder` — 영상 부호화(WebCodecs)",
+          "body": "JavaScript · 캔버스 장면(VideoFrame)을 H.264 같은 압축 영상 조각으로 바꿉니다. 브라우저 안에서 MP4 를 굽는 사진첩·수업 리플레이가 쓰고, 조각을 파일로 묶는 일은 mp4-writer.js 가 합니다."
+        },
+        {
+          "id": "cr-AudioEncoder",
+          "title": "`AudioEncoder` — 소리 부호화(WebCodecs)",
+          "body": "JavaScript · 소리 표본을 AAC 같은 압축 소리 조각으로 바꿉니다. 사진첩이 배경음악을 MP4 에 넣을 때 씁니다. 지원하지 않는 브라우저면 소리 없이 저장한다고 알립니다."
+        },
+        {
+          "id": "cr-OfflineAudioContext",
+          "title": "`OfflineAudioContext` — 들리지 않게 소리 굽기",
+          "body": "JavaScript · 스피커로 내보내지 않고 소리 그래프를 실제 시간보다 빠르게 계산해 표본으로 돌려줍니다. 재생목록의 페이드·겹침을 MP4 에 넣을 소리로 미리 구울 때 씁니다."
+        },
+        {
+          "id": "cr-getUserMedia",
+          "title": "`getUserMedia` — 마이크·카메라 열기",
+          "body": "JavaScript · navigator.mediaDevices.getUserMedia — 사용자 허락을 받아 마이크·카메라 흐름을 엽니다. 다 쓰면 트랙을 멈춰야 브라우저의 녹음 표시가 꺼집니다."
+        },
+        {
+          "id": "cr-URLSearchParams",
+          "title": "`URLSearchParams` — 주소 물음 만들기",
+          "body": "JavaScript · \"?a=1&b=2\" 꼴의 물음을 이름·값으로 만들고 읽습니다. 값에 &·= 같은 글자가 있어도 알아서 이스케이프합니다."
+        },
+        {
+          "id": "cr-HttpWebRequest",
+          "title": "`HttpWebRequest` — HTTP 요청",
+          "body": "C# · .NET Framework 의 HTTP 요청 형식입니다. 런처가 바깥 API 를 부를 때 쓰며, 제한 시간(Timeout)·리다이렉트 따라가기(AllowAutoRedirect)·바이트 구간(AddRange)을 요청마다 정합니다."
+        },
+        {
+          "id": "cr-MemoryStream",
+          "title": "`MemoryStream` — 메모리 안의 바이트 흐름",
+          "body": "C# · 파일 대신 메모리에 바이트를 쓰고 읽는 흐름입니다. 런처는 응답을 여기 모으며 한 조각마다 상한을 넘는지 봅니다 — 넘으면 끊어 큰 응답이 메모리를 다 쓰지 못하게 합니다."
+        },
+        {
+          "id": "cr-Stopwatch",
+          "title": "`Stopwatch` — 경과 시간 재기",
+          "body": "C# · 시작한 뒤 흐른 시간을 정확히 잽니다(ElapsedMilliseconds). 시험지 수신이 \"한 연결은 20초 안에 다 보내야 한다\" 를 지키는 데 씁니다."
+        },
+        {
+          "id": "cr-ProtectedData",
+          "title": "`ProtectedData` — DPAPI 암호화",
+          "body": "C# · Windows 사용자 계정에 묶어 바이트를 암호화·복호화합니다(Protect·Unprotect). 런처가 인증키를 디스크에 둘 때 씁니다."
+        },
+        {
+          "id": "cr-BitConverter",
+          "title": "`BitConverter` — 바이트 ↔ 숫자",
+          "body": "C# · 바이트 배열과 정수·실수를 서로 바꿉니다. 이 PC 의 바이트 차례(IsLittleEndian)를 따르므로, 정해진 차례로 적힌 파일 형식(GRIB2 는 큰 쪽부터)을 읽을 때는 뒤집어야 합니다."
+        },
+        {
           "id": "cr-RegExp",
           "title": "`RegExp` — 정규식 만들기",
           "body": "JavaScript · 글자로 적은 패턴에서 정규식을 만듭니다. /…/ 리터럴과 달리 실행 중에 이름·검색어를 끼워 넣을 수 있는데, 그때 사용자 글자 속의 . * ( 같은 기호를 먼저 이스케이프하지 않으면 뜻이 바뀝니다."
@@ -2315,17 +2460,17 @@ window.MN_REVIEW_DATA = {
       "category": "개요",
       "group": "코드 메서드·실행 패턴 사전",
       "title": "코드 메서드·실행 패턴 사전",
-      "subtitle": "표준 메서드 139개와 실행 패턴 15개",
-      "summary": "3차 표준 API 확장 범위로, 실제 코드에 나오는 표준 메서드 139개와 여러 줄에 걸친 실행 패턴 15개를 모았습니다. 메서드는 객체 뒤에 점을 찍어 호출하는 경우에만 코드에서 연결하므로 프로젝트 함수와 같은 이름을 잘못 잡지 않습니다. 실행 패턴은 한 단어로 판별할 수 없어 검색과 사전 카드로 제공합니다.",
+      "subtitle": "표준 메서드 146개와 실행 패턴 15개",
+      "summary": "3차 표준 API 확장 범위로, 실제 코드에 나오는 표준 메서드 146개와 여러 줄에 걸친 실행 패턴 15개를 모았습니다. 메서드는 객체 뒤에 점을 찍어 호출하는 경우에만 코드에서 연결하므로 프로젝트 함수와 같은 이름을 잘못 잡지 않습니다. 실행 패턴은 한 단어로 판별할 수 없어 검색과 사전 카드로 제공합니다.",
       "diagram": null,
       "usage": [
         {
-          "title": "배열·문자열 메서드 (63개)",
-          "body": "map, filter, reduce, forEach, find, findIndex, some, every, includes, set, delete, keys, entries, add, has, push, pop, shift, unshift, slice, splice, join, split, padStart, replace, match, matchAll, startsWith, endsWith, trim, toLowerCase, toUpperCase, sort, reverse, flatMap, indexOf, get, values, stringify, parse, assign, freeze, now, max, min, floor, round, abs, random, isArray, isFinite, exec, setItem, getItem, test, toFixed, repeat, localeCompare, normalize, lastIndexOf, concat, toLocaleLowerCase, getTime"
+          "title": "배열·문자열 메서드 (69개)",
+          "body": "map, filter, reduce, forEach, find, findIndex, some, every, includes, set, delete, keys, entries, add, has, push, pop, shift, unshift, slice, splice, join, split, padStart, replace, match, matchAll, startsWith, endsWith, trim, toLowerCase, toUpperCase, sort, reverse, flatMap, indexOf, get, values, stringify, parse, assign, freeze, now, hypot, toLocaleString, digest, deriveKey, encrypt, decrypt, max, min, floor, round, abs, random, isArray, isFinite, exec, setItem, getItem, test, toFixed, repeat, localeCompare, normalize, lastIndexOf, concat, toLocaleLowerCase, getTime"
         },
         {
-          "title": "DOM·이벤트 메서드 (26개)",
-          "body": "createElement, appendChild, append, remove, closest, matches, contains, setAttribute, getAttribute, removeAttribute, toggle, preventDefault, observe, disconnect, abort, toDataURL, stopPropagation, focus, select, click, scrollIntoView, getBoundingClientRect, setPointerCapture, releasePointerCapture, replaceChildren, createElementNS"
+          "title": "DOM·이벤트 메서드 (27개)",
+          "body": "createElement, appendChild, append, remove, closest, matches, contains, setAttribute, getAttribute, removeAttribute, toggle, preventDefault, observe, disconnect, abort, toDataURL, stopPropagation, focus, select, click, scrollIntoView, toBlob, getBoundingClientRect, setPointerCapture, releasePointerCapture, replaceChildren, createElementNS"
         },
         {
           "title": "비동기·파일 메서드 (8개)",
@@ -2811,6 +2956,41 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · Date.now — 1970년부터 지금까지 흐른 밀리초를 수 하나로 돌려줍니다. 이 앱은 문서 id 를 만들 때, \"고친 시각\"을 적을 때, 얼마나 걸렸는지 잴 때 씁니다. 사람이 읽는 날짜가 아니라 비교·계산용 값입니다."
         },
         {
+          "id": "cm-hypot",
+          "title": "`hypot` — 두 점 사이 거리",
+          "body": "JavaScript · Math.hypot — 가로·세로 차이를 넣으면 직선 거리(√(x²+y²))를 돌려줍니다. 끌기·자석 정렬·근처 정류장 찾기처럼 \"얼마나 가까운가\" 를 잴 때 씁니다."
+        },
+        {
+          "id": "cm-toBlob",
+          "title": "`toBlob` — 캔버스를 그림 파일로",
+          "body": "JavaScript · canvas.toBlob — 캔버스에 그린 것을 PNG·JPEG·WebP 파일 바이트로 비동기로 만듭니다. 사진을 줄여 담거나 내보낼 때 씁니다."
+        },
+        {
+          "id": "cm-toLocaleString",
+          "title": "`toLocaleString` — 지역 규칙대로 글자로",
+          "body": "JavaScript · 숫자에는 1,234 같은 자리 구분을, 날짜에는 사용자 언어의 날짜 꼴을 붙여 글자로 바꿉니다. 화면에 보일 값에만 쓰고 저장할 값에는 쓰지 않습니다."
+        },
+        {
+          "id": "cm-digest",
+          "title": "`digest` — 해시 계산",
+          "body": "JavaScript · crypto.subtle.digest — 바이트의 SHA-256 같은 해시를 비동기로 구합니다. 일기장·여행일지가 사진 파일 이름(앞 20자리)을 정해 같은 사진을 한 번만 담는 데 씁니다."
+        },
+        {
+          "id": "cm-deriveKey",
+          "title": "`deriveKey` — 비밀번호로 키 만들기",
+          "body": "JavaScript · crypto.subtle.deriveKey — PBKDF2 처럼 비밀번호를 여러 번 섞어 암호 키를 만듭니다. 반복 수가 클수록 무작위 대입이 느려집니다."
+        },
+        {
+          "id": "cm-encrypt",
+          "title": "`encrypt` — 암호화",
+          "body": "JavaScript · crypto.subtle.encrypt — 키로 바이트를 암호문으로 바꿉니다. AES-GCM 이면 머리 같은 추가 데이터까지 함께 인증해, 한 바이트라도 바뀌면 decrypt 가 거절합니다."
+        },
+        {
+          "id": "cm-decrypt",
+          "title": "`decrypt` — 복호화",
+          "body": "JavaScript · crypto.subtle.decrypt — 암호문을 원래 바이트로 되돌립니다. 키가 틀리거나 내용이 바뀌었으면 예외를 던집니다 — 일기장은 이것으로 \"암호가 맞는가\" 를 판정합니다."
+        },
+        {
           "id": "cm-max",
           "title": "`max` — 가장 큰 값 · 하한 씌우기",
           "body": "JavaScript · Math.max — 받은 값 중 가장 큰 것을 돌려줍니다. 이 앱에서 훨씬 잦은 쓰임은 \"여러 값 중 고르기\" 가 아니라 Math.max(0, x) 처럼 하한을 씌우는 것입니다. Math.min 과 겹쳐 쓰면 값을 범위 안으로 누르는 관용구가 됩니다."
@@ -3141,11 +3321,11 @@ window.MN_REVIEW_DATA = {
       "usage": [
         {
           "title": "앱 코어 (25개)",
-          "body": "evaluate, translateTree, handleFiles, tryNeed, saveBlob, sound, rememberWorkspace, showResult, byId, canRedo, canUndo, last, pickRandomInt, saveText, shortcutMatches, scale, pickCryptoRandom, names, hideLoading, showLoading, generate, setSettings, hideResult, screenPixelRatio, syncShortcutHints"
+          "body": "evaluate, translateTree, handleFiles, tryNeed, saveBlob, rememberWorkspace, sound, showResult, byId, last, canRedo, canUndo, pickRandomInt, saveText, shortcutMatches, showLoading, scale, pickCryptoRandom, names, hideLoading, generate, setSettings, plain, hideResult, screenPixelRatio"
         },
         {
           "title": "문서·편집 (30개)",
-          "body": "confirmDialog, refreshChrome, makeDoc, markDocumentDirty, activateIfIdle, setActiveDoc, saveTextDoc, markDocumentSavedSnapshot, request, askText, createScratchInFolder, newMapScratch, route, loadText, saveFileBackendAvailable, recoverySnapshotFile, smartDecodeText, renderSidebar, mapSetToolIcon, ensureRendered, withFileHandle, withDirHandle, flat, fileExtOf, inputValue, mapNormalizeMarker, mapDocSerialize, bumpCodeFont, startLazyRender, updateDocumentStatus"
+          "body": "confirmDialog, refreshChrome, makeDoc, markDocumentDirty, activateIfIdle, setActiveDoc, saveTextDoc, markDocumentSavedSnapshot, newMapScratch, request, askText, createScratchInFolder, route, loadText, saveFileBackendAvailable, recoverySnapshotFile, smartDecodeText, renderSidebar, mapSetToolIcon, mapDocSerialize, ensureRendered, withFileHandle, withDirHandle, mapNormalizeMarker, flat, fileExtOf, inputValue, mapDocEmpty, bumpCodeFont, startLazyRender"
         },
         {
           "title": "Python·노트북 (20개)",
@@ -3161,7 +3341,7 @@ window.MN_REVIEW_DATA = {
         },
         {
           "title": "학습 도구 (15개)",
-          "body": "newWhiteboard, defaultBoardBg, whiteboardStencilGroup, readBoardRecoverySnapshot, whiteboardVectorGroupSvg, whiteboardFocusAllowsPoint, normalizeWhiteboardTextSize, whiteboardClipboardItem, whiteboardClampView, normalizeWhiteboardFocusState, whiteboardCanFlipItem, whiteboardPresetResizeItem, expandWhiteboardFormulaTemplate, setWhiteboardInternalClipboard, whiteboardEducationCatalog"
+          "body": "newWhiteboard, defaultBoardBg, whiteboardEducationCatalog, whiteboardStencilGroup, boardStateFromSnapshot, readBoardRecoverySnapshot, whiteboardVectorGroupSvg, whiteboardItemStep, whiteboardFocusAllowsPoint, screenPoint, normalizeWhiteboardTextSize, whiteboardClipboardItem, whiteboardWithStep, whiteboardClampView, normalizeWhiteboardFocusState"
         },
         {
           "title": "EXE·로컬 서버 (15개)",
@@ -3173,7 +3353,7 @@ window.MN_REVIEW_DATA = {
         },
         {
           "title": "테스트 (5개)",
-          "body": "collapseSidebar, dispatchEvent, cancelAnimationFrame, insertBefore, drawImage"
+          "body": "collapseSidebar, dispatchEvent, insertBefore, drawImage, uiIcon"
         }
       ],
       "features": [
@@ -3195,7 +3375,7 @@ window.MN_REVIEW_DATA = {
         {
           "id": "pf-js-markdocumentdirty-1htvj8n",
           "title": "`markDocumentDirty` — 프로젝트 처리",
-          "body": "JavaScript · 문서·편집 · src/js/documents.js:1359에서 정의되며, 코드에서 호출 형태 57회·사용 파일 25개가 확인됩니다. 정의 위치: src/js/documents.js:1359, tests/diary.test.js:882, tests/exam-paper.test.js:20 외 1곳. 대표 파일 역할: 탭·사이드바·분할 작업·검색"
+          "body": "JavaScript · 문서·편집 · src/js/documents.js:1359에서 정의되며, 코드에서 호출 형태 57회·사용 파일 25개가 확인됩니다. 정의 위치: src/js/documents.js:1359, tests/diary.test.js:882, tests/exam-paper.test.js:20 외 2곳. 대표 파일 역할: 탭·사이드바·분할 작업·검색"
         },
         {
           "id": "pf-js-activateifidle-1na49xx",
@@ -3215,7 +3395,12 @@ window.MN_REVIEW_DATA = {
         {
           "id": "pf-js-markdocumentsavedsnapshot-1wf17jg",
           "title": "`markDocumentSavedSnapshot` — 프로젝트 처리",
-          "body": "JavaScript · 문서·편집 · src/js/documents.js:1460에서 정의되며, 코드에서 호출 형태 22회·사용 파일 17개가 확인됩니다. 정의 위치: src/js/documents.js:1460, tests/diary.test.js:902, tests/diary.test.js:930. 대표 파일 역할: 탭·사이드바·분할 작업·검색"
+          "body": "JavaScript · 문서·편집 · src/js/documents.js:1460에서 정의되며, 코드에서 호출 형태 23회·사용 파일 18개가 확인됩니다. 정의 위치: src/js/documents.js:1460, tests/diary.test.js:902, tests/diary.test.js:930. 대표 파일 역할: 탭·사이드바·분할 작업·검색"
+        },
+        {
+          "id": "pf-js-newmapscratch-1gs95bx",
+          "title": "`newMapScratch` — 프로젝트 처리",
+          "body": "JavaScript · 문서·편집 · src/js/map-viewer.js:4957에서 정의되며, 코드에서 호출 형태 52회·사용 파일 16개가 확인됩니다. 정의 위치: src/js/map-viewer.js:4957. 대표 파일 역할: DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽"
         },
         {
           "id": "pf-js-request-hdxo6q",
@@ -3233,14 +3418,9 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 문서·편집 · src/js/code-viewer.js:4494에서 정의되며, 코드에서 호출 형태 17회·사용 파일 15개가 확인됩니다. 정의 위치: src/js/code-viewer.js:4494. 대표 파일 역할: 자체 구문강조 + 저장 분기 + 실행기 연결"
         },
         {
-          "id": "pf-js-newmapscratch-1gs95bx",
-          "title": "`newMapScratch` — 프로젝트 처리",
-          "body": "JavaScript · 문서·편집 · src/js/map-viewer.js:4957에서 정의되며, 코드에서 호출 형태 45회·사용 파일 14개가 확인됩니다. 정의 위치: src/js/map-viewer.js:4957. 대표 파일 역할: DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽"
-        },
-        {
           "id": "pf-js-route-dwh9ni",
           "title": "`route` — 이벤트·요청 처리",
-          "body": "JavaScript · 문서·편집 · src/js/jeju-bus-api.js:46에서 정의되며, 코드에서 호출 형태 47회·사용 파일 13개가 확인됩니다. 정의 위치: src/js/jeju-bus-api.js:46. 대표 파일 역할: TAGO 와 서울시, 두 공급자를 한 모양으로 — 수신 시각을 GPS 측정 시각으로 쓰지 않는다"
+          "body": "JavaScript · 문서·편집 · src/js/jeju-bus-api.js:46에서 정의되며, 코드에서 호출 형태 49회·사용 파일 14개가 확인됩니다. 정의 위치: src/js/jeju-bus-api.js:46. 대표 파일 역할: TAGO 와 서울시, 두 공급자를 한 모양으로 — 수신 시각을 GPS 측정 시각으로 쓰지 않는다"
         },
         {
           "id": "pf-js-loadtext-4zobvu",
@@ -3273,6 +3453,11 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 문서·편집 · src/js/map-viewer.js:5325에서 정의되며, 코드에서 호출 형태 13회·사용 파일 9개가 확인됩니다. 정의 위치: src/js/map-viewer.js:5325. 대표 파일 역할: DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽"
         },
         {
+          "id": "pf-js-mapdocserialize-1y5zmn9",
+          "title": "`mapDocSerialize` — 프로젝트 처리",
+          "body": "JavaScript · 문서·편집 · src/js/map-viewer.js:484에서 정의되며, 코드에서 호출 형태 31회·사용 파일 8개가 확인됩니다. 정의 위치: src/js/map-viewer.js:484. 대표 파일 역할: DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽"
+        },
+        {
           "id": "pf-js-ensurerendered-191t68q",
           "title": "`ensureRendered` — 조건 보장",
           "body": "JavaScript · 문서·편집 · src/js/documents.js:1309에서 정의되며, 코드에서 호출 형태 19회·사용 파일 8개가 확인됩니다. 정의 위치: src/js/documents.js:1309. 대표 파일 역할: 탭·사이드바·분할 작업·검색"
@@ -3288,6 +3473,11 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 문서·편집 · src/js/documents.js:1853에서 정의되며, 코드에서 호출 형태 10회·사용 파일 8개가 확인됩니다. 정의 위치: src/js/documents.js:1853. 대표 파일 역할: 탭·사이드바·분할 작업·검색"
         },
         {
+          "id": "pf-js-mapnormalizemarker-1tkh5cy",
+          "title": "`mapNormalizeMarker` — 프로젝트 처리",
+          "body": "JavaScript · 문서·편집 · src/js/map-viewer.js:290에서 정의되며, 코드에서 호출 형태 35회·사용 파일 7개가 확인됩니다. 정의 위치: src/js/map-viewer.js:290. 대표 파일 역할: DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽"
+        },
+        {
           "id": "pf-js-flat-1leu4d6",
           "title": "`flat` — 프로젝트 처리",
           "body": "JavaScript · 문서·편집 · src/js/spreadsheet-formula.js:335에서 정의되며, 코드에서 호출 형태 30회·사용 파일 7개가 확인됩니다. 정의 위치: src/js/spreadsheet-formula.js:335. 대표 파일 역할: 토크나이저 → 파서 → 평가기, 함수 74개"
@@ -3295,7 +3485,7 @@ window.MN_REVIEW_DATA = {
         {
           "id": "pf-js-fileextof-1bmiihr",
           "title": "`fileExtOf` — 프로젝트 처리",
-          "body": "JavaScript · 문서·편집 · src/js/document-types.js:39에서 정의되며, 코드에서 호출 형태 20회·사용 파일 7개가 확인됩니다. 정의 위치: src/js/document-types.js:39. 대표 파일 역할: 지원 형식과 코드 프로파일 정의 — MNDocumentTypes 레지스트리"
+          "body": "JavaScript · 문서·편집 · src/js/document-types.js:39에서 정의되며, 코드에서 호출 형태 20회·사용 파일 7개가 확인됩니다. 정의 위치: src/js/document-types.js:39, tests/workspace-closed-restore.test.js:21. 대표 파일 역할: 지원 형식과 코드 프로파일 정의 — MNDocumentTypes 레지스트리"
         },
         {
           "id": "pf-js-inputvalue-1686im0",
@@ -3303,14 +3493,9 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 문서·편집 · src/js/spreadsheet-tools.js:7에서 정의되며, 코드에서 호출 형태 19회·사용 파일 7개가 확인됩니다. 정의 위치: src/js/spreadsheet-tools.js:7. 대표 파일 역할: 화면 파일에서 덜어 낸 두 번째 순수부 — 입력 해석·유효성·정렬·피벗·이름 함수·설정 보존"
         },
         {
-          "id": "pf-js-mapnormalizemarker-1tkh5cy",
-          "title": "`mapNormalizeMarker` — 프로젝트 처리",
-          "body": "JavaScript · 문서·편집 · src/js/map-viewer.js:290에서 정의되며, 코드에서 호출 형태 34회·사용 파일 6개가 확인됩니다. 정의 위치: src/js/map-viewer.js:290. 대표 파일 역할: DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽"
-        },
-        {
-          "id": "pf-js-mapdocserialize-1y5zmn9",
-          "title": "`mapDocSerialize` — 프로젝트 처리",
-          "body": "JavaScript · 문서·편집 · src/js/map-viewer.js:484에서 정의되며, 코드에서 호출 형태 28회·사용 파일 6개가 확인됩니다. 정의 위치: src/js/map-viewer.js:484. 대표 파일 역할: DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽"
+          "id": "pf-js-mapdocempty-5bc1de",
+          "title": "`mapDocEmpty` — 프로젝트 처리",
+          "body": "JavaScript · 문서·편집 · src/js/map-viewer.js:416에서 정의되며, 코드에서 호출 형태 23회·사용 파일 6개가 확인됩니다. 정의 위치: src/js/map-viewer.js:416. 대표 파일 역할: DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽"
         },
         {
           "id": "pf-js-bumpcodefont-bxbcj5",
@@ -3321,11 +3506,6 @@ window.MN_REVIEW_DATA = {
           "id": "pf-js-startlazyrender-1jmho9x",
           "title": "`startLazyRender` — 열기·시작",
           "body": "JavaScript · 문서·편집 · src/js/pdf-render.js:427에서 정의되며, 코드에서 호출 형태 16회·사용 파일 6개가 확인됩니다. 정의 위치: src/js/pdf-render.js:427. 대표 파일 역할: 페이지 자리표시자와 화질·야간 모드"
-        },
-        {
-          "id": "pf-js-updatedocumentstatus-ytrc8v",
-          "title": "`updateDocumentStatus` — 갱신·동기화",
-          "body": "JavaScript · 문서·편집 · src/js/documents.js:1351에서 정의되며, 코드에서 호출 형태 12회·사용 파일 6개가 확인됩니다. 정의 위치: src/js/documents.js:1351, tests/pdf-export-tab-switch.test.js:77, tests/pdf-recovery.test.js:21. 대표 파일 역할: 탭·사이드바·분할 작업·검색"
         },
         {
           "id": "pf-js-buildinfo-8v26v",
@@ -3380,7 +3560,7 @@ window.MN_REVIEW_DATA = {
         {
           "id": "pf-js-evaluate-1byypze",
           "title": "`evaluate` — 실행",
-          "body": "JavaScript · 앱 코어 · src/js/board-tools.js:196에서 정의되며, 코드에서 호출 형태 420회·사용 파일 48개가 확인됩니다. 정의 위치: src/js/board-tools.js:196. 대표 파일 역할: 계산 전용 순수 모듈 MNBoardTools — DOM 을 만들지 않고 벡터 항목만 돌려준다"
+          "body": "JavaScript · 앱 코어 · src/js/board-tools.js:196에서 정의되며, 코드에서 호출 형태 464회·사용 파일 53개가 확인됩니다. 정의 위치: src/js/board-tools.js:196. 대표 파일 역할: 계산 전용 순수 모듈 MNBoardTools — DOM 을 만들지 않고 벡터 항목만 돌려준다"
         },
         {
           "id": "pf-js-translatetree-8k53et",
@@ -3390,7 +3570,7 @@ window.MN_REVIEW_DATA = {
         {
           "id": "pf-js-handlefiles-qo05iy",
           "title": "`handleFiles` — 이벤트·요청 처리",
-          "body": "JavaScript · 앱 코어 · src/js/file-loaders.js:81에서 정의되며, 코드에서 호출 형태 64회·사용 파일 34개가 확인됩니다. 정의 위치: src/js/file-loaders.js:81, tests/bracket.test.js:184, tests/folder-new-document.test.js:34 외 4곳. 대표 파일 역할: 드래그·폴더·압축·확장자 판정"
+          "body": "JavaScript · 앱 코어 · src/js/file-loaders.js:81에서 정의되며, 코드에서 호출 형태 66회·사용 파일 36개가 확인됩니다. 정의 위치: src/js/file-loaders.js:81, tests/bracket.test.js:184, tests/folder-new-document.test.js:34 외 6곳. 대표 파일 역할: 드래그·폴더·압축·확장자 판정"
         },
         {
           "id": "pf-js-tryneed-10fa0la",
@@ -3403,14 +3583,14 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 앱 코어 · src/js/download.js:20에서 정의되며, 코드에서 호출 형태 33회·사용 파일 23개가 확인됩니다. 정의 위치: src/js/download.js:20. 대표 파일 역할: 스무 곳에서 되풀이되던 여섯 줄 — 줄 수가 아니라 빠뜨리기 쉬운 한 줄 때문에 모았다"
         },
         {
+          "id": "pf-js-rememberworkspace-1uhxmrn",
+          "title": "`rememberWorkspace` — 프로젝트 처리",
+          "body": "JavaScript · 앱 코어 · src/js/workspace-store.js:356에서 정의되며, 코드에서 호출 형태 33회·사용 파일 22개가 확인됩니다. 정의 위치: src/js/workspace-store.js:356, tests/pdf-export-tab-switch.test.js:75. 대표 파일 역할: 서버/IndexedDB 이중 경로 · 동일 포맷"
+        },
+        {
           "id": "pf-js-sound-3wdeac",
           "title": "`sound` — 프로젝트 처리",
           "body": "JavaScript · 앱 코어 · src/js/pick.js:298에서 정의되며, 코드에서 호출 형태 56회·사용 파일 21개가 확인됩니다. 정의 위치: src/js/pick.js:298. 대표 파일 역할: 명단 하나로 여러 뽑기 — 게임은 pick-*.js 가 스스로 올라온다"
-        },
-        {
-          "id": "pf-js-rememberworkspace-1uhxmrn",
-          "title": "`rememberWorkspace` — 프로젝트 처리",
-          "body": "JavaScript · 앱 코어 · src/js/workspace-store.js:356에서 정의되며, 코드에서 호출 형태 32회·사용 파일 21개가 확인됩니다. 정의 위치: src/js/workspace-store.js:356, tests/pdf-export-tab-switch.test.js:75. 대표 파일 역할: 서버/IndexedDB 이중 경로 · 동일 포맷"
         },
         {
           "id": "pf-js-showresult-15bt5ad",
@@ -3423,6 +3603,11 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 앱 코어 · src/js/state.js:1055에서 정의되며, 코드에서 호출 형태 691회·사용 파일 16개가 확인됩니다. 정의 위치: src/js/state.js:1055, tests/concept-doc.test.js:26, tests/content-search-live-text.test.js:37 외 5곳. 대표 파일 역할: 열린 문서·탭·사이드바·토스트의 원본"
         },
         {
+          "id": "pf-js-last-rpp1cp",
+          "title": "`last` — 프로젝트 처리",
+          "body": "JavaScript · 앱 코어 · src/js/search-history.js:77에서 정의되며, 코드에서 호출 형태 76회·사용 파일 18개가 확인됩니다. 정의 위치: src/js/search-history.js:77. 대표 파일 역할: 구획별 12개 보관"
+        },
+        {
           "id": "pf-js-canredo-18y17bd",
           "title": "`canRedo` — 상태·유효성 판별",
           "body": "JavaScript · 앱 코어 · src/js/history.js:110에서 정의되며, 코드에서 호출 형태 33회·사용 파일 18개가 확인됩니다. 정의 위치: src/js/history.js:110. 대표 파일 역할: 7개 편집기가 공유"
@@ -3431,11 +3616,6 @@ window.MN_REVIEW_DATA = {
           "id": "pf-js-canundo-18d7nzj",
           "title": "`canUndo` — 상태·유효성 판별",
           "body": "JavaScript · 앱 코어 · src/js/history.js:109에서 정의되며, 코드에서 호출 형태 33회·사용 파일 18개가 확인됩니다. 정의 위치: src/js/history.js:109. 대표 파일 역할: 7개 편집기가 공유"
-        },
-        {
-          "id": "pf-js-last-rpp1cp",
-          "title": "`last` — 프로젝트 처리",
-          "body": "JavaScript · 앱 코어 · src/js/search-history.js:77에서 정의되며, 코드에서 호출 형태 74회·사용 파일 16개가 확인됩니다. 정의 위치: src/js/search-history.js:77. 대표 파일 역할: 구획별 12개 보관"
         },
         {
           "id": "pf-js-pickrandomint-b283ls",
@@ -3451,6 +3631,11 @@ window.MN_REVIEW_DATA = {
           "id": "pf-js-shortcutmatches-rnle68",
           "title": "`shortcutMatches` — 프로젝트 처리",
           "body": "JavaScript · 앱 코어 · src/js/state.js:831에서 정의되며, 코드에서 호출 형태 42회·사용 파일 12개가 확인됩니다. 정의 위치: src/js/state.js:831. 대표 파일 역할: 열린 문서·탭·사이드바·토스트의 원본"
+        },
+        {
+          "id": "pf-js-showloading-17zxvpk",
+          "title": "`showLoading` — 화면 표시",
+          "body": "JavaScript · 앱 코어 · src/js/state.js:1194에서 정의되며, 코드에서 호출 형태 39회·사용 파일 12개가 확인됩니다. 정의 위치: src/js/state.js:1194, tests/spreadsheet-recovery.test.js:98, tests/tar-parser.test.js:132. 대표 파일 역할: 열린 문서·탭·사이드바·토스트의 원본"
         },
         {
           "id": "pf-js-scale-108fh4h",
@@ -3473,11 +3658,6 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 앱 코어 · src/js/state.js:1195에서 정의되며, 코드에서 호출 형태 42회·사용 파일 11개가 확인됩니다. 정의 위치: src/js/state.js:1195. 대표 파일 역할: 열린 문서·탭·사이드바·토스트의 원본"
         },
         {
-          "id": "pf-js-showloading-17zxvpk",
-          "title": "`showLoading` — 화면 표시",
-          "body": "JavaScript · 앱 코어 · src/js/state.js:1194에서 정의되며, 코드에서 호출 형태 38회·사용 파일 11개가 확인됩니다. 정의 위치: src/js/state.js:1194, tests/tar-parser.test.js:132. 대표 파일 역할: 열린 문서·탭·사이드바·토스트의 원본"
-        },
-        {
           "id": "pf-js-generate-1l0u8ia",
           "title": "`generate` — 생성·구성",
           "body": "JavaScript · 앱 코어 · src/js/lotto.js:425에서 정의되며, 코드에서 호출 형태 14회·사용 파일 11개가 확인됩니다. 정의 위치: src/js/lotto.js:425. 대표 파일 역할: 모든 조합에 순번을 매겨 고르게 뽑는다"
@@ -3486,6 +3666,11 @@ window.MN_REVIEW_DATA = {
           "id": "pf-js-setsettings-7irii6",
           "title": "`setSettings` — 설정·저장",
           "body": "JavaScript · 앱 코어 · src/js/pick.js:529에서 정의되며, 코드에서 호출 형태 35회·사용 파일 10개가 확인됩니다. 정의 위치: src/js/pick.js:529. 대표 파일 역할: 명단 하나로 여러 뽑기 — 게임은 pick-*.js 가 스스로 올라온다"
+        },
+        {
+          "id": "pf-js-plain-1mr1k6f",
+          "title": "`plain` — 프로젝트 처리",
+          "body": "JavaScript · 앱 코어 · src/js/neis-api.js:50에서 정의되며, 코드에서 호출 형태 150회·사용 파일 9개가 확인됩니다. 정의 위치: src/js/neis-api.js:50, tests/map-choropleth.test.js:27, tests/map-radius.test.js:14 외 3곳. 대표 파일 역할: 학교 찾기·급식·학사일정·시간표 — 일기장의 \"우리 학교\""
         },
         {
           "id": "pf-js-hideresult-1yeejuk",
@@ -3498,24 +3683,14 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 앱 코어 · src/js/state.js:1016에서 정의되며, 코드에서 호출 형태 13회·사용 파일 10개가 확인됩니다. 정의 위치: src/js/state.js:1016. 대표 파일 역할: 열린 문서·탭·사이드바·토스트의 원본"
         },
         {
-          "id": "pf-js-syncshortcuthints-1d2zlsa",
-          "title": "`syncShortcutHints` — 갱신·동기화",
-          "body": "JavaScript · 앱 코어 · src/js/state.js:869에서 정의되며, 코드에서 호출 형태 14회·사용 파일 9개가 확인됩니다. 정의 위치: src/js/state.js:869. 대표 파일 역할: 열린 문서·탭·사이드바·토스트의 원본"
-        },
-        {
           "id": "pf-js-collapsesidebar-erramq",
           "title": "`collapseSidebar` — 닫기·숨기기",
-          "body": "JavaScript · 테스트 · tests/e2e/helpers.js:18에서 정의되며, 코드에서 호출 형태 58회·사용 파일 45개가 확인됩니다. 정의 위치: tests/e2e/helpers.js:18. 대표 파일 역할: 공통 헬퍼"
+          "body": "JavaScript · 테스트 · tests/e2e/helpers.js:18에서 정의되며, 코드에서 호출 형태 63회·사용 파일 50개가 확인됩니다. 정의 위치: tests/e2e/helpers.js:18. 대표 파일 역할: 공통 헬퍼"
         },
         {
           "id": "pf-js-dispatchevent-jh4fg9",
           "title": "`dispatchEvent` — 이벤트·요청 처리",
-          "body": "JavaScript · 테스트 · tests/diagnostics.test.js:40에서 정의되며, 코드에서 호출 형태 70회·사용 파일 31개가 확인됩니다. 정의 위치: tests/diagnostics.test.js:40. 대표 파일 역할: 제거 규칙·순환 기록·비정상 종료 판정·설정 패널·임시 기록 위치"
-        },
-        {
-          "id": "pf-js-cancelanimationframe-1jrcbs",
-          "title": "`cancelAnimationFrame` — 상태·유효성 판별",
-          "body": "JavaScript · 테스트 · tests/music-audio.test.js:199에서 정의되며, 코드에서 호출 형태 52회·사용 파일 30개가 확인됩니다. 정의 위치: tests/music-audio.test.js:199. 대표 파일 역할: 가짜 AudioContext 로 예약 시각·주파수·WAV 헤더 23개"
+          "body": "JavaScript · 테스트 · tests/diagnostics.test.js:40에서 정의되며, 코드에서 호출 형태 72회·사용 파일 32개가 확인됩니다. 정의 위치: tests/diagnostics.test.js:40. 대표 파일 역할: 제거 규칙·순환 기록·비정상 종료 판정·설정 패널·임시 기록 위치"
         },
         {
           "id": "pf-js-insertbefore-1glasmr",
@@ -3526,6 +3701,11 @@ window.MN_REVIEW_DATA = {
           "id": "pf-js-drawimage-1o84lzc",
           "title": "`drawImage` — 화면 표시",
           "body": "JavaScript · 테스트 · tests/board-render.test.js:17에서 정의되며, 코드에서 호출 형태 55회·사용 파일 24개가 확인됩니다. 정의 위치: tests/board-render.test.js:17. 대표 파일 역할: 선택 판정·이동 좌표·group/polyline"
+        },
+        {
+          "id": "pf-js-uiicon-gm7f9m",
+          "title": "`uiIcon` — 프로젝트 처리",
+          "body": "JavaScript · 테스트 · tests/pick-screen.test.js:23에서 정의되며, 코드에서 호출 형태 66회·사용 파일 20개가 확인됩니다. 정의 위치: tests/pick-screen.test.js:23. 대표 파일 역할: 게임마다 열자마자 붙고 결과 창에 명단의 사람이 나오는지"
         },
         {
           "id": "pf-js-startpractice-6bsxp2",
@@ -3613,9 +3793,19 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:830에서 정의되며, 코드에서 호출 형태 6회·사용 파일 5개가 확인됩니다. 정의 위치: src/js/whiteboard.js:830. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
         },
         {
+          "id": "pf-js-whiteboardeducationcatalog-3rtej7",
+          "title": "`whiteboardEducationCatalog` — 프로젝트 처리",
+          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:429에서 정의되며, 코드에서 호출 형태 8회·사용 파일 3개가 확인됩니다. 정의 위치: src/js/whiteboard.js:429. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
+        },
+        {
           "id": "pf-js-whiteboardstencilgroup-1237zbp",
           "title": "`whiteboardStencilGroup` — 프로젝트 처리",
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:580에서 정의되며, 코드에서 호출 형태 7회·사용 파일 3개가 확인됩니다. 정의 위치: src/js/whiteboard.js:580. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
+        },
+        {
+          "id": "pf-js-boardstatefromsnapshot-ydmbvk",
+          "title": "`boardStateFromSnapshot` — 프로젝트 처리",
+          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:865에서 정의되며, 코드에서 호출 형태 6회·사용 파일 3개가 확인됩니다. 정의 위치: src/js/whiteboard.js:865. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
         },
         {
           "id": "pf-js-readboardrecoverysnapshot-13onxz8",
@@ -3628,9 +3818,19 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:516에서 정의되며, 코드에서 호출 형태 4회·사용 파일 3개가 확인됩니다. 정의 위치: src/js/whiteboard.js:516. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
         },
         {
+          "id": "pf-js-whiteboarditemstep-174gc13",
+          "title": "`whiteboardItemStep` — 프로젝트 처리",
+          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:120에서 정의되며, 코드에서 호출 형태 21회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:120. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
+        },
+        {
           "id": "pf-js-whiteboardfocusallowspoint-1xkuiru",
           "title": "`whiteboardFocusAllowsPoint` — 프로젝트 처리",
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:787에서 정의되며, 코드에서 호출 형태 18회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:787. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
+        },
+        {
+          "id": "pf-js-screenpoint-1gnq0ul",
+          "title": "`screenPoint` — 프로젝트 처리",
+          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:959에서 정의되며, 코드에서 호출 형태 16회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:959, tests/e2e/map-choropleth.spec.js:16. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
         },
         {
           "id": "pf-js-normalizewhiteboardtextsize-oe560x",
@@ -3643,6 +3843,11 @@ window.MN_REVIEW_DATA = {
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:48에서 정의되며, 코드에서 호출 형태 11회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:48. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
         },
         {
+          "id": "pf-js-whiteboardwithstep-1m2o16g",
+          "title": "`whiteboardWithStep` — 프로젝트 처리",
+          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:125에서 정의되며, 코드에서 호출 형태 10회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:125. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
+        },
+        {
           "id": "pf-js-whiteboardclampview-1p6heiw",
           "title": "`whiteboardClampView` — 프로젝트 처리",
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:734에서 정의되며, 코드에서 호출 형태 9회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:734. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
@@ -3651,31 +3856,6 @@ window.MN_REVIEW_DATA = {
           "id": "pf-js-normalizewhiteboardfocusstate-16dcpp6",
           "title": "`normalizeWhiteboardFocusState` — 변환·정규화",
           "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:749에서 정의되며, 코드에서 호출 형태 8회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:749. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
-        },
-        {
-          "id": "pf-js-whiteboardcanflipitem-1vqdxt4",
-          "title": "`whiteboardCanFlipItem` — 프로젝트 처리",
-          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:199에서 정의되며, 코드에서 호출 형태 8회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:199. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
-        },
-        {
-          "id": "pf-js-whiteboardpresetresizeitem-1pzwuxu",
-          "title": "`whiteboardPresetResizeItem` — 프로젝트 처리",
-          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:224에서 정의되며, 코드에서 호출 형태 8회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:224. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
-        },
-        {
-          "id": "pf-js-expandwhiteboardformulatemplate-11lglda",
-          "title": "`expandWhiteboardFormulaTemplate` — 프로젝트 처리",
-          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:359에서 정의되며, 코드에서 호출 형태 7회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:359. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
-        },
-        {
-          "id": "pf-js-setwhiteboardinternalclipboard-11qsmbt",
-          "title": "`setWhiteboardInternalClipboard` — 설정·저장",
-          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:156에서 정의되며, 코드에서 호출 형태 7회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:156. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
-        },
-        {
-          "id": "pf-js-whiteboardeducationcatalog-3rtej7",
-          "title": "`whiteboardEducationCatalog` — 프로젝트 처리",
-          "body": "JavaScript · 학습 도구 · src/js/whiteboard.js:429에서 정의되며, 코드에서 호출 형태 7회·사용 파일 2개가 확인됩니다. 정의 위치: src/js/whiteboard.js:429. 대표 파일 역할: 그리기·선택·복구·녹화 + 도구상자 + 집중 도구 + 우클릭 메뉴"
         },
         {
           "id": "pf-cs-write-seghdo",
@@ -5058,6 +5238,15 @@ window.MN_REVIEW_DATA = {
           "lineCount": 775,
           "lineOffset": 0,
           "totalLines": 775
+        },
+        {
+          "path": "tests/workspace-closed-restore.test.js",
+          "label": "workspace-closed-restore.test.js",
+          "description": "닫은 파일은 재시작해도 백업·폴더에서 되살아나지 않는다",
+          "code": "\"use strict\";\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst vm = require(\"node:vm\");\nconst read = name => fs.readFileSync(path.join(__dirname, \"../src/js\", name), \"utf8\");\nconst loader = read(\"file-loaders.js\");\nconst documents = read(\"documents.js\");\n\n// Renderers and the disk-removal timer are replaced; open/close and persisted\n// restore filtering execute production code, with a fresh VM for every restart.\nfunction session(storage = new Map()){\n  const removed = [];\n  const context = vm.createContext({\n    localStorage:{ getItem:key => storage.get(key) || null, setItem:(key,value) => storage.set(key,value) },\n    console, File, clearTimeout, setTimeout:() => 1,\n    docs:[], navNodes:[], docsBySourceKey:new Map(), contentMatchSnippets:new Map(),\n    studyPdfId:null, activeMru:[], activeId:0,\n    throwIfUiCancelled(){}, inspectTextFileEncoding:async () => null,\n    fileExtOf:name => name.split(\".\").pop(), workspaceFindOpenDocument:async () => null,\n    confirmLargeFileOpen:async () => true,\n    contentCacheDrop(){}, evictContentSearchDoc(){}, workspaceForgetClosedDoc(){}, bumpNavTree(){},\n    forgetWorkspacePaths:paths => removed.push([...paths]),\n    SQLITE_EXTS:[], BINARY_ASSET_EXTS:new Set(), CODE_EXTS:{}, IMG_EXTS:[], VIDEO_EXTS:[], AUDIO_EXTS:[], SUBTITLE_EXTS:[]\n  });\n  vm.runInContext(read(\"workspace-store.js\"), context);\n  // Leave pending disk deletion unexecuted to reproduce closing immediately.\n  context.forgetWorkspacePaths = paths => removed.push([...paths]);\n  let nextId = 0;\n  // MusicXML 도 다른 파일처럼 원본 이름·경로 그대로 문서가 된다.\n  const make = (file, opts) => {\n    const doc = { id:++nextId, kind:\"music\", name:file.name, sourceKey:opts.sourceKey,\n      workspacePath:opts.workspacePath, el:{ remove(){} } };\n    context.docs.push(doc);\n    context.docsBySourceKey.set(opts.sourceKey, doc);\n    context.navNodes.push({type:\"doc\", docId:doc.id});\n    return doc;\n  };\n  context.loadMusicSheet = (file,opts) => make(file,opts);\n  context.loadMusicXml = (file,opts) => make(file,opts);\n  vm.runInContext(loader.slice(loader.indexOf(\"async function handleFiles(\"), loader.indexOf(\"// 닫은 탭 복원 스택\")), context);\n  vm.runInContext(documents.slice(documents.indexOf(\"function closeDoc(\"), documents.indexOf(\"function withFileHandle(\")), context);\n  const open = (name,restore = false) => context.handleFiles([new File([\"sample\"],name)], {workspacePath:\"scores/\"+name, restoreFromWorkspace:restore});\n  const close = doc => context.closeDoc(doc.id,{skipUi:true,skipConfirm:true,forgetWorkspace:true});\n  return {context,storage,removed,open,close};\n}\n\ntest(\"두 파일을 모두 닫고 디스크 정리 전에 재시작해도 백업·폴더에서 되살아나지 않는다\", async () => {\n  const first = session();\n  const a = await first.open(\"a.msheet\"), b = await first.open(\"b.msheet\");\n  first.close(a); first.close(b);\n  assert.equal(first.context.docs.length,0);\n  const restarted = session(first.storage);\n  assert.equal(await restarted.open(\"a.msheet\",true),null);\n  assert.equal(await restarted.open(\"b.msheet\",true),null);\n  assert.ok(await restarted.open(\"new.msheet\",true));\n  assert.deepEqual(restarted.context.docs.map(d => d.name),[\"new.msheet\"]);\n});\n\ntest(\"이름만 같은 MusicXML 두 원본(.musicxml·.mxl)은 각각 닫기와 복원이 적용된다\", async () => {\n  const first = session();\n  const xml = await first.open(\"Chopin.musicxml\"), mxl = await first.open(\"Chopin.mxl\");\n  assert.equal(xml.workspaceRestorePath,\"scores/Chopin.musicxml\");\n  assert.equal(mxl.workspaceRestorePath,\"scores/Chopin.mxl\");\n  first.close(xml);\n  assert.deepEqual(first.removed[0],[\"scores/Chopin.musicxml\"]);\n  const halfway = session(first.storage);\n  assert.equal(await halfway.open(\"Chopin.musicxml\",true),null);\n  assert.ok(await halfway.open(\"Chopin.mxl\",true));\n  first.close(mxl);\n  const restarted = session(first.storage);\n  for (const name of [\"Chopin.musicxml\",\"Chopin.mxl\"])\n    assert.equal(await restarted.open(name,true),null);\n});\n\ntest(\"직접 다시 연 파일은 다음 재시작에 다시 복원한다\", async () => {\n  const first = session();\n  first.close(await first.open(\"Chopin.musicxml\"));\n  const manual = session(first.storage);\n  assert.ok(await manual.open(\"Chopin.musicxml\"));\n  const restarted = session(first.storage);\n  assert.ok(await restarted.open(\"Chopin.musicxml\",true));\n  assert.equal(restarted.context.workspaceRestorePathExcluded(\"scores/Chopin.msheet\"),false);\n});\n\ntest(\"다른 작업공간에서 열린 동일 원본은 전역 복원에서 제외하지 않는다\", async () => {\n  const first = session();\n  const a = await first.open(\"shared.msheet\"), b = await first.open(\"shared.msheet\");\n  b.workspaceIds = new Set([\"other\"]);\n  first.close(a);\n  assert.equal(first.removed.length,0);\n  assert.equal(first.context.workspaceRestorePathExcluded(b.workspacePath),false);\n});\n\ntest(\"내부 새로고침 닫기는 복원 제외 기록을 남기지 않는다\", async () => {\n  const first = session();\n  const doc = await first.open(\"a.msheet\");\n  first.context.closeDoc(doc.id,{skipUi:true,skipConfirm:true});\n  assert.ok(await session(first.storage).open(\"a.msheet\",true));\n});\n",
+          "lineCount": 102,
+          "lineOffset": 0,
+          "totalLines": 102
         },
         {
           "path": "tests/workspaces.test.js",
@@ -6964,6 +7153,15 @@ window.MN_REVIEW_DATA = {
           "totalLines": 3768
         },
         {
+          "path": "tests/e2e/python-trace-memory.spec.js",
+          "label": "python-trace-memory.spec.js",
+          "description": "단계 실행 메모리 그림 — 같은 리스트를 가리키는 두 이름·재귀 프레임",
+          "code": "const { test, expect } = require(\"@playwright/test\");\nconst { spawnSync } = require(\"child_process\");\nconst { collapseSidebar } = require(\"./helpers\");\n\n/* 단계 실행 '그림으로 보기'(프레임·객체 상자·화살표).\n *\n * 기록 스크립트는 앱이 만든 그대로를 이 컴퓨터 파이썬으로 돌려 실제 보고서를 얻고,\n * 브라우저 실행(Pyodide Worker)은 그 출력을 돌려주는 가짜로 바꿔 끼운다.\n * 파이썬이 없는 환경이면 건너뛴다.\n */\nconst hasPython = spawnSync(\"python\", [\"--version\"], { encoding:\"utf8\" }).status === 0;\n\nconst SOURCE = [\n  \"def fact(n):\",\n  \"    if n <= 1:\",\n  \"        return 1\",\n  \"    return n * fact(n - 1)\",\n  \"a = [1, 2]\",\n  \"b = a\",\n  \"b.append(fact(3))\",\n  \"print('done', a)\",\n  \"\"\n].join(\"\\n\");\n\nasync function openTrace(page, source){\n  await page.addInitScript(() => {\n    try { localStorage.setItem(\"mn_onboarded_v1\", \"1\"); localStorage.setItem(\"uiLang\", \"ko\"); } catch(_){}\n  });\n  await collapseSidebar(page);\n  await page.goto(\"/\");\n  await page.locator(\"#fileInput\").setInputFiles({\n    name: \"trace.py\", mimeType: \"text/x-python\", buffer: Buffer.from(source, \"utf8\")\n  });\n  await expect(page.locator(\".run-go\")).toBeVisible();\n  const harness = await page.evaluate((src) => buildPythonTraceHarness(src, \"trace.py\", 300), source);\n  const run = spawnSync(\"python\", [\"-\"], { input:harness, encoding:\"utf8\" });\n  expect(run.status).toBe(0);\n  await page.evaluate((stdout) => {\n    window.pythonBackendAvailable = async () => false;\n    window.ensurePyodideWorker = async () => {};\n    window.preparePyodideWorkerPackages = async () => ({ urls:[], names:[] });\n    window.startPyodideWorkerRun = () => ({\n      promise: Promise.resolve({ stdout, stderr:\"\", code:0, outputs:[] }),\n      cancel(){}\n    });\n  }, run.stdout);\n  await page.evaluate(() => document.querySelector(\".run-trace\").click());\n  await expect(page.locator(\".py-trace-controls\")).toBeVisible();\n}\n\n// 슬라이더를 조건에 맞는 첫 단계로 옮긴다(단계 번호는 파이썬 버전에 따라 조금씩 달라서 번호로 짚지 않는다).\nasync function seekStep(page, predicateSource){\n  const index = await page.evaluate((src) => {\n    const panel = document.querySelector(\".py-trace-controls\").closest(\".code-output\") || document;\n    const slider = panel.querySelector(\".py-trace-controls input[type=range]\");\n    const max = Number(slider.max);\n    const test = new Function(\"doc\", \"return (\" + src + \")(doc)\");\n    for (let i = 0; i <= max; i++){\n      slider.value = String(i);\n      slider.dispatchEvent(new Event(\"input\", { bubbles:true }));\n      if (test(document)) return i;\n    }\n    return -1;\n  }, predicateSource);\n  expect(index).toBeGreaterThanOrEqual(0);\n  return index;\n}\n\ntest.describe(\"단계 실행 그림 보기\", () => {\n  test.skip(!hasPython, \"로컬 파이썬이 없어 기록 보고서를 만들 수 없음\");\n\n  test(\"두 이름이 한 리스트를 가리키면 상자는 하나, 화살표는 둘\", async ({ page }) => {\n    await openTrace(page, SOURCE);\n    await expect(page.locator(\".py-mem\")).toBeVisible();\n    await seekStep(page, `doc => {\n      const names = [...doc.querySelectorAll(\".py-mem-frame.is-current .py-mem-name\")].map(el => el.textContent);\n      return names.includes(\"a\") && names.includes(\"b\");\n    }`);\n    const frame = page.locator(\".py-mem-frame.is-current\");\n    await expect(frame.locator(\".py-mem-frame-head\")).toHaveText(\"전역\");\n    await expect(frame.locator(\".py-mem-ptr\")).toHaveCount(2);\n    await expect(page.locator(\".py-mem-obj.is-seq\")).toHaveCount(1);\n    // 화살표 두 개가 모두 같은 상자 왼쪽 가장자리에서 끝난다.\n    const ends = await page.evaluate(() => {\n      const inner = document.querySelector(\".py-mem-inner\").getBoundingClientRect();\n      const box = document.querySelector(\".py-mem-obj.is-seq\").getBoundingClientRect();\n      return [...document.querySelectorAll(\".py-mem-arrows g path\")].map(path => {\n        const length = path.getTotalLength();\n        const p = path.getPointAtLength(length);\n        return { dx: Math.abs(p.x - (box.left - inner.left)), dy: Math.abs(p.y - (box.top - inner.top + 13)) };\n      });\n    });\n    expect(ends).toHaveLength(2);\n    for (const end of ends){ expect(end.dx).toBeLessThan(3); expect(end.dy).toBeLessThan(3); }\n    // b.append 뒤 단계에서는 상자가 바뀜 표시를 받는다.\n    await seekStep(page, `doc => [...doc.querySelectorAll(\".py-mem-obj.is-seq .py-mem-slot\")].length === 3`);\n    await expect(page.locator(\".py-mem-obj.is-seq\")).toHaveClass(/is-changed/);\n  });\n\n  test(\"재귀 호출은 프레임이 쌓이고, 출력은 그 단계까지만 보인다\", async ({ page }) => {\n    await openTrace(page, SOURCE);\n    await seekStep(page, `doc => doc.querySelectorAll(\".py-mem-frame\").length === 4`);\n    await expect(page.locator(\".py-mem-frame-head\")).toHaveText([\"전역\", \"fact()\", \"fact()\", \"fact()\"]);\n    await expect(page.locator(\".py-mem-frame.is-current\")).toHaveCount(1);\n    await expect(page.locator(\".py-trace-printed pre\")).toHaveText(\"(아직 출력 없음)\");\n    await page.locator(\".py-trace-controls input[type=range]\").evaluate((slider) => {\n      slider.value = slider.max; slider.dispatchEvent(new Event(\"input\", { bubbles:true }));\n    });\n    await expect(page.locator(\".py-trace-printed pre\")).toHaveText(\"done [1, 2, 6]\");\n  });\n\n  test(\"표로 보기로 바꾸면 예전 표가 나오고, 고른 보기가 다음에도 이어진다\", async ({ page }) => {\n    await openTrace(page, SOURCE);\n    await page.locator(\".py-trace-views button\", { hasText: \"표로 보기\" }).click();\n    await expect(page.locator(\".py-mem\")).toHaveCount(0);\n    await expect(page.locator(\".py-trace-vars\")).toBeVisible();\n    expect(await page.evaluate(() => localStorage.getItem(\"mn.pyTraceView\"))).toBe(\"table\");\n    await page.evaluate(() => document.querySelector(\".run-trace\").click());\n    await expect(page.locator(\".py-trace-views button.is-on\")).toHaveText(\"표로 보기\");\n    await expect(page.locator(\".py-trace-vars\")).toBeVisible();\n  });\n});\n",
+          "lineCount": 123,
+          "lineOffset": 0,
+          "totalLines": 123
+        },
+        {
           "path": "tests/python-editor-word-select.test.js",
           "label": "word-select.test.js",
           "description": "F3 단어 선택",
@@ -7182,6 +7380,15 @@ window.MN_REVIEW_DATA = {
           "lineCount": 2974,
           "lineOffset": 0,
           "totalLines": 2974
+        },
+        {
+          "path": "tests/pyodide-wheel-registry.test.js",
+          "label": "pyodide-wheel-registry.test.js",
+          "description": "번들 휠 등록부를 시작할 때가 아니라 처음 쓸 때 한 번 읽기",
+          "code": "\"use strict\";\n\n// 번들 파이썬 휠 등록부는 시작할 때 실행되지 않는 JSON 블록에 있고, 처음 필요할 때 한 번만 읽힌다.\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst vm = require(\"node:vm\");\n\nconst root = path.join(__dirname, \"..\");\nconst runtime = fs.readFileSync(path.join(root, \"src/js/python-runtime.js\"), \"utf8\");\nconst build = fs.readFileSync(path.join(root, \"build-offline.js\"), \"utf8\");\n\nfunction loadRegistry(holder){\n  const start = runtime.indexOf(\"let _bundledPyodideWheels = null;\");\n  const end = runtime.indexOf(\"function decodeBundledPyodideWheel(\");\n  assert.ok(start > 0 && end > start, \"registry block not found\");\n  const lookups = { count:0 };\n  const context = vm.createContext({\n    JSON, console:{ warn(){} },\n    document:{ getElementById(id){ lookups.count++; return id === \"mnPyodideWheels\" ? holder : null; } }\n  });\n  vm.runInContext(runtime.slice(start, end) + \"\\nglobalThis.read = bundledPyodideWheelRegistry;\", context);\n  return { read:context.read, lookups };\n}\n\ntest(\"휠 등록부 JSON 블록은 처음 한 번만 읽고 결과를 재사용한다\", () => {\n  let reads = 0;\n  const holder = { get textContent(){ reads++; return JSON.stringify({ faker:{ packageName:\"Faker\", fileName:\"faker.whl\", base64:\"UEsDBA==\" } }); } };\n  const { read, lookups } = loadRegistry(holder);\n  assert.equal(read().faker.packageName, \"Faker\");\n  assert.equal(read().faker.fileName, \"faker.whl\");\n  assert.equal(reads, 1);\n  assert.equal(lookups.count, 1);\n});\n\ntest(\"블록이 없거나 깨져도 빈 등록부로 넘어가 온라인 설치 갈래를 막지 않는다\", () => {\n  assert.deepEqual(JSON.parse(JSON.stringify(loadRegistry(null).read())), {});\n  assert.deepEqual(JSON.parse(JSON.stringify(loadRegistry({ textContent:\"{broken\" }).read())), {});\n});\n\ntest(\"빌드는 휠을 실행되는 전역 변수가 아니라 JSON 블록으로 심는다\", () => {\n  assert.match(build, /<script type=\"application\\/json\" id=\"mnPyodideWheels\">\\$\\{esc\\(JSON\\.stringify\\(bundledWheelRegistry\\)\\)\\}<\\/script>/);\n  assert.ok(!build.includes(\"window.__MN_PYODIDE_WHEELS__=\"), \"실행되는 휠 등록부가 되살아났다\");\n  assert.ok(!runtime.includes(\"__MN_PYODIDE_WHEELS__\"), \"런타임이 옛 전역 변수를 읽고 있다\");\n});\n",
+          "lineCount": 47,
+          "lineOffset": 0,
+          "totalLines": 47
         },
         {
           "path": "tests/python-stderr-classify.test.js",
@@ -9477,6 +9684,24 @@ window.MN_REVIEW_DATA = {
           "totalLines": 6613
         },
         {
+          "path": "tests/xlsx-undo-snapshot-reuse.test.js",
+          "label": "xlsx-undo-snapshot-reuse.test.js",
+          "description": "되돌리기 — 건드리지 않은 시트의 복제본 재사용과 그 정확성",
+          "code": "\"use strict\";\n\n// 엑셀 되돌리기: 바뀌지 않은 수식 없는 시트는 복제본을 재사용하되, 되돌리기 결과는 예전과 똑같아야 한다.\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst fs = require(\"node:fs\");\nconst vm = require(\"node:vm\");\nconst V = require(\"../src/js/spreadsheet-viewer.js\");\n\nconst source = fs.readFileSync(require.resolve(\"../src/js/spreadsheet-viewer.js\"), \"utf8\");\nconst start = source.indexOf(\"  const cloneModel =\");\nconst end = source.indexOf(\"  // 도구모음 버튼을 누르면\", start);\nconst historySource = fs.readFileSync(require.resolve(\"../src/js/history.js\"), \"utf8\") + \"\\nMNEditHistory\";\n\nfunction cell(v, f=null){ return { v, xv:v, style:{}, f }; }\n\n// 실제 spreadsheet-viewer.js 의 히스토리 코드를 그대로 실행한다. structuredClone 을 세어 시트별 복제 횟수를 본다.\nfunction workbook(){\n  const clones = new Map();\n  const context = {\n    csvFastAoa:false, cloneSpreadsheetValue:V.cloneSpreadsheetValue,\n    exModels:{ Data:[[cell(1)]], Notes:[[cell(\"memo\")]], Report:[[cell(1, \"Data!A1\")]] },\n    exMerges:{ Data:[], Notes:[], Report:[] },\n    editedCells:{ Data:new Map(), Notes:new Map(), Report:new Map() },\n    styledCells:{ Data:new Map(), Notes:new Map(), Report:new Map() },\n    sheetRevs:{}, condRulesBySheet:{ Data:[], Notes:[], Report:[] }, structChanged:new Set(), sheetsWithFormula:new Set([\"Report\"]),\n    sheet:{}, worksheetViews:{ Data:{}, Notes:{}, Report:{} }, colFiltersBySheet:{},\n    wb:{ SheetNames:[\"Data\", \"Notes\", \"Report\"], Sheets:{ Data:{}, Notes:{}, Report:{} } }, currentSheet:\"Data\",\n    sheetOrigNames:new Map(), addedSheets:new Set(), removedOrigSheets:new Set(), sourceLayoutSheets:new Map(),\n    undoBtn:null, redoBtn:null, anyDirty:false, rerender(){}, toast(){},\n    MNEditHistory:vm.runInNewContext(historySource, { setTimeout, clearTimeout })\n  };\n  context.structuredClone = (value) => {\n    for (const [name, model] of Object.entries(context.exModels)) if (model === value) clones.set(name, (clones.get(name) || 0) + 1);\n    return structuredClone(value);\n  };\n  vm.createContext(context);\n  vm.runInContext(source.slice(start, end), context);\n  const run = (code) => vm.runInContext(code, context);\n  return { context, clones, run, value:(name) => run(`exModels[${JSON.stringify(name)}][0][0].v`) };\n}\n\ntest(\"같은 시트를 여러 번 고쳐도 건드리지 않은 수식 없는 시트는 한 번만 복제하고, 수식 시트는 매번 복제한다\", () => {\n  const { clones, run } = workbook();\n  for (let i = 2; i <= 6; i++) run(`pushUndo(\"Data\"); exModels.Data[0][0].v = ${i};`);\n  run(`doUndo()`);\n  assert.equal(clones.get(\"Notes\"), 1, \"바뀌지 않은 시트를 편집마다 다시 복제했다\");\n  assert.ok(clones.get(\"Report\") >= 6, \"수식 시트는 제자리 재계산 때문에 매번 복제해야 한다\");\n  assert.ok(clones.get(\"Data\") >= 5, \"고친 시트는 매번 새 상태를 복제해야 한다\");\n});\n\ntest(\"재사용해도 되돌리기·다시 실행 결과가 정확하다(여러 시트·되돌린 뒤 새 편집)\", () => {\n  const { run, value } = workbook();\n  run(`pushUndo(\"Notes\"); exModels.Notes[0][0].v = \"수정\";`);\n  run(`pushUndo(\"Data\"); exModels.Data[0][0].v = 2;`);\n  run(`doUndo()`);\n  assert.equal(value(\"Data\"), 1);\n  assert.equal(value(\"Notes\"), \"수정\");\n  run(`doUndo()`);\n  assert.equal(value(\"Notes\"), \"memo\");\n  run(`doRedo(); doRedo();`);\n  assert.equal(value(\"Notes\"), \"수정\");\n  assert.equal(value(\"Data\"), 2);\n\n  // 되돌린 뒤 새로 편집하면 sheetRevs 가 예전 숫자로 돌아가 같은 번호가 다시 나온다. 그래도 옛 복제본을 쓰면 안 된다.\n  run(`doUndo()`);\n  assert.equal(value(\"Data\"), 1);\n  run(`pushUndo(\"Data\"); exModels.Data[0][0].v = 3;`);\n  run(`doUndo()`);\n  assert.equal(value(\"Data\"), 1);\n  run(`doRedo()`);\n  assert.equal(value(\"Data\"), 3);\n});\n\ntest(\"수식 시트가 기록 없이 제자리에서 재계산돼도 되돌리기는 그 시점의 값을 되살린다\", () => {\n  const { run, value } = workbook();\n  run(`pushUndo(\"Data\"); exModels.Data[0][0].v = 2;`);\n  run(`exModels.Report[0][0].v = 2;`);               // recalcAll 처럼 pushUndo 없이 결과만 바뀐다\n  run(`pushUndo(\"Data\"); exModels.Data[0][0].v = 5;`);\n  run(`exModels.Report[0][0].v = 5;`);\n  run(`doUndo()`);\n  assert.equal(value(\"Data\"), 2);\n  assert.equal(value(\"Report\"), 2, \"수식 시트의 옛 복제본을 재사용해 재계산 결과가 어긋났다\");\n});\n\ntest(\"되살린 모델을 고쳐도 히스토리에 공유된 복제본은 오염되지 않는다\", () => {\n  const { run, value } = workbook();\n  run(`pushUndo(\"Notes\"); exModels.Notes[0][0].v = \"A\";`);\n  run(`pushUndo(\"Data\"); exModels.Data[0][0].v = 2;`);\n  run(`doUndo(); doUndo();`);                          // Notes 를 복원: 복제본을 재사용 표에 올린다\n  assert.equal(value(\"Notes\"), \"memo\");\n  run(`exModels.Notes[0][0].style.bold = true;`);      // 기록 없이 되살린 셀 객체를 건드려도\n  run(`doRedo(); doUndo();`);\n  assert.equal(run(`exModels.Notes[0][0].style.bold`), undefined, \"되살릴 때 공유 복제본을 그대로 넘겼다\");\n});\n\ntest(\"시트 이름을 바꾸거나 지우면 재사용 표도 따라 정리된다\", () => {\n  const rename = source.slice(source.indexOf(\"  const renameSheetState = (oldName, name) => {\"), source.indexOf(\"  const addNewSheet = async\"));\n  assert.match(rename, /modelCloneCache\\.set\\(name, modelCloneCache\\.get\\(oldName\\)\\); modelCloneCache\\.delete\\(oldName\\);/);\n  const remove = source.slice(source.indexOf(\"  const deleteCurrentSheet = async () => {\"));\n  assert.match(remove.slice(0, 1200), /modelCloneCache\\.delete\\(name\\);/);\n});\n",
+          "lineCount": 103,
+          "lineOffset": 0,
+          "totalLines": 103
+        },
+        {
+          "path": "tests/spreadsheet-recovery.test.js",
+          "label": "spreadsheet-recovery.test.js",
+          "description": "CSV→XLSX 직후·재시작 뒤 복구와 미저장 표시",
+          "code": "\"use strict\";\n\nconst test=require(\"node:test\");\nconst assert=require(\"node:assert/strict\");\nconst fs=require(\"node:fs\");\nconst vm=require(\"node:vm\");\nconst XLSX=require(\"../vendor/xlsx.full.min.js\");\nconst core=require(\"../src/js/core.js\");\nconst {decodeWorkspace}=core;\nconst {spreadsheetConvertedDocOptions}=require(\"../src/js/spreadsheet-viewer.js\");\nconst T=require(\"../src/js/spreadsheet-tools.js\");\nconst read=name=>fs.readFileSync(require.resolve(\"../src/js/\"+name),\"utf8\");\nconst documents=read(\"documents.js\"),loaders=read(\"file-loaders.js\"),spreadsheet=read(\"spreadsheet-viewer.js\");\n\nfunction recoverySession(){\n  const storage=new Map(),backups=new Map();\n  const context=vm.createContext({...core,File,Blob,Uint8Array,TextEncoder,TextDecoder,XLSX,console,clearTimeout,\n    WORKSPACE_CAP:256*1024*1024,window:{},docs:[],navNodes:[],\n    localStorage:{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value),removeItem:key=>storage.delete(key)},\n    docStableKey:doc=>doc.workspaceRestorePath||doc.workspacePath,\n    markDocumentDirty:(doc,dirty=true)=>{doc.hasUnsavedEdits=dirty;},\n    spreadsheetTools:T,spreadsheetConvertedDocOptions,\n    toast(){},normalizedRunPath:value=>String(value||\"\").replace(/\\\\/g,\"/\").replace(/^\\/+/,\"\")\n  });\n  vm.runInContext(read(\"workspace-store.js\"),context);\n  vm.runInContext(spreadsheet.slice(spreadsheet.indexOf(\"function sheetBaseName(\"),spreadsheet.indexOf(\"function sanitizeFilePart(\")),context);\n  // 저장 매체만 메모리로 대체한다. 복구 File 생성·바이너리 포맷·읽기는 실제 코드를 쓴다.\n  context.rememberWorkspace=async files=>{\n    const bytes=await context.buildWorkspacePayload(files);\n    for(const row of decodeWorkspace(bytes))backups.set(row.path,row.bytes);\n    return true;\n  };\n  context.workspaceBackendAvailable=async()=>false;\n  const start=documents.indexOf(\"const UNSAVED_DOCS_KEY =\"),end=documents.indexOf(\"function unsavedDocumentLabel\",start);\n  const snapshotStart=documents.indexOf(\"function recoverySnapshotFile(\"),snapshotEnd=documents.indexOf(\"function updateDocumentEncoding\",snapshotStart);\n  vm.runInContext(documents.slice(start,end)+documents.slice(snapshotStart,snapshotEnd),context);\n  return {context,storage,backups};\n}\n\ntest(\"CSV 변환 직후 저장 전에도 원본 CSV와 새 XLSX의 바이트를 모두 복원할 수 있다\",async()=>{\n  const {context,backups}=recoverySession();\n  const original=new File([\"수학,과학,영어\\n52,58,55\"],\"성적.csv\");\n  Object.defineProperty(original,\"webkitRelativePath\",{value:\"자료/성적.csv\"});\n  await context.rememberWorkspace([original]);\n  const rows=[\"수학,과학,영어\",\"52,58,55\"];\n  Object.assign(context,{rowStarts:[0,1],recordAt:i=>rows[i],parseCsvRecord:line=>line.split(\",\"),delimiter:\",\",\n    hasHeader:true,promptCsvHeaderChoice:async()=>true,filename:\"성적.csv\",\n    ownerDoc:{workspacePath:\"자료/성적.csv\",parentId:\"folder\",originalSaveMode:true},\n    handleFiles:async(files,options)=>{\n      const doc={name:files[0].name,kind:\"office\",sourceFile:files[0],...options};context.docs.push(doc);return doc;\n    }});\n  const start=spreadsheet.indexOf(\"        const aoa = [];\"),end=spreadsheet.indexOf(\"      } catch(e){ console.error(e); toast(\\\"변환하지 못했어요.\",start);\n  await vm.runInContext(\"(async()=>{\"+spreadsheet.slice(start,end)+\"})()\",context);\n  assert.ok(backups.has(\"자료/성적.csv\"));assert.ok(backups.has(\"자료/성적.xlsx\"));\n  assert.equal(context.docs[0].hasUnsavedEdits,true);assert.equal(context.docs[0].originalSaveMode,true);\n  const payload=await context.buildWorkspacePayload([...backups].map(([path,bytes])=>{\n    const file=new File([bytes],path.split(\"/\").pop());Object.defineProperty(file,\"webkitRelativePath\",{value:path});return file;\n  }));\n  const restored=await context.parseWorkspacePayload(payload);\n  assert.deepEqual(Array.from(restored.rows,row=>row.path),[\"자료/성적.csv\",\"자료/성적.xlsx\"]);\n  const xlsx=XLSX.read(await restored.rows[1].file.arrayBuffer(),{type:\"array\"});\n  assert.equal(xlsx.Sheets.Sheet1.A2.v,52);\n});\n\ntest(\"스프레드시트 복구본은 재시작 후 미저장 표시와 동기화 보호를 복원하고 저장 후 해제한다\",async()=>{\n  const {context,storage}=recoverySession();\n  context.docs=[{kind:\"office\",name:\"성적.xlsx\",workspacePath:\"자료/성적.xlsx\",hasUnsavedEdits:true},\n    {kind:\"office\",name:\"원본.csv\",workspacePath:\"자료/원본.csv\",hasUnsavedEdits:false},\n    {kind:\"office\",name:\"문서.docx\",workspacePath:\"자료/문서.docx\",hasUnsavedEdits:true}];\n  context.persistUnsavedDocKeys();\n  assert.deepEqual(JSON.parse(storage.get(\"classdock-unsaved-docs:v2\")),[\"자료/성적.xlsx\"]);\n  const restored={kind:\"office\",name:\"성적.xlsx\",workspacePath:\"자료/성적.xlsx\"};context.docs=[restored];\n  assert.equal(context.restoreUnsavedDocMarks(),1);assert.equal(restored.hasUnsavedEdits,true);assert.equal(restored.workspaceRecovery,true);\n  await context.markDocumentSavedSnapshot(restored,new Uint8Array([1,2,3]));context.persistUnsavedDocKeys();\n  assert.equal(restored.hasUnsavedEdits,false);assert.equal(storage.has(\"classdock-unsaved-docs:v2\"),false);\n});\n\ntest(\"자동 복원에서 낱개 XLSX의 기억한 파일 핸들을 문서에 다시 연결한다\",async()=>{\n  const {context}=recoverySession(),handle={kind:\"file\",name:\"성적.xlsx\"};\n  Object.assign(context,{docsBySourceKey:new Map(),throwIfUiCancelled(){},fileExtOf:name=>name.split(\".\").pop(),\n    inspectTextFileEncoding:async()=>null,loadFsHandle:async path=>{assert.equal(path,\"성적.xlsx\");return handle;},\n    workspaceFindOpenDocument:async()=>null,confirmLargeFileOpen:async()=>true,\n    BINARY_ASSET_EXTS:new Set(),SQLITE_EXTS:[],CODE_EXTS:{},IMG_EXTS:[],VIDEO_EXTS:[],AUDIO_EXTS:[],SUBTITLE_EXTS:[],\n    loadOffice:async(file,ext,opts)=>({kind:\"office\",name:file.name,...opts})});\n  const start=loaders.indexOf(\"async function handleFiles(\"),end=loaders.indexOf(\"// 닫은 탭 복원 스택\",start);\n  vm.runInContext(loaders.slice(start,end),context);\n  const doc=await context.handleFiles([new File([\"xlsx\"],\"성적.xlsx\")],{restoreFromWorkspace:true});\n  assert.equal(doc.fsHandle,handle);assert.equal(doc.workspaceRestorePath,\"성적.xlsx\");\n});\n\ntest(\"낱개 XLSX 드롭은 원본 저장용 파일 핸들을 보존한다\",async()=>{\n  const {context,backups}=recoverySession();\n  const raw=new File([\"xlsx\"],\"성적.xlsx\",{lastModified:123});\n  const snapshot=new File([\"xlsx\"],\"성적.xlsx\",{lastModified:123});\n  const handle={kind:\"file\",name:raw.name,getFile:async()=>snapshot};\n  let opened=[];\n  Object.assign(context,{fileQueue:Promise.resolve(),runUiBatch:async task=>task(),\n    showLoading(){},yieldToBrowser:async()=>{},collapseToActiveBranch(){},\n    handleFiles:async files=>{opened=files;},\n    toast:message=>assert.fail(message)});\n  for(const [source,name] of [[documents,\"withFileHandle\"],[loaders,\"setFileRelativePath\"],[loaders,\"queueDroppedItems\"]]){\n    const start=source.indexOf(\"function \"+name+\"(\");\n    vm.runInContext(source.slice(start,source.indexOf(\"\\n}\",start)+2),context);\n  }\n  await context.queueDroppedItems({files:[raw],items:[{kind:\"file\",getAsFileSystemHandle:async()=>handle}]});\n  assert.equal(opened.length,1);assert.equal(opened[0].__fsHandle,handle);\n  assert.ok(backups.has(\"성적.xlsx\"));\n});\n",
+          "lineCount": 109,
+          "lineOffset": 0,
+          "totalLines": 109
+        },
+        {
           "path": "tests/xlsx-edit.test.js",
           "label": "xlsx-edit.test.js",
           "description": "편집·수식·병합·차트·셀 그림·저장 왕복 38개",
@@ -10128,6 +10353,33 @@ window.MN_REVIEW_DATA = {
           "totalLines": 6854
         },
         {
+          "path": "tests/whiteboard-steps.test.js",
+          "label": "whiteboard-steps.test.js",
+          "description": "단계(차례대로 보이기) 번호 규칙과 되돌리기 스냅샷 보호",
+          "code": "\"use strict\";\n\n// 화이트보드 단계 발표: 항목의 step 번호 규칙, 여러 개를 읽는 순서대로 매기기,\n// 메모 왕복(스냅샷)에서 단계 번호가 살아남는지, 화면·녹화·선택이 같은 판정을 쓰는지를 고정한다.\n\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst {\n  whiteboardItemStep, whiteboardWithStep, whiteboardStepValues, whiteboardReadingOrder,\n  boardStateFromSnapshot\n} = require(\"../src/js/whiteboard.js\");\n\nconst source = fs.readFileSync(path.join(__dirname, \"../src/js/whiteboard.js\"), \"utf8\");\n\ntest(\"단계 번호는 1 이상 정수만 인정하고 나머지는 늘 보이는 0 이다\", () => {\n  assert.equal(whiteboardItemStep({ step:3 }), 3);\n  assert.equal(whiteboardItemStep({ step:\"2\" }), 2);\n  assert.equal(whiteboardItemStep({ step:2.7 }), 2);\n  assert.equal(whiteboardItemStep({ step:0 }), 0);\n  assert.equal(whiteboardItemStep({ step:-1 }), 0);\n  assert.equal(whiteboardItemStep({ step:\"abc\" }), 0);\n  assert.equal(whiteboardItemStep({}), 0);\n  assert.equal(whiteboardItemStep(null), 0);\n  assert.equal(whiteboardItemStep({ step:500 }), 99);\n});\n\ntest(\"단계를 바꾸면 사본을 돌려주고, 같으면 원본 그대로다(되돌리기 스냅샷 보호)\", () => {\n  const item = { type:\"rect\", x1:0, y1:0, x2:10, y2:10 };\n  const stepped = whiteboardWithStep(item, 2);\n  assert.notEqual(stepped, item);\n  assert.equal(stepped.step, 2);\n  assert.equal(item.step, undefined);\n  assert.equal(whiteboardWithStep(stepped, 2), stepped);\n  const cleared = whiteboardWithStep(stepped, 0);\n  assert.equal(\"step\" in cleared, false);\n  assert.equal(whiteboardWithStep(item, 0), item);\n});\n\ntest(\"쓰인 단계 번호만 작은 것부터 한 번씩 센다(띄엄띄엄 번호도 차례로 밟는다)\", () => {\n  const items = [{ step:3 }, {}, { step:1 }, { step:3 }, { step:7 }];\n  assert.deepEqual(whiteboardStepValues(items), [1, 3, 7]);\n  assert.deepEqual(whiteboardStepValues([]), []);\n  // 측정값처럼 남을 따라가는 항목은 stepOf 로 셈한다.\n  assert.deepEqual(whiteboardStepValues([{ follow:5 }, { step:2 }], (it) => it.follow || it.step || 0), [2, 5]);\n});\n\ntest(\"차례로 매기기는 위 줄부터, 한 줄 안에서는 왼쪽부터다\", () => {\n  const box = (x, y, w=80, h=30) => ({ x, y, w, h });\n  // ①② / ③④ 두 줄 배치를 섞어서 넘긴다. ②는 ①보다 살짝 위에 있어도 같은 줄이다.\n  const entries = [\n    { id:\"④\", box:box(200, 100) },\n    { id:\"①\", box:box(0, 42) },\n    { id:\"③\", box:box(0, 100) },\n    { id:\"②\", box:box(200, 38) }\n  ];\n  assert.deepEqual(whiteboardReadingOrder(entries).map((e) => e.id), [\"①\", \"②\", \"③\", \"④\"]);\n  // 세로로 늘어놓은 보기\n  const column = [{ id:\"c\", box:box(0, 200) }, { id:\"a\", box:box(0, 0) }, { id:\"b\", box:box(4, 100) }];\n  assert.deepEqual(whiteboardReadingOrder(column).map((e) => e.id), [\"a\", \"b\", \"c\"]);\n  assert.deepEqual(whiteboardReadingOrder([{ id:\"x\", box:null }]), []);\n});\n\ntest(\"메모로 보낸 스냅샷을 다시 열어도 단계 번호가 그대로 남는다\", () => {\n  const snapshot = JSON.parse(JSON.stringify({\n    version:1,\n    bg:\"#ffffff\",\n    items:[\n      { type:\"text\", x:10, y:10, text:\"문제\", fontSize:20 },\n      { type:\"text\", x:10, y:50, text:\"① 보기\", fontSize:20, step:1 },\n      { type:\"group\", x:10, y:90, w:100, h:40, sourceW:100, sourceH:40, step:2, items:[] }\n    ]\n  }));\n  const state = boardStateFromSnapshot(snapshot);\n  assert.deepEqual(state.items.map(whiteboardItemStep), [0, 1, 2]);\n  assert.deepEqual(whiteboardStepValues(state.items), [1, 2]);\n});\n\ntest(\"화면·선택·녹화가 모두 같은 '보이는 항목' 판정을 쓴다\", () => {\n  // 그리기\n  assert.match(source, /const shown = shownItemTest\\(\\);\\s*for \\(const it of wb\\.items\\)\\{\\s*if \\(it === editingTextItem \\|\\| !shown\\(it\\)\\) continue;/);\n  // 클릭으로 고르기 — 두 번의 훑기 모두\n  assert.match(source, /!isVectorSumItem\\(it\\) && shown\\(it\\) && hitTestBoardItem\\(it, p, measureBoardText, tol, true\\)/);\n  assert.match(source, /isVectorSumItem\\(it\\) \\|\\| !shown\\(it\\) \\|\\| !hitTestBoardItem\\(it, p, measureBoardText, tol\\)/);\n  // 끌어서 고르기·모두 고르기\n  assert.match(source, /const inside = wb\\.items\\.filter\\(\\(it\\) => \\{\\s*if \\(!shown\\(it\\)\\) return false;/);\n  assert.match(source, /isSelectableBoardItem\\(it\\) && shown\\(it\\)/);\n  // 녹화는 지금 보이는 것만\n  assert.match(source, /doc\\.recorder\\.capture\\(visibleItems\\(\\)/);\n  assert.match(source, /LessonRecorder\\(visibleItems\\(\\)/);\n  assert.match(source, /doc\\.recorder\\.stop\\(visibleItems\\(\\)/);\n  assert.doesNotMatch(source, /doc\\.recorder\\.capture\\(wb\\.items/);\n});\n\ntest(\"번호표는 편집 중에만 그리고 내보내기·발표에는 넣지 않는다\", () => {\n  assert.match(source, /const drawStepBadges = \\(\\) => \\{\\s*if \\(stepView\\.active \\|\\| gearHidden\\) return;/);\n});\n\ntest(\"묶으면 그룹이 가장 이른 단계를 맡고, 풀면 조각이 그룹 단계를 물려받는다\", () => {\n  assert.match(source, /group\\.items = group\\.items\\.map\\(\\(child\\) => whiteboardWithStep\\(child, 0\\)\\);\\s*if \\(groupStep\\.length\\) group\\.step = Math\\.min\\(\\.\\.\\.groupStep\\);/);\n  assert.match(source, /ungroupBoardItem\\(selected, measureBoardText\\)\\.map\\(\\(child\\) => whiteboardWithStep\\(child, groupStep\\)\\)/);\n});\n\ntest(\"발표 넘기기는 프레젠터 키(PageDown/PageUp)와 화살표·Home/End, Esc 로 끝낸다\", () => {\n  assert.match(source, /\\[\"PageDown\", \"PageUp\", \"ArrowRight\", \"ArrowLeft\", \"ArrowDown\", \"ArrowUp\", \"Home\", \"End\"\\]\\.includes\\(e\\.key\\)/);\n  assert.match(source, /e\\.key === \"Escape\" && stepView\\.active\\)\\{[^}]*stopSteps\\(\\);/);\n});\n\ntest(\"단계 발표 단추는 도구 노출 설정에 등록돼 있다\", () => {\n  const state = fs.readFileSync(path.join(__dirname, \"../src/js/state.js\"), \"utf8\");\n  const css = fs.readFileSync(path.join(__dirname, \"../src/styles.css\"), \"utf8\");\n  assert.match(state, /id:\"wbSteps\"[\\s\\S]*?cls:\"wb-toolvis-steps\"[\\s\\S]*?target:\"whiteboard\"/);\n  assert.match(css, /html\\.hide-tool-wbSteps \\.wb-toolvis-steps/);\n  assert.match(source, /stepsGroup\\.classList\\.add\\(\"wb-toolvis-steps\"\\)/);\n});\n\ntest(\"빈 곳 우클릭의 '단계 모두 빼기'는 한 번 묻고 보드 전체 단계를 되돌리기 한 단계로 뗀다\", () => {\n  assert.match(source, /contextAction\\(\"단계 모두 빼기\",[^)]*clearAllSteps\\)/);\n  const clearAll = /const clearAllSteps = \\(\\) => \\{([\\s\\S]*?)\\n  \\};/.exec(source);\n  assert.ok(clearAll, \"clearAllSteps 를 찾지 못했다\");\n  assert.match(clearAll[1], /applySteps\\(stepped\\.map\\(\\(it\\) => \\[it, 0\\]\\)\\)/);\n  assert.match(clearAll[1], /confirmDialog\\(/);\n  assert.match(source, /contextShowClearBtn\\.disabled=!total;/);\n});\n",
+          "lineCount": 126,
+          "lineOffset": 0,
+          "totalLines": 126
+        },
+        {
+          "path": "tests/e2e/whiteboard-multi-select.spec.js",
+          "label": "whiteboard-multi-select.spec.js",
+          "description": "Ctrl+끌기 여러 개 고르기·함께 옮기기·한 번에 되돌리기",
+          "code": "const { test, expect } = require(\"@playwright/test\");\nconst { collapseSidebar } = require(\"./helpers\");\n\n/* 선택 도구에서 Ctrl 을 누른 채 빈 곳을 끌면 선택 상자가 생기고, 상자 안에 통째로 들어온 항목을 한꺼번에 고른다.\n   고른 것 중 하나를 잡아 끌면 전부 같이 옮겨지고(되돌리기 한 번), Delete 는 전부 지우며, Esc 는 선택만 푼다. */\n\nasync function openBoard(page){\n  await page.addInitScript(() => {\n    try { localStorage.setItem(\"mn_onboarded_v1\", \"1\"); localStorage.setItem(\"uiLang\", \"ko\"); } catch(_){}\n  });\n  await collapseSidebar(page);\n  await page.goto(\"/\");\n  await page.keyboard.press(\"Alt+b\");\n  const canvas = page.locator(\".wb-canvas\");\n  await expect(canvas).toBeVisible();\n  return canvas;\n}\n\nconst pickTool = (page, tool) => page.locator(`.wb-tool.wb-toolvis-${tool}`).click();\nconst rects = (page) => page.evaluate(() => {\n  const doc = docs.find((d) => d.id === activeId);\n  return doc.boardState.items.filter((it) => it.type === \"rect\").map((it) => ({ x:Math.min(it.x1, it.x2), y:Math.min(it.y1, it.y2) }));\n});\nconst itemSummary = (page) => page.evaluate(() => {\n  const doc = docs.find((d) => d.id === activeId);\n  return doc.boardState.items.map((it) => ({ type:it.type, color:it.color || \"\", children:(it.items || []).length,\n    x:it.type === \"rect\" ? Math.min(it.x1, it.x2) : it.x }));\n});\n\nasync function drag(page, canvas, from, to, modifier){\n  const box = await canvas.boundingBox();\n  expect(box, \"캔버스가 화면에 있어야 한다\").not.toBeNull();\n  if (modifier) await page.keyboard.down(modifier);\n  await page.mouse.move(box.x + from[0], box.y + from[1]);\n  await page.mouse.down();\n  await page.mouse.move(box.x + to[0], box.y + to[1], { steps:8 });\n  await page.mouse.up();\n  if (modifier) await page.keyboard.up(modifier);\n}\n\nasync function drawThreeRects(page, canvas){\n  await pickTool(page, \"rect\");\n  await drag(page, canvas, [60, 60], [120, 110]);\n  await drag(page, canvas, [160, 60], [220, 110]);\n  await drag(page, canvas, [400, 260], [460, 310]);    // 선택 상자 밖에 둘 것\n  await pickTool(page, \"select\");\n  expect(await rects(page)).toHaveLength(3);\n}\n\ntest(\"Ctrl+끌기로 여러 개를 고르고 함께 옮긴 뒤 되돌리기 한 번에 돌아온다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  const canvas = await openBoard(page);\n  await drawThreeRects(page, canvas);\n  const before = await rects(page);\n\n  await drag(page, canvas, [30, 30], [260, 140], \"Control\");      // 앞의 둘만 감싼다\n  await drag(page, canvas, [90, 85], [140, 185]);                  // 그중 하나를 잡고 (+50,+100)\n\n  const after = await rects(page);\n  expect(after[0].x - before[0].x).toBeCloseTo(50, 0);\n  expect(after[0].y - before[0].y).toBeCloseTo(100, 0);\n  expect(after[1].x - before[1].x).toBeCloseTo(50, 0);\n  expect(after[1].y - before[1].y).toBeCloseTo(100, 0);\n  expect(after[2]).toEqual(before[2]);                             // 상자 밖 항목은 그대로\n\n  await page.keyboard.press(\"Control+z\");\n  expect(await rects(page)).toEqual(before);\n  expect(errors).toEqual([]);\n});\n\ntest(\"여러 개를 고른 채 Delete 는 전부 지우고, Esc 는 선택만 푼다\", async ({ page }) => {\n  const canvas = await openBoard(page);\n  await drawThreeRects(page, canvas);\n\n  await drag(page, canvas, [30, 30], [260, 140], \"Control\");\n  await page.keyboard.press(\"Escape\");\n  await page.keyboard.press(\"Delete\");\n  expect(await rects(page)).toHaveLength(3);                       // 선택이 풀려 아무것도 안 지워진다\n\n  await drag(page, canvas, [30, 30], [260, 140], \"Control\");\n  await page.keyboard.press(\"Delete\");\n  expect(await rects(page)).toHaveLength(1);\n\n  await page.keyboard.press(\"Control+z\");\n  expect(await rects(page)).toHaveLength(3);\n});\n\ntest(\"Ctrl+클릭으로 하나씩 더하고, 선택 밖을 누르면 여러 개 선택이 풀린다\", async ({ page }) => {\n  const canvas = await openBoard(page);\n  await drawThreeRects(page, canvas);\n  const box = await canvas.boundingBox();\n  // page.mouse.click 은 modifiers 옵션을 모른다 — 키를 직접 누르고 있어야 한다.\n  const click = async (x, y, modifiers = []) => {\n    for (const key of modifiers) await page.keyboard.down(key);\n    await page.mouse.click(box.x + x, box.y + y);\n    for (const key of modifiers) await page.keyboard.up(key);\n  };\n\n  await click(90, 60);                                             // 첫째(테두리) 고르기\n  await click(430, 260, [\"Control\"]);                              // 셋째 더하기\n  await page.keyboard.press(\"Delete\");\n  expect(await rects(page)).toHaveLength(1);                       // 둘째만 남는다\n  await page.keyboard.press(\"Control+z\");\n\n  await drag(page, canvas, [30, 30], [260, 140], \"Control\");\n  await click(560, 380);                                           // 빈 곳 클릭 → 선택 해제\n  await page.keyboard.press(\"Delete\");\n  expect(await rects(page)).toHaveLength(3);\n});\n\ntest(\"Ctrl+G 로 묶으면 한 덩어리로 움직이고, Ctrl+Shift+G 로 풀면 옮긴 자리에서 고른 채로 돌아온다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  const canvas = await openBoard(page);\n  await drawThreeRects(page, canvas);\n  const before = await rects(page);\n\n  await drag(page, canvas, [30, 30], [260, 140], \"Control\");\n  await page.keyboard.press(\"Control+g\");\n  const grouped = await itemSummary(page);\n  expect(grouped.map((it) => it.type)).toEqual([\"group\", \"rect\"]);\n  expect(grouped[0].children).toBe(2);\n  // 도구막대 단추도 '묶기'가 아니라 다시 '분리'로 돌아와 있어야 한다(그룹 한 개가 골라진 상태).\n  await expect(page.locator(\".wb-ungroup\").first()).toHaveText(\"분리\");\n\n  await drag(page, canvas, [90, 85], [140, 185]);                  // 그룹을 (+50,+100)\n  await page.keyboard.press(\"Control+Shift+g\");\n  const after = await rects(page);\n  expect(after).toHaveLength(3);\n  expect(after[0].x - before[0].x).toBeCloseTo(50, 0);\n  expect(after[1].y - before[1].y).toBeCloseTo(100, 0);\n  expect(after[2]).toEqual(before[2]);\n\n  await page.keyboard.press(\"Delete\");                             // 푼 조각 둘이 골라져 있다\n  expect(await rects(page)).toHaveLength(1);\n  expect(errors).toEqual([]);\n});\n\ntest(\"여러 개 위에서 우클릭하면 선택을 지킨 채 복제·색 바꾸기·맨 뒤로를 한꺼번에 한다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  const canvas = await openBoard(page);\n  await drawThreeRects(page, canvas);\n  const box = await canvas.boundingBox();\n  const menu = page.locator(\".wb-focus-context-menu\");\n  const rightClick = (x, y) => page.mouse.click(box.x + x, box.y + y, { button:\"right\" });\n\n  await drag(page, canvas, [30, 30], [260, 140], \"Control\");\n  await rightClick(90, 85);\n  await expect(menu.locator(\".wb-context-target\")).toHaveText(\"2개 항목\");\n  await expect(menu.locator(\".wb-context-item button\", { hasText:\"측정\" })).toBeHidden();\n  await menu.locator(\".wb-context-item button\", { hasText:\"복제\" }).click();\n\n  let items = await itemSummary(page);\n  expect(items).toHaveLength(5);\n  expect(items[3].x - items[0].x).toBeCloseTo(24, 0);              // 오른쪽 아래로 비켜 복제\n  expect(items[4].x - items[1].x).toBeCloseTo(24, 0);\n\n  // 복제본 둘이 골라져 있다 — 그 위에서 우클릭해 색을 칠한다.\n  await rightClick(90 + 24, 85 + 24);\n  await expect(menu.locator(\".wb-context-target\")).toHaveText(\"2개 항목\");\n  const swatch = menu.locator(\".wb-context-swatch\").nth(2);\n  const color = await swatch.evaluate((el) => {\n    const m = getComputedStyle(el).backgroundColor.match(/\\d+/g).map(Number);\n    return \"#\" + m.slice(0, 3).map((n) => n.toString(16).padStart(2, \"0\")).join(\"\");\n  });\n  await swatch.click();\n  items = await itemSummary(page);\n  expect(items[3].color).toBe(color);\n  expect(items[4].color).toBe(color);\n  expect(items[0].color).not.toBe(color);\n\n  await rightClick(90 + 24, 85 + 24);\n  await menu.locator(\".wb-context-item button\", { hasText:\"맨 뒤로\" }).click();\n  items = await itemSummary(page);\n  expect(items[0].color).toBe(color);                              // 고른 둘이 맨 밑 두 층으로\n  expect(items[1].color).toBe(color);\n  expect(items[2].color).not.toBe(color);\n\n  await page.keyboard.press(\"Control+z\");                          // 맨 뒤로 → 되돌리기 한 번\n  items = await itemSummary(page);\n  expect(items[3].color).toBe(color);\n  expect(errors).toEqual([]);\n});\n\ntest(\"맞춤은 전체 상자 가장자리에 맞추고, 간격 고르게는 양 끝을 두고 사이 틈을 같게 한다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  const canvas = await openBoard(page);\n  const box = await canvas.boundingBox();\n  const menu = page.locator(\".wb-focus-context-menu\");\n  await pickTool(page, \"rect\");\n  await drag(page, canvas, [60, 60], [120, 110]);      // 폭 60\n  await drag(page, canvas, [150, 150], [230, 200]);    // 폭 80 — 일부러 가운데 쪽으로 치우치게\n  await drag(page, canvas, [400, 90], [440, 130]);     // 폭 40\n  await pickTool(page, \"select\");\n  await page.keyboard.press(\"Control+a\");\n\n  const openAlign = async () => {\n    await page.mouse.click(box.x + 90, box.y + 85, { button:\"right\" });\n    await expect(menu.locator(\".wb-context-align-section\")).toBeVisible();\n  };\n  await openAlign();\n  await menu.locator(\".wb-context-align-section button\", { hasText:\"위\" }).click();\n  expect((await rects(page)).map((r) => r.y)).toEqual([60, 60, 60]);\n  await page.keyboard.press(\"Control+z\");\n  await page.keyboard.press(\"Control+a\");                          // 되돌리기는 선택을 푼다(한 개 선택과 같은 규칙)\n\n  await openAlign();\n  await menu.locator(\".wb-context-align-section button\", { hasText:\"가로 간격\" }).click();\n  const list = await rects(page);\n  const widths = [60, 80, 40];\n  const gap1 = list[1].x - (list[0].x + widths[0]), gap2 = list[2].x - (list[1].x + widths[1]);\n  expect(list[0].x).toBe(60);\n  expect(list[2].x).toBe(400);                                     // 양 끝은 그대로\n  expect(gap1).toBeCloseTo(gap2, 5);\n  expect(errors).toEqual([]);\n});\n\ntest(\"화살표 키로 고른 것을 옮기고, 누르고 있던 이동은 되돌리기 한 번에 돌아온다\", async ({ page }) => {\n  const canvas = await openBoard(page);\n  await drawThreeRects(page, canvas);\n  const before = await rects(page);\n\n  await drag(page, canvas, [30, 30], [260, 140], \"Control\");\n  for (let i = 0; i < 5; i++) await page.keyboard.down(\"ArrowRight\");   // 키 반복처럼 누른 채\n  await page.keyboard.up(\"ArrowRight\");\n  await page.keyboard.press(\"Shift+ArrowDown\");\n\n  let after = await rects(page);\n  expect(after[0].x - before[0].x).toBe(5);\n  expect(after[1].y - before[1].y).toBe(10);\n  expect(after[2]).toEqual(before[2]);\n\n  await page.keyboard.press(\"Control+z\");                          // Shift+↓ 한 단계\n  after = await rects(page);\n  expect(after[0].y).toBe(before[0].y);\n  expect(after[0].x - before[0].x).toBe(5);\n  await page.keyboard.press(\"Control+z\");                          // → 다섯 번이 한 단계\n  expect(await rects(page)).toEqual(before);\n});\n\ntest(\"그림이 섞여도 묶이고, 복구본·녹화·붙여넣기에서 그룹 안 그림이 살아 있다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  const canvas = await openBoard(page);\n  const box = await canvas.boundingBox();\n  const menu = page.locator(\".wb-focus-context-menu\");\n  await pickTool(page, \"rect\");\n  await drag(page, canvas, [60, 60], [120, 110]);\n  await page.evaluate(async () => {\n    const c = document.createElement(\"canvas\"); c.width = 40; c.height = 30;\n    const g = c.getContext(\"2d\"); g.fillStyle = \"#ff0000\"; g.fillRect(0, 0, 40, 30);\n    await docs.find((d) => d.id === activeId).insertBoardImage(c.toDataURL(\"image/png\"));\n  });\n  await expect.poll(() => page.evaluate(() => docs.find((d) => d.id === activeId).boardState.items.length)).toBe(2);\n\n  await page.keyboard.press(\"Control+a\");\n  await page.keyboard.press(\"Control+g\");\n  const grouped = await page.evaluate(() => {\n    const doc = docs.find((d) => d.id === activeId);\n    const group = doc.boardState.items[0];\n    const image = group.items.find((it) => it.type === \"image\");\n    doc.flushBoardRecovery();\n    const saved = JSON.parse(localStorage.getItem(Object.keys(localStorage).find((k) => k.includes(\"화이트보드\") && localStorage.getItem(k).includes('\"group\"'))));\n    const savedImage = saved.items[0].items.find((it) => it.type === \"image\");\n    const lesson = lessonSerializeItems(doc.boardState.items)[0].items.find((it) => it.type === \"image\");\n    return {\n      count:doc.boardState.items.length, type:group.type, live:!!(image && image.img && image.img.complete),\n      savedSrc:String(savedImage.src).slice(0, 15), savedHasImg:\"img\" in savedImage,\n      lessonSrc:String(lesson.src).slice(0, 15),\n    };\n  });\n  expect(grouped).toEqual({ count:1, type:\"group\", live:true, savedSrc:\"data:image/png;\", savedHasImg:false, lessonSrc:\"data:image/png;\" });\n\n  // 그룹을 복사 → 지우기 → 붙여넣기: 붙여넣은 그룹 속 그림도 불러와져 있어야 한다.\n  const group = await page.evaluate(() => { const g = docs.find((d) => d.id === activeId).boardState.items[0]; return { x:g.x, y:g.y, w:g.w, h:g.h }; });\n  const inside = { x:box.x + group.x + group.w / 2, y:box.y + group.y + group.h / 2 };\n  await page.mouse.click(inside.x, inside.y, { button:\"right\" });\n  await menu.locator(\".wb-context-item button\", { hasText:\"복사\" }).click();\n  await page.keyboard.press(\"Delete\");\n  await page.mouse.click(box.x + 500, box.y + 300, { button:\"right\" });\n  await menu.locator(\".wb-context-board button\", { hasText:\"붙여넣기\" }).click();\n  await expect.poll(() => page.evaluate(() => {\n    const g = docs.find((d) => d.id === activeId).boardState.items[0];\n    const image = g && g.items && g.items.find((it) => it.type === \"image\");\n    return !!(image && image.img && image.img.complete);\n  })).toBe(true);\n  expect(errors).toEqual([]);\n});\n\ntest(\"여러 개·그룹 속 수식도 색은 다시 그려 한 번에, S/M/L 은 크기로 바뀐다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  const canvas = await openBoard(page);\n  const box = await canvas.boundingBox();\n  const menu = page.locator(\".wb-focus-context-menu\");\n  const model = () => page.evaluate(() => docs.find((d) => d.id === activeId).boardState.items.map((it) => ({\n    type:it.type, role:it.role || \"\", color:it.formulaColor || it.color || \"\", src:it.src || \"\", x:it.x, y:it.y, w:it.w, h:it.h,\n    baseW:it.formulaBaseW, width:it.width, sourceW:it.sourceW,\n    children:(it.items || []).map((c) => ({ role:c.role || \"\", color:c.formulaColor || c.color || \"\", w:c.w, baseW:c.formulaBaseW, live:!!(c.img && c.img.complete) })),\n  })));\n\n  // 수식 둘을 실제 수식 창으로 넣고, 겹치지 않게 자리만 벌려 둔다.\n  await page.mouse.click(box.x + 600, box.y + 400, { button:\"right\" });\n  await menu.locator(\".wb-context-board button\", { hasText:\"수학·과학\" }).click();\n  const panel = page.locator(\".wb-edu-panel\").last();\n  await panel.locator(\".wb-edu-tab\", { hasText:/^수식$/ }).click();\n  for (const source of [\"x^2\", String.raw`\\frac{a}{b}`]){\n    const before = (await model()).length;\n    // 다른 만들기 창도 같은 입력·넣기 클래스를 쓴다 — 보이는 것만 집는다.\n    await panel.locator(\".wb-formula-input:visible\").fill(source);\n    await panel.locator(\".wb-formula-insert:visible\").click();\n    await expect.poll(async () => (await model()).length).toBe(before + 1);\n  }\n  await page.keyboard.press(\"Escape\");\n  await page.evaluate(() => {\n    const items = docs.find((d) => d.id === activeId).boardState.items;\n    items[0] = Object.assign({}, items[0], { x:60, y:60 });\n    items[1] = Object.assign({}, items[1], { x:320, y:220 });\n  });\n  await pickTool(page, \"rect\");\n  await drag(page, canvas, [60, 260], [140, 320]);\n  await pickTool(page, \"select\");\n\n  const swatchColor = (swatch) => swatch.evaluate((el) => {\n    const m = getComputedStyle(el).backgroundColor.match(/\\d+/g).map(Number);\n    return \"#\" + m.slice(0, 3).map((n) => n.toString(16).padStart(2, \"0\")).join(\"\");\n  });\n  const start = await model();\n  const onFormula = async () => {\n    const f = (await model())[0];\n    await page.mouse.click(box.x + f.x + f.w / 2, box.y + f.y + f.h / 2, { button:\"right\" });\n    await expect(menu).toBeVisible();\n  };\n\n  // ① 여러 개 색: 수식 둘은 새 그림(src)으로, 사각형은 색으로 — 되돌리기 한 번에 전부 돌아온다.\n  await page.keyboard.press(\"Control+a\");\n  await onFormula();\n  await expect(menu.locator(\".wb-context-target\")).toHaveText(\"3개 항목\");\n  const red = menu.locator(\".wb-context-swatch\").nth(2);\n  const redColor = await swatchColor(red);\n  await red.click();\n  await expect.poll(async () => (await model()).map((it) => it.color)).toEqual([redColor, redColor, redColor]);\n  let now = await model();\n  expect(now[0].src).not.toBe(start[0].src);\n  expect([now[0].x, now[0].w]).toEqual([start[0].x, start[0].w]);   // 색만 바뀌고 자리·크기는 그대로\n  await page.keyboard.press(\"Control+z\");\n  expect((await model()).map((it) => it.color)).toEqual(start.map((it) => it.color));\n\n  // ② 여러 개 L: 수식은 원래 크기의 1.5배(가운데 기준), 사각형은 굵기 8.\n  await page.keyboard.press(\"Control+a\");\n  await onFormula();\n  await menu.locator(\".wb-context-width\", { hasText:\"L\" }).click();\n  now = await model();\n  expect(now[0].w).toBe(Math.round(start[0].baseW * 1.5));\n  expect(now[0].x + now[0].w / 2).toBeCloseTo(start[0].x + start[0].w / 2, 0);\n  expect(now[2].width).toBe(8);\n\n  // ③ 묶은 그룹 한 개: 속 수식도 색이 다시 그려지고, S 로 줄이면 그룹 상자가 자식에 맞춰 다시 잡힌다.\n  await page.keyboard.press(\"Control+a\");\n  await page.keyboard.press(\"Control+g\");\n  const grouped = (await model())[0];\n  await page.mouse.click(box.x + grouped.x + 5, box.y + grouped.y + 5, { button:\"right\" });\n  await expect(menu.locator(\".wb-context-target\")).toHaveText(\"그룹\");\n  const blue = menu.locator(\".wb-context-swatch\").nth(3);\n  const blueColor = await swatchColor(blue);\n  await blue.click();\n  await expect.poll(async () => (await model())[0].children.map((c) => c.color)).toEqual([blueColor, blueColor, blueColor]);\n  expect((await model())[0].children.every((c) => c.role !== \"education-formula\" || c.live)).toBe(true);\n\n  await page.mouse.click(box.x + grouped.x + 5, box.y + grouped.y + 5, { button:\"right\" });\n  await menu.locator(\".wb-context-width\", { hasText:\"S\" }).click();\n  const small = (await model())[0];\n  const formulaChild = small.children.find((c) => c.role === \"education-formula\");\n  expect(formulaChild.w).toBe(Math.round(formulaChild.baseW * .75));\n  expect(small.sourceW).toBeCloseTo(small.w, 5);                     // 비율 1 그대로 상자만 다시 잡힘\n  expect(errors).toEqual([]);\n});\n\ntest(\"Ctrl+A 로 전부 고르고, 메뉴로 복사한 여러 개를 빈 곳에 붙여넣는다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  const canvas = await openBoard(page);\n  await drawThreeRects(page, canvas);\n  const box = await canvas.boundingBox();\n  const menu = page.locator(\".wb-focus-context-menu\");\n\n  await page.keyboard.press(\"Control+a\");\n  await page.mouse.click(box.x + 90, box.y + 85, { button:\"right\" });\n  await expect(menu.locator(\".wb-context-target\")).toHaveText(\"3개 항목\");\n  await menu.locator(\".wb-context-item button\", { hasText:\"복사\" }).click();\n  await page.keyboard.press(\"Delete\");\n  expect(await rects(page)).toHaveLength(0);\n\n  await page.mouse.click(box.x + 500, box.y + 300, { button:\"right\" });\n  await menu.locator(\".wb-context-board button\", { hasText:\"붙여넣기\" }).click();\n  await expect.poll(() => rects(page).then((list) => list.length)).toBe(3);\n  await page.keyboard.press(\"Delete\");                             // 붙여넣은 셋이 골라진 채다\n  expect(await rects(page)).toHaveLength(0);\n  expect(errors).toEqual([]);\n});\n",
+          "lineCount": 404,
+          "lineOffset": 0,
+          "totalLines": 404
+        },
+        {
+          "path": "tests/whiteboard-special-chars.test.js",
+          "label": "whiteboard-special-chars.test.js",
+          "description": "특수문자 갈래·최근 20개",
+          "code": "\"use strict\";\n\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst { whiteboardSpecialCharGroups, normalizeWhiteboardRecentSymbols, whiteboardEducationCatalog } = require(\"../src/js/whiteboard.js\");\n\nconst read = (file) => fs.readFileSync(path.join(__dirname, \"..\", file), \"utf8\");\n\ntest(\"특수문자 목록은 갈래마다 겹치지 않는 글자를 담고, 수학 갈래는 도구상자 기호를 빌린다\", () => {\n  const groups = whiteboardSpecialCharGroups();\n  assert.deepEqual(groups.map((group) => group.id), [\"common\",\"shape\",\"arrow\",\"number\",\"unit\",\"punct\",\"script\",\"greek\",\"math\"]);\n  for (const group of groups){\n    assert.ok(group.chars.length >= 10, group.id);\n    const chars = group.chars.map(([ch]) => ch);\n    assert.equal(new Set(chars).size, chars.length, group.id);\n    for (const [ch, name] of group.chars){ assert.ok(ch && ch.length <= 2, group.id + \" \" + ch); assert.ok(name, ch); }\n  }\n  const mathChars = groups.find((group) => group.id === \"math\").chars.map(([ch]) => ch);\n  const symbols = whiteboardEducationCatalog().filter((entry) => entry.category === \"symbol\").map((entry) => entry.value);\n  assert.deepEqual(mathChars, symbols);\n});\n\ntest(\"최근 특수문자는 새 글자를 앞에 두고 중복 없이 20개까지\", () => {\n  assert.deepEqual(normalizeWhiteboardRecentSymbols([\"①\",\"※\"], \"※\"), [\"※\",\"①\"]);\n  assert.deepEqual(normalizeWhiteboardRecentSymbols(null, \"→\"), [\"→\"]);\n  assert.deepEqual(normalizeWhiteboardRecentSymbols([1, \"\", \"긴긴긴긴긴\", \"★\"]), [\"★\"]);\n  const many = Array.from({ length:30 }, (_, i) => String.fromCharCode(0x2460 + i));\n  assert.equal(normalizeWhiteboardRecentSymbols(many, \"※\").length, 20);\n});\n\ntest(\"글상자 우클릭은 보드 메뉴로 올라가지 않고, 고르개는 초점을 뺏지 않는다\", () => {\n  const source = read(\"src/js/whiteboard.js\");\n  assert.match(source, /ta\\.addEventListener\\(\"contextmenu\", \\(e\\) => \\{\\s*e\\.stopPropagation\\(\\);\\s*if \\(e\\.shiftKey\\) return;/);\n  assert.match(source, /symbolPicker\\.addEventListener\\(\"mousedown\",e=>e\\.preventDefault\\(\\)\\)/);\n  assert.match(source, /document\\.execCommand\\(\"insertText\",false,ch\\)/);\n  assert.match(source, /symbolPicker\\.className=\"wb-symbol-picker ui-keep-symbols\"/);\n  assert.match(read(\"src/js/icons.js\"), /\\.text-view,\\.ui-keep-symbols\"\\)/);\n});\n",
+          "lineCount": 41,
+          "lineOffset": 0,
+          "totalLines": 41
+        },
+        {
           "path": "docs/화이트보드-집중도구-설계.md",
           "label": "화이트보드-집중도구-설계.md",
           "description": "설계 문서 — 상태 모델·DOM 층·판서 규칙",
@@ -10774,6 +11026,15 @@ window.MN_REVIEW_DATA = {
           "totalLines": 532
         },
         {
+          "path": "tests/pension.test.js",
+          "label": "pension.test.js",
+          "description": "연금복권 — 조·여섯 자리, 겹치지 않는 표, 조·자리 고정",
+          "code": "\"use strict\";\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst { pension } = require(\"../src/js/lotto.js\");\nconst key = ticket => ticket.group + \":\" + ticket.number;\nconst state = (extra={}) => pension.normalize(Object.assign({ count:5 }, extra));\n\ntest(\"무작위 조로 1~5장은 조 1~5·여섯 자리 숫자이고, 한 번에 뽑는 표는 겹치지 않는다\", () => {\n  for (const count of [1, 5]){\n    const tickets = pension.draw(state({ count }));\n    assert.equal(tickets.length, count);\n    assert.equal(new Set(tickets.map(key)).size, count);\n    for (const ticket of tickets){ assert.ok(ticket.group >= 1 && ticket.group <= 5); assert.match(ticket.number, /^\\d{6}$/); }\n  }\n  assert.equal(pension.pool(state()).total, 5000000);\n});\ntest(\"자리마다 같은 숫자가 나올 수 있고, 순번은 앞 자리부터 채운다\", () => {\n  assert.equal(pension.numberAt([null, null, null, null, null, null], 77150), \"077150\");\n  assert.equal(pension.numberAt([1, null, 1, null, 1, null], 999), \"191919\");\n});\ntest(\"조를 지정하면 그 조로만 뽑고, 고정한 자리는 모든 표에 들어간다\", () => {\n  const tickets = pension.draw(state({ group:3, fixed:[null, null, null, null, null, 7] }));\n  assert.equal(tickets.length, 5);\n  assert.ok(tickets.every(ticket => ticket.group === 3 && ticket.number.endsWith(\"7\")));\n});\ntest(\"모든 조는 장 수와 관계없이 같은 번호로 1~5조 5장을 만든다\", () => {\n  const tickets = pension.draw(state({ count:2, group:\"all\" }));\n  assert.deepEqual(tickets.map(ticket => ticket.group), [1, 2, 3, 4, 5]);\n  assert.equal(new Set(tickets.map(ticket => ticket.number)).size, 1);\n  const fixed = pension.draw(state({ group:\"all\", fixed:[1, 2, 3, 4, 5, 6] }));\n  assert.ok(fixed.every(ticket => ticket.number === \"123456\"));\n});\ntest(\"표가 모자라면 멈추고, 무작위 조는 여섯 자리를 다 고정해도 5장까지 된다\", () => {\n  const allFixed = [1, 2, 3, 4, 5, 6];\n  assert.equal(pension.pool(state({ group:2, fixed:allFixed, count:1 })).reason, \"\");\n  assert.match(pension.pool(state({ group:2, fixed:allFixed, count:2 })).reason, /1장뿐/);\n  assert.throws(() => pension.draw(state({ group:2, fixed:allFixed, count:2 })), /1장뿐/);\n  const tickets = pension.draw(state({ fixed:allFixed, count:5 }), () => 0);\n  assert.deepEqual(tickets.map(key), [\"1:123456\", \"2:123456\", \"3:123456\", \"4:123456\", \"5:123456\"]);\n  assert.throws(() => pension.draw({ count:0, group:\"random\", fixed:[] }), /장 수/);\n});\ntest(\"손상된 저장 데이터는 걸러지고 유효한 설정·기록은 왕복한다\", () => {\n  const saved = state({ count:9, group:7, fixed:[1, 10, -1, \"3\", 4.5, 9, 8], history:[\n    { id:\"ok\", time:2, games:[{ group:1, number:\"000000\" }, { group:5, number:\"999999\" }] },\n    { id:\"dup\", time:1, games:[{ group:1, number:\"123456\" }, { group:1, number:\"123456\" }] },\n    { id:\"bad\", time:1, games:[{ group:6, number:\"123456\" }] },\n    { id:\"short\", time:1, games:[{ group:1, number:\"12345\" }] },\n  ] });\n  assert.equal(saved.count, 1); assert.equal(saved.group, \"random\");\n  assert.deepEqual(saved.fixed, [1, null, null, null, null, 9]);\n  assert.deepEqual(saved.history.map(round => round.id), [\"ok\"]);\n  assert.deepEqual(pension.normalize(JSON.parse(JSON.stringify(saved))), saved);\n  assert.equal(pension.normalize({ group:\"all\" }).group, \"all\");\n});\n",
+          "lineCount": 55,
+          "lineOffset": 0,
+          "totalLines": 55
+        },
+        {
           "path": "tests/lotto.test.js",
           "label": "lotto.test.js",
           "description": "서로 다른 6개·겹치지 않는 조합·순번 ↔ 조합 복원·제외 조건",
@@ -11359,6 +11620,15 @@ window.MN_REVIEW_DATA = {
           "lineCount": 360,
           "lineOffset": 0,
           "totalLines": 360
+        },
+        {
+          "path": "tests/map-subway-controls.test.js",
+          "label": "map-subway-controls.test.js",
+          "description": "노선 고르기 — 일부라도 보이면 화면 유지, 다 밖이면 이동",
+          "code": "\"use strict\";\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst vm = require(\"node:vm\");\nconst source = fs.readFileSync(path.join(__dirname, \"../src/js/map-viewer.js\"), \"utf8\");\nconst context = vm.createContext({ window:{}, document:{}, location:{ protocol:\"file:\" }, navigator:{ onLine:true } });\nvm.runInContext(source, context);\nconst inView = vm.runInContext(\"mapSubwayRouteInView\", context);\nconst project = ([x,y]) => ({ x,y });\nconst size = { x:100, y:100 };\n\ntest(\"노선 일부가 보이면 유지: 화면 안의 역·역 사이 구간·화면 경계\", () => {\n  assert.equal(inView({ A:[50,50] }, () => [], project, size), true);\n  assert.equal(inView({ A:[-20,50], B:[120,50] }, n => n === \"A\" ? [\"B\"] : [\"A\"], project, size), true);\n  assert.equal(inView({ A:[50,-20], B:[50,120] }, n => n === \"A\" ? [\"B\"] : [\"A\"], project, size), true);\n  assert.equal(inView({ A:[-20,-20], B:[0,0] }, () => [\"B\"], project, size), true);\n});\n\ntest(\"노선 전체가 화면 밖이면 이동: 범위 사각형만 겹쳐도 실제 구간이 없으면 밖이다\", () => {\n  assert.equal(inView({ A:[-20,-20], B:[-20,120], C:[120,120] },\n    n => ({ A:[\"B\"], B:[\"A\",\"C\"], C:[\"B\"] })[n], project, size), false);\n  assert.equal(inView({ A:[-20,10], B:[10,-20] }, () => [\"B\"], project, size), false);\n  assert.equal(inView({ A:[-20,50], B:[120,50] }, () => [], project, size), false);\n  assert.equal(inView({}, () => [], project, size), false);\n});\n\n/* 브라우저 없이 실제 선택·중지·조회 코드를 실행한다. 지도와 타이머만 대역으로 교체한다. */\nfunction controls(){\n  const events = {};\n  const requests = [], fitted = [], intervals = new Set(), frames = new Set(), ingested = [];\n  let nextId = 0;\n  const table = {\n    \"가노선\":{ A:[-20,50], B:[120,50] },\n    \"나노선\":{ A:[200,200], B:[300,300] }\n  };\n  const layer = () => ({\n    present:false, cleared:0,\n    clearLayers(){ this.cleared++; },\n    addTo(){ this.present = true; }\n  });\n  const select = { value:\"\", addEventListener:(name, handler) => { events[name] = handler; } };\n  const ctx = vm.createContext({\n    subwayOn:false, subwayShown:-1, subwayNote:\"\", subwayRequestSeq:0, subwayFetching:false,\n    subwayTimer:0, subwayFrame:0, subwayLabelsShown:false, subwayStationDots:[],\n    subwayTrains:new Map(), subwayMarkers:new Map(), subwayLayer:layer(), subwayRouteLayer:layer(),\n    subwayLineSelect:select, subwayViewAll:() => {},\n    document:{ hidden:false }, stage:{ offsetParent:{} },\n    map:{\n      latLngToContainerPoint:project, getSize:() => size,\n      fitBounds:(points, options) => fitted.push({ points, options }),\n      on:() => {}, off:() => {}, removeLayer:l => { l.present = false; }\n    },\n    MNSubwayLive:{\n      stationsOf:line => table[line], neighbours:(_line, n) => n === \"A\" ? [\"B\"] : [\"A\"],\n      ingest:(_trains, rows, line) => { ingested.push({ rows, line }); return new Set(); }\n    },\n    mapSubwayRouteInView:inView,\n    mapT:text => text, mapTf:(text, vars) => text.replace(/\\{(\\w+)\\}/g, (_, k) => vars[k]),\n    setStatus:text => { ctx.status = text; }, syncSubwayPicker:() => { ctx.selected = select.value; },\n    subwayDrawRoute:() => { ctx.drawn = select.value; }, subwaySyncLabels:() => {},\n    subwayCloseArrivals:() => { ctx.arrivalClosed = true; }, subwayRender:() => {},\n    MAP_SUBWAY_POLL_MS:15000,\n    setInterval:() => { const id = ++nextId; intervals.add(id); return id; },\n    clearInterval:id => intervals.delete(id),\n    requestAnimationFrame:() => { const id = ++nextId; frames.add(id); return id; },\n    cancelAnimationFrame:id => frames.delete(id),\n    fetch:url => new Promise((resolve, reject) => requests.push({ url, resolve, reject }))\n  });\n  const statusStart = source.indexOf(\"    const subwayStatus = (shown) => {\");\n  const pollEnd = source.indexOf(\"    /* ── 역별 도착 정보\", statusStart);\n  const controlStart = source.indexOf(\"    const subwayStop = () => {\");\n  const controlEnd = source.indexOf(\"    toolChips.appendChild(subwayLinePicker);\", controlStart);\n  assert.ok(statusStart > 0 && pollEnd > statusStart && controlStart > pollEnd && controlEnd > controlStart);\n  vm.runInContext(source.slice(statusStart, pollEnd) + source.slice(controlStart, controlEnd), ctx);\n  const choose = line => { select.value = line; events.change(); };\n  const settle = async (at, rows = []) => {\n    requests[at].resolve({ ok:true, json:async () => ({ realtimePositionList:rows }) });\n    await new Promise(resolve => setImmediate(resolve));\n  };\n  return { ctx, choose, settle, requests, fitted, intervals, frames, ingested };\n}\n\ntest(\"노선 선택 즉시 표시·조회, 일부가 보이면 유지, 전체 보기는 강제 이동\", async () => {\n  const c = controls();\n  c.choose(\"가노선\");\n  assert.equal(c.ctx.subwayOn, true);\n  assert.equal(c.ctx.drawn, \"가노선\");\n  assert.equal(c.ctx.subwayRouteLayer.present, true);\n  assert.equal(c.ctx.subwayLayer.present, true);\n  assert.equal(c.requests.length, 1);\n  assert.equal(c.fitted.length, 0);\n  c.ctx.subwayViewAll();\n  assert.equal(c.fitted.length, 1);\n  assert.equal(c.fitted[0].points.length, 2);\n  await c.settle(0);\n  assert.equal(c.ctx.subwayLineSelect.value, \"가노선\");\n  assert.equal(c.ctx.subwayOn, true);\n  assert.match(c.ctx.status, /운행 중인 열차가 없어요/);\n});\n\ntest(\"화면 밖 노선 선택 시 자동 이동, 숨기면 표시·타이머·조회·도착 패널 모두 정리\", async () => {\n  const c = controls();\n  c.choose(\"나노선\");\n  assert.equal(c.fitted.length, 1);\n  assert.equal(c.fitted[0].options.maxZoom, 14);\n  assert.equal(c.intervals.size, 1);\n  assert.equal(c.frames.size, 1);\n  c.choose(\"\");\n  assert.equal(c.ctx.subwayOn, false);\n  assert.equal(c.ctx.selected, \"\");\n  assert.equal(c.ctx.subwayRouteLayer.present, false);\n  assert.equal(c.ctx.subwayLayer.present, false);\n  assert.equal(c.ctx.arrivalClosed, true);\n  assert.equal(c.intervals.size, 0);\n  assert.equal(c.frames.size, 0);\n  await c.settle(0, [{ trainNo:\"old\" }]);\n  assert.equal(c.ingested.length, 0);\n  assert.equal(c.ctx.status, \"\");\n});\n\ntest(\"조회 도중 노선 변경 시 즉시 새 노선 조회, 늦게 온 이전 응답·오류는 무시\", async () => {\n  const c = controls();\n  c.choose(\"가노선\");\n  c.choose(\"나노선\");\n  assert.equal(c.requests.length, 2);\n  assert.equal(c.intervals.size, 1);\n  await c.settle(0, [{ trainNo:\"old\" }]);\n  assert.equal(c.ingested.length, 0);\n  assert.equal(c.ctx.subwayFetching, true);\n  await c.settle(1, [{ trainNo:\"new\" }]);\n  assert.equal(c.ingested[0].line, \"나노선\");\n  c.choose(\"가노선\");\n  c.choose(\"나노선\");\n  c.requests[2].reject(new Error(\"subway-key-required\"));\n  await new Promise(resolve => setImmediate(resolve));\n  assert.equal(c.ctx.subwayOn, true);\n  assert.equal(c.ctx.subwayLineSelect.value, \"나노선\");\n  assert.equal(c.ctx.subwayFetching, true);\n  await c.settle(3);\n});\n\ntest(\"인증키가 없으면 선택을 해제하고 조회를 중지\", async () => {\n  const c = controls();\n  c.choose(\"가노선\");\n  c.requests[0].resolve({ ok:false, text:async () => \"subway-key-required\" });\n  await new Promise(resolve => setImmediate(resolve));\n  assert.equal(c.ctx.subwayOn, false);\n  assert.equal(c.ctx.selected, \"\");\n  assert.equal(c.intervals.size, 0);\n  assert.equal(c.frames.size, 0);\n  assert.match(c.ctx.status, /인증키/);\n});\n",
+          "lineCount": 155,
+          "lineOffset": 0,
+          "totalLines": 155
         },
         {
           "path": "tests/subway-live.test.js",
@@ -12331,6 +12601,24 @@ window.MN_REVIEW_DATA = {
           "totalLines": 224
         },
         {
+          "path": "tests/map-choropleth.test.js",
+          "label": "map-choropleth.test.js",
+          "description": "경계 두 시점·시도 줄임말·옛 이름·일반구 맞추기",
+          "code": "\"use strict\";\n\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst vm = require(\"node:vm\");\n\n// 색칠 지도: 이름 맞추기·구간 나누기·표시 세기는 실제 경계 자료(vendor/korea-regions.js)로 검증한다.\nconst root = path.join(__dirname, \"..\");\nconst read = (file) => fs.readFileSync(path.join(root, file), \"utf8\");\nfunction load(){\n  const context = { console, Blob, URL, Map, Set, Date, Math, JSON, setTimeout, clearTimeout,\n    document:{}, window:{}, location:{ protocol:\"file:\" }, navigator:{ onLine:true } };\n  context.globalThis = context;\n  vm.createContext(context);\n  vm.runInContext(read(\"vendor/korea-regions.js\"), context);\n  vm.runInContext(read(\"vendor/korea-emd.js\"), context);\n  vm.runInContext(read(\"src/js/map-viewer.js\") + `\n    ;globalThis.__choro = { mapChoroEmdScopes, mapChoroScopeVintage, mapChoroMatch, mapChoroTable, mapChoroRowsFromText, mapChoroValuesFromTable,\n      mapChoroBestVintage, mapChoroBreaks, mapChoroClassOf, mapChoroColors, mapChoroRegions, mapChoroGeometry,\n      mapChoroContains, mapChoroMarkerCounts, mapChoroValueKey, mapChoroNumber, mapNormalizeChoropleth,\n      mapDocEmpty, mapDocParse, mapDocSerialize, mapDocContentKey, mapAttributionText, MAP_CHORO_SCHEMES };`, context);\n  return context.__choro;\n}\nconst api = load();\nconst plain = (value) => JSON.parse(JSON.stringify(value));\nconst match = (text, level = \"sgg\", vintage = \"2026-07\") => plain(api.mapChoroMatch(text, level, vintage));\n\ntest(\"경계 자료는 두 시점의 시도·시군구를 모두 담는다\", () => {\n  assert.equal(api.mapChoroRegions(\"sido\", \"2026-07\").length, 16);   // 전남광주통합특별시\n  assert.equal(api.mapChoroRegions(\"sido\", \"2025-12\").length, 17);\n  assert.ok(api.mapChoroRegions(\"sgg\", \"2026-07\").length > 240);\n  const seoul = api.mapChoroGeometry(api.mapChoroRegions(\"sido\", \"2026-07\").find(r => r.sido === \"서울특별시\").geom);\n  assert.equal(api.mapChoroContains(seoul, 37.5665, 126.978), true, \"서울시청은 서울 안\");\n  assert.equal(api.mapChoroContains(seoul, 35.1796, 129.0756), false, \"부산시청은 서울 밖\");\n  assert.ok(api.mapChoroContains(seoul, seoul.anchor[0], seoul.anchor[1]), \"글자 자리는 지역 안에 있다\");\n});\n\ntest(\"시도 이름은 줄임말·옛 이름까지 받는다\", () => {\n  assert.equal(match(\"서울\", \"sido\").key, \"서울특별시\");\n  assert.equal(match(\"부산시\", \"sido\").key, \"부산광역시\");\n  assert.equal(match(\"강원도\", \"sido\").key, \"강원특별자치도\");\n  assert.equal(match(\"전라북도\", \"sido\").key, \"전북특별자치도\");\n  assert.equal(match(\"충북\", \"sido\").key, \"충청북도\");\n  assert.equal(match(\"제주도\", \"sido\").key, \"제주특별자치도\");\n  assert.equal(match(\"광주광역시\", \"sido\", \"2026-07\").status, \"none\", \"통합 뒤에는 광주광역시 경계가 없다\");\n  assert.equal(match(\"광주광역시\", \"sido\", \"2025-12\").key, \"광주광역시\");\n  assert.equal(match(\"전국\", \"sido\").status, \"skip\", \"합계 줄은 못 찾은 이름이 아니다\");\n});\n\ntest(\"시군구: 시도가 붙은 이름·같은 이름·일반구를 가린다\", () => {\n  assert.equal(match(\"종로구\").key, \"서울특별시|종로구\");\n  assert.equal(match(\"중구\").status, \"ambiguous\", \"여러 시도에 있는 이름은 칠하지 않는다\");\n  assert.equal(match(\"서울특별시 중구\").key, \"서울특별시|중구\");\n  assert.equal(match(\"경남 고성군\").key, \"경상남도|고성군\");\n  // 광주시(경기)가 광주(광역시) + '시'로 잘못 떼이지 않는다\n  assert.equal(match(\"광주시\").key, \"경기도|광주시\");\n  const suwon = match(\"수원시\");\n  assert.equal(suwon.key, \"경기도|수원시\");\n  assert.equal(suwon.keys.length, 4, \"수원시는 네 구를 한 덩어리로 칠한다\");\n  assert.equal(match(\"세종특별자치시\").key, \"세종특별자치시|세종시\");\n  assert.equal(match(\"인천 중구\", \"sgg\", \"2025-12\").key, \"인천광역시|중구\");\n  assert.equal(match(\"화성시\", \"sgg\", \"2025-12\").keys.length, 1);\n});\n\nconst emd = (text, scope, vintage = \"2026-07\") => plain(api.mapChoroMatch(text, \"emd\", vintage, scope));\n\ntest(\"읍면동은 범위 안만 담고, 두 파일의 경계 번호를 따로 센다\", () => {\n  const all = api.mapChoroRegions(\"emd\", \"2026-07\", \"\");\n  assert.ok(all.length > 3500, \"전국 읍면동\");\n  const jongno = api.mapChoroRegions(\"emd\", \"2026-07\", \"서울특별시|종로구\");\n  assert.ok(jongno.length > 10 && jongno.every(r => r.sgg === \"종로구\"));\n  assert.equal(api.mapChoroRegions(\"emd\", \"2026-07\", \"경기도|수원시\").some(r => r.sgg === \"수원시장안구\"), true, \"시를 고르면 일반구가 모두 들어온다\");\n  assert.equal(api.mapChoroRegions(\"emd\", \"2026-07\", \"광주광역시\").length, 0, \"통합 뒤에는 광주광역시가 없다\");\n  assert.ok(api.mapChoroRegions(\"emd\", \"2025-12\", \"광주광역시\").length > 90);\n  assert.equal(api.mapChoroScopeVintage(\"광주광역시\", \"2026-07\"), \"2025-12\");\n  const hyoja = jongno.find(r => r.emd === \"청운효자동\");\n  assert.equal(hyoja.code, \"1111051500\");\n  const shape = api.mapChoroGeometry(hyoja.geom);\n  assert.equal(api.mapChoroContains(shape, shape.anchor[0], shape.anchor[1]), true);\n  assert.notEqual(api.mapChoroGeometry(hyoja.geom), api.mapChoroGeometry(Number(hyoja.geom.slice(1))), \"읍면동 번호와 시도·시군구 번호는 섞이지 않는다\");\n  const scopes = plain(api.mapChoroEmdScopes());\n  const gyeonggi = scopes.find(item => item.sido === \"경기도\");\n  assert.deepEqual(gyeonggi.sggs.find(item => item.value === \"수원시\"), { value:\"수원시\", city:true });\n  assert.ok(scopes.some(item => item.sido === \"광주광역시\") && scopes.some(item => item.sido === \"전남광주통합특별시\"), \"두 시점의 시도를 모두 고를 수 있다\");\n});\n\ntest(\"읍면동: 코드가 먼저, 이름은 범위 안에서 하나로 좁혀질 때만 칠한다\", () => {\n  assert.equal(emd(\"서울특별시 종로구 청운효자동(1111051500)\", \"서울특별시\").key, \"서울특별시|종로구|청운효자동\");\n  assert.equal(emd(\"아무 이름 1111051500\", \"서울특별시|종로구\").key, \"서울특별시|종로구|청운효자동\", \"코드만 맞아도 된다\");\n  assert.equal(emd(\"서울특별시 종로구 (1111000000)\", \"서울특별시\").status, \"skip\", \"시군구 합계 줄\");\n  assert.equal(emd(\"서울특별시 종로구\", \"서울특별시\").status, \"skip\");\n  assert.equal(emd(\"청운효자동\", \"서울특별시|종로구\").key, \"서울특별시|종로구|청운효자동\");\n  assert.equal(emd(\"청운효자동\", \"부산광역시\").status, \"outside\", \"범위 밖 줄은 틀린 이름이 아니다\");\n  assert.equal(emd(\"중앙동\", \"경기도\").status, \"ambiguous\", \"경기도 안에도 중앙동이 여럿\");\n  const jungang = emd(\"중앙동\", \"경기도|과천시\");\n  assert.equal(jungang.status, \"ok\");\n  assert.equal(jungang.key, \"경기도|과천시|중앙동\");\n  assert.equal(emd(\"수원시 파장동\", \"경기도\").key, \"경기도|수원시장안구|파장동\", \"구를 빼고 적어도 찾는다\");\n  assert.equal(emd(\"경기 수원시 장안구 파장동\", \"경기도|수원시\").key, \"경기도|수원시장안구|파장동\");\n  assert.equal(emd(\"종로1.2.3.4가동\", \"서울특별시|종로구\").key, \"서울특별시|종로구|종로1·2·3·4가동\");\n  assert.equal(emd(\"강동구 상일1동\", \"서울특별시\").key, \"서울특별시|강동구|상일제1동\", \"'제'를 빼고 적어도 같은 동\");\n  assert.equal(emd(\"없는동\", \"서울특별시\").status, \"none\");\n  // 코드 열이 따로 있는 표: 코드 열은 값으로 고를 수 없고 이름 쪽으로 넘어간다\n  const table = api.mapChoroTable(api.mapChoroRowsFromText(\"행정기관코드\\t행정기관\\t인구\\n1111000000\\t종로구\\t139,417\\n1111051500\\t청운효자동\\t11,000\\n1111053000\\t사직동\\t9,000\\n2611051000\\t중앙동\\t5,000\"));\n  assert.deepEqual(plain(table.columns.map(c => [c.label, c.numeric, c.code])), [[\"행정기관코드\", false, true], [\"행정기관\", false, false], [\"인구\", true, false]]);\n  const result = plain(api.mapChoroValuesFromTable(table, 2, \"emd\", \"2026-07\", \"서울특별시|종로구\"));\n  assert.deepEqual(result.values, { \"서울특별시|종로구|청운효자동\":11000, \"서울특별시|종로구|사직동\":9000 });\n  assert.equal(result.outside, 1, \"부산 중앙동은 범위 밖\");\n  assert.deepEqual(result.unmatched, []);\n  // 시도·시군구 지도도 이름에 붙은 코드 때문에 못 찾지 않는다\n  assert.equal(match(\"서울특별시 종로구 (1111000000)\").key, \"서울특별시|종로구\");\n});\n\ntest(\"읍면동 표시 개수와 설정 저장\", () => {\n  const counts = plain(api.mapChoroMarkerCounts([{ lat:37.5665, lng:126.978 }, { lat:35.1796, lng:129.0756 }], \"emd\", \"2026-07\", \"서울특별시|중구\"));\n  assert.equal(Object.values(counts).reduce((a, b) => a + b, 0), 1, \"범위 밖 표시는 세지 않는다\");\n  const settings = plain(api.mapNormalizeChoropleth({ level:\"emd\", scope:\" 서울특별시 | 종로구 |x\", source:\"markers\" }));\n  assert.equal(settings.level, \"emd\");\n  assert.equal(settings.scope, \"서울특별시|종로구\");\n  assert.equal(\"scope\" in plain(api.mapNormalizeChoropleth({ level:\"sgg\", scope:\"서울특별시\", source:\"markers\" })), false, \"시군구 지도는 범위를 담지 않는다\");\n});\n\ntest(\"붙여 넣은 표에서 머리줄·숫자 열·빈 값을 가려 읽고, 이름이 더 맞는 시점을 고른다\", () => {\n  const text = \"행정구역\\t인구(명)\\t면적\\n전국\\t51,000,000\\t100\\n서울특별시\\t9,386,034\\t605\\n광주광역시\\t1,419,237\\t501\\n\"\n    + \"전라남도\\t1,804,217\\t12348\\n제주도\\t\\t1850\\n없는도\\t5\\t1\";\n  const table = api.mapChoroTable(api.mapChoroRowsFromText(text));\n  assert.deepEqual(plain(table.columns.map(c => [c.label, c.numeric])), [[\"행정구역\", false], [\"인구(명)\", true], [\"면적\", true]]);\n  const best = plain(api.mapChoroBestVintage(table, 1, \"sido\"));\n  assert.equal(best.vintage, \"2025-12\");\n  assert.deepEqual(best.result.values, { \"서울특별시\":9386034, \"광주광역시\":1419237, \"전라남도\":1804217 });\n  assert.deepEqual(best.result.unmatched, [\"없는도\"]);\n  assert.equal(best.result.empty, 1, \"빈 값은 0이 아니라 '값 없음'\");\n  assert.equal(api.mapChoroNumber(\"\"), null);\n  assert.equal(api.mapChoroNumber(\"12.5%\"), 12.5);\n  // CSV 와 두 칸짜리 이름(시도, 시군구)\n  const csv = api.mapChoroTable(api.mapChoroRowsFromText(\"시도,시군구,학교 수\\n서울특별시,중구,30\\n대구광역시,중구,\\\"1,204\\\"\"));\n  const result = plain(api.mapChoroValuesFromTable(csv, 2, \"sgg\", \"2026-07\"));\n  assert.deepEqual(result.values, { \"서울특별시|중구\":30, \"대구광역시|중구\":1204 });\n});\n\ntest(\"일반구는 제 값이 없으면 그 시를 합친 값을 쓴다\", () => {\n  const region = api.mapChoroRegions(\"sgg\", \"2026-07\").find(r => r.sgg === \"수원시장안구\");\n  assert.equal(api.mapChoroValueKey(region, { \"경기도|수원시\":1 }), \"경기도|수원시\");\n  assert.equal(api.mapChoroValueKey(region, { \"경기도|수원시장안구\":2, \"경기도|수원시\":1 }), \"경기도|수원시장안구\");\n  assert.equal(api.mapChoroValueKey(region, {}), \"\");\n});\n\ntest(\"구간은 같은 개수씩·같은 간격으로 나누고, 몰린 값은 구간을 줄인다\", () => {\n  assert.deepEqual(plain(api.mapChoroBreaks([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5, \"quantile\")), [1, 3, 5, 6, 8, 10]);\n  assert.deepEqual(plain(api.mapChoroBreaks([0, 100], 4, \"equal\")), [0, 25, 50, 75, 100]);\n  assert.deepEqual(plain(api.mapChoroBreaks([1, 1, 1, 1, 10], 5, \"quantile\")), [1, 10]);\n  assert.deepEqual(plain(api.mapChoroBreaks([7, 7], 5, \"quantile\")), [7, 7]);\n  assert.equal(api.mapChoroClassOf(10, [1, 5, 10]), 1, \"최댓값은 맨 윗 구간\");\n  assert.equal(api.mapChoroClassOf(1, [1, 5, 10]), 0);\n  for (const scheme of api.MAP_CHORO_SCHEMES.filter(item => item.colors)){\n    const colors = api.mapChoroColors(scheme.id, 5);\n    assert.equal(colors.length, 5);\n    assert.equal(colors[0], scheme.colors[0]);\n    assert.equal(colors[4], scheme.colors[scheme.colors.length - 1]);\n  }\n});\n\ntest(\"직접 고른 색은 낮은 값·가운데·높은 값 사이를 단계 수만큼 섞는다\", () => {\n  assert.deepEqual(plain(api.mapChoroColors(\"custom\", 3, [\"#000000\", \"#ffffff\"])), [\"#000000\", \"#808080\", \"#ffffff\"]);\n  // 가운데 색이 있으면 홀수 단계의 가운데 칸이 정확히 그 색이다\n  assert.deepEqual(plain(api.mapChoroColors(\"custom\", 5, [\"#0000ff\", \"#ffffff\", \"#ff0000\"])),\n    [\"#0000ff\", \"#8080ff\", \"#ffffff\", \"#ff8080\", \"#ff0000\"]);\n  assert.equal(api.mapChoroColors(\"custom\", 7, [\"#123456\", \"#ABCDEF\"]).length, 7);\n  assert.deepEqual(plain(api.mapChoroColors(\"custom\", 2, [\"red\", \"#12\"])), [\"#fef9c3\", \"#b91c1c\"], \"잘못된 색은 기본 색으로\");\n\n  const custom = plain(api.mapNormalizeChoropleth({ source:\"markers\", scheme:\"custom\", customColors:[\"#ABCDEF\", \"#00ff00\", \"#112233\", \"#999999\"] }));\n  assert.deepEqual(custom.customColors, [\"#abcdef\", \"#00ff00\", \"#112233\"], \"색은 세 개까지, 소문자로\");\n  const model = api.mapDocEmpty(\"색\");\n  model.choropleth = api.mapNormalizeChoropleth({ source:\"markers\", scheme:\"custom\", customColors:[\"#ffffff\", \"#7c3aed\"] });\n  assert.deepEqual(plain(api.mapDocParse(api.mapDocSerialize(model)).choropleth.customColors), [\"#ffffff\", \"#7c3aed\"]);\n  assert.equal(\"customColors\" in plain(api.mapNormalizeChoropleth({ source:\"markers\", scheme:\"blue\", customColors:[\"#ffffff\", \"#000000\"] })), false,\n    \"정해 둔 색표를 쓰면 직접 고른 색은 담지 않는다\");\n});\n\ntest(\"표시 개수는 주소를 되묻지 않고 경계 안에서 센다\", () => {\n  const counts = plain(api.mapChoroMarkerCounts([\n    { lat:37.5665, lng:126.978 }, { lat:37.57, lng:126.98 }, { lat:35.1796, lng:129.0756 }, { lat:30, lng:120 }\n  ], \"sido\", \"2026-07\"));\n  assert.equal(counts[\"서울특별시\"], 2);\n  assert.equal(counts[\"부산광역시\"], 1);\n  assert.equal(counts[\"경기도\"], 0, \"없는 지역은 0 으로 칠한다\");\n});\n\ntest(\"색칠 설정은 .map 에 담기고, 옛 파일·잘못된 값은 안전하게 연다\", () => {\n  const model = api.mapDocEmpty(\"인구 지도\");\n  assert.equal(model.choropleth, null);\n  const before = api.mapDocContentKey(model);\n  model.choropleth = api.mapNormalizeChoropleth({ level:\"sido\", vintage:\"2025-12\", source:\"table\",\n    values:{ \"서울특별시\":9386034, \"나쁜값\":\"12\", \"빈값\":null }, scheme:\"green\", classes:4, method:\"equal\", opacity:3, labels:true, title:\"인구\" });\n  assert.notEqual(api.mapDocContentKey(model), before, \"칠하면 저장 안 됨(●)이 켜진다\");\n  const again = api.mapDocParse(api.mapDocSerialize(model));\n  assert.deepEqual(plain(again.choropleth), { level:\"sido\", vintage:\"2025-12\", source:\"table\", values:{ \"서울특별시\":9386034 },\n    title:\"인구\", unit:\"\", scheme:\"green\", classes:4, method:\"equal\", opacity:0.95, labels:true });\n  assert.equal(api.mapNormalizeChoropleth({ source:\"table\", values:{} }), null, \"값 없는 표 색칠은 버린다\");\n  assert.equal(plain(api.mapNormalizeChoropleth({ source:\"markers\", values:{ \"서울특별시\":3 } })).values[\"서울특별시\"], undefined,\n    \"표시 개수는 저장하지 않고 열 때마다 센다\");\n  const old = api.mapDocParse(JSON.stringify({ type:\"classdock-map\", version:12, markers:[] }));\n  assert.equal(old.choropleth, null);\n  assert.match(api.mapAttributionText(model), /통계청 SGIS/, \"그림 출처에 행정경계 출처가 따라간다\");\n});\n\ntest(\"경계 자료는 지연 로드 묶음이고 출처·라이선스가 함께 있다\", () => {\n  const manifest = JSON.parse(read(\"scripts.manifest.json\"));\n  const entry = manifest.vendorScripts.find(item => item.file === \"korea-regions.js\");\n  assert.equal(entry.lazy, \"koreaRegions\");\n  assert.match(read(\"src/js/lazy.js\"), /koreaRegions:\\{[^}]*files:\\[\"korea-regions\\.js\"\\]/);\n  assert.ok(fs.existsSync(path.join(root, \"vendor/licenses/admdongkor-20260701.txt\")));\n  assert.match(read(\"vendor/korea-regions.js\"), /공공누리 제1유형[\\s\\S]*CC BY 4\\.0/);\n  const editor = read(\"src/js/map-viewer.js\");\n  assert.match(editor, /interactive:false, color:\"#475569\"/, \"경계층은 지도 클릭·우클릭을 가로채지 않는다\");\n  assert.match(editor, /MAP_CAPTURE_HIDDEN_PANES = \\[[^\\n]*\"\\.map-choro-hover\"/, \"마우스를 올린 지역 글자는 캡처에서 감춘다\");\n});\n",
+          "lineCount": 220,
+          "lineOffset": 0,
+          "totalLines": 220
+        },
+        {
+          "path": "tests/e2e/map-choropleth.spec.js",
+          "label": "map-choropleth.spec.js",
+          "description": "붙여 넣은 표로 칠하기·범례·되돌리기·저장",
+          "code": "const { test, expect } = require(\"@playwright/test\");\nconst { collapseSidebar } = require(\"./helpers\");\n\n/* 색칠 지도의 화면 쪽 계약. 이름 맞추기 규칙은 tests/map-choropleth.test.js 가 보고, 여기서는\n   붙여 넣은 표 → 경계층·범례 → 마우스 올린 지역 → 우클릭 메뉴 → 되돌리기·저장이 한 흐름으로 이어지는지 본다.\n   배경 타일은 인터넷에서 받으므로 기대하지 않는다(경계는 앱에 들어 있어 타일 없이 그려진다). */\n\nasync function openApp(page){\n  await page.addInitScript(() => {\n    try { localStorage.setItem(\"mn_onboarded_v1\", \"1\"); localStorage.setItem(\"uiLang\", \"ko\"); } catch(_){}\n  });\n  await collapseSidebar(page);\n  await page.goto(\"/\");\n}\nconst mapModel = (page) => page.evaluate(() => JSON.parse(JSON.stringify(docs.find(d => d.kind === \"map\").mapDoc)));\nconst screenPoint = (page, lat, lng) => page.evaluate(([la, ln]) => {\n  const map = docs.find(d => d.kind === \"map\").mapInstance;\n  const rect = map.getContainer().getBoundingClientRect();\n  const point = map.latLngToContainerPoint([la, ln]);\n  return { x:rect.left + point.x, y:rect.top + point.y };\n}, [lat, lng]);\n\nconst TABLE = [\n  \"시도\\t인구(명)\",\n  \"전국\\t51,000,000\",\n  \"서울특별시\\t9,386,034\",\n  \"경기도\\t13,630,821\",\n  \"광주광역시\\t1,419,237\",\n  \"전라남도\\t1,804,217\",\n  \"부산\\t3,266,598\",\n  \"없는도\\t12\"\n].join(\"\\n\");\n\ntest(\"붙여 넣은 표로 시도를 칠하고 범례·마우스 올린 지역·되돌리기·저장이 따라온다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  await openApp(page);\n  await page.evaluate(() => newMapScratch());\n  await expect(page.locator(\".map-stage.leaflet-container\")).toHaveCount(1);\n\n  const button = page.locator(\".map-choropleth\");\n  await expect(button).toHaveAttribute(\"aria-pressed\", \"false\");\n  await button.click();\n  const modal = page.locator(\".map-choro-modal\");\n  await expect(modal).toBeVisible();\n\n  await modal.locator(\".map-choro-paste\").fill(TABLE);\n  // 광주광역시·전라남도가 있으니 자동 시점은 통합 전(2025년 12월)을 고른다\n  await expect(modal.locator(\".map-choro-note\")).toContainText(\"맞춘 지역 5곳\");\n  await expect(modal.locator(\".map-choro-note\")).toContainText(\"2025년 12월 기준\");\n  await expect(modal.locator(\".map-choro-note\")).toContainText(\"없는도\");\n  await modal.locator(\".map-choro-unit\").fill(\"명\");\n  await modal.locator(\".map-choro-apply\").click();\n  await expect(modal).toHaveCount(0);\n\n  await expect(button).toHaveAttribute(\"aria-pressed\", \"true\");\n  const model = await mapModel(page);\n  expect(model.choropleth.vintage).toBe(\"2025-12\");\n  expect(model.choropleth.title).toBe(\"인구(명)\");\n  expect(model.choropleth.values).toEqual({ \"서울특별시\":9386034, \"경기도\":13630821, \"광주광역시\":1419237, \"전라남도\":1804217, \"부산광역시\":3266598 });\n  await expect(page.locator(\".leaflet-mapChoro-pane path\")).toHaveCount(17);\n  const legend = page.locator(\".map-choro-legend\");\n  await expect(legend).toBeVisible();\n  await expect(legend).toContainText(\"인구(명) (명)\");\n  await expect(legend).toContainText(\"자료 없음\");\n  await expect(legend).toContainText(\"통계청 SGIS\");\n  await expect(page.locator(\".map-status\")).toContainText(\"저장 안 됨\");\n\n  // 서울 위에 마우스를 올리면 지역 이름과 값이 뜬다\n  const seoul = await screenPoint(page, 37.5665, 126.978);\n  await page.mouse.move(seoul.x, seoul.y);\n  await expect(page.locator(\".map-choro-hover\")).toContainText(\"서울특별시 · 9,386,034 명\");\n\n  // 나라 전체를 덮는 층이지만 우클릭 메뉴는 그대로 열린다\n  await page.mouse.click(seoul.x, seoul.y, { button:\"right\" });\n  await expect(page.locator(\".map-context-menu\")).toBeVisible();\n  await page.keyboard.press(\"Escape\");\n\n  // 저장 형식에 담긴다\n  const saved = await page.evaluate(() => JSON.parse(mapDocSerialize(docs.find(d => d.kind === \"map\").mapDoc)));\n  // 색칠은 13 판부터 담긴다 — 판이 더 올라가도(14=자전거길 층) 지금 판으로 쓰면 된다.\n  expect(saved.version).toBe(await page.evaluate(() => MAP_DOC_VERSION));\n  expect(saved.version).toBeGreaterThanOrEqual(13);\n  expect(saved.choropleth.values[\"서울특별시\"]).toBe(9386034);\n\n  // 되돌리면 색칠이 걷힌다\n  await page.locator(\".map-undo\").click();\n  await expect(button).toHaveAttribute(\"aria-pressed\", \"false\");\n  await expect(page.locator(\".leaflet-mapChoro-pane path\")).toHaveCount(0);\n  await expect(legend).toBeHidden();\n  expect(errors).toEqual([]);\n});\n\ntest(\"켜진 🎨 단추를 다시 누르면 색칠이 걷히고, 다시 켜면 걷기 전 설정이 창에 채워지며, 범례를 누르면 설정 창이 열린다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  await openApp(page);\n  await page.evaluate(() => newMapScratch());\n  await expect(page.locator(\".map-stage.leaflet-container\")).toHaveCount(1);\n\n  const button = page.locator(\".map-choropleth\");\n  const modal = page.locator(\".map-choro-modal\");\n  await button.click();\n  await expect(modal.locator(\".map-choro-clear\")).toHaveCount(0);   // 창에는 지우기 단추가 없다\n  await modal.locator(\".map-choro-paste\").fill(TABLE);\n  await expect(modal.locator(\".map-choro-note\")).toContainText(\"맞춘 지역 5곳\");\n  await modal.locator(\".map-choro-title\").fill(\"우리 인구\");\n  await modal.locator(\".map-choro-apply\").click();\n  await expect(button).toHaveAttribute(\"aria-pressed\", \"true\");\n  // 되돌리기 기록은 200ms 안의 변경을 한 단계로 묶는다 — 칠한 것이 기록된 뒤에 걷어야 따로 되돌려진다.\n  await expect(page.locator(\".map-undo\")).toBeEnabled();\n  const legend = page.locator(\".map-choro-legend\");\n  await expect(legend).toBeVisible();\n\n  // 범례를 누르면 지금 설정으로 창이 열리고, 지도에는 표시가 찍히지 않는다\n  const markersBefore = (await mapModel(page)).markers.length;\n  await legend.click();\n  await expect(modal).toBeVisible();\n  await expect(modal.locator(\".map-choro-title\")).toHaveValue(\"우리 인구\");\n  await modal.locator(\".map-choro-close\").click();\n  await expect(modal).toHaveCount(0);\n  expect((await mapModel(page)).markers.length).toBe(markersBefore);\n\n  // 켜진 단추를 누르면 창 없이 바로 걷힌다\n  await button.click();\n  await expect(modal).toHaveCount(0);\n  await expect(button).toHaveAttribute(\"aria-pressed\", \"false\");\n  await expect(page.locator(\".leaflet-mapChoro-pane path\")).toHaveCount(0);\n  await expect(legend).toBeHidden();\n  expect((await mapModel(page)).choropleth).toBeNull();\n\n  // 다시 누르면 걷기 전 설정이 채워진 창이 열린다\n  await button.click();\n  await expect(modal).toBeVisible();\n  await expect(modal.locator(\".map-choro-title\")).toHaveValue(\"우리 인구\");\n  await expect(modal.locator(\".map-choro-paste\")).toHaveValue(/서울특별시\\t9386034/);\n  await modal.locator(\".map-choro-close\").click();\n\n  // 걷은 것도 되돌리기로 살아난다\n  await page.locator(\".map-undo\").click();\n  await expect(button).toHaveAttribute(\"aria-pressed\", \"true\");\n  await expect(legend).toBeVisible();\n  expect(errors).toEqual([]);\n});\n\ntest(\"읍면동은 범위를 골라 코드 붙은 표로 칠하고, 범위로 지도를 옮기며, 다시 열면 범위가 남아 있다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  await openApp(page);\n  await page.evaluate(() => newMapScratch());\n  await expect(page.locator(\".map-stage.leaflet-container\")).toHaveCount(1);\n\n  await page.locator(\".map-choropleth\").click();\n  const modal = page.locator(\".map-choro-modal\");\n  await expect(modal.locator(\".map-choro-scope\")).toBeHidden();\n  await modal.locator(\".map-choro-level\").selectOption(\"emd\");\n  await expect(modal.locator(\".map-choro-scope\")).toBeVisible();\n  await expect(modal.locator(\".map-choro-scope-sido\")).toHaveValue(\"서울특별시\");\n  await modal.locator(\".map-choro-scope-sgg\").selectOption(\"종로구\");\n  await modal.locator(\".map-choro-paste\").fill([\n    \"행정구역\\t인구\",\n    \"서울특별시 (1100000000)\\t9,386,034\",\n    \"서울특별시 종로구 (1111000000)\\t139,417\",\n    \"서울특별시 종로구 청운효자동(1111051500)\\t11,000\",\n    \"서울특별시 종로구 사직동(1111053000)\\t9,000\",\n    \"부산광역시 중구 중앙동(2611051000)\\t5,000\"\n  ].join(\"\\n\"));\n  await expect(modal.locator(\".map-choro-note\")).toContainText(\"맞춘 지역 2곳\");\n  await expect(modal.locator(\".map-choro-note\")).toContainText(\"범위 밖 1줄\");\n  await modal.locator(\".map-choro-apply\").click();\n  await expect(modal).toHaveCount(0);\n\n  const settings = (await mapModel(page)).choropleth;\n  expect(settings.level).toBe(\"emd\");\n  expect(settings.scope).toBe(\"서울특별시|종로구\");\n  expect(settings.values).toEqual({ \"서울특별시|종로구|청운효자동\":11000, \"서울특별시|종로구|사직동\":9000 });\n  const expected = await page.evaluate(() => mapChoroRegions(\"emd\", \"2026-07\", \"서울특별시|종로구\").length);\n  await expect(page.locator(\".leaflet-mapChoro-pane path\")).toHaveCount(expected);\n  // 종로구로 옮겨 간다\n  const center = await page.evaluate(() => docs.find(d => d.kind === \"map\").mapInstance.getCenter());\n  expect(Math.abs(center.lat - 37.59)).toBeLessThan(0.05);\n  expect(Math.abs(center.lng - 126.98)).toBeLessThan(0.05);\n\n  // 범례를 누르면 읍면동·범위가 그대로 채워진 창이 열린다\n  await page.locator(\".map-choro-legend\").click();\n  await expect(modal.locator(\".map-choro-level\")).toHaveValue(\"emd\");\n  await expect(modal.locator(\".map-choro-scope-sgg\")).toHaveValue(\"종로구\");\n  await expect(modal.locator(\".map-choro-note\")).toContainText(\"맞춘 지역 2곳\");\n  expect(errors).toEqual([]);\n});\n\ntest(\"표시 개수로 칠하면 표시를 더할 때 색이 따라 바뀌고, 시군구 값 글자는 확대해야 나온다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  await openApp(page);\n  await page.evaluate(() => newMapScratch());\n  await expect(page.locator(\".map-stage.leaflet-container\")).toHaveCount(1);\n  await page.evaluate(() => {\n    const doc = docs.find(d => d.kind === \"map\");\n    for (const [lat, lng] of [[37.5796, 126.977], [37.58, 126.98], [37.4979, 127.0276]]) doc.mapDoc.markers.push(mapNormalizeMarker({ lat, lng }));\n  });\n\n  await page.locator(\".map-choropleth\").click();\n  const modal = page.locator(\".map-choro-modal\");\n  await modal.locator(\".map-choro-level\").selectOption(\"sgg\");\n  await modal.locator('input[name=\"mapChoroSource\"][value=\"markers\"]').check();\n  await expect(modal.locator(\".map-choro-paste\")).toBeHidden();\n  await expect(modal.locator(\".map-choro-note\")).toContainText(\"표시 3개 중 3개\");\n  await modal.locator(\".map-choro-labels\").check();\n  await modal.locator(\".map-choro-apply\").click();\n\n  const legend = page.locator(\".map-choro-legend\");\n  await expect(legend).toContainText(\"지역별 표시 개수 (개)\");\n  expect((await mapModel(page)).choropleth.values).toEqual({});   // 개수는 저장하지 않고 열 때마다 센다\n\n  // 멀리서는 시군구 글자를 쓰지 않는다\n  await page.evaluate(() => docs.find(d => d.kind === \"map\").mapInstance.setView([37.55, 126.99], 7, { animate:false }));\n  await expect(page.locator(\".map-choro-label\")).toHaveCount(0);\n  await page.evaluate(() => docs.find(d => d.kind === \"map\").mapInstance.setView([37.55, 126.99], 11, { animate:false }));\n  await expect(page.locator(\".map-choro-label\", { hasText:\"종로구\" })).toContainText(\"2\");\n\n  // 표시를 하나 더 찍으면 다시 센다\n  const addBtn = page.locator(\".map-add\");\n  await addBtn.click();\n  const jongno = await screenPoint(page, 37.573, 126.979);\n  await page.mouse.click(jongno.x, jongno.y);\n  await expect(page.locator(\".map-choro-label\", { hasText:\"종로구\" })).toContainText(\"3\");\n  expect(errors).toEqual([]);\n});\n\ntest(\"색을 직접 고르면 미리보기 띠·지도·범례가 그 색으로 칠해지고 다음 지도에서도 이어 쓴다\", async ({ page }) => {\n  const errors = [];\n  page.on(\"pageerror\", (error) => errors.push(error.message));\n  await openApp(page);\n  await page.evaluate(() => newMapScratch());\n  await expect(page.locator(\".map-stage.leaflet-container\")).toHaveCount(1);\n\n  await page.locator(\".map-choropleth\").click();\n  const modal = page.locator(\".map-choro-modal\");\n  await modal.locator(\".map-choro-paste\").fill(TABLE);\n  await expect(modal.locator(\".map-choro-custom\")).toBeHidden();\n  await modal.locator(\".map-choro-scheme\").selectOption(\"custom\");\n  await expect(modal.locator(\".map-choro-custom\")).toBeVisible();\n  await modal.locator(\".map-choro-classes\").selectOption(\"3\");\n  await modal.locator(\".map-choro-color-low\").fill(\"#ffffff\");\n  await modal.locator(\".map-choro-color-high\").fill(\"#7c3aed\");\n  const strip = () => modal.locator(\".map-choro-preview i\").evaluateAll(cells => cells.map(cell => cell.title));\n  expect(await strip()).toEqual([\"#ffffff\", \"#be9df6\", \"#7c3aed\"]);\n  // 가운데 색을 켜면 가운데 칸이 그 색이 된다\n  await modal.locator(\".map-choro-mid-on\").check();\n  await modal.locator(\".map-choro-color-mid\").fill(\"#facc15\");\n  expect(await strip()).toEqual([\"#ffffff\", \"#facc15\", \"#7c3aed\"]);\n  await modal.locator(\".map-choro-apply\").click();\n\n  const settings = (await mapModel(page)).choropleth;\n  expect(settings.scheme).toBe(\"custom\");\n  expect(settings.customColors).toEqual([\"#ffffff\", \"#facc15\", \"#7c3aed\"]);\n  const fills = await page.locator(\".leaflet-mapChoro-pane path\").evaluateAll(paths => [...new Set(paths.map(p => p.getAttribute(\"fill\")))]);\n  expect(fills).toEqual(expect.arrayContaining([\"#ffffff\", \"#facc15\", \"#7c3aed\"]));\n  const swatches = await page.locator(\".map-choro-legend-row i\").evaluateAll(cells => cells.map(cell => getComputedStyle(cell).backgroundColor));\n  expect(swatches.slice(0, 3)).toEqual([\"rgb(124, 58, 237)\", \"rgb(250, 204, 21)\", \"rgb(255, 255, 255)\"]);\n\n  // 새 지도에서 직접 고르기를 열면 지난번 색이 채워져 있다\n  await page.evaluate(() => newMapScratch());\n  await expect(page.locator(\".map-choropleth\")).toHaveCount(2);\n  await page.locator(\".map-choropleth\").last().click();\n  await page.locator(\".map-choro-modal .map-choro-scheme\").selectOption(\"custom\");\n  await expect(page.locator(\".map-choro-modal .map-choro-color-high\")).toHaveValue(\"#7c3aed\");\n  await expect(page.locator(\".map-choro-modal .map-choro-mid-on\")).toBeChecked();\n  expect(errors).toEqual([]);\n});\n",
+          "lineCount": 272,
+          "lineOffset": 0,
+          "totalLines": 272
+        },
+        {
           "path": "src/js/kosis-api.js",
           "label": "kosis-api.js",
           "description": "자주 쓰는 통계 표·응답 해석·런처 조회(MNKosisApi)",
@@ -12399,6 +12687,15 @@ window.MN_REVIEW_DATA = {
           "lineCount": 214,
           "lineOffset": 0,
           "totalLines": 214
+        },
+        {
+          "path": "tests/e2e/map-projected-import.spec.js",
+          "label": "map-projected-import.spec.js",
+          "description": "평면 좌표 표 들이기 — 주소로 좌표계 고르기·열 이름과 값 범위로 짐작",
+          "code": "const { test, expect } = require(\"@playwright/test\");\nconst { collapseSidebar } = require(\"./helpers\");\nconst K = require(\"../../src/js/korea-coords.js\");\n\n/* 표 들이기: 위경도 대신 평면 좌표(미터)가 적힌 표.\n * 예전에는 이런 줄이 '좌표 오류' 로 모두 빠졌다. 이제는 좌표계를 골라 앱 안에서 바꿔 넣는다.\n * 중부원점 GRS80 5186 과 5181 은 값만으로 가를 수 없어(북쪽으로 100km 차이) 주소 열과 맞춰 고르는지 본다. */\nasync function openApp(page){\n  await page.addInitScript(() => {\n    try { localStorage.setItem(\"mn_onboarded_v1\", \"1\"); localStorage.setItem(\"uiLang\", \"ko\"); } catch(_){}\n  });\n  await collapseSidebar(page);\n  await page.goto(\"/\");\n  await page.evaluate(() => newMapScratch());\n  await expect(page.locator(\".map-stage.leaflet-container\")).toHaveCount(1);\n}\nconst mapModel = (page) => page.evaluate(() => JSON.parse(JSON.stringify(docs.find(d => d.kind === \"map\").mapDoc)));\nasync function importCsv(page, text){\n  const chooser = page.waitForEvent(\"filechooser\");\n  await page.locator(\".map-csv-import\").click();\n  await (await chooser).setFiles({ name:\"places.csv\", mimeType:\"text/csv\", buffer:Buffer.from(text, \"utf8\") });\n}\nconst places = [\n  { name:\"서울시청\", address:\"서울특별시 중구 세종대로 110\", lat:37.5663, lng:126.9779 },\n  { name:\"부산시청\", address:\"부산광역시 연제구 중앙대로 1001\", lat:35.1796, lng:129.0756 },\n  { name:\"제주시청\", address:\"제주특별자치도 제주시 광양9길 10\", lat:33.4996, lng:126.5312 }\n];\n\ntest(\"주소 열이 있으면 주소와 맞는 좌표계를 골라 표시로 넣는다\", async ({ page }) => {\n  await openApp(page);\n  const rows = places.map(p => { const [x, y] = K.fromWgs84(\"5186\", p.lat, p.lng); return [p.name, p.address, x.toFixed(2), y.toFixed(2)].join(\",\"); });\n  await importCsv(page, \"이름,주소,X좌표,Y좌표\\n\" + rows.join(\"\\n\") + \"\\n\");\n\n  const modal = page.locator(\".map-projected-modal\");\n  await expect(modal).toBeVisible();\n  await expect(modal.locator(\".map-projected-system\")).toHaveValue(\"5186\");\n  await expect(modal.locator(\".map-projected-reason\")).toContainText(\"3줄 중 3줄\");\n  await expect(modal.locator(\"tbody tr.is-match\")).toHaveCount(3);\n  await expect(modal.locator(\"tbody tr\").first()).toContainText(\"서울특별시 중구\");\n\n  // 다른 좌표계를 고르면 미리보기가 바로 바뀐다(5181 이면 100km 남쪽 — 주소와 안 맞는다).\n  await modal.locator(\".map-projected-system\").selectOption(\"5181\");\n  await expect(modal.locator(\"tbody tr.is-match\")).toHaveCount(0);\n  await modal.locator(\".map-projected-system\").selectOption(\"5186\");\n\n  await modal.locator(\".map-projected-apply\").click();\n  await expect(modal).toHaveCount(0);\n  const model = await mapModel(page);\n  expect(model.markers).toHaveLength(3);\n  for (const place of places) {\n    const marker = model.markers.find(m => m.label === place.name);\n    expect(Math.abs(marker.lat - place.lat)).toBeLessThan(0.00001);\n    expect(Math.abs(marker.lng - place.lng)).toBeLessThan(0.00001);\n    expect(marker.address).toBe(place.address);\n    expect(marker).not.toHaveProperty(\"x\");\n  }\n});\n\ntest(\"주소가 없으면 열 이름과 값 범위로 짐작하고, 취소하면 아무것도 넣지 않는다\", async ({ page }) => {\n  await openApp(page);\n  // 인허가(LOCALDATA) 모양 — '좌표정보(x)' 는 중부원점 Bessel 로 먼저 짐작한다.\n  const rows = places.map(p => { const [x, y] = K.fromWgs84(\"2097\", p.lat, p.lng); return [p.name, x.toFixed(1), y.toFixed(1)].join(\",\"); });\n  await importCsv(page, \"사업장명,좌표정보(x),좌표정보(y)\\n\" + rows.join(\"\\n\") + \"\\n\");\n  const modal = page.locator(\".map-projected-modal\");\n  await expect(modal.locator(\".map-projected-system\")).toHaveValue(\"2097\");\n  await expect(modal.locator(\".map-projected-reason\")).toContainText(\"값 범위로 짐작\");\n  await expect(modal.locator(\".map-projected-summary\")).toContainText(\"3줄 중 3줄\");\n  await modal.locator(\".map-projected-cancel\").click();\n  await expect(modal).toHaveCount(0);\n  expect((await mapModel(page)).markers).toHaveLength(0);\n});\n",
+          "lineCount": 72,
+          "lineOffset": 0,
+          "totalLines": 72
         },
         {
           "path": "tests/korea-coords.test.js",
@@ -16042,6 +16339,24 @@ window.MN_REVIEW_DATA = {
           "totalLines": 5681
         },
         {
+          "path": "tests/trip-templates-focus.test.js",
+          "label": "trip-templates-focus.test.js",
+          "description": "템플릿 3종 — 있던 글·사진·완료 체크를 지키고 중복 추가하지 않음",
+          "code": "\"use strict\";\nconst test = require(\"node:test\");\nconst assert = require(\"node:assert/strict\");\nconst fs = require(\"node:fs\");\nconst path = require(\"node:path\");\nconst vm = require(\"node:vm\");\nconst diary = require(\"../src/js/diary.js\");\nObject.assign(globalThis, diary);\nconst trip = require(\"../src/js/trip.js\");\nconst source = fs.readFileSync(path.join(__dirname, \"../src/js/trip.js\"), \"utf8\");\nconst historySource = fs.readFileSync(path.join(__dirname, \"../src/js/history.js\"), \"utf8\");\nconst section = (start, end) => {\n  const from = source.indexOf(start), to = source.indexOf(end, from);\n  assert.ok(from >= 0 && to > from);\n  return source.slice(from, to);\n};\n\ntest(\"여행 템플릿 3종은 한국어·영어 준비물과 질문을 갖춘다\", () => {\n  assert.deepEqual(trip.TRIP_TEMPLATES.map(t => t.id), [\"daytrip\", \"overnight\", \"fieldtrip\"]);\n  for (const template of trip.TRIP_TEMPLATES){\n    assert.ok(template.checklist.length >= 6);\n    assert.equal(template.questions.length, 4);\n    for (const pair of [template.name, template.description, ...template.checklist, ...template.questions]){\n      assert.equal(pair.length, 2);\n      assert.ok(pair.every(text => typeof text === \"string\" && text.trim()));\n    }\n  }\n});\n\ntest(\"템플릿은 기존 글·제목·사진·완료 체크를 유지하고, 답을 써도 중복 추가하지 않는다\", () => {\n  const model = trip.tripEmpty(\"기존 여행\");\n  const day = trip.tripNormalizeDay({ id:\"dy-1\", title:\"바다\", text:\"원래 쓴 글\\n\", date:\"2026-10-01\",\n    stickers:[{ id:\"st-1\", kind:\"photo\", asset:\"assets/photo123.jpg\", x:.2, y:1, w:.3, ar:.7 }] });\n  model.days.push(day);\n  model.checklist.push({ id:\"ck-original\", text:\"  충전기  \", done:true });\n  const stickers = JSON.stringify(day.stickers);\n  const first = trip.tripApplyTemplate(model, day.id, \"daytrip\");\n  assert.equal(first.addedChecklist, 5);\n  assert.equal(first.addedQuestions, true);\n  assert.equal(day.title, \"바다\");\n  assert.equal(day.date, \"2026-10-01\");\n  assert.ok(day.text.startsWith(\"원래 쓴 글\\n\"));\n  assert.equal(JSON.stringify(day.stickers), stickers);\n  assert.equal(model.checklist[0].done, true);\n  day.text = day.text.replace(\"오늘의 여행지와 떠난 이유:\\n\", \"오늘의 여행지와 떠난 이유:\\n바다를 보고 싶었다.\\n\");\n  const before = trip.tripContentKey(model);\n  const repeated = trip.tripApplyTemplate(model, day.id, \"daytrip\", { en:true });\n  assert.equal(repeated.changed, false, \"언어를 바꾸거나 답을 써도 같은 양식을 다시 넣지 않는다\");\n  assert.equal(trip.tripContentKey(model), before);\n});\n\ntest(\"준비물만 넣으면 날을 만들지 않고, 질문만 넣으면 현재 날이나 새 날에 기록한다\", () => {\n  const model = trip.tripEmpty(\"여행\");\n  const packing = trip.tripApplyTemplate(model, \"\", \"overnight\", { questions:false, en:true });\n  assert.equal(packing.addedChecklist, 8);\n  assert.equal(model.days.length, 0);\n  assert.ok(model.checklist.some(item => item.text === \"Toiletries\"));\n  const writing = trip.tripApplyTemplate(model, \"\", \"fieldtrip\", { checklist:false });\n  assert.equal(writing.addedChecklist, 0);\n  assert.equal(model.checklist.length, 8);\n  assert.equal(model.days.length, 1);\n  assert.equal(model.days[0].date, \"\", \"처음 날에는 임의의 여행 날짜를 넣지 않는다\");\n  assert.match(model.days[0].text, /방문 목적/);\n  model.days[0].date = \"2026-10-01\";\n  trip.tripApplyTemplate(model, \"missing\", \"overnight\", { checklist:false });\n  assert.equal(model.days[1].date, \"2026-10-02\");\n});\n\ntest(\"서로 다른 양식의 공통 준비물은 한 번만 넣고 200개·400날 제한을 지킨다\", () => {\n  const model = trip.tripEmpty(\"여행\");\n  trip.tripApplyTemplate(model, \"\", \"daytrip\", { questions:false });\n  trip.tripApplyTemplate(model, \"\", \"overnight\", { questions:false, en:true });\n  assert.equal(model.checklist.filter(item => [\"충전기\", \"Charger\"].includes(item.text)).length, 1);\n  model.checklist = Array.from({ length:199 }, (_, i) => ({ id:\"ck-\" + i, text:\"내 준비물 \" + i, done:false }));\n  const limited = trip.tripApplyTemplate(model, \"\", \"daytrip\", { questions:false });\n  assert.equal(model.checklist.length, 200);\n  assert.equal(limited.addedChecklist, 1);\n  assert.equal(limited.skippedChecklist, 5);\n  model.days = Array.from({ length:400 }, (_, i) => trip.tripNormalizeDay({ id:\"dy-\" + i, text:\"기록\" }));\n  const before = trip.tripContentKey(model);\n  assert.equal(trip.tripApplyTemplate(model, \"\", \"daytrip\").reason, \"full\");\n  assert.equal(trip.tripContentKey(model), before, \"새 날을 만들 수 없으면 부분 적용하지 않는다\");\n  assert.equal(trip.tripApplyTemplate(model, \"dy-0\", \"daytrip\", { checklist:false }).addedQuestions, true);\n});\n\ntest(\"없는 양식·모두 해제는 문서를 바꾸지 않고, 적용한 양식은 기존 ZIP 형식으로 왕복한다\", async () => {\n  const model = trip.tripEmpty(\"여행\");\n  const before = trip.tripContentKey(model);\n  assert.equal(trip.tripApplyTemplate(model, \"\", \"unknown\").changed, false);\n  assert.equal(trip.tripApplyTemplate(model, \"\", \"daytrip\", { checklist:false, questions:false }).changed, false);\n  assert.equal(trip.tripContentKey(model), before);\n  trip.tripApplyTemplate(model, \"\", \"fieldtrip\");\n  const opened = await trip.tripUnpack(trip.tripPack(model, new Map()));\n  assert.equal(opened.model.version, trip.TRIP_VERSION);\n  assert.deepEqual(opened.model.checklist, model.checklist);\n  assert.equal(opened.model.days[0].text, model.days[0].text);\n  assert.equal(\"purpose\" in opened.model, false);\n  assert.equal(\"prompts\" in opened.model.days[0], false);\n});\n\ntest(\"템플릿 버튼의 실제 적용 처리는 본문과 준비물을 한 번에 되돌리고 다시 적용한다\", () => {\n  const model = trip.tripEmpty(\"여행\");\n  const ctx = vm.createContext({ setTimeout, clearTimeout });\n  vm.runInContext(historySource + \"\\nglobalThis.historyApi = MNEditHistory;\", ctx);\n  const history = ctx.historyApi.create({ capture:() => JSON.stringify(model),\n    apply:state => Object.assign(model, JSON.parse(state)), isEqual:(a, b) => a === b });\n  history.reset();\n  const layouts = [];\n  Object.assign(ctx, { model, current:\"\", templateChecklist:true, templateQuestions:true, history, checkOpen:false,\n    tripApplyTemplate:trip.tripApplyTemplate, tripGetTemplates:trip.tripGetTemplates, tripIsEn:() => false, dayOf:id => model.days.find(day => day.id === id),\n    setDrawMode:() => {}, setTemplateOpen:() => {}, clearSelection:() => {}, setStatus:() => {},\n    renderRail:() => {}, renderPage:() => {}, renderChecklist:() => {}, touch:() => history.commit(),\n    localStorage:{ setItem:() => {} }, templateBtn:{ focus:() => {} }, els:{ area:{ focus:() => {} } }, layout:opts => layouts.push(opts.flow)\n  });\n  vm.runInContext(section(\"  function applyTemplate(id){\", \"  templateBtn.addEventListener\"), ctx);\n  const before = trip.tripContentKey(model);\n  ctx.applyTemplate(\"daytrip\");\n  const after = trip.tripContentKey(model);\n  assert.notEqual(after, before);\n  assert.deepEqual(layouts, [true], \"기존 본문 아래 사진은 추가한 질문에 맞춰 이동한다\");\n  assert.equal(history.size(), 2);\n  assert.equal(history.undo(), true);\n  assert.equal(trip.tripContentKey(model), before);\n  assert.equal(history.redo(), true);\n  assert.equal(trip.tripContentKey(model), after);\n  ctx.applyTemplate(\"daytrip\");\n  assert.equal(history.size(), 2);\n  history.cancel();\n});\n\nclass Element {\n  constructor(){\n    const classes = new Set();\n    this.classList = { toggle:(name, on) => on ? classes.add(name) : classes.delete(name), contains:name => classes.has(name) };\n    this.attributes = {}; this.listeners = {}; this.hidden = true; this.isConnected = true;\n  }\n  setAttribute(key, value){ this.attributes[key] = value; }\n  querySelector(){ return this.label || null; }\n  addEventListener(name, fn){ this.listeners[name] = fn; }\n  focus(){ this.focused = true; }\n  contains(){ return true; }\n  closest(){ return this.editing ? {} : null; }\n}\nfunction focusHarness(existingDay=true){\n  const model = trip.tripEmpty(\"여행\"), root = new Element(), focusBtn = new Element(), main = new Element();\n  if (existingDay) model.days.push(trip.tripNormalizeDay({ id:\"dy-1\" }));\n  focusBtn.label = {}; main.scrollTop = 123;\n  const panels = { panel:new Element(), artPanel:new Element(),\n    setPanelOpen:on => { panels.panel.hidden = !on; }, setArtPanelOpen:on => { panels.artPanel.hidden = !on; } };\n  const callbacks = new Map(), counts = { layout:0, map:0, picking:0, area:0 };\n  let frameId = 0;\n  const ctx = vm.createContext({\n    model, root, focusBtn, main, panels, tripIsEn:() => false,\n    current:existingDay ? \"dy-1\" : \"\", dayOf:id => model.days.find(day => day.id === id), addDayBtn:new Element(), setStatus:() => {},\n    els:{ area:{ disabled:!existingDay, focus:() => { counts.area++; } }, drawBar:{ hidden:true } },\n    setTemplateOpen:on => { ctx.templatePanel.hidden = !on; },\n    setMobileMapOpen:open => { ctx.mobileMapOpen = open; main.inert = open; }, cancelPicking:() => { counts.picking++; },\n    requestAnimationFrame:fn => { callbacks.set(++frameId, fn); return frameId; }, cancelAnimationFrame:id => callbacks.delete(id),\n    layout:() => { counts.layout++; }, redrawDrawing:() => {}, tripMapWidth:350,\n    applyTripMapWidth:width => { assert.equal(width, 350); counts.map++; }, window:{ addEventListener:() => {} },\n    touch:() => assert.fail(\"몰입 보기는 파일을 수정하면 안 된다\"),\n    templatePanel:new Element(), templateBtn:new Element(), styleBtn:new Element(), stickerBtn:new Element(),\n    mobileMapOpen:false, pickingFor:\"\", doc:{ id:\"doc-1\", el:root }, activeId:\"doc-1\", mapPane:new Element(), mapMobileBtn:new Element(),\n    history:{}, document:{ activeElement:main }\n  });\n  vm.runInContext(\"let focusMode = false;\\n\" + section(\"  /* 몰입은 보는 상태다.\", \"  mapDivider.addEventListener(\\\"pointerdown\\\"\"), ctx);\n  vm.runInContext(section(\"  const onKey = (e) => {\\n    if (!root.isConnected\", \"  document.addEventListener(\\\"keydown\\\", onKey, true);\"), ctx);\n  ctx.addDayBtn.focus = () => { ctx.addDayBtn.focused = true; ctx.document.activeElement = ctx.addDayBtn; };\n  return { ctx, root, focusBtn, panels, main, model, counts,\n    runFrames:() => { for (const fn of callbacks.values()) fn(); callbacks.clear(); },\n    escape:(target=main, composing=false) => {\n      const event = { key:\"Escape\", target, isComposing:composing, preventDefault:() => {}, stopPropagation:() => {} };\n      vm.runInContext(\"onKey\", ctx)(event);\n    } };\n}\n\nfunction usePageRenderer(h){\n  Object.assign(h.ctx, { deleteBtn:new Element(), dayTitle:new Element(), dayDate:new Element(), dayDateDisplay:new Element(), dayDateField:new Element(),\n    tripWord:trip.tripWord, applyStyle:() => {}, renderStickers:() => {}, syncDrawBar:() => {}, renderSpots:() => {}, renderMap:() => {}, syncWeather:() => {} });\n  vm.runInContext(section(\"  function renderPage(){\", \"  addDayBtn.addEventListener\"), h.ctx);\n  return h.ctx.renderPage;\n}\n\nfunction editingHarness(existingDay=true){\n  const h = focusHarness(false), ctx = h.ctx, model = h.model;\n  if (existingDay) model.days.push(trip.tripNormalizeDay({ id:\"dy-1\", text:\"원래 글\", title:\"첫 날\" }));\n  const area = new Element();\n  area.tagName = \"TEXTAREA\";\n  area.selectionStart = area.selectionEnd = 3;\n  area.selectionDirection = \"none\";\n  area.focus = () => { ctx.document.activeElement = area; };\n  area.setSelectionRange = (start, end, direction) => {\n    area.selectionStart = start; area.selectionEnd = end; area.selectionDirection = direction;\n  };\n  ctx.els.area = area;\n  ctx.templateBtn.tagName = \"BUTTON\";\n  ctx.templateBtn.focus = () => { ctx.document.activeElement = ctx.templateBtn; };\n  ctx.current = existingDay ? \"dy-1\" : \"\";\n  const renderPage = usePageRenderer(h);\n  renderPage();\n  ctx.setTimeout = setTimeout; ctx.clearTimeout = clearTimeout;\n  vm.runInContext(historySource + \"\\nglobalThis.historyApi = MNEditHistory;\", ctx);\n  ctx.history = ctx.historyApi.create({ capture:() => JSON.stringify(model), isEqual:(a, b) => a === b,\n    apply:state => {\n      Object.assign(model, JSON.parse(state));\n      if (!model.days.some(day => day.id === ctx.current)) ctx.current = model.days[0]?.id || \"\";\n      renderPage();\n    } });\n  ctx.history.reset();\n  Object.assign(ctx, { templateChecklist:true, templateQuestions:true, checkOpen:false,\n    tripApplyTemplate:trip.tripApplyTemplate, tripGetTemplates:trip.tripGetTemplates, dayOf:id => model.days.find(day => day.id === id),\n    setDrawMode:() => {}, clearSelection:() => {}, setStatus:() => {},\n    renderRail:() => {}, renderPage, renderChecklist:() => {}, touch:() => ctx.history.commit(),\n    localStorage:{ setItem:() => {} }\n  });\n  vm.runInContext(section(\"  function applyTemplate(id){\", \"  templateBtn.addEventListener\"), ctx);\n  const key = (keyName, overrides={}) => {\n    const event = { key:keyName, ctrlKey:true, target:ctx.document.activeElement,\n      preventDefault(){ this.defaultPrevented = true; }, stopPropagation(){ this.stopped = true; }, ...overrides };\n    vm.runInContext(\"onKey\", ctx)(event);\n    return event;\n  };\n  return { ...h, area, key, type:text => {\n    area.value = model.days.find(day => day.id === ctx.current).text = text;\n    ctx.history.commitSoon(400);\n  } };\n}\n\ntest(\"본문에 커서가 있어도 Ctrl+Z는 입력 다음 템플릿을 되돌리고 Ctrl+Y·Ctrl+Shift+Z로 복원한다\", () => {\n  const h = editingHarness();\n  try {\n    const before = trip.tripContentKey(h.model);\n    h.ctx.applyTemplate(\"daytrip\");\n    assert.equal(h.ctx.document.activeElement, h.area);\n    const template = trip.tripContentKey(h.model);\n    const templateText = h.area.value;\n    h.type(templateText + \"\\n여행에서 쓴 답\");\n    const typed = trip.tripContentKey(h.model);\n    assert.equal(h.key(\"z\").defaultPrevented, true);\n    assert.equal(trip.tripContentKey(h.model), template, \"아직 지연 기록 중인 입력부터 되돌린다\");\n    assert.equal(h.area.value, templateText);\n    assert.equal(h.area.selectionStart, 3);\n    assert.equal(h.main.scrollTop, 123);\n    assert.equal(h.key(\"z\").stopped, true);\n    assert.equal(trip.tripContentKey(h.model), before, \"준비물과 질문을 함께 되돌린다\");\n    h.key(\"y\");\n    assert.equal(trip.tripContentKey(h.model), template);\n    h.key(\"Z\", { shiftKey:true });\n    assert.equal(trip.tripContentKey(h.model), typed);\n    h.key(\"z\", { ctrlKey:false, metaKey:true });\n    assert.equal(trip.tripContentKey(h.model), template);\n    h.type(templateText + \"\\n새 답\");\n    const edited = trip.tripContentKey(h.model);\n    h.key(\"y\");\n    assert.equal(trip.tripContentKey(h.model), edited, \"새 입력 후 다시 실행하면 이전 답으로 덮지 않는다\");\n    h.key(\"z\");\n    assert.equal(trip.tripContentKey(h.model), template);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"템플릿이 처음 만든 날을 Ctrl+Z로 없앤 뒤에도 ＋ 날에서 다시 실행할 수 있다\", () => {\n  const h = editingHarness(false);\n  try {\n    const before = trip.tripContentKey(h.model);\n    h.ctx.applyTemplate(\"overnight\");\n    const after = trip.tripContentKey(h.model);\n    h.key(\"z\");\n    assert.equal(trip.tripContentKey(h.model), before);\n    assert.equal(h.area.disabled, true);\n    assert.equal(h.ctx.document.activeElement, h.ctx.addDayBtn);\n    h.key(\"y\");\n    assert.equal(trip.tripContentKey(h.model), after);\n    assert.equal(h.area.disabled, false);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"저장한 내 템플릿도 실제 적용 버튼과 본문 Ctrl+Z·Ctrl+Y 기록을 함께 사용한다\", () => {\n  const h = editingHarness();\n  h.ctx.localStorage.getItem = () => JSON.stringify([{ id:\"user-camp\", name:\"캠핑\", checklist:[\"텐트\"], questions:[\"캠핑 기록\"] }]);\n  try {\n    const before = trip.tripContentKey(h.model);\n    h.ctx.applyTemplate(\"user-camp\");\n    const after = trip.tripContentKey(h.model);\n    assert.notEqual(after, before);\n    assert.equal(h.model.checklist[0].text, \"텐트\");\n    assert.match(h.area.value, /캠핑 기록/);\n    h.key(\"z\");\n    assert.equal(trip.tripContentKey(h.model), before);\n    h.key(\"y\");\n    assert.equal(trip.tripContentKey(h.model), after);\n    h.ctx.applyTemplate(\"user-camp\");\n    assert.equal(h.ctx.history.size(), 2);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"다른 입력칸의 기본 되돌리기·한글 조합·다른 탭·Alt 조합은 여행 기록 단축키가 가로채지 않는다\", () => {\n  const h = editingHarness();\n  try {\n    h.ctx.applyTemplate(\"daytrip\");\n    const after = trip.tripContentKey(h.model);\n    for (const tagName of [\"INPUT\", \"TEXTAREA\", \"SELECT\", \"DIV\"]){\n      const field = new Element(); field.tagName = tagName; field.isContentEditable = tagName === \"DIV\";\n      h.ctx.document.activeElement = field;\n      assert.equal(h.key(\"z\").defaultPrevented, undefined);\n      assert.equal(h.key(\"y\").defaultPrevented, undefined);\n    }\n    h.area.focus();\n    assert.equal(h.key(\"z\", { isComposing:true }).defaultPrevented, undefined);\n    assert.equal(h.key(\"z\", { altKey:true }).defaultPrevented, undefined);\n    assert.equal(h.key(\"z\", { defaultPrevented:true }).stopped, undefined);\n    h.ctx.activeId = \"another-doc\";\n    assert.equal(h.key(\"z\").defaultPrevented, undefined);\n    h.ctx.activeId = h.ctx.doc.id; h.root.isConnected = false;\n    assert.equal(h.key(\"z\").defaultPrevented, undefined);\n    assert.equal(trip.tripContentKey(h.model), after);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"몰입은 여정·지도 보기를 감추고 종료하며 문서 내용·스크롤 위치를 유지한다\", () => {\n  const h = focusHarness(), before = trip.tripContentKey(h.model);\n  h.ctx.mobileMapOpen = true; h.main.inert = true;\n  h.ctx.setFocusMode(true); h.runFrames();\n  assert.equal(h.root.classList.contains(\"is-trip-focus\"), true);\n  assert.equal(h.focusBtn.attributes[\"aria-pressed\"], \"true\");\n  assert.equal(h.ctx.mobileMapOpen, false);\n  assert.equal(h.main.inert, false);\n  assert.equal(h.main.scrollTop, 123);\n  h.escape(); h.runFrames();\n  assert.equal(h.root.classList.contains(\"is-trip-focus\"), false);\n  assert.equal(h.focusBtn.attributes[\"aria-pressed\"], \"false\");\n  assert.equal(h.counts.map, 1);\n  assert.equal(trip.tripContentKey(h.model), before);\n});\n\ntest(\"글을 쓸 날이 없으면 몰입 버튼과 직접 실행을 막고 ＋ 날을 안내한다\", () => {\n  const h = editingHarness(false);\n  try {\n    const before = trip.tripContentKey(h.model);\n    assert.equal(h.focusBtn.disabled, true);\n    assert.match(h.focusBtn.title, /＋ 날/);\n    h.ctx.setFocusMode(true); h.runFrames();\n    assert.equal(h.root.classList.contains(\"is-trip-focus\"), false);\n    assert.equal(h.focusBtn.attributes[\"aria-pressed\"], \"false\");\n    assert.equal(h.ctx.document.activeElement, h.ctx.addDayBtn);\n    assert.equal(trip.tripContentKey(h.model), before);\n    h.ctx.tripIsEn = () => true; h.ctx.syncFocusButton();\n    assert.match(h.focusBtn.attributes[\"aria-label\"], /Add a day/);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"＋ 날로 빈 날을 만들면 바로 몰입할 수 있고 커서는 본문에 놓인다\", () => {\n  const h = editingHarness(false);\n  try {\n    Object.assign(h.ctx, { tripNormalizeDay:trip.tripNormalizeDay, tripNextDayDate:trip.tripNextDayDate,\n      autoDated:new Set(), requestSpecialMonths:() => {} });\n    vm.runInContext(section('  addDayBtn.addEventListener(\"click\", () => {', '  deleteBtn.addEventListener(\"click\", () => {'), h.ctx);\n    h.ctx.addDayBtn.listeners.click();\n    assert.equal(h.model.days.length, 1);\n    assert.equal(h.area.value, \"\", \"글을 아직 쓰지 않은 빈 날도 편집 가능한 날이다\");\n    assert.equal(h.focusBtn.disabled, false);\n    h.focusBtn.listeners.click(); h.runFrames();\n    assert.equal(h.root.classList.contains(\"is-trip-focus\"), true);\n    assert.equal(h.ctx.document.activeElement, h.area);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"준비물 전용 템플릿은 몰입을 열지 않고, 기록 질문으로 날을 만들면 몰입이 활성화된다\", () => {\n  const h = editingHarness(false);\n  try {\n    h.ctx.templateQuestions = false; h.ctx.applyTemplate(\"daytrip\");\n    assert.equal(h.model.days.length, 0);\n    assert.equal(h.focusBtn.disabled, true);\n    h.ctx.templateQuestions = true; h.ctx.applyTemplate(\"daytrip\");\n    assert.equal(h.model.days.length, 1);\n    assert.equal(h.focusBtn.disabled, false);\n    assert.equal(h.root.classList.contains(\"is-trip-focus\"), false, \"날 생성은 몰입을 자동 실행하지 않는다\");\n    h.focusBtn.listeners.click();\n    assert.equal(h.ctx.document.activeElement, h.area);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"몰입 중 마지막 날 삭제·복원·다시 삭제는 몰입 상태와 버튼을 갱신한다\", () => {\n  const h = editingHarness();\n  try {\n    h.ctx.tripT = text => text;\n    vm.runInContext(section('  deleteBtn.addEventListener(\"click\", () => {', '  dayTitle.addEventListener(\"input\",'), h.ctx);\n    h.ctx.setFocusMode(true);\n    h.ctx.deleteBtn.listeners.click(); h.runFrames();\n    assert.equal(h.model.days.length, 0);\n    assert.equal(h.root.classList.contains(\"is-trip-focus\"), false);\n    assert.equal(h.focusBtn.disabled, true);\n    assert.equal(h.ctx.document.activeElement, h.ctx.addDayBtn);\n    h.ctx.history.undo();\n    assert.equal(h.model.days.length, 1);\n    assert.equal(h.focusBtn.disabled, false);\n    assert.equal(h.root.classList.contains(\"is-trip-focus\"), false);\n    h.ctx.setFocusMode(true); h.ctx.history.redo(); h.runFrames();\n    assert.equal(h.model.days.length, 0);\n    assert.equal(h.root.classList.contains(\"is-trip-focus\"), false);\n    assert.equal(h.focusBtn.disabled, true);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"몰입 중 첫 템플릿을 Ctrl+Z로 되돌려 날이 없어지면 일반 화면으로 나오고 Ctrl+Y도 유지한다\", () => {\n  const h = editingHarness(false);\n  try {\n    h.ctx.applyTemplate(\"daytrip\"); h.ctx.setFocusMode(true);\n    h.key(\"z\"); h.runFrames();\n    assert.equal(h.model.days.length, 0);\n    assert.equal(h.root.classList.contains(\"is-trip-focus\"), false);\n    assert.equal(h.focusBtn.disabled, true);\n    assert.equal(h.ctx.document.activeElement, h.ctx.addDayBtn);\n    h.key(\"y\");\n    assert.equal(h.model.days.length, 1);\n    assert.equal(h.focusBtn.disabled, false);\n    assert.equal(h.root.classList.contains(\"is-trip-focus\"), false);\n  } finally { h.ctx.history.cancel(); }\n});\n\ntest(\"몰입 중 Esc는 글상자 편집·그리기·한글 조합을 방해하지 않고 열린 창부터 닫는다\", () => {\n  const h = focusHarness();\n  h.ctx.setFocusMode(true);\n  h.escape(h.main, true);\n  assert.equal(h.root.classList.contains(\"is-trip-focus\"), true);\n  const edit = new Element(); edit.editing = true; edit.tagName = \"textarea\";\n  h.escape(edit);\n  assert.equal(h.root.classList.contains(\"is-trip-focus\"), true);\n  h.ctx.els.drawBar.hidden = false; h.escape();\n  assert.equal(h.root.classList.contains(\"is-trip-focus\"), true);\n  h.ctx.els.drawBar.hidden = true;\n  h.ctx.templatePanel.hidden = false; h.escape();\n  assert.equal(h.ctx.templatePanel.hidden, true);\n  assert.equal(h.root.classList.contains(\"is-trip-focus\"), true);\n  h.panels.panel.hidden = false; h.escape();\n  assert.equal(h.panels.panel.hidden, true);\n  assert.equal(h.root.classList.contains(\"is-trip-focus\"), true);\n  h.escape();\n  assert.equal(h.root.classList.contains(\"is-trip-focus\"), false);\n});\n",
+          "lineCount": 440,
+          "lineOffset": 0,
+          "totalLines": 440
+        },
+        {
+          "path": "tests/e2e/trip-extras.spec.js",
+          "label": "trip-extras.spec.js",
+          "description": "위치 찾기·여정 띠 날씨와 대표 사진·날에 안 붙는 경비",
+          "code": "const { test, expect } = require(\"@playwright/test\");\nconst { collapseSidebar } = require(\"./helpers\");\nconst { solidPng } = require(\"./helpers-png\");\n\n/* 여행일지 확장(2026-09-28) — 이름·주소로 위치 찾기 · 여정 띠 칸의 사진·날씨 · 날에 안 붙는 돈 · 준비물·할 일 ·\n * 일기장으로 보내기 · 여행 되돌아보기. */\n\nasync function boot(page){\n  await page.addInitScript(() => {\n    try {\n      localStorage.setItem(\"mn_onboarded_v1\", \"1\"); localStorage.setItem(\"uiLang\", \"ko\");\n      localStorage.removeItem(\"mn.tripExtraOpen\"); localStorage.removeItem(\"mn.tripChecklistOpen\");\n    } catch (_) {}\n  });\n  await collapseSidebar(page);\n  await page.goto(\"/\");\n  await expect(page.locator(\"#commandPaletteOpen\")).toBeVisible();\n  await page.evaluate(() => window.newTripScratch && window.newTripScratch());\n  await expect(page.locator(\".trip-bar\")).toBeVisible();\n}\nconst tripModel = page => page.evaluate(() => JSON.parse(JSON.stringify(docs.find(d => d.kind === \"trip\").trip)));\n// 사진 한 장을 장소에 붙인다(자산 이름은 앱이 쓰는 해시 모양으로).\nasync function seedDayWithPhoto(page){\n  const png = solidPng(40, 30, [30, 140, 90]).toString(\"base64\");\n  await page.locator(\".trip-add-day\").click();\n  await page.evaluate((b64) => {\n    const doc = docs.find(d => d.kind === \"trip\");\n    const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));\n    doc.tripAssets.set(\"assets/photo00001.png\", { bytes });\n    const day = doc.trip.days[0];\n    day.date = \"2026-07-20\"; day.title = \"첫날\"; day.text = \"바람이 셌다\"; day.weather = \"sunny\";\n    day.spots.push({ id:\"sp-a\", at:\"09:30\", name:\"성산일출봉\", address:\"\", note:\"해돋이\", kind:\"sight\",\n      lat:33.458, lng:126.942, color:\"\", cost:null, photos:[\"assets/photo00001.png\"] });\n  }, png);\n  await page.locator(\".trip-day-chip\").nth(0).click();\n  await page.locator(\".trip-title\").fill(\"제주\");                 // 되돌리기 기록에 남긴다\n}\n\ntest(\"장소 줄의 돋보기로 이름·주소를 찾아 고르면 좌표와 빈 주소가 채워진다\", async ({ page }) => {\n  await boot(page);\n  await page.locator(\".trip-add-day\").click();\n  await page.locator(\".trip-add-spot\").click();\n  await page.locator(\".trip-spot-name\").fill(\"성산일출봉\");\n  // 런처 없이도 시험할 수 있게 공용 검색을 흉내 낸다(지도 문서와 같은 mapGeocode 를 부른다).\n  await page.evaluate(() => {\n    window.__asked = [];\n    window.mapGeocode = async (q) => { window.__asked.push(q); return [\n      { name:\"성산일출봉 · 제주특별자치도 서귀포시 성산읍\", title:\"성산일출봉\", road:\"제주특별자치도 서귀포시 성산읍 일출로 284-12\", lat:33.4588, lng:126.9425 },\n      { name:\"성산항\", title:\"성산항\", road:\"\", address:\"제주 서귀포시 성산읍\", lat:33.47, lng:126.93 }]; };\n  });\n  await page.locator(\".trip-spot-find\").click();\n  const menu = page.locator(\".text-context-menu\");\n  await expect(menu.getByText(/성산일출봉 · /)).toBeVisible();\n  await menu.getByText(/성산일출봉 · /).click();\n  const model = await tripModel(page);\n  const spot = model.days[0].spots[0];\n  expect([spot.lat, spot.lng]).toEqual([33.4588, 126.9425]);\n  expect(spot.address).toBe(\"제주특별자치도 서귀포시 성산읍 일출로 284-12\");\n  expect(spot.name).toBe(\"성산일출봉\");\n  expect(await page.evaluate(() => window.__asked)).toEqual([\"성산일출봉\"]);\n  await expect(page.locator(\".trip-spot-pick\")).toHaveClass(/is-on/);\n\n  // 이름도 주소도 없으면 묻지 않는다\n  await page.locator(\".trip-add-spot\").click();\n  await page.locator(\".trip-spot\").nth(1).locator(\".trip-spot-find\").click();\n  await expect(page.locator(\".trip-status\")).toContainText(\"이름이나 주소를 먼저\");\n});\n\ntest(\"여정 띠 칸에 그날 날씨 그림과 대표 사진이 붙는다\", async ({ page }) => {\n  await boot(page);\n  await seedDayWithPhoto(page);\n  const chip = page.locator(\".trip-day-chip\").nth(0);\n  await expect(chip).toHaveClass(/has-thumb/);\n  await expect(chip.locator(\".trip-day-chip-thumb\")).toHaveAttribute(\"src\", /^blob:/);\n  await expect(chip.locator(\".trip-day-chip-wx\")).toHaveAttribute(\"data-mark\", \"sunny\");\n  // 사진을 빼면 칸에서도 사라진다\n  await page.locator(\".trip-spot-photo-remove\").first().click();\n  await expect(chip).not.toHaveClass(/has-thumb/);\n});\n\ntest(\"날에 안 붙는 돈을 펴서 더하면 전체 합계에 들어가고, 되돌리기로 돌아온다\", async ({ page }) => {\n  await boot(page);\n  await page.locator(\".trip-add-day\").click();\n  await expect(page.locator(\".trip-budget-line\")).toBeHidden();   // 쓴 돈이 없으면 합계 줄은 감춘다\n  const toggle = page.locator(\".trip-extra-toggle\");\n  await expect(toggle).toContainText(\"날에 안 붙는 돈\");\n  await toggle.click();\n  await page.locator(\".trip-extra-add\").click();\n  const row = page.locator(\".trip-extra-row\");\n  await expect(row).toHaveCount(1);\n  await expect(row.locator(\".trip-extra-label\")).toBeFocused();\n  await row.locator(\".trip-extra-label\").fill(\"항공권\");\n  await row.locator(\".trip-extra-amount\").fill(\"320000\");\n  await row.locator(\".trip-extra-kind\").selectOption(\"move\");\n  await expect(page.locator(\".trip-budget-sum\")).toContainText(\"모두 320,000원\");\n  await expect(toggle).toContainText(\"1건 · 320,000원\");\n  const model = await tripModel(page);\n  expect(model.expenses.map(x => [x.label, x.amount, x.currency, x.kind])).toEqual([[\"항공권\", 320000, \"KRW\", \"move\"]]);\n  // 요약 창에도 들어간다\n  await page.locator(\".trip-summary-btn\").click();\n  await expect(page.locator(\".trip-summary-money\")).toContainText(\"320,000원\");\n  await expect(page.locator(\".trip-summary-card\")).toContainText(\"날에 안 붙는 돈 포함\");\n  await page.keyboard.press(\"Escape\");\n});\n\ntest(\"준비물·할 일을 여정 띠 아래에서 더하고 체크하면 파일에 담긴다\", async ({ page }) => {\n  await boot(page);\n  const head = page.locator(\".trip-check-toggle\");\n  await expect(head).toHaveText(/준비물·할 일$/);\n  await head.click();\n  const add = page.locator(\".trip-check-add\");\n  await add.fill(\"여권\"); await add.press(\"Enter\");\n  await page.locator(\".trip-check-add\").fill(\"충전기\"); await page.locator(\".trip-check-add\").press(\"Enter\");\n  await expect(page.locator(\".trip-check-row\")).toHaveCount(2);\n  await page.locator(\".trip-check-row\").nth(0).locator(\".trip-check-box\").check();\n  await expect(head).toContainText(\"1/2\");\n  await expect(page.locator(\".trip-check-row\").nth(0)).toHaveClass(/is-done/);\n  let model = await tripModel(page);\n  expect(model.checklist.map(x => [x.text, x.done])).toEqual([[\"여권\", true], [\"충전기\", false]]);\n  await page.locator(\".trip-check-clear\").click();\n  await expect(head).toContainText(\"0/2\");\n  // 접은 상태는 파일이 아니라 이 브라우저에\n  expect(await page.evaluate(() => localStorage.getItem(\"mn.tripChecklistOpen\"))).toBe(\"1\");\n  model = await tripModel(page);\n  expect(model.checklist.every(x => !x.done)).toBe(true);\n});\n\ntest(\"이 날을 새 일기장으로 보내면 같은 날짜 일기에 글·들른 곳·사진이 옮겨 적힌다\", async ({ page }) => {\n  await boot(page);\n  await seedDayWithPhoto(page);\n  await page.locator(\".trip-main .trip-spots\").click({ button:\"right\", position:{ x:6, y:6 } });\n  const menu = page.locator(\".text-context-menu\");\n  await menu.getByText(\"이 날을 일기장으로 보내기\").hover();\n  await menu.getByText(\"새 일기장으로\").click();\n  await expect(page.locator(\".diary-bar\")).toBeVisible();\n  const entry = await page.evaluate(() => {\n    const d = docs.find(x => x.kind === \"diary\");\n    const e = d.diary.entries.find(x => x.date === \"2026-07-20\");\n    return e && { title:e.title, text:e.text, tags:e.tags, weather:e.weather,\n      photos:e.stickers.filter(s => (s.kind || \"photo\") === \"photo\").map(s => [s.asset, d.diaryAssets.has(s.asset)]) };\n  });\n  expect(entry.title).toBe(\"첫날\");\n  expect(entry.text).toBe(\"바람이 셌다\\n\\n— 들른 곳 —\\n· 09:30 성산일출봉 — 해돋이\");\n  expect(entry.tags).toEqual([\"여행\"]);\n  expect(entry.weather).toBe(\"sunny\");\n  expect(entry.photos).toEqual([[\"assets/photo00001.png\", true]]);\n  await expect(page.locator(\".diary-text[aria-label='일기 본문']\")).toHaveValue(/들른 곳/);\n});\n\ntest(\"여행 되돌아보기 — 날 여는 장부터 넘겨 보고, 키로 앞뒤·멈추기, Esc 로 닫는다\", async ({ page }) => {\n  await boot(page);\n  await seedDayWithPhoto(page);\n  await page.locator(\".trip-replay-open\").click();\n  const card = page.locator(\".trip-replay-card\");\n  await expect(card).toBeVisible();\n  await expect(page.locator(\".trip-replay-count\")).toHaveText(\"1 / 2\");\n  await expect(page.locator(\".trip-replay-day-title\")).toHaveText(\"첫날\");\n  await page.keyboard.press(\" \");                                // 멈추기\n  await expect(card).toHaveClass(/is-paused/);\n  await page.keyboard.press(\"ArrowRight\");\n  await expect(page.locator(\".trip-replay-count\")).toHaveText(\"2 / 2\");\n  await expect(page.locator(\".trip-replay-photo\")).toHaveAttribute(\"src\", /^blob:/);\n  await expect(page.locator(\".trip-replay-caption\")).toContainText(\"09:30  성산일출봉\");\n  await page.keyboard.press(\"ArrowLeft\");\n  await expect(page.locator(\".trip-replay-count\")).toHaveText(\"1 / 2\");\n  await page.keyboard.press(\"Escape\");\n  await expect(card).toBeHidden();\n  // 보기만 하는 창 — 열고 닫아도 모델이 그대로다\n  const dirty = await page.evaluate(() => { const d = docs.find(x => x.kind === \"trip\"); return tripContentKey(d.trip) === d.savedText; });\n  expect(typeof dirty).toBe(\"boolean\");\n});\n",
+          "lineCount": 172,
+          "lineOffset": 0,
+          "totalLines": 172
+        },
+        {
           "path": "tests/trip.test.js",
           "label": "trip.test.js",
           "description": "옛 갈래 버리기·좌표 불신·참조 자산·영상 한도·EXIF·국내 판정·동기 뼈대",
@@ -16399,6 +16714,15 @@ window.MN_REVIEW_DATA = {
           "lineCount": 1529,
           "lineOffset": 0,
           "totalLines": 1529
+        },
+        {
+          "path": "tests/remote-terminal-tools.test.js",
+          "label": "remote-terminal-tools.test.js",
+          "description": "터미널 검색·내보내기 — 줄바꿈 이음, 한글·이모지 칸 폭, 이스케이프 코드 제외",
+          "code": "\"use strict\";\nconst test=require(\"node:test\");\nconst assert=require(\"node:assert/strict\");\nconst fs=require(\"node:fs\");\nconst path=require(\"node:path\");\nconst vm=require(\"node:vm\");\nconst {Terminal}=require(\"../vendor/xterm.js\");\n\n// Exercise the real vendored xterm parser and buffers in Node; no browser or screen capture.\nconst context={TextEncoder,TextDecoder,document:{getElementById:()=>null}};\nconst source=fs.readFileSync(path.join(__dirname,\"../src/js/remote-terminal.js\"),\"utf8\")\n  .replace(\"const terminalSnapshot = \",\"const terminalSnapshot = globalThis.snapshot = \");\nvm.runInNewContext(source,context);\nconst write=(term,text)=>new Promise(resolve=>term.write(text,resolve));\n\ntest(\"terminal search joins soft wraps and maps Korean, emoji and combining characters to cells\",async()=>{\n  const terminal=new Terminal({cols:6,rows:4});\n  try{\n    await write(terminal,\"ab한cdEF\\r\\n😀e\\u0301끝\");\n    const result=context.snapshot(terminal,\"한cdEF\");\n    assert.equal(result.text,\"ab한cdEF\\n😀e\\u0301끝\");\n    assert.equal(JSON.stringify(result.matches),JSON.stringify([{row:0,column:2,length:6}]));\n    const emoji=context.snapshot(terminal,\"😀e\\u0301\");\n    // The bundled default Unicode provider renders this emoji as one cell.\n    assert.equal(JSON.stringify(emoji.matches),JSON.stringify([{row:2,column:0,length:2}]));\n    assert.equal(context.snapshot(terminal,\"EF😀\").matches.length,0,\"hard newlines are not soft wraps\");\n  }finally{terminal.dispose();}\n});\n\ntest(\"output export reflects overwritten rendered text, excludes escape codes and respects active buffer\",async()=>{\n  const terminal=new Terminal({cols:20,rows:3,scrollback:5});\n  try{\n    await write(terminal,\"\\x1b[31mold progress\\x1b[0m\\r\\x1b[2Kdone\\r\\n  indented  \");\n    assert.equal(context.snapshot(terminal).text,\"done\\n  indented  \");\n    await write(terminal,\"\\x1b[?1049hALT\");\n    assert.match(context.snapshot(terminal).text,/ALT/);\n    assert.doesNotMatch(context.snapshot(terminal).text,/done/);\n    await write(terminal,\"\\x1b[?1049l\");\n    assert.match(context.snapshot(terminal).text,/done/);\n    await write(terminal,\"\\r\\n\"+Array.from({length:15},(_,n)=>\"line\"+n).join(\"\\r\\n\"));\n    assert.doesNotMatch(context.snapshot(terminal).text,/done|line0\\n/);\n    assert.match(context.snapshot(terminal).text,/line14$/);\n  }finally{terminal.dispose();}\n});\n\ntest(\"search caps matches and preserves a double-width character wrapped at the last column\",async()=>{\n  const terminal=new Terminal({cols:6,rows:3,scrollback:1500});\n  try{\n    await write(terminal,\"abcde한글\");\n    assert.equal(context.snapshot(terminal).text,\"abcde한글\");\n    const match=context.snapshot(terminal,\"e한\").matches[0];\n    assert.equal(JSON.stringify(match),JSON.stringify({row:0,column:4,length:4}));\n    await write(terminal,\"\\r\\n\"+\"x\".repeat(6000));\n    const result=context.snapshot(terminal,\"x\");\n    assert.equal(result.matches.length,5000);assert.equal(result.limited,true);\n  }finally{terminal.dispose();}\n});\n",
+          "lineCount": 58,
+          "lineOffset": 0,
+          "totalLines": 58
         },
         {
           "path": "docs/원격터미널-설계.md",
@@ -18426,6 +18750,15 @@ window.MN_REVIEW_DATA = {
         }
       ],
       "files": [
+        {
+          "path": "tests/e2e/settings-connect.spec.js",
+          "label": "settings-connect.spec.js",
+          "description": "설정 → 연결 탭 — 서비스별 키 상태 배지",
+          "code": "// 설정 '연결' 탭 — 인터넷 서비스 인증키(지도 검색·환율·지하철·공공데이터포털·KOSIS·NEIS)를 한 줄씩 접어 둔다.\nconst { test, expect } = require(\"@playwright/test\");\n\ntest(\"연결 탭은 서비스를 접힌 한 줄로 보여 주고 배지로 키 상태를 알린다\", async ({ page }) => {\n  // 런처가 없는 정적 서버라 지하철만 키가 있는 것처럼 답해 두 상태(등록됨 / EXE에서만)를 함께 본다.\n  await page.route(\"**/subway-key-status\", (route) => route.fulfill({\n    status:200, contentType:\"application/json\",\n    body:JSON.stringify({ hasKey:true, remembered:true, persistentSupported:true })\n  }));\n  await page.addInitScript(() => { try { localStorage.setItem(\"uiLang\", \"ko\"); } catch(_){} });\n  await page.goto(\"/\");\n  await page.locator(\"#settingsOpen\").click();\n\n  // 일반 탭에는 더 이상 키 입력칸이 없다.\n  const general = page.locator('[data-settings-panel=\"general\"]');\n  await expect(general).toBeVisible();\n  await expect(general.locator(\"input[type=password]\")).toHaveCount(0);\n\n  await page.locator('[data-settings-tab=\"connect\"]').click();\n  const panel = page.locator('[data-settings-panel=\"connect\"]');\n  await expect(panel).toBeVisible();\n  const items = panel.locator(\"details.conn-item\");\n  await expect(items).toHaveCount(6);\n  await expect(panel.locator(\"details.conn-item[open]\")).toHaveCount(0);\n  await expect(page.locator(\"#settingSubwayKey\")).toBeHidden();\n\n  await expect(page.locator(\"#settingSubwayBadge\")).toHaveText(\"키 등록됨\");\n  await expect(page.locator(\"#settingSubwayBadge\")).toHaveAttribute(\"data-kind\", \"ok\");\n  await expect(page.locator(\"#settingTagoBadge\")).toHaveText(\"EXE에서만\");\n  await expect(items.filter({ has:page.locator(\"#settingTagoKey\") }).locator(\".conn-name\")).toHaveText(\"공공데이터포털\");\n  await expect(page.locator(\"#settingMapSearchBadge\")).toHaveText(\"OpenStreetMap\");\n  await expect(page.locator(\"#settingKosisBadge\")).toHaveText(\"EXE에서만\");\n  await expect(items.filter({ has:page.locator(\"#settingKosisKey\") }).locator(\".conn-name\")).toHaveText(\"KOSIS 국가통계\");\n  await expect(page.locator(\"#settingNeisBadge\")).toHaveText(\"EXE에서만\");\n  await expect(items.filter({ has:page.locator(\"#settingNeisKey\") }).locator(\".conn-name\")).toHaveText(\"NEIS 교육정보\");\n\n  // 펼치면 입력칸이 보이고, 다른 줄을 펼치면 앞 줄은 닫힌다(한 번에 하나).\n  await items.filter({ has:page.locator(\"#settingSubwayKey\") }).locator(\"summary\").click();\n  await expect(page.locator(\"#settingSubwayKey\")).toBeVisible();\n  await items.filter({ has:page.locator(\"#settingMapSearchProvider\") }).locator(\"summary\").click();\n  await expect(page.locator(\"#settingSubwayKey\")).toBeHidden();\n\n  // 카카오를 고르면 키 칸이 나오고 배지도 따라 바뀐다.\n  await page.locator(\"#settingMapSearchProvider\").selectOption(\"kakao\");\n  await expect(page.locator(\"#settingMapSearchKey\")).toBeVisible();\n  await expect(page.locator(\"#settingMapSearchBadge\")).toHaveText(\"EXE에서만\");\n});\n\ntest(\"영어 화면에서는 환율·지하철 키 상태 문구도 영어로 나온다\", async ({ page }) => {\n  await page.route(\"**/subway-key-status\", (route) => route.fulfill({\n    status:200, contentType:\"application/json\",\n    body:JSON.stringify({ hasKey:true, remembered:true, persistentSupported:true })\n  }));\n  await page.addInitScript(() => { try { localStorage.setItem(\"uiLang\", \"en\"); } catch(_){} });\n  await page.goto(\"/\");\n  await page.locator(\"#settingsOpen\").click();\n  await page.locator('[data-settings-tab=\"connect\"]').click();\n  await expect(page.locator(\"#settingExchangeRateStatus\")).toHaveText(\"Exchange rate key settings are available in ClassDock.exe.\");\n  await expect(page.locator(\"#settingSubwayStatus\")).toHaveText(\"The subway key is stored encrypted for this Windows user.\");\n  await expect(page.locator(\"#settingTagoStatus\")).toHaveText(\"Data.go.kr key settings are available in ClassDock.exe.\");\n  await expect(page.locator(\"#settingKosisStatus\")).toHaveText(\"KOSIS key settings are available in ClassDock.exe.\");\n  await expect(page.locator(\"#settingNeisStatus\")).toHaveText(\"NEIS key settings are available in ClassDock.exe.\");\n});\n",
+          "lineCount": 64,
+          "lineOffset": 0,
+          "totalLines": 64
+        },
         {
           "path": "desktop/launcher.cs",
           "label": "launcher.cs (버스 라우팅)",
@@ -22454,6 +22787,148 @@ window.MN_REVIEW_DATA = {
         "MP4"
       ],
       "short": "ffmpeg 는 거의 모든 영상·소리 형식을 읽고 바꿔 주는 명령줄 도구이고, MP4 는 브라우저가 가장 널리 재생하는 영상 형식입니다."
+    },
+    {
+      "id": "term-121",
+      "term": "공공데이터포털 · 활용신청",
+      "en": "data.go.kr / service application",
+      "aliases": [
+        "공공데이터포털 · 활용신청",
+        "공공데이터포털",
+        "활용신청"
+      ],
+      "short": "정부·공공기관의 자료를 API 로 내주는 사이트(data.go.kr)입니다."
+    },
+    {
+      "id": "term-122",
+      "term": "TAGO",
+      "en": "national public transit API",
+      "aliases": [
+        "TAGO"
+      ],
+      "short": "국토교통부 국가대중교통정보센터의 API 묶음입니다."
+    },
+    {
+      "id": "term-123",
+      "term": "DPAPI",
+      "en": "Windows Data Protection API",
+      "aliases": [
+        "DPAPI"
+      ],
+      "short": "Windows 가 \"지금 로그인한 사용자\" 에게 묶어 데이터를 암호화해 주는 기능입니다."
+    },
+    {
+      "id": "term-124",
+      "term": "사전 요청 · preflight",
+      "en": "CORS preflight (OPTIONS)",
+      "aliases": [
+        "사전 요청 · preflight",
+        "사전 요청"
+      ],
+      "short": "다른 출처의 페이지가 사용자 정의 헤더를 붙이거나 특별한 메서드로 요청하려 하면, 브라우저가 먼저 OPTIONS 로 \"보내도 되는가\" 를 묻는 요청입니다."
+    },
+    {
+      "id": "term-125",
+      "term": "data URL",
+      "en": "data: URL",
+      "aliases": [
+        "data URL"
+      ],
+      "short": "파일 내용을 base64 글자로 바꿔 주소 자리에 그대로 넣는 방식입니다(data:image/png;base64,…)."
+    },
+    {
+      "id": "term-126",
+      "term": "ZIP · STORE · DEFLATE",
+      "en": "ZIP container",
+      "aliases": [
+        "ZIP · STORE · DEFLATE",
+        "ZIP"
+      ],
+      "short": "여러 파일을 하나로 묶는 그릇입니다."
+    },
+    {
+      "id": "term-127",
+      "term": "파일 판 · 형식 버전",
+      "en": "format version",
+      "aliases": [
+        "파일 판 · 형식 버전",
+        "판 번호",
+        "판을 올"
+      ],
+      "short": "파일 안에 \"이 파일은 몇 번째 모양으로 쓰였다\" 를 적어 두는 번호입니다(version)."
+    },
+    {
+      "id": "term-128",
+      "term": "메타데이터 · EXIF",
+      "en": "metadata / EXIF",
+      "aliases": [
+        "메타데이터 · EXIF",
+        "메타데이터",
+        "EXIF"
+      ],
+      "short": "내용 자체가 아니라 내용에 \"관한\" 정보입니다 — 만든 때, 크기, 형식 같은 것."
+    },
+    {
+      "id": "term-129",
+      "term": "GRIB2 · GFS",
+      "en": "GRIB2 / Global Forecast System",
+      "aliases": [
+        "GRIB2 · GFS",
+        "GRIB"
+      ],
+      "short": "GFS 는 미국 해양대기청(NOAA)이 하루 네 번 내는 전 지구 기상 예보이고, GRIB2 는 그 같은 격자 기상 자료를 담는 이진 형식입니다."
+    },
+    {
+      "id": "term-130",
+      "term": "암호 봉투 · AES-GCM · PBKDF2",
+      "en": "encryption envelope",
+      "aliases": [
+        "암호 봉투 · AES-GCM · PBKDF2",
+        "암호 봉투",
+        "PBKDF2"
+      ],
+      "short": "파일 전체를 암호문으로 감싸고 머리에 \"어떻게 풀어야 하는지\"(반복 수·salt·IV)만 남기는 방식을 이 리뷰에서 봉투라 부릅니다."
+    },
+    {
+      "id": "term-131",
+      "term": "GUID",
+      "en": "globally unique identifier",
+      "aliases": [
+        "GUID"
+      ],
+      "short": "사실상 겹치지 않는 128비트 무작위 번호입니다(예: 3f2a…-…)."
+    },
+    {
+      "id": "term-132",
+      "term": "원자적 쓰기",
+      "en": "atomic write",
+      "aliases": [
+        "원자적 쓰기",
+        "원자적"
+      ],
+      "short": "파일을 바꿀 때 \"다 바뀌었거나 하나도 안 바뀌었거나\" 둘 중 하나만 있게 하는 방법입니다."
+    },
+    {
+      "id": "term-133",
+      "term": "오픈 라이선스 · CC0 · OFL · ODbL",
+      "en": "open licenses",
+      "aliases": [
+        "오픈 라이선스 · CC0 · OFL · ODbL",
+        "라이선스",
+        "CC0",
+        "OFL",
+        "ODbL"
+      ],
+      "short": "남이 만든 코드·글꼴·자료를 쓰는 조건입니다."
+    },
+    {
+      "id": "term-134",
+      "term": "하네스",
+      "en": "test harness",
+      "aliases": [
+        "하네스"
+      ],
+      "short": "테스트하려는 코드를 실제 화면·브라우저 없이 돌리도록 감싸 주는 받침 코드입니다."
     }
   ],
   "codeWords": [
@@ -24855,6 +25330,186 @@ window.MN_REVIEW_DATA = {
       "type": "identifier"
     },
     {
+      "id": "cr-Path2D",
+      "name": "Path2D",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "다시 쓰는 캔버스 도형",
+      "short": "SVG 경로 글자(\"M3 8 L12 5 …\")로 캔버스 도형을 만들어 두고 여러 번 그립니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-createImageBitmap",
+      "name": "createImageBitmap",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "그림 미리 풀기",
+      "short": "그림 파일(Blob)을 화면에 그리기 좋은 형태로 미리 풀어 둡니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-getRandomValues",
+      "name": "getRandomValues",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "암호학적 난수",
+      "short": "crypto.getRandomValues — 예측할 수 없는 난수로 배열을 채웁니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-subtle",
+      "name": "subtle",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "브라우저 내장 암호",
+      "short": "crypto.subtle — 해시(digest), 비밀번호에서 키 만들기(deriveKey), 암호화·복호화(encrypt·decrypt)를 브라우저가 직접 해 줍니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-DecompressionStream",
+      "name": "DecompressionStream",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "압축 풀기 흐름",
+      "short": "deflate·gzip 으로 줄인 바이트를 흘려 넣으면 풀린 바이트를 내줍니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-VideoEncoder",
+      "name": "VideoEncoder",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "영상 부호화(WebCodecs)",
+      "short": "캔버스 장면(VideoFrame)을 H.264 같은 압축 영상 조각으로 바꿉니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-AudioEncoder",
+      "name": "AudioEncoder",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "소리 부호화(WebCodecs)",
+      "short": "소리 표본을 AAC 같은 압축 소리 조각으로 바꿉니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-OfflineAudioContext",
+      "name": "OfflineAudioContext",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "들리지 않게 소리 굽기",
+      "short": "스피커로 내보내지 않고 소리 그래프를 실제 시간보다 빠르게 계산해 표본으로 돌려줍니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-getUserMedia",
+      "name": "getUserMedia",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "마이크·카메라 열기",
+      "short": "navigator.mediaDevices.getUserMedia — 사용자 허락을 받아 마이크·카메라 흐름을 엽니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-URLSearchParams",
+      "name": "URLSearchParams",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "JavaScript 기본 기능",
+      "label": "주소 물음 만들기",
+      "short": "\"?a=1&b=2\" 꼴의 물음을 이름·값으로 만들고 읽습니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-HttpWebRequest",
+      "name": "HttpWebRequest",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "HTTP 요청",
+      "short": ".NET Framework 의 HTTP 요청 형식입니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-MemoryStream",
+      "name": "MemoryStream",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "메모리 안의 바이트 흐름",
+      "short": "파일 대신 메모리에 바이트를 쓰고 읽는 흐름입니다.",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-Stopwatch",
+      "name": "Stopwatch",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "경과 시간 재기",
+      "short": "시작한 뒤 흐른 시간을 정확히 잽니다(ElapsedMilliseconds).",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-ProtectedData",
+      "name": "ProtectedData",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "DPAPI 암호화",
+      "short": "Windows 사용자 계정에 묶어 바이트를 암호화·복호화합니다(Protect·Unprotect).",
+      "type": "identifier"
+    },
+    {
+      "id": "cr-BitConverter",
+      "name": "BitConverter",
+      "languages": [
+        "cs"
+      ],
+      "languageLabel": "C#",
+      "kind": "C# 기본 기능",
+      "label": "바이트 ↔ 숫자",
+      "short": "바이트 배열과 정수·실수를 서로 바꿉니다.",
+      "type": "identifier"
+    },
+    {
       "id": "cr-RegExp",
       "name": "RegExp",
       "languages": [
@@ -25993,6 +26648,90 @@ window.MN_REVIEW_DATA = {
       "type": "method"
     },
     {
+      "id": "cm-hypot",
+      "name": "hypot",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "배열·문자열 메서드",
+      "label": "두 점 사이 거리",
+      "short": "Math.hypot — 가로·세로 차이를 넣으면 직선 거리(√(x²+y²))를 돌려줍니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-toBlob",
+      "name": "toBlob",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "DOM·이벤트 메서드",
+      "label": "캔버스를 그림 파일로",
+      "short": "canvas.toBlob — 캔버스에 그린 것을 PNG·JPEG·WebP 파일 바이트로 비동기로 만듭니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-toLocaleString",
+      "name": "toLocaleString",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "배열·문자열 메서드",
+      "label": "지역 규칙대로 글자로",
+      "short": "숫자에는 1,234 같은 자리 구분을, 날짜에는 사용자 언어의 날짜 꼴을 붙여 글자로 바꿉니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-digest",
+      "name": "digest",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "배열·문자열 메서드",
+      "label": "해시 계산",
+      "short": "crypto.subtle.digest — 바이트의 SHA-256 같은 해시를 비동기로 구합니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-deriveKey",
+      "name": "deriveKey",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "배열·문자열 메서드",
+      "label": "비밀번호로 키 만들기",
+      "short": "crypto.subtle.deriveKey — PBKDF2 처럼 비밀번호를 여러 번 섞어 암호 키를 만듭니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-encrypt",
+      "name": "encrypt",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "배열·문자열 메서드",
+      "label": "암호화",
+      "short": "crypto.subtle.encrypt — 키로 바이트를 암호문으로 바꿉니다.",
+      "type": "method"
+    },
+    {
+      "id": "cm-decrypt",
+      "name": "decrypt",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "배열·문자열 메서드",
+      "label": "복호화",
+      "short": "crypto.subtle.decrypt — 암호문을 원래 바이트로 되돌립니다.",
+      "type": "method"
+    },
+    {
       "id": "cm-max",
       "name": "max",
       "languages": [
@@ -26877,6 +27616,10 @@ window.MN_REVIEW_DATA = {
           "line": 20
         },
         {
+          "path": "tests/spreadsheet-recovery.test.js",
+          "line": 21
+        },
+        {
           "path": "tests/trip.test.js",
           "line": 873
         }
@@ -26993,7 +27736,7 @@ window.MN_REVIEW_DATA = {
       "languageLabel": "JavaScript",
       "kind": "문서·편집",
       "label": "프로젝트 처리",
-      "short": "src/js/documents.js:1460에서 정의되며, 코드에서 호출 형태 22회·사용 파일 17개가 확인됩니다.",
+      "short": "src/js/documents.js:1460에서 정의되며, 코드에서 호출 형태 23회·사용 파일 18개가 확인됩니다.",
       "type": "project-function",
       "definitions": [
         {
@@ -27009,8 +27752,28 @@ window.MN_REVIEW_DATA = {
           "line": 930
         }
       ],
-      "callCount": 22,
-      "usedFileCount": 17
+      "callCount": 23,
+      "usedFileCount": 18
+    },
+    {
+      "id": "pf-js-newmapscratch-1gs95bx",
+      "name": "newMapScratch",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "문서·편집",
+      "label": "프로젝트 처리",
+      "short": "src/js/map-viewer.js:4957에서 정의되며, 코드에서 호출 형태 52회·사용 파일 16개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/map-viewer.js",
+          "line": 4957
+        }
+      ],
+      "callCount": 52,
+      "usedFileCount": 16
     },
     {
       "id": "pf-js-request-hdxo6q",
@@ -27081,26 +27844,6 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 15
     },
     {
-      "id": "pf-js-newmapscratch-1gs95bx",
-      "name": "newMapScratch",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "문서·편집",
-      "label": "프로젝트 처리",
-      "short": "src/js/map-viewer.js:4957에서 정의되며, 코드에서 호출 형태 45회·사용 파일 14개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/map-viewer.js",
-          "line": 4957
-        }
-      ],
-      "callCount": 45,
-      "usedFileCount": 14
-    },
-    {
       "id": "pf-js-route-dwh9ni",
       "name": "route",
       "languages": [
@@ -27109,7 +27852,7 @@ window.MN_REVIEW_DATA = {
       "languageLabel": "JavaScript",
       "kind": "문서·편집",
       "label": "이벤트·요청 처리",
-      "short": "src/js/jeju-bus-api.js:46에서 정의되며, 코드에서 호출 형태 47회·사용 파일 13개가 확인됩니다.",
+      "short": "src/js/jeju-bus-api.js:46에서 정의되며, 코드에서 호출 형태 49회·사용 파일 14개가 확인됩니다.",
       "type": "project-function",
       "definitions": [
         {
@@ -27117,8 +27860,8 @@ window.MN_REVIEW_DATA = {
           "line": 46
         }
       ],
-      "callCount": 47,
-      "usedFileCount": 13
+      "callCount": 49,
+      "usedFileCount": 14
     },
     {
       "id": "pf-js-loadtext-4zobvu",
@@ -27253,6 +27996,26 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 9
     },
     {
+      "id": "pf-js-mapdocserialize-1y5zmn9",
+      "name": "mapDocSerialize",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "문서·편집",
+      "label": "프로젝트 처리",
+      "short": "src/js/map-viewer.js:484에서 정의되며, 코드에서 호출 형태 31회·사용 파일 8개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/map-viewer.js",
+          "line": 484
+        }
+      ],
+      "callCount": 31,
+      "usedFileCount": 8
+    },
+    {
       "id": "pf-js-ensurerendered-191t68q",
       "name": "ensureRendered",
       "languages": [
@@ -27313,6 +28076,26 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 8
     },
     {
+      "id": "pf-js-mapnormalizemarker-1tkh5cy",
+      "name": "mapNormalizeMarker",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "문서·편집",
+      "label": "프로젝트 처리",
+      "short": "src/js/map-viewer.js:290에서 정의되며, 코드에서 호출 형태 35회·사용 파일 7개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/map-viewer.js",
+          "line": 290
+        }
+      ],
+      "callCount": 35,
+      "usedFileCount": 7
+    },
+    {
       "id": "pf-js-flat-1leu4d6",
       "name": "flat",
       "languages": [
@@ -27347,6 +28130,10 @@ window.MN_REVIEW_DATA = {
         {
           "path": "src/js/document-types.js",
           "line": 39
+        },
+        {
+          "path": "tests/workspace-closed-restore.test.js",
+          "line": 21
         }
       ],
       "callCount": 20,
@@ -27373,43 +28160,23 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 7
     },
     {
-      "id": "pf-js-mapnormalizemarker-1tkh5cy",
-      "name": "mapNormalizeMarker",
+      "id": "pf-js-mapdocempty-5bc1de",
+      "name": "mapDocEmpty",
       "languages": [
         "js"
       ],
       "languageLabel": "JavaScript",
       "kind": "문서·편집",
       "label": "프로젝트 처리",
-      "short": "src/js/map-viewer.js:290에서 정의되며, 코드에서 호출 형태 34회·사용 파일 6개가 확인됩니다.",
+      "short": "src/js/map-viewer.js:416에서 정의되며, 코드에서 호출 형태 23회·사용 파일 6개가 확인됩니다.",
       "type": "project-function",
       "definitions": [
         {
           "path": "src/js/map-viewer.js",
-          "line": 290
+          "line": 416
         }
       ],
-      "callCount": 34,
-      "usedFileCount": 6
-    },
-    {
-      "id": "pf-js-mapdocserialize-1y5zmn9",
-      "name": "mapDocSerialize",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "문서·편집",
-      "label": "프로젝트 처리",
-      "short": "src/js/map-viewer.js:484에서 정의되며, 코드에서 호출 형태 28회·사용 파일 6개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/map-viewer.js",
-          "line": 484
-        }
-      ],
-      "callCount": 28,
+      "callCount": 23,
       "usedFileCount": 6
     },
     {
@@ -27450,34 +28217,6 @@ window.MN_REVIEW_DATA = {
         }
       ],
       "callCount": 16,
-      "usedFileCount": 6
-    },
-    {
-      "id": "pf-js-updatedocumentstatus-ytrc8v",
-      "name": "updateDocumentStatus",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "문서·편집",
-      "label": "갱신·동기화",
-      "short": "src/js/documents.js:1351에서 정의되며, 코드에서 호출 형태 12회·사용 파일 6개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/documents.js",
-          "line": 1351
-        },
-        {
-          "path": "tests/pdf-export-tab-switch.test.js",
-          "line": 77
-        },
-        {
-          "path": "tests/pdf-recovery.test.js",
-          "line": 21
-        }
-      ],
-      "callCount": 12,
       "usedFileCount": 6
     },
     {
@@ -27689,7 +28428,7 @@ window.MN_REVIEW_DATA = {
       "languageLabel": "JavaScript",
       "kind": "앱 코어",
       "label": "실행",
-      "short": "src/js/board-tools.js:196에서 정의되며, 코드에서 호출 형태 420회·사용 파일 48개가 확인됩니다.",
+      "short": "src/js/board-tools.js:196에서 정의되며, 코드에서 호출 형태 464회·사용 파일 53개가 확인됩니다.",
       "type": "project-function",
       "definitions": [
         {
@@ -27697,8 +28436,8 @@ window.MN_REVIEW_DATA = {
           "line": 196
         }
       ],
-      "callCount": 420,
-      "usedFileCount": 48
+      "callCount": 464,
+      "usedFileCount": 53
     },
     {
       "id": "pf-js-translatetree-8k53et",
@@ -27729,7 +28468,7 @@ window.MN_REVIEW_DATA = {
       "languageLabel": "JavaScript",
       "kind": "앱 코어",
       "label": "이벤트·요청 처리",
-      "short": "src/js/file-loaders.js:81에서 정의되며, 코드에서 호출 형태 64회·사용 파일 34개가 확인됩니다.",
+      "short": "src/js/file-loaders.js:81에서 정의되며, 코드에서 호출 형태 66회·사용 파일 36개가 확인됩니다.",
       "type": "project-function",
       "definitions": [
         {
@@ -27757,12 +28496,20 @@ window.MN_REVIEW_DATA = {
           "line": 151
         },
         {
+          "path": "tests/spreadsheet-recovery.test.js",
+          "line": 49
+        },
+        {
+          "path": "tests/spreadsheet-recovery.test.js",
+          "line": 99
+        },
+        {
           "path": "tests/tar-parser.test.js",
           "line": 136
         }
       ],
-      "callCount": 64,
-      "usedFileCount": 34
+      "callCount": 66,
+      "usedFileCount": 36
     },
     {
       "id": "pf-js-tryneed-10fa0la",
@@ -27805,6 +28552,30 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 23
     },
     {
+      "id": "pf-js-rememberworkspace-1uhxmrn",
+      "name": "rememberWorkspace",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "앱 코어",
+      "label": "프로젝트 처리",
+      "short": "src/js/workspace-store.js:356에서 정의되며, 코드에서 호출 형태 33회·사용 파일 22개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/workspace-store.js",
+          "line": 356
+        },
+        {
+          "path": "tests/pdf-export-tab-switch.test.js",
+          "line": 75
+        }
+      ],
+      "callCount": 33,
+      "usedFileCount": 22
+    },
+    {
       "id": "pf-js-sound-3wdeac",
       "name": "sound",
       "languages": [
@@ -27822,30 +28593,6 @@ window.MN_REVIEW_DATA = {
         }
       ],
       "callCount": 56,
-      "usedFileCount": 21
-    },
-    {
-      "id": "pf-js-rememberworkspace-1uhxmrn",
-      "name": "rememberWorkspace",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "앱 코어",
-      "label": "프로젝트 처리",
-      "short": "src/js/workspace-store.js:356에서 정의되며, 코드에서 호출 형태 32회·사용 파일 21개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/workspace-store.js",
-          "line": 356
-        },
-        {
-          "path": "tests/pdf-export-tab-switch.test.js",
-          "line": 75
-        }
-      ],
-      "callCount": 32,
       "usedFileCount": 21
     },
     {
@@ -27917,6 +28664,26 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 16
     },
     {
+      "id": "pf-js-last-rpp1cp",
+      "name": "last",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "앱 코어",
+      "label": "프로젝트 처리",
+      "short": "src/js/search-history.js:77에서 정의되며, 코드에서 호출 형태 76회·사용 파일 18개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/search-history.js",
+          "line": 77
+        }
+      ],
+      "callCount": 76,
+      "usedFileCount": 18
+    },
+    {
       "id": "pf-js-canredo-18y17bd",
       "name": "canRedo",
       "languages": [
@@ -27955,26 +28722,6 @@ window.MN_REVIEW_DATA = {
       ],
       "callCount": 33,
       "usedFileCount": 18
-    },
-    {
-      "id": "pf-js-last-rpp1cp",
-      "name": "last",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "앱 코어",
-      "label": "프로젝트 처리",
-      "short": "src/js/search-history.js:77에서 정의되며, 코드에서 호출 형태 74회·사용 파일 16개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/search-history.js",
-          "line": 77
-        }
-      ],
-      "callCount": 74,
-      "usedFileCount": 16
     },
     {
       "id": "pf-js-pickrandomint-b283ls",
@@ -28034,6 +28781,34 @@ window.MN_REVIEW_DATA = {
         }
       ],
       "callCount": 42,
+      "usedFileCount": 12
+    },
+    {
+      "id": "pf-js-showloading-17zxvpk",
+      "name": "showLoading",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "앱 코어",
+      "label": "화면 표시",
+      "short": "src/js/state.js:1194에서 정의되며, 코드에서 호출 형태 39회·사용 파일 12개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/state.js",
+          "line": 1194
+        },
+        {
+          "path": "tests/spreadsheet-recovery.test.js",
+          "line": 98
+        },
+        {
+          "path": "tests/tar-parser.test.js",
+          "line": 132
+        }
+      ],
+      "callCount": 39,
       "usedFileCount": 12
     },
     {
@@ -28165,30 +28940,6 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 11
     },
     {
-      "id": "pf-js-showloading-17zxvpk",
-      "name": "showLoading",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "앱 코어",
-      "label": "화면 표시",
-      "short": "src/js/state.js:1194에서 정의되며, 코드에서 호출 형태 38회·사용 파일 11개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/state.js",
-          "line": 1194
-        },
-        {
-          "path": "tests/tar-parser.test.js",
-          "line": 132
-        }
-      ],
-      "callCount": 38,
-      "usedFileCount": 11
-    },
-    {
       "id": "pf-js-generate-1l0u8ia",
       "name": "generate",
       "languages": [
@@ -28227,6 +28978,46 @@ window.MN_REVIEW_DATA = {
       ],
       "callCount": 35,
       "usedFileCount": 10
+    },
+    {
+      "id": "pf-js-plain-1mr1k6f",
+      "name": "plain",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "앱 코어",
+      "label": "프로젝트 처리",
+      "short": "src/js/neis-api.js:50에서 정의되며, 코드에서 호출 형태 150회·사용 파일 9개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/neis-api.js",
+          "line": 50
+        },
+        {
+          "path": "tests/map-choropleth.test.js",
+          "line": 27
+        },
+        {
+          "path": "tests/map-radius.test.js",
+          "line": 14
+        },
+        {
+          "path": "tests/office-replace-roundtrip.test.js",
+          "line": 10
+        },
+        {
+          "path": "tests/office-replace.test.js",
+          "line": 7
+        },
+        {
+          "path": "tests/photo-album-harness.js",
+          "line": 87
+        }
+      ],
+      "callCount": 150,
+      "usedFileCount": 9
     },
     {
       "id": "pf-js-hideresult-1yeejuk",
@@ -28269,26 +29060,6 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 10
     },
     {
-      "id": "pf-js-syncshortcuthints-1d2zlsa",
-      "name": "syncShortcutHints",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "앱 코어",
-      "label": "갱신·동기화",
-      "short": "src/js/state.js:869에서 정의되며, 코드에서 호출 형태 14회·사용 파일 9개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/state.js",
-          "line": 869
-        }
-      ],
-      "callCount": 14,
-      "usedFileCount": 9
-    },
-    {
       "id": "pf-js-collapsesidebar-erramq",
       "name": "collapseSidebar",
       "languages": [
@@ -28297,7 +29068,7 @@ window.MN_REVIEW_DATA = {
       "languageLabel": "JavaScript",
       "kind": "테스트",
       "label": "닫기·숨기기",
-      "short": "tests/e2e/helpers.js:18에서 정의되며, 코드에서 호출 형태 58회·사용 파일 45개가 확인됩니다.",
+      "short": "tests/e2e/helpers.js:18에서 정의되며, 코드에서 호출 형태 63회·사용 파일 50개가 확인됩니다.",
       "type": "project-function",
       "definitions": [
         {
@@ -28305,8 +29076,8 @@ window.MN_REVIEW_DATA = {
           "line": 18
         }
       ],
-      "callCount": 58,
-      "usedFileCount": 45
+      "callCount": 63,
+      "usedFileCount": 50
     },
     {
       "id": "pf-js-dispatchevent-jh4fg9",
@@ -28317,7 +29088,7 @@ window.MN_REVIEW_DATA = {
       "languageLabel": "JavaScript",
       "kind": "테스트",
       "label": "이벤트·요청 처리",
-      "short": "tests/diagnostics.test.js:40에서 정의되며, 코드에서 호출 형태 70회·사용 파일 31개가 확인됩니다.",
+      "short": "tests/diagnostics.test.js:40에서 정의되며, 코드에서 호출 형태 72회·사용 파일 32개가 확인됩니다.",
       "type": "project-function",
       "definitions": [
         {
@@ -28325,28 +29096,8 @@ window.MN_REVIEW_DATA = {
           "line": 40
         }
       ],
-      "callCount": 70,
-      "usedFileCount": 31
-    },
-    {
-      "id": "pf-js-cancelanimationframe-1jrcbs",
-      "name": "cancelAnimationFrame",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "테스트",
-      "label": "상태·유효성 판별",
-      "short": "tests/music-audio.test.js:199에서 정의되며, 코드에서 호출 형태 52회·사용 파일 30개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "tests/music-audio.test.js",
-          "line": 199
-        }
-      ],
-      "callCount": 52,
-      "usedFileCount": 30
+      "callCount": 72,
+      "usedFileCount": 32
     },
     {
       "id": "pf-js-insertbefore-1glasmr",
@@ -28387,6 +29138,26 @@ window.MN_REVIEW_DATA = {
       ],
       "callCount": 55,
       "usedFileCount": 24
+    },
+    {
+      "id": "pf-js-uiicon-gm7f9m",
+      "name": "uiIcon",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "테스트",
+      "label": "프로젝트 처리",
+      "short": "tests/pick-screen.test.js:23에서 정의되며, 코드에서 호출 형태 66회·사용 파일 20개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "tests/pick-screen.test.js",
+          "line": 23
+        }
+      ],
+      "callCount": 66,
+      "usedFileCount": 20
     },
     {
       "id": "pf-js-startpractice-6bsxp2",
@@ -28729,6 +29500,26 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 5
     },
     {
+      "id": "pf-js-whiteboardeducationcatalog-3rtej7",
+      "name": "whiteboardEducationCatalog",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "학습 도구",
+      "label": "프로젝트 처리",
+      "short": "src/js/whiteboard.js:429에서 정의되며, 코드에서 호출 형태 8회·사용 파일 3개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/whiteboard.js",
+          "line": 429
+        }
+      ],
+      "callCount": 8,
+      "usedFileCount": 3
+    },
+    {
       "id": "pf-js-whiteboardstencilgroup-1237zbp",
       "name": "whiteboardStencilGroup",
       "languages": [
@@ -28746,6 +29537,26 @@ window.MN_REVIEW_DATA = {
         }
       ],
       "callCount": 7,
+      "usedFileCount": 3
+    },
+    {
+      "id": "pf-js-boardstatefromsnapshot-ydmbvk",
+      "name": "boardStateFromSnapshot",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "학습 도구",
+      "label": "프로젝트 처리",
+      "short": "src/js/whiteboard.js:865에서 정의되며, 코드에서 호출 형태 6회·사용 파일 3개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/whiteboard.js",
+          "line": 865
+        }
+      ],
+      "callCount": 6,
       "usedFileCount": 3
     },
     {
@@ -28789,6 +29600,26 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 3
     },
     {
+      "id": "pf-js-whiteboarditemstep-174gc13",
+      "name": "whiteboardItemStep",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "학습 도구",
+      "label": "프로젝트 처리",
+      "short": "src/js/whiteboard.js:120에서 정의되며, 코드에서 호출 형태 21회·사용 파일 2개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/whiteboard.js",
+          "line": 120
+        }
+      ],
+      "callCount": 21,
+      "usedFileCount": 2
+    },
+    {
       "id": "pf-js-whiteboardfocusallowspoint-1xkuiru",
       "name": "whiteboardFocusAllowsPoint",
       "languages": [
@@ -28806,6 +29637,30 @@ window.MN_REVIEW_DATA = {
         }
       ],
       "callCount": 18,
+      "usedFileCount": 2
+    },
+    {
+      "id": "pf-js-screenpoint-1gnq0ul",
+      "name": "screenPoint",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "학습 도구",
+      "label": "프로젝트 처리",
+      "short": "src/js/whiteboard.js:959에서 정의되며, 코드에서 호출 형태 16회·사용 파일 2개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/whiteboard.js",
+          "line": 959
+        },
+        {
+          "path": "tests/e2e/map-choropleth.spec.js",
+          "line": 16
+        }
+      ],
+      "callCount": 16,
       "usedFileCount": 2
     },
     {
@@ -28849,6 +29704,26 @@ window.MN_REVIEW_DATA = {
       "usedFileCount": 2
     },
     {
+      "id": "pf-js-whiteboardwithstep-1m2o16g",
+      "name": "whiteboardWithStep",
+      "languages": [
+        "js"
+      ],
+      "languageLabel": "JavaScript",
+      "kind": "학습 도구",
+      "label": "프로젝트 처리",
+      "short": "src/js/whiteboard.js:125에서 정의되며, 코드에서 호출 형태 10회·사용 파일 2개가 확인됩니다.",
+      "type": "project-function",
+      "definitions": [
+        {
+          "path": "src/js/whiteboard.js",
+          "line": 125
+        }
+      ],
+      "callCount": 10,
+      "usedFileCount": 2
+    },
+    {
       "id": "pf-js-whiteboardclampview-1p6heiw",
       "name": "whiteboardClampView",
       "languages": [
@@ -28886,106 +29761,6 @@ window.MN_REVIEW_DATA = {
         }
       ],
       "callCount": 8,
-      "usedFileCount": 2
-    },
-    {
-      "id": "pf-js-whiteboardcanflipitem-1vqdxt4",
-      "name": "whiteboardCanFlipItem",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "학습 도구",
-      "label": "프로젝트 처리",
-      "short": "src/js/whiteboard.js:199에서 정의되며, 코드에서 호출 형태 8회·사용 파일 2개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/whiteboard.js",
-          "line": 199
-        }
-      ],
-      "callCount": 8,
-      "usedFileCount": 2
-    },
-    {
-      "id": "pf-js-whiteboardpresetresizeitem-1pzwuxu",
-      "name": "whiteboardPresetResizeItem",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "학습 도구",
-      "label": "프로젝트 처리",
-      "short": "src/js/whiteboard.js:224에서 정의되며, 코드에서 호출 형태 8회·사용 파일 2개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/whiteboard.js",
-          "line": 224
-        }
-      ],
-      "callCount": 8,
-      "usedFileCount": 2
-    },
-    {
-      "id": "pf-js-expandwhiteboardformulatemplate-11lglda",
-      "name": "expandWhiteboardFormulaTemplate",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "학습 도구",
-      "label": "프로젝트 처리",
-      "short": "src/js/whiteboard.js:359에서 정의되며, 코드에서 호출 형태 7회·사용 파일 2개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/whiteboard.js",
-          "line": 359
-        }
-      ],
-      "callCount": 7,
-      "usedFileCount": 2
-    },
-    {
-      "id": "pf-js-setwhiteboardinternalclipboard-11qsmbt",
-      "name": "setWhiteboardInternalClipboard",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "학습 도구",
-      "label": "설정·저장",
-      "short": "src/js/whiteboard.js:156에서 정의되며, 코드에서 호출 형태 7회·사용 파일 2개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/whiteboard.js",
-          "line": 156
-        }
-      ],
-      "callCount": 7,
-      "usedFileCount": 2
-    },
-    {
-      "id": "pf-js-whiteboardeducationcatalog-3rtej7",
-      "name": "whiteboardEducationCatalog",
-      "languages": [
-        "js"
-      ],
-      "languageLabel": "JavaScript",
-      "kind": "학습 도구",
-      "label": "프로젝트 처리",
-      "short": "src/js/whiteboard.js:429에서 정의되며, 코드에서 호출 형태 7회·사용 파일 2개가 확인됩니다.",
-      "type": "project-function",
-      "definitions": [
-        {
-          "path": "src/js/whiteboard.js",
-          "line": 429
-        }
-      ],
-      "callCount": 7,
       "usedFileCount": 2
     },
     {

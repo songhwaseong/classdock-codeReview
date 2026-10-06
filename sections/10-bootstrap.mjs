@@ -797,6 +797,7 @@ export default ({ manifest, helpers, rootDir }) => {
         { title: '종료 확정', body: '종료 직전 변경을 서버 상태로 한 번 더 확정합니다.' },
       ],
       files: [
+        { path: 'tests/workspace-closed-restore.test.js', label: 'workspace-closed-restore.test.js', description: '닫은 파일은 재시작해도 백업·폴더에서 되살아나지 않는다' },
         { path: 'tests/workspaces.test.js', label: 'workspaces.test.js', description: '정규화·복원 순서·경로 인덱스·공유 문서 14개' },
         { path: 'tests/workspace-membership.test.js', label: 'workspace-membership.test.js', description: '복원 중에는 작업공간 소속을 저장하지 않는다' },
         { path: 'tests/e2e/workspace-menu-button.spec.js', label: 'workspace-menu-button.spec.js', description: '작업공간 버튼이 탭 줄 왼쪽에 — 탭이 없어도 보이고, 좁은 창·키보드로도 전환' },

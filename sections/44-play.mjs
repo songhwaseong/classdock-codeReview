@@ -211,6 +211,7 @@ export default ({ manifest, helpers, rootDir }) => {
         '로또 6/45 는 후보 번호(제외 번호·직전 회차 제외·공통 번호 조건을 반영한 것)의 모든 6개 조합에 순번을 매기고, 그 순번을 겹치지 않게 고르게 뽑아 조합으로 되돌립니다. ' +
         '연금복권은 조(1~5)와 여섯 자리를 순번 하나로 묶어 같은 방식으로 뽑습니다. 화면과 같은 규칙을 Node 에서도 검사할 수 있는 순수 모델이고, 기록은 브라우저에 둡니다.',
       files: [
+        { path: 'tests/pension.test.js', label: 'pension.test.js', description: '연금복권 — 조·여섯 자리, 겹치지 않는 표, 조·자리 고정' },
         { path: 'tests/lotto.test.js', label: 'lotto.test.js', description: '서로 다른 6개·겹치지 않는 조합·순번 ↔ 조합 복원·제외 조건' },
         { path: 'tests/e2e/lotto-layout.spec.js', label: 'lotto-layout.spec.js', description: '배치·확대·5게임·저장·기록 복원·오프라인 HTML' },
       ],

@@ -231,6 +231,8 @@ export default ({ helpers, rootDir }) => {
         { title: '거리', body: '대권 직선 거리만 셉니다. 화면에 늘 "직선" 이라고 적습니다.' },
       ],
       files: [
+        { path: 'tests/trip-templates-focus.test.js', label: 'trip-templates-focus.test.js', description: '템플릿 3종 — 있던 글·사진·완료 체크를 지키고 중복 추가하지 않음' },
+        { path: 'tests/e2e/trip-extras.spec.js', label: 'trip-extras.spec.js', description: '위치 찾기·여정 띠 날씨와 대표 사진·날에 안 붙는 경비' },
         { path: 'tests/trip.test.js', label: 'trip.test.js', description: '옛 갈래 버리기·좌표 불신·참조 자산·영상 한도·EXIF·국내 판정·동기 뼈대' },
         { path: 'tests/trip-user-templates.test.js', label: 'trip-user-templates.test.js', description: '사용자 템플릿' },
         { path: 'tests/e2e/trip.spec.js', label: 'trip.spec.js', description: '여정 띠·장소·지도 칸·굳히기가 막히는 경우·EXIF·내보내기·경비·인쇄의 자료 출처' },

@@ -116,6 +116,7 @@ export default ({ manifest, helpers }) => {
         { title: '정의 이동', body: '로컬 정의와 import 된 모듈 정의를 찾아 읽기 전용 분할 뷰어로 엽니다.' },
       ],
       files: [
+        { path: 'tests/e2e/python-trace-memory.spec.js', label: 'python-trace-memory.spec.js', description: '단계 실행 메모리 그림 — 같은 리스트를 가리키는 두 이름·재귀 프레임' },
         { path: 'tests/python-editor-word-select.test.js', label: 'word-select.test.js', description: 'F3 단어 선택' },
         { path: 'tests/python-editor-completion.test.js', label: 'completion.test.js', description: '자동완성 닫기·응답 무효화' },
         { path: 'tests/python-editor-jump-down.test.js', label: 'jump-down.test.js', description: '문서 끝 빈 줄·들여쓰기 유지' },
@@ -223,6 +224,7 @@ export default ({ manifest, helpers }) => {
         { title: '그래프 확대', body: 'image-lightbox.js 와 연결돼 결과 그래프를 클릭하면 큰 창으로 봅니다.' },
       ],
       files: [
+        { path: 'tests/pyodide-wheel-registry.test.js', label: 'pyodide-wheel-registry.test.js', description: '번들 휠 등록부를 시작할 때가 아니라 처음 쓸 때 한 번 읽기' },
         { path: 'tests/python-stderr-classify.test.js', label: 'stderr-classify.test.js', description: '경고·실패 분류' },
         { path: 'tests/python-autosave.test.js', label: 'python-autosave.test.js', description: '자동 저장 기본 꺼짐·설정 이어받기' },
         { path: 'tests/python-local-detect.test.js', label: 'python-local-detect.test.js', description: '로컬 파이썬 탐색과 Store 가짜 실행 파일 제외' },

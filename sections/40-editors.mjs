@@ -726,6 +726,8 @@ export default ({ manifest, helpers, rootDir }) => {
         { title: '컨텍스트 메뉴', body: 'tests/e2e/spreadsheet-context-menu.spec.js 가 우클릭 동작을 검증합니다.' },
       ],
       files: [
+        { path: 'tests/xlsx-undo-snapshot-reuse.test.js', label: 'xlsx-undo-snapshot-reuse.test.js', description: '되돌리기 — 건드리지 않은 시트의 복제본 재사용과 그 정확성' },
+        { path: 'tests/spreadsheet-recovery.test.js', label: 'spreadsheet-recovery.test.js', description: 'CSV→XLSX 직후·재시작 뒤 복구와 미저장 표시' },
         { path: 'tests/xlsx-edit.test.js', label: 'xlsx-edit.test.js', description: '편집·수식·병합·차트·셀 그림·저장 왕복 38개' },
         { path: 'tests/e2e/spreadsheet-undo.spec.js', label: 'spreadsheet-undo.spec.js', description: '표 되돌리기 화면 흐름' },
         { path: 'tests/e2e/spreadsheet-image-layout.spec.js', label: 'spreadsheet-image-layout.spec.js', description: '셀 그림이 원래 칸 크기로 앉는지' },
@@ -1146,6 +1148,9 @@ export default ({ manifest, helpers, rootDir }) => {
         },
       ],
       files: [
+        { path: 'tests/whiteboard-steps.test.js', label: 'whiteboard-steps.test.js', description: '단계(차례대로 보이기) 번호 규칙과 되돌리기 스냅샷 보호' },
+        { path: 'tests/e2e/whiteboard-multi-select.spec.js', label: 'whiteboard-multi-select.spec.js', description: 'Ctrl+끌기 여러 개 고르기·함께 옮기기·한 번에 되돌리기' },
+        { path: 'tests/whiteboard-special-chars.test.js', label: 'whiteboard-special-chars.test.js', description: '특수문자 갈래·최근 20개' },
         {
           path: 'docs/화이트보드-집중도구-설계.md',
           label: '화이트보드-집중도구-설계.md',

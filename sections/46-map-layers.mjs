@@ -358,6 +358,8 @@ export default ({ manifest, helpers, rootDir }) => {
         },
       ],
       files: [
+        { path: 'tests/map-choropleth.test.js', label: 'map-choropleth.test.js', description: '경계 두 시점·시도 줄임말·옛 이름·일반구 맞추기' },
+        { path: 'tests/e2e/map-choropleth.spec.js', label: 'map-choropleth.spec.js', description: '붙여 넣은 표로 칠하기·범례·되돌리기·저장' },
         { path: 'src/js/kosis-api.js', label: 'kosis-api.js', description: '자주 쓰는 통계 표·응답 해석·런처 조회(MNKosisApi)' },
         { path: 'tests/kosis-api.test.js', label: 'kosis-api.test.js', description: '시도 붙이기·코드 모양·일반구' },
         { path: 'tests/e2e/kosis-choro.spec.js', label: 'kosis-choro.spec.js', description: '런처 여부·자주 쓰는 통계로 칠하기' },
@@ -384,6 +386,7 @@ export default ({ manifest, helpers, rootDir }) => {
         '공공데이터 표에 흔한 평면 좌표(도로명주소·국가공간정보의 UTM-K, 인허가 자료의 중부원점 TM 등)를 위경도로 바꿔, 지도 표 들이기가 이런 줄을 "좌표 오류" 로 버리지 않게 합니다. ' +
         '횡메르카토르 크뤼거 급수와 옛 Bessel 좌표계의 7변수 변환을 넣었고, 표의 좌표계를 짐작하는 guess 와 국내 판정 inKorea 도 여기 있습니다. 여행일지의 국내·해외 판정도 이 inKorea 를 씁니다.',
       files: [
+        { path: 'tests/e2e/map-projected-import.spec.js', label: 'map-projected-import.spec.js', description: '평면 좌표 표 들이기 — 주소로 좌표계 고르기·열 이름과 값 범위로 짐작' },
         { path: 'tests/korea-coords.test.js', label: 'korea-coords.test.js', description: '카카오 변환값과 1m 안·보정 없는 원점의 어긋남·왕복 1cm' },
       ],
       notes: [
