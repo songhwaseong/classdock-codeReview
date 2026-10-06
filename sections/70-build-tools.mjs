@@ -32,6 +32,7 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
   const offlineSize = artifactSize(rootDir, 'classdock-offline.html');
   const exeSize = artifactSize(rootDir, 'ClassDock.exe');
   const scriptLines = scriptTotalLines(rootDir, manifest);
+  const sampleLines = sourceLines(rootDir, 'tools/make-sample-files.py');
 
   return [
     sec({
@@ -54,7 +55,8 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
         {
           title: '생성 파일',
           body:
-            'classdock-offline.html, desktop/app.html, vendor/korean-font.js, vendor/korean-hunspell-worker.js 는 생성물입니다. 직접 고치면 다음 빌드에 덮어써집니다.',
+            'classdock-offline.html, desktop/app.html, 사용법.html, THIRD_PARTY_NOTICES.txt, vendor/korean-font.js, vendor/korean-hunspell-worker.js, vendor/hand-font-*.js(손글씨), vendor/korea-regions.js·korea-emd.js(행정경계) 는 생성물입니다. ' +
+            '직접 고치면 다음 빌드에 덮어써지거나 --check 에 걸립니다 — 만드는 도구는 아래 "문서 생성기"·"자산 생성기" 섹션에 있습니다.',
         },
         {
           title: '오프라인 원칙의 강제',
@@ -63,14 +65,16 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
         },
       ],
       features: [
-        { title: 'check', body: 'tools/check-source.js — 문법·전역 충돌·계층·의존·공개 API·지연 vendor.' },
+        { title: 'check', body: 'ESLint(전역 스크립트의 최상위 선언을 모아 no-undef 에 알려 줌) → tools/check-source.js(문법·전역 충돌·계층·의존·공개 API·지연 vendor) → 라이선스 고지 동기화(--check).' },
         { title: 'test', body: 'node --test tests/*.test.js — 단위·계약 테스트.' },
-        { title: 'build', body: '맞춤법 워커 빌드 → build-offline.js 로 단일 HTML 생성.' },
+        { title: 'build', body: '맞춤법 워커 빌드 → 사용법.md → 사용법.html → 라이선스 고지 생성 → build-offline.js 로 단일 HTML 생성(빌드 정보 블록을 새김).' },
         { title: 'release-check', body: 'tools/check-release.js — 로컬 경로 잔존·vendor 해시·산출물 검사.' },
       ],
       files: [
         { path: 'package.json', label: 'package.json', description: 'verify 스크립트 정의' },
         { path: 'AGENTS.md', label: 'AGENTS.md', description: 'EXE 반영 절차 규칙' },
+        { path: 'eslint.config.cjs', label: 'eslint.config.cjs', description: 'manifest 의 스크립트에서 모은 전역 선언을 no-undef 에 넘기는 설정' },
+        { path: 'tools/source-globals.js', label: 'source-globals.js', description: '전역 스크립트의 최상위 선언 이름 모으기(espree)' },
       ],
       notes: [
         {
@@ -84,7 +88,8 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            'verify 에 타입 검사가 없습니다. JS 전역 스크립트라 오타 하나가 런타임 undefined 로만 드러나고, state.js 의 100개짜리 구조 분해 같은 곳은 특히 취약합니다.',
+            'verify 에 타입 검사가 없습니다. 전역 이름의 오타는 이제 ESLint 가 잡습니다 — source-globals.js 가 manifest 순서의 스크립트들에서 최상위 선언을 모아 no-undef 에 알려 주므로, ' +
+            '어느 파일에도 선언되지 않은 이름을 쓰면 check 에서 실패합니다. 하지만 속성 이름(obj.foo)의 오타나 함수 인자 모양의 어긋남은 여전히 런타임에야 드러나고, state.js 의 100개짜리 구조 분해 같은 곳이 그 자리입니다.',
         },
         {
           type: 'risk',
@@ -364,19 +369,157 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
     }),
 
     sec({
+      id: 'tool-generated-docs',
+      category: CAT,
+      group: '생성기',
+      title: '문서 생성기 — 사용법.html · THIRD_PARTY_NOTICES.txt',
+      subtitle: '원본 하나 → 생성물, 그리고 --check',
+      summary:
+        '사람이 손으로 두 벌을 맞추던 문서를 "원본 + 생성기 + 동기화 검사" 로 바꾼 두 도구입니다. build-manual-html.mjs 는 사용법.md 를 사용법.html 로, ' +
+        'build-third-party-notices.mjs 는 vendor/licenses/*.txt 와 자산의 ATTRIBUTION.md 를 모아 라이선스 고지 한 파일로 만듭니다. 둘 다 --check 로 "생성 결과와 다르면 실패" 를 돌릴 수 있습니다.',
+      usage: [
+        {
+          title: '두 벌을 손으로 맞추지 않는다',
+          body:
+            '예전에는 사용법.md 와 사용법.html 을 나란히 고쳐야 해서 한쪽만 바뀌면 조용히 어긋났고, 앱에 들어가는 것은 HTML 이라 사용자는 낡은 쪽을 봤습니다. 이제 마크다운이 원본입니다(머리말에 그 이유가 그대로 있습니다).',
+        },
+        {
+          title: '고지는 빠뜨림을 실패로',
+          body:
+            '앱에 들어가는 라이브러리·글꼴·음원·데이터가 EXE 하나에 인라인되므로 라이선스 전문과 저작자 표시도 배포본에 실어야 합니다. 목록(COMPONENTS)에 없는 파일이 vendor/licenses 에 있으면 생성이 실패하고, ' +
+            'check 단계가 --check 로 고지가 최신인지 봅니다. 앱 안에서는 도움말 → "오픈소스 라이선스" 가 같은 파일을 엽니다.',
+        },
+      ],
+      files: [
+        { path: 'tools/build-manual-html.mjs', label: 'build-manual-html.mjs', description: '사용법.md → 사용법.html' },
+        { path: 'tools/build-third-party-notices.mjs', label: 'build-third-party-notices.mjs', description: 'vendor/licenses + ATTRIBUTION → THIRD_PARTY_NOTICES.txt' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '"있는데 목록에 없으면 실패" 라는 방향이 맞습니다. 새 vendor 를 넣고 고지를 잊는 실수는 흔하고 결과(라이선스 위반)는 무거운데, 전문 파일을 두는 순간 목록에 올리지 않으면 빌드가 멈춥니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            'check:manual 스크립트는 있지만 verify 에는 고지 검사(check:notices)만 들어가 있습니다. build 가 사용법.html 을 매번 다시 만들어 산출물은 늘 맞지만, ' +
+            '레포에 커밋된 사용법.html 이 원본과 어긋난 채로 남는 것은 verify 가 잡지 않습니다.',
+        },
+      ],
+    }),
+
+    sec({
+      id: 'tool-release',
+      category: CAT,
+      group: '배포',
+      title: '버전과 배포 묶음 — tools/release.js · pack.ps1',
+      subtitle: '번호는 package.json 한 곳, "바뀌었는가" 는 앱 내용의 지문으로',
+      summary:
+        '버전 번호는 package.json 의 version 한 곳에만 두고, 빌드 날짜·커밋 꼬리표는 빌드할 때 HTML 에 빌드 정보 블록으로 새깁니다(EXE 는 AssemblyInfo.generated.cs). ' +
+        'pack.ps1 은 빌드한 앱 내용의 지문(빌드 정보 블록을 뺀 단일 HTML + EXE 에 함께 실리는 파일들의 SHA-256)을 지난 배포 기록(release.json)과 비교해, 같으면 번호를 그대로 두고 바뀌었으면 올릴지 묻습니다. ' +
+        '오프라인 PC 용으로 ffmpeg·자바 라이브러리·JDK 를 함께 담을지도 고릅니다.',
+      usage: [
+        {
+          title: '지문에서 빼는 것',
+          body:
+            '빌드할 때마다 바뀌는 날짜·꼬리표 블록과 EXE 바이트(빌드마다 다름)는 지문에서 빼고, ffmpeg·JDK·java-libs 는 "담을지 고르는 덧붙이개" 라 앱 내용으로 치지 않습니다. ' +
+            '그래서 같은 소스를 다시 묶거나 덧붙이개만 바꿔 묶으면 번호가 오르지 않습니다.',
+        },
+        {
+          title: 'JDK 도 앱과 같은 방식으로 받는다',
+          body: 'pack.ps1 이 JDK 를 담을 때 앱의 자동 설치와 같은 배포처(Adoptium)·같은 체크섬 확인을 쓰고, 받은 zip 은 dist\\cache 에 두고 다시 씁니다.',
+        },
+      ],
+      files: [
+        { path: 'tools/release.js', label: 'release.js', description: 'status · next · set-version · record — 지문과 배포 기록' },
+        { path: 'pack.ps1', label: 'pack.ps1', description: '빌드 → 고지 → 버전 정하기 → (JDK·ffmpeg·jar) → zip' },
+        { path: 'release.json', label: 'release.json', description: '배포 기록' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '"번호를 올릴까" 를 기억이 아니라 내용 비교로 정합니다. 학교마다 손으로 옮겨 설치하는 앱에서 "같은 1.0.3 인데 내용이 다르다" 는 가장 고치기 어려운 문의라, 그 상황을 구조적으로 막는 장치입니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '레포의 release.json 은 아직 releases 가 비어 있습니다. 묶은 zip 을 기록하는 record 가 실제로 돈 적이 없거나 기록이 커밋되지 않은 상태라, 지금은 매번 "바뀌었다" 로 판정됩니다. ' +
+            '기록 파일을 커밋하는 단계가 pack.ps1 의 안내에 있으면 지문 비교가 비로소 쓸모를 냅니다.',
+        },
+      ],
+    }),
+
+    sec({
+      id: 'tool-asset-generators',
+      category: CAT,
+      group: '생성기',
+      title: '자산 생성기 — 브랜드 락업 · 손글씨 글꼴 · 행정경계',
+      subtitle: 'build-brand-lockup.py · build-hand-fonts.py · build-korea-regions.mjs',
+      summary:
+        '앱에 들어가는 큰 자산을 원자료에서 다시 만드는 도구들입니다. 결과물만 레포에 있고 원자료(글꼴 TTF, 행정경계 JSON)는 레포 밖에서 받아 넣는 구조라, 다시 만드는 법이 각 도구 머리말에 적혀 있습니다.',
+      usage: [
+        {
+          title: '브랜드 락업 — 함정 기록이 먼저',
+          body:
+            '헤더의 Class + 심볼 + ock 워드마크를 글꼴 없이 외곽선 패스로 만들어 classdock.html·styles.css 에 넣습니다(--apply, --check). ' +
+            '머리말이 "값을 고치기 전에 읽을 것" 으로 시작합니다 — 외곽선에는 힌팅이 없어 작은 크기에서 세로획이 2.17px 로 번지므로 크기를 키웠고, 간격은 정수여야 한다는 식의 실측 함정이 번호를 달고 적혀 있습니다.',
+        },
+        {
+          title: '손글씨 글꼴 — OFL 을 지키며 줄인다',
+          body:
+            '나눔손글씨(SIL OFL 1.1)를 WOFF2 → base64 JS 로 바꿔 vendor 에 넣고 일기장이 고를 때만 지연 로드합니다. 붓 윤곽 글꼴은 한 벌 2.6MB 라 자주 쓰는 한글 2,350자만 남기는데, ' +
+            '글자를 줄이면 OFL 의 "고친 글꼴" 이 되어 예약 이름을 쓸 수 없으므로 글꼴 안 이름을 ClassDock Hand … 로 바꾸고 원본과 고친 내용을 설명에 적습니다. 끝에 manifest 의 sha384 를 바꾸라고 출력합니다.',
+        },
+        {
+          title: '행정경계 — 가볍게 담는 법',
+          body:
+            '통계청 SGIS 경계(가공 vuski/admdongkor, CC BY 4.0)를 소수 넷째 자리로 반올림해 인코딩 폴리라인 글자로 담고(JSON 배열의 약 1/4), 두 시점(최신·통합 전)에서 같은 경계는 한 번만 담습니다. ' +
+            '읍면동은 따로 떼어 고를 때만 읽습니다. 통계가 한두 해 늦으므로 옛 이름으로도 칠할 수 있게 한 것이 이유로 적혀 있습니다.',
+        },
+      ],
+      files: [
+        { path: 'tools/build-brand-lockup.py', label: 'build-brand-lockup.py', description: '헤더 락업 SVG · 아이콘 생성(--apply · --check)' },
+        { path: 'tools/build-hand-fonts.py', label: 'build-hand-fonts.py', description: '손글씨 글꼴 → vendor/hand-font-*.js (부분 글꼴·이름 바꾸기)' },
+        { path: 'tools/build-korea-regions.mjs', label: 'build-korea-regions.mjs', description: '행정경계 → vendor/korea-regions.js · korea-emd.js' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '라이선스를 "출처 한 줄" 이 아니라 도구의 동작으로 지켰습니다 — 글꼴을 줄이면 이름을 바꾸고 원본을 적고, 경계 자료는 CC BY 출처를 색칠 지도가 켜졌을 때 함께 표시합니다. ' +
+            '이 도구들이 없었다면 다음 사람이 글꼴을 다시 줄이며 예약 이름을 그대로 둘 자리입니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '셋 다 결과물을 만든 뒤 사람이 해야 할 일이 남습니다(손글씨: manifest sha384 바꾸기, 락업: 오프라인 HTML·EXE 다시 만들기, 경계: 원자료를 레포 밖에서 받기). ' +
+            '락업만 --check 가 있고 나머지 둘은 "원자료로 다시 만들면 지금 vendor 파일과 같은가" 를 확인할 길이 없어, 생성물이 손으로 고쳐져도 드러나지 않습니다.',
+        },
+      ],
+    }),
+
+    sec({
       id: 'tool-misc',
       category: CAT,
       group: '기타 도구',
       title: '패키징과 1회성 자산 도구',
-      subtitle: 'pack.ps1 · clean.bat · make-sample-files.py · recolor-calico-sprites.js',
+      subtitle: 'clean.bat · make-sample-files.py · recolor-calico-sprites.js · clean-sprite.ps1',
       summary:
-        '배포 묶음 만들기(pack.ps1/pack.bat), 산출물 정리(clean.bat), 샘플 파일 생성(make-sample-files.py), ' +
-        '픽셀 펫 스프라이트 리컬러(recolor-calico-sprites.js) 같은 주변 도구들입니다. 앱에 로드되지 않습니다.',
+        '산출물 정리(clean.bat), 샘플 파일 생성(make-sample-files.py), 픽셀 펫 스프라이트 리컬러(recolor-calico-sprites.js)·테두리 정리(clean-sprite.ps1) 같은 주변 도구들입니다. ' +
+        '앱에 로드되지 않습니다. 배포 묶음(pack.ps1)은 "버전과 배포 묶음" 섹션으로 옮겼습니다.',
       usage: [
         {
           title: '샘플 생성기',
           body:
-            'tools/make-sample-files.py(1,235줄)가 테스트·시연용 문서를 만듭니다. 각 형식을 실제로 열어 보는 회귀 확인에 쓰입니다.',
+            `tools/make-sample-files.py${sampleLines ? `(${formatLines(sampleLines)}줄)` : ''}가 테스트·시연용 문서를 만듭니다. 각 형식을 실제로 열어 보는 회귀 확인에 쓰입니다.`,
         },
         {
           title: '1회성 자산 도구',
@@ -384,12 +527,12 @@ export default ({ manifest, helpers, diagrams, rootDir }) => {
         },
       ],
       features: [
-        { title: 'pack', body: '배포용 묶음을 만듭니다.' },
         { title: 'clean', body: '생성 산출물을 지웁니다.' },
+        { title: 'clean-sprite', body: '사진을 픽셀로 바꾼 스프라이트에 남는 흰 테두리를 지웁니다. 의도한 그림(기둥·벽·그림자)은 건드리지 않게 단계를 나눴고, -Backup 으로 원본을 남길 수 있습니다.' },
       ],
       files: [
-        { path: 'pack.ps1', label: 'pack.ps1', description: '배포 묶음' },
         { path: 'clean.bat', label: 'clean.bat', description: '산출물 정리' },
+        { path: 'tools/clean-sprite.ps1', label: 'clean-sprite.ps1', description: '스프라이트 흰 테두리 정리' },
         { path: 'tools/make-sample-files.py', label: 'make-sample-files.py', description: '샘플 파일 생성기' },
         { path: 'tools/recolor-calico-sprites.js', label: 'recolor-calico-sprites.js', description: '1회성 스프라이트 리컬러' },
       ],

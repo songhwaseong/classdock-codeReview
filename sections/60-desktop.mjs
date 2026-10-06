@@ -7,7 +7,20 @@
 // 코드 안의 잘 안 변하는 문자열(함수 이름·라우팅 경로)을 앵커로 두고 생성 때 다시 찾는다.
 // 앵커를 못 찾으면 조용히 넘어가지 않고 생성 스크립트가 경고한다.
 
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { anchoredRange, linesLabel } from '../lib/source-metrics.mjs';
+import { collectLauncherRoutes } from '../lib/endpoint-check.mjs';
+
+// 두 런처가 아는 능력 프로브(/can-proxy-* · /can-run-*)를 센다 — Go 폴백에서 빠지는 기능 목록을 손으로 적지 않기 위해.
+const probes = (rootDir, relativePath) => {
+  try {
+    const text = readFileSync(path.join(rootDir, relativePath), 'utf8');
+    return [...new Set([...text.matchAll(/"(\/can-(?:proxy|run)-[a-z-]+)"/g)].map((m) => m[1]))].sort();
+  } catch {
+    return null;
+  }
+};
 
 // 앵커를 찾지 못한 구간. 생성 스크립트가 이 목록을 경고로 찍는다.
 export const brokenAnchors = [];
@@ -18,6 +31,13 @@ export default ({ helpers, diagrams, rootDir }) => {
   // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs 의 이유 참고).
   const workerLines = linesLabel(rootDir, 'desktop/db_worker.py');
   const launcherLines = linesLabel(rootDir, 'desktop/launcher.cs');
+  const csProbes = probes(rootDir, 'desktop/launcher.cs');
+  const goProbes = probes(rootDir, 'desktop/main.go');
+  const csOnly = csProbes && goProbes ? csProbes.filter((p) => !goProbes.includes(p)) : null;
+  const csRoutes = collectLauncherRoutes(rootDir);
+  let goRoutes = null;
+  try { goRoutes = (readFileSync(path.join(rootDir, 'desktop/main.go'), 'utf8').match(/HandleFunc\("\//g) || []).length; } catch { /* 문장에서 숫자를 뺀다 */ }
+  const routeGap = csRoutes && goRoutes ? ` — 라우팅 경로가 C# ${csRoutes.size}개, Go ${goRoutes}개입니다` : '';
 
   /**
    * @param label       화면에 보일 구간 이름
@@ -201,6 +221,15 @@ export default ({ helpers, diagrams, rootDir }) => {
           body:
             '지도 스냅샷의 sandbox iframe 은 Origin: null 로 /tile-proxy 만 호출합니다. 이 경로만 예외로 두고, 대신 별도의 목적지 allowlist 로 보호합니다.',
         },
+        {
+          title: '토큰을 다시 받는 입구 — /local-token',
+          body:
+            'ClassDock.exe 를 다시 시작하면 토큰이 바뀌는데, 이미 열린 창은 예전 토큰을 들고 있어 모든 저장·실행이 403 이 됩니다. 그 창이 새로고침 없이 새 토큰을 받아 가는 경로입니다. ' +
+            '토큰 없이 열리는 대신 X-ClassDock-Action 사용자 정의 헤더를 요구합니다 — 다른 사이트에서 이 헤더를 붙이면 사전 요청(OPTIONS)이 필요한데 런처는 /tile-proxy 말고는 사전 요청을 허락하지 않고, ' +
+            'Origin 검사도 먼저 걸립니다. 주석의 논리대로 앱 페이지(GET /)가 이미 토큰을 담아 주므로 새로 여는 권한은 없습니다. ' +
+            '받는 쪽은 state-sync.js 의 fetch 감싸기입니다 — 403 local-token-required 를 받으면 새 토큰을 한 번만 받아 다시 보내고, 다시 보낼 수 없는 요청(본문 스트림)이나 호출자가 토큰을 직접 넣은 요청은 재시도하지 않습니다. ' +
+            '같은 재시작으로 런처 메모리의 원본 폴더 번호도 사라지므로, 그 경우는 409 source-folder-unknown 으로 잘못된 경로(400)와 갈라 알려 창이 경로로 다시 연결하게 합니다.',
+        },
       ],
       features: [
         { title: '무단 요청 본문 미판독', body: '인증 실패 요청은 본문을 읽지 않습니다. 큰 무단 요청으로 메모리·I/O 를 점유하는 것을 막습니다.' },
@@ -211,8 +240,10 @@ export default ({ helpers, diagrams, rootDir }) => {
       files: [
         L('launcher.cs (인증 판정)', { from: 'static bool TokenEquals', before: 4, to: 'static bool IsImageMemoExtension', after: -1 }, 'TokenEquals · HasAllowedLocalHost · HasAllowedLocalOrigin · RequiresLocalAuthToken'),
         L('launcher.cs (요청 처리 진입)', { from: '지도 스냅샷의 sandbox iframe', before: 40, lines: 116 }, '인증 적용과 tile-proxy 예외'),
+        L('launcher.cs (토큰 다시 받기)', { from: 'else if (method == "GET" && path == "/local-token")', lines: 14 }, '/local-token — 재시작 뒤 열린 창이 새 토큰을 받는 입구'),
         { path: 'tests/local-server-security.test.js', label: 'local-server-security.test.js', description: '로컬 API 보안 계약 테스트' },
-        { path: 'src/js/state-sync.js', label: 'state-sync.js', description: '프런트에서 토큰을 붙이는 쪽' },
+        { path: 'src/js/state-sync.js', label: 'state-sync.js', description: '프런트에서 토큰을 붙이는 쪽 · 재시작 뒤 새 토큰으로 한 번 다시 보내기' },
+        { path: 'tests/launcher-restart-recovery.test.js', label: 'launcher-restart-recovery.test.js', description: '새 토큰 한 번만 · 다시 못 보낼 요청은 그대로 · 모르는 폴더 번호면 경로로 다시 연결' },
       ],
       notes: [
         {
@@ -245,7 +276,10 @@ export default ({ helpers, diagrams, rootDir }) => {
           label: 'Risk',
           body:
             'RequiresLocalAuthToken 이 문자열 비교와 StartsWith 의 긴 목록입니다. 새 엔드포인트를 추가하면서 여기 등록을 잊으면 인증 없이 열립니다 — ' +
-            '기본이 "토큰 불필요"이고 예외를 열거하는 구조라 실수의 방향이 위험한 쪽입니다. 기본을 반대로(모두 필요, 공개 목록만 예외) 두는 편이 안전합니다.',
+            '기본이 "토큰 불필요"이고 예외를 열거하는 구조라 실수의 방향이 위험한 쪽입니다. 기본을 반대로(모두 필요, 공개 목록만 예외) 두는 편이 안전합니다. ' +
+            '실제로 2026-10 기준 /subway-arrival? 이 그렇게 빠졌습니다 — 같은 키·같은 한도를 쓰는 /subway-position? 은 목록에 있는데 새로 생긴 쪽만 등록되지 않았습니다(실시간 교통 대리 수신 섹션). ' +
+            '같은 모양의 틈이 2026-09-14 에도 하나 막혔습니다: /local-file? 의 토큰 규칙이 GET 에만 걸려 있었는데 라우팅은 메서드를 가리지 않아, POST 로 보내면 토큰 없이 로컬 파일을 읽을 수 있었습니다. ' +
+            '"규칙은 메서드+경로, 라우팅은 경로만" 이라는 어긋남이 생길 수 있는 것도 목록 방식의 약점입니다.',
         },
         {
           type: 'risk',
@@ -303,6 +337,13 @@ export default ({ helpers, diagrams, rootDir }) => {
             '작업공간 저장을 "전체 읽기 → 항목별 파싱 → 직렬화 → ToArray" 에서 레코드 위치만 기억하고 1MB 버퍼로 흘려 쓰는 RewriteWorkspace 로 바꿨습니다. ' +
             '예전 방식은 최종 크기의 4~5배를 한꺼번에 잡아 상한을 올릴 수 없었다는 이유가 주석에 있고, 그 덕에 자동복원 상한이 256MB → 512MB 로 올라갔습니다. ' +
             '교체는 임시 파일 → File.Replace 이고, 실패해도 원본을 지우거나 직접 덮어쓰는 우회를 하지 않습니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '/save-file 이 쓸 수 없는 경로(.. · 콜론 같은 Windows 금지 문자)를 받으면 기본 이름 practice.py 로 바꿔 저장해, 기존 practice.py 를 조용히 덮어쓰던 문제가 2026-09-14 에 고쳐졌습니다. ' +
+            '지금은 이름을 아예 안 보냈을 때만 기본 이름을 쓰고, 보냈는데 못 쓰는 경로는 400 invalid-save-path 로 거절해 호출부가 다른 저장 방식으로 넘어갑니다. "잘못된 입력을 그럴듯한 기본값으로 바꾸지 않는다" 가 저장에서는 특히 맞습니다.',
         },
         {
           type: 'risk',
@@ -612,7 +653,7 @@ export default ({ helpers, diagrams, rootDir }) => {
       title: '지도 타일·장소 검색 라우팅',
       subtitle: '브라우저가 지도 서버를 직접 부르지 않게 하는 여덟 경로',
       summary:
-        '지도 문서가 바깥을 보는 지점은 배경 타일과 장소 검색 둘뿐이고, EXE 로 돌 때는 둘 다 이 라우팅을 거칩니다. ' +
+        '지도 문서 자체가 바깥을 보는 지점은 배경 타일과 장소 검색이고, EXE 로 돌 때는 둘 다 이 라우팅을 거칩니다(실시간 교통·항공·여객선·날씨·장날·통계 층은 따로 아래 섹션들의 경로를 씁니다). ' +
         '런처 한 곳에서 목적지 허용 목록·요청 간격·API 키·디스크 캐시를 통제하므로, 브라우저 쪽에는 키도 호스트 목록도 남지 않습니다.',
       usage: [
         {
@@ -660,8 +701,9 @@ export default ({ helpers, diagrams, rootDir }) => {
           type: 'good',
           label: 'Good',
           body:
-            '"인터넷이 필요한 지점"이 여덟 경로로 모여 있습니다. 지도 기능이 아무리 커져도 바깥과 닿는 면은 여기만 보면 되고, ' +
-            '허용 목록·요청 간격·키가 모두 이 한 파일에 있습니다.',
+            '타일·검색의 "인터넷이 필요한 지점"이 여덟 경로로 모여 있고, 허용 목록·요청 간격·키가 모두 이 한 파일에 있습니다. ' +
+            '그 뒤 붙은 층들도 이 원칙을 따라 런처를 거치는데, 한국 둘레 바람(weather-wind.js → api.open-meteo.com)만 브라우저가 직접 부르는 예외입니다. ' +
+            '그래서 "바깥과 닿는 면은 launcher.cs 만 보면 된다" 는 말에는 이제 그 한 줄의 단서가 붙습니다.',
         },
         {
           type: 'info',
@@ -677,11 +719,13 @@ export default ({ helpers, diagrams, rootDir }) => {
       id: 'launcher-transit',
       category: CAT,
       group: '지도',
-      title: '실시간 교통 대리 수신 — 서울 지하철 · 제주 버스',
-      subtitle: '인증키를 브라우저에 두지 않고, 조회 한도와 남의 사이트 부담을 런처 한 곳에서 묶는다',
+      title: '실시간 교통 대리 수신 — 서울 지하철 · 전국 버스(TAGO)',
+      subtitle: '인증키를 브라우저에 두지 않고, 조회 한도를 런처 한 곳에서 묶는다',
       summary:
-        '지도의 실시간 열차·버스 층이 바깥을 보는 경로입니다. 지하철은 서울시 realtimePosition API 를 인증키로 부르고, 제주 버스는 제주 버스정보 사이트의 조회 네 가지를 부릅니다. ' +
-        '둘 다 원격 주소를 프런트에서 받지 않고 호스트·경로·메서드를 고정하며, 응답 크기 상한과 짧은 캐시를 두어 한 교실의 여러 화면이 같은 노선을 봐도 상류 호출을 한 번으로 묶습니다.',
+        '지도의 실시간 열차·버스 층이 바깥을 보는 경로입니다. 지하철은 서울시 realtimePosition·realtimeStationArrival API 를 지하철 키로 부르고, ' +
+        '버스는 공공데이터포털 일반 인증키로 TAGO(국가대중교통정보센터)의 노선·위치·도착·근처 정류장 조회를, 서울만은 TAGO 에 없어 서울시 버스정보 API 를 부릅니다. ' +
+        '둘 다 원격 주소를 프런트에서 받지 않고 호스트·조회 종류를 고정하며, 응답 크기 상한과 짧은 캐시를 두어 한 교실의 여러 화면이 같은 노선을 봐도 상류 호출을 한 번으로 묶습니다. ' +
+        '버스 분기는 이제 항공·여객선·날씨·장날 조회와 같은 사슬·같은 캐시를 나눠 씁니다(/jeju-bus-* 라는 이름은 제주 사이트만 보던 시범 때 것).',
       usage: [
         {
           title: '지하철 API 는 https 를 받지 않는다',
@@ -692,68 +736,249 @@ export default ({ helpers, diagrams, rootDir }) => {
         {
           title: '오류도 HTTP 200 으로 온다',
           body:
-            '본문의 code 로 가릅니다 — INFO-000 정상, INFO-100 키 오류, INFO-200 자료 없음. INFO-200 은 "지금 이 노선에 열차가 없다" 는 정상 답이라 그대로 내보내고, ' +
-            '키 저장 시 시험 조회도 심야의 INFO-200 을 "키는 멀쩡하다" 로 받아들입니다. 환율 API 에서 이미 한 번 겪은 함정이라는 기록이 있습니다.',
+            '본문의 code 로 가릅니다 — INFO-000 정상, INFO-100 키 오류, INFO-200 자료 없음, ERROR-337 하루 한도 초과. INFO-200 은 "지금 이 노선에 열차가 없다" 는 정상 답이라 그대로 내보내고, ' +
+            '키 저장 시 시험 조회도 심야의 INFO-200 을 "키는 멀쩡하다" 로 받아들입니다. TAGO 도 같은 함정이라(HTTP 200 + 본문 resultCode) 버스 쪽은 00 정상 · 03 자료 없음만 통과시키고 ' +
+            '22 는 한도, 20·30·31·32 와 게이트웨이의 XML·401·403 거절은 키 문제로 읽습니다. 서울 버스는 msgHeader.headerCd(0 · 4 · 5~7 · 8)로 같은 갈래를 만듭니다.',
         },
         {
           title: '키는 DPAPI 로 사용자 계정에 묶는다',
           body:
             '"기억하기" 를 고르면 ProtectedData(CurrentUser) 로 암호화해 LocalAppData 에 임시 파일 → 교체로 씁니다. 기억하지 않으면 파일을 지우고 메모리에만 둡니다. ' +
-            '키를 지우면 그 키로 받아 둔 캐시도 함께 비웁니다. 키 상태·저장·삭제는 토큰에 더해 X-ClassDock-Action 헤더를 요구합니다.',
+            '키를 바꾸거나 지우면 그 키로 받아 둔 캐시와 그 키로 난 오류도 함께 비웁니다. 키 상태·저장·삭제는 토큰에 더해 X-ClassDock-Action 헤더를 요구합니다. ' +
+            '지하철 키는 2호선 시험 조회를 통과해야 저장되지만, 공공데이터포털 키는 형식만 봅니다 — 활용신청이 서비스마다 따로라 버스로 시험하면 항공·여객선만 신청한 정상 키를 거절하기 때문입니다.',
         },
         {
-          title: '제주 버스: 같은 조회는 한 줄로 세운다',
+          title: '버스: 같은 조회는 한 줄로 세운다',
           body:
-            '조회 키(종류:값)를 16개 잠금 중 하나에 배정해, 같은 노선을 여러 화면이 동시에 물으면 앞 요청이 끝날 때까지 기다렸다가 그 결과를 받습니다. ' +
-            '캐시는 위치 30초·노선·정류장·경로 24시간이고 항목 100개를 넘으면 가장 오래 안 쓴 것부터 버립니다. 새로고침 요청도 30초 안에는 상류를 다시 부르지 않습니다.',
+            '조회 키(종류:도시:값)를 16개 잠금 중 하나에 배정해, 같은 노선을 여러 화면이 동시에 물으면 앞 요청이 끝날 때까지 기다렸다가 그 결과를 받습니다. ' +
+            '캐시는 위치 30초 · 도착 예정 20초 · 노선·정류장 하루이고 항목 100개를 넘으면 가장 오래 안 쓴 것부터 버립니다. 새로고침 요청도 30초 안에는 상류를 다시 부르지 않습니다.',
         },
         {
-          title: '실패하면 늦게, 그러나 마지막 위치는 알린다',
+          title: '실패하면 늦게, 고칠 일이면 기다리지 않는다',
           body:
-            '상류가 Retry-After 를 주면 30초~24시간 범위에서 따르고, 실패한 동안에는 2분 이내 위치 캐시를 X-ClassDock-Bus-Stale: 1 로 내줍니다. ' +
-            '원본 수신 시각은 X-ClassDock-Bus-Fetched-At 으로 보존해, 캐시를 다시 전달해도 새 관측으로 보이지 않게 합니다.',
+            '키 문제는 428, 한도는 429, 그 밖은 503 으로 돌려주고 본문에 까닭(bus-key-invalid 등)을, X-ClassDock-Bus-Upstream 에 상류가 준 코드를 싣습니다. ' +
+            '다음 시도는 한도 30분 · 키 문제 1분 · 그 밖 30초 뒤이고, 상류가 Retry-After 를 주면 30초~24시간 범위에서 따릅니다. ' +
+            '연결 실패 동안에는 2분 이내 위치 캐시를 X-ClassDock-Bus-Stale: 1 로 내주지만, 키·한도 문제일 때는 낡은 위치로 덮지 않습니다 — 기다려도 풀리지 않는 일이라 화면이 까닭을 알려야 하기 때문입니다.',
+        },
+        {
+          title: '노선 목록 최신화는 별도 일꾼으로',
+          body:
+            '도시별 노선 목록은 사용자가 단추를 눌렀을 때만 백그라운드 스레드 하나로 받습니다. 번호 없이 한 번 물어 충분하면 끝, 모자라면 1~9 로 나눠 묻고(서울은 0~9), ' +
+            '결과가 화면이 정한 최소 개수보다 적으면 예전 목록을 그대로 둡니다. 조회 캐시를 거치지 않고 LocalAppData 에 도시별 파일로 남기며, 시작·취소는 X-ClassDock-Action 을 요구합니다.',
         },
       ],
       features: [
-        { title: '지하철 캐시', body: '노선마다 한 칸, 12초 신선 · 받기 실패 시 1분 이내 값. 하루 1,000회 한도라 캐시가 절약이 아니라 필수라는 주석이 있습니다.' },
-        { title: '노선 허용 목록', body: '노선 이름이 URL 경로에 들어가므로 16개 목록에 있는 것만 통과. 표·main.go 와 같은 목록인지 테스트가 봅니다.' },
-        { title: '응답 상한', body: '지하철 512KB · 제주 위치 2MB · 제주 노선·정류장·경로 5MB. 제한 시간 12초, 제주 요청은 리다이렉트를 따라가지 않습니다.' },
-        { title: '능력 프로브', body: '/can-proxy-subway · /can-proxy-jeju-bus. 지하철은 Go 폴백 런처에도 있고, 제주 버스는 C# 런처에만 있습니다.' },
+        { title: '지하철 캐시', body: '위치는 노선마다 한 칸, 12초 신선 · 받기 실패 시 1분 이내 값. 역별 도착은 20초이고 낡은 값을 대신 내주지 않습니다(도착 예정은 1분만 지나도 틀린 말).' },
+        { title: '노선·역 허용 목록', body: '노선 이름이 URL 경로에 들어가므로 16개 목록에 있는 것만 통과. 표·main.go 와 같은 목록인지 테스트가 봅니다. 역 이름은 한글·숫자·영문·괄호 등 30자로 거릅니다.' },
+        { title: '버스 값 검사', body: 'ValidJejuBusValue 가 조회 종류마다 모양을 정합니다 — 노선 번호 20자(마을1·B1 허용), ID 30자, 근처 정류장은 대한민국 범위 좌표를 소수 넷째 자리로 잘라 캐시가 잘게 갈라지지 않게.' },
+        { title: '응답 상한', body: '지하철 512KB · 버스 위치 2MB · 그 밖 5MB. 제한 시간 12초, 버스 요청은 리다이렉트를 따라가지 않습니다.' },
+        { title: '능력 프로브', body: '/can-proxy-subway · /can-proxy-jeju-bus. 지하철(위치·도착)은 Go 폴백 런처에도 있고, 버스는 C# 런처에만 있습니다.' },
       ],
       files: [
-        L('launcher.cs (교통 라우팅)', { from: 'else if (method == "GET" && path == "/can-proxy-jeju-bus")', before: 1, to: 'else if (method == "DELETE" && path == "/subway-key")', after: 10 }, '/jeju-bus-* · /subway-position · /subway-key*'),
-        L('launcher.cs (지하철 대리 수신)', { from: '===== 지하철 실시간 열차 위치 =====', to: '// 제주 사이트 시범 연결.', after: -1 }, '노선 목록·키 보관(DPAPI)·결과 코드·캐시'),
-        L('launcher.cs (제주 버스 대리 수신)', { from: '// 제주 사이트 시범 연결.', to: 'static bool TryProxyMapTile(string url, out byte[] data, out string mime)', after: -1 }, '조회 네 가지·잠금 16개·캐시 100개·Retry-After'),
+        L('launcher.cs (버스 라우팅)', { from: 'else if (method == "GET" && (path == "/can-proxy-jeju-bus"', to: 'else if (method == "DELETE" && path == "/tago-key")', after: 10 }, '/jeju-bus-* · /jeju-bus-catalog* · /tago-key* — 항공·여객선·날씨·장날도 같은 분기'),
+        L('launcher.cs (지하철 라우팅)', { from: 'else if (method == "GET" && path == "/can-proxy-subway")', to: 'else if (method == "DELETE" && path == "/subway-key")', after: 10 }, '/subway-position · /subway-arrival · /subway-key*'),
+        L('launcher.cs (지하철 대리 수신)', { from: '===== 지하철 실시간 열차 위치 =====', to: '/* 버스 = TAGO(', after: -1 }, '노선 목록·키 보관(DPAPI)·결과 코드·캐시·역별 도착'),
+        L('launcher.cs (버스 대리 수신)', { from: '/* 버스 = TAGO(', to: '/* NEIS 교육정보 개방 포털', after: -1 }, 'TAGO·서울 버스 조회·잠금 16개·캐시 100개·결과 코드 — 항공·날씨 조회 도우미 포함'),
+        L('launcher.cs (공공데이터포털 키 · 노선 목록)', { from: '// 공공데이터포털 일반 인증키. tago 이름과 파일은', to: 'static bool TryProxyMapTile(string url, out byte[] data, out string mime)', after: -1 }, '키 보관(DPAPI)·캐시 비우기·노선 목록 최신화 일꾼'),
         { path: 'tests/subway-stations.test.js', label: 'subway-stations.test.js', description: '노선 목록이 표·main.go·launcher.cs 세 곳에서 같은지' },
-        { path: 'tests/jeju-bus-controller.test.js', label: 'jeju-bus-controller.test.js', description: '런처 캐시 시각·Retry-After 보존' },
+        { path: 'tests/jeju-bus-controller.test.js', label: 'jeju-bus-controller.test.js', description: '런처 캐시 시각·Retry-After 보존, 키 없음·한도 안내' },
+        { path: 'docs/API-인증키-안내.md', label: 'API-인증키-안내.md', description: '기능별로 어떤 키·어떤 활용신청이 필요한지 — 공공데이터포털 키 하나가 버스·날씨·장날·항공·여객선을 함께 연다' },
       ],
       notes: [
         {
           type: 'good',
           label: 'Good',
           body:
-            '두 대리 수신 모두 "원격 URL 을 입력받지 않는다" 를 지킵니다. 지하철은 노선 이름을 목록으로, 제주 버스는 조회 종류를 네 가지로·값을 숫자(노선 검색만 하이픈 허용) 12자로 좁히고, ' +
-            '제주 요청은 AllowAutoRedirect=false 로 리다이렉트를 통한 목적지 변경까지 막았습니다. /tile-proxy 가 허용 호스트 목록으로 막은 것과 같은 결의 방어입니다.',
+            '두 대리 수신 모두 "원격 URL 을 입력받지 않는다" 를 지킵니다. 지하철은 노선 이름을 목록으로, 버스는 조회 종류를 정해 둔 것으로·값을 종류별 모양으로 좁히고 ' +
+            '호스트(apis.data.go.kr · ws.bus.go.kr)를 상수로 고정했으며, AllowAutoRedirect=false 로 리다이렉트를 통한 목적지 변경까지 막았습니다. /tile-proxy 가 허용 호스트 목록으로 막은 것과 같은 결의 방어입니다.',
         },
         {
           type: 'good',
           label: 'Good',
           body:
-            '제주 응답을 캐시에 넣기 전에 JavaScriptSerializer 로 파싱해 종류별 모양(정류장 목록 배열·차량 배열·노선 배열)을 확인합니다. 잘못된 JSON 이나 오류 페이지를 24시간 캐시하는 사고를 막습니다.',
+            '"기다리면 풀리는 실패" 와 "사람이 고쳐야 하는 실패" 를 런처에서 갈라 HTTP 상태로 넘깁니다. 화면은 428·429 를 받으면 "다시 시도하는 중" 이라고 하지 않고 ' +
+            '활용신청·키 설정을 안내하며, 테스트("인증키가 없으면 다시 시도한다고 하지 않고 설정을 안내한다")가 그 약속을 지킵니다. 지하철도 ERROR-337 을 subway-quota 로 따로 알려, ' +
+            '한도가 떨어진 오후에 "열차 정보를 받지 못했어요" 로만 보이던 빈틈이 메워졌습니다.',
         },
         {
           type: 'risk',
           label: 'Risk',
           body:
-            '제주 버스 잠금은 네트워크 호출(최대 12초) 동안 잡혀 있고, 잠금이 16개뿐이라 해시가 같은 칸에 떨어진 서로 다른 노선도 그동안 기다립니다. ' +
-            'HTTP 요청마다 스레드를 쓰는 런처라 상류가 느린 날에는 대기 스레드가 쌓입니다. 한 교실 규모에서는 문제가 되지 않을 크기지만, 조회 키별 진행 중 작업을 공유하는 방식이 더 정확한 도구입니다.',
+            '이름이 실제 범위를 따라가지 못했습니다. TryJejuBus · JejuBusCache · ValidJejuBusValue 와 /jeju-bus-* 경로가 지금은 전국 버스뿐 아니라 항공·여객선·날씨·태풍·특일·장날까지 받고, ' +
+            '한 줄짜리 삼항 사슬이 경로 → 종류 → 값을 정합니다. 주석이 "이름은 그때 것" 이라고 밝혀 두었지만, 새 조회를 붙일 때마다 이 사슬과 검사 함수와 TTL 식 세 곳을 함께 고쳐야 하는 구조입니다. ' +
+            '종류별 {경로, 값 읽기, 검사, TTL, 상류 호출} 을 표 하나로 모으면 세 곳이 한 줄이 됩니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '캐시 100칸과 잠금 16개를 버스·항공·여객선·날씨·장날이 나눠 씁니다. 하루짜리 항목(노선·정류장·특일·장날)과 30초짜리 위치가 같은 LRU 에 있어, 날씨·장날 쪽을 훑으면 보던 노선 정보가 밀려날 수 있고, ' +
+            '잠금은 여전히 상류 호출(최대 12초) 동안 잡혀 해시가 같은 칸에 떨어진 다른 조회도 기다립니다. 한 교실 규모에서는 드러나지 않을 크기지만, 종류별로 칸을 나누거나 조회 키별 진행 중 작업을 공유하는 편이 맞습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '서울 버스 API 는 https 를 받지 않아 serviceKey 가 http URL 에 평문으로 실립니다. 지하철도 같은 사정이지만 그 키는 지하철만 여는 반면, 이 키는 버스·항공·여객선·날씨까지 여는 공공데이터포털 일반 인증키입니다. ' +
+            '제공처 사정이라 피할 수는 없으니, 설정 화면이나 인증키 안내 문서에 "서울 버스를 쓰면 이 키가 평문으로 나간다" 는 점을 적어 두는 편이 정직합니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'RequiresLocalAuthToken 의 GET 목록에 /subway-position? 은 있는데 새로 생긴 /subway-arrival? 이 빠져 있습니다. 같은 키·같은 하루 1,000회 한도를 쓰는 조회라 토큰 규칙이 갈릴 이유가 없고, ' +
+            '화면의 fetch 는 state-sync.js 가 토큰을 자동으로 붙이므로 목록에 넣어도 바뀌는 것이 없습니다. 지금은 Origin 검사만 남아 있어, Origin 을 보내지 않는 요청은 포트만 알면 사용자의 한도를 쓸 수 있습니다.',
         },
         {
           type: 'info',
           label: 'Info',
           body:
-            '지하철 조회 예산은 화면 15초 · 런처 12초 캐시로 한 노선을 4시간 남짓 볼 수 있는 계산입니다(하루 1,000회). 여러 시간 연속으로 켜 두는 교실이나 여러 노선을 번갈아 보는 수업에서는 ' +
-            '오후에 한도가 떨어질 수 있고, 그때 화면은 "열차 정보를 받지 못했어요" 로만 보입니다 — 한도 소진을 구분하는 결과 코드 처리는 없습니다.',
+            '버스 응답의 모양 검사는 런처에서 화면으로 옮겨졌습니다. 런처는 결과 코드와 body 유무만 보고 캐시하며, 항목 모양(item 이 배열인가·좌표가 있는가)은 jeju-bus-api.js 의 rows() 가 확인해 ' +
+            'bus-invalid-data 로 던집니다. 지하철 조회 예산은 그대로 화면 15초 · 런처 12초 캐시로 한 노선을 4시간 남짓 볼 수 있는 계산입니다(하루 1,000회).',
+        },
+      ],
+    }),
+
+    sec({
+      id: 'launcher-world-wind',
+      category: CAT,
+      group: '지도',
+      title: '세계·상층 바람 — NOAA GFS 원자료 받기와 GRIB2 해독',
+      subtitle: 'desktop/world_wind.cs — 외부 라이브러리 없이, 틀린 바람을 보이느니 실패한다',
+      summary:
+        '지도 바람 창의 "세계" 범위와 850·500·250hPa 상층 바람은 런처가 NOAA GFS 1° 원자료를 받아 해독해 /world-wind-* 로 줍니다. ' +
+        '공개 S3 버킷에서 예보 하나(수백 MB)를 통째로 받지 않고, 색인(.idx)을 읽어 필요한 필드(u·v 바람·기온·지표 기압·해면기압)의 바이트 구간만 HTTP Range 로 받습니다. ' +
+        '해독한 프레임은 디스크에 담아 다시 씁니다.',
+      usage: [
+        {
+          title: '해독기를 직접 — 그러나 범위를 좁혀',
+          body:
+            'GFS 1° 정규 위경도 격자와 NCEP 표의 템플릿 몇 가지(3.0 · 4.0 · 5.0/5.2/5.3 · 7.0/7.2/7.3)만 받습니다. 모르는 압축 방식이나 앞뒤가 안 맞는 메타데이터는 "틀린 바람을 보이느니 실패한다" 로 거절합니다(fail closed). ' +
+            '머리말 첫 줄이 그 원칙이고, 테스트가 기준 구현(ecCodes)과 전 지구 격자점을 대조합니다.',
+        },
+        {
+          title: '받는 쪽도 믿지 않는다',
+          body:
+            '주소는 발표 시각(6시간 단위, 48시간 이내)·예보 시간(3시간 단위, 72시간까지)·기압면(10m·850·500·250)을 검사한 뒤에만 만들고, 리다이렉트를 따라가지 않습니다. ' +
+            'Range 응답은 206 과 Content-Range 가 요청과 같은지, 길이가 정확한지, 상한(필드 하나 4MB)을 넘지 않는지 봅니다. 실패한 프레임은 5분 동안 다시 묻지 않습니다.',
+        },
+      ],
+      features: [
+        { title: '디스크 캐시', body: '%LOCALAPPDATA% 아래 프레임별 .bin. 128MB 를 넘거나 72시간 지난 것부터 지웁니다. 읽을 때 크기·머리·시각이 맞는지 다시 확인합니다.' },
+        { title: '능력 프로브', body: '/can-proxy-world-wind. C# 런처에만 있고, 브라우저로 그냥 열면 "최신 Windows ClassDock.exe 에서" 라고 안내합니다.' },
+      ],
+      files: [
+        L('launcher.cs (세계 바람 라우팅)', { from: 'else if (method == "GET" && path == "/can-proxy-world-wind")', to: 'catch (Exception) { WriteResponse(stream, "503 Service Unavailable", "text/plain", Encoding.UTF8.GetBytes("world-wind-network")); }', after: 1 }, '/can-proxy-world-wind · /world-wind-catalog · /world-wind-frame'),
+        { path: 'desktop/world_wind.cs', label: 'world_wind.cs', description: 'GRIB2 해독(WorldWindGrib) · 받기·캐시·프레임 묶기(WorldWindService)' },
+        { path: 'tests/world-wind-desktop.test.js', label: 'world-wind-desktop.test.js', description: 'ecCodes 대조 · 메타데이터·가리기·캐시·재시도 한도 · 세계 경로의 토큰 요구' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '"필요한 바이트만 받는다" 가 정확하게 구현됐습니다. 색인으로 구간을 찾고, 서버가 준 Content-Range 가 요청과 같은지까지 확인해 엉뚱한 필드를 바람으로 읽는 사고를 막습니다. ' +
+            '교실 회선으로 수백 MB 예보 파일을 받지 않게 한 선택이, 받은 것을 검증하는 코드와 함께 들어왔습니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            'Frame() 이 잠금 하나(gate) 안에서 캐시 확인부터 필드 다섯 개 받기(각 최대 20초)까지 합니다. 같은 프레임을 두 번 받지 않는 효과는 있지만, 예보 시각을 빠르게 넘기면 다른 프레임 요청들도 앞 다운로드를 기다립니다. ' +
+            '키별로 진행 중 작업을 공유하면 같은 효과를 내면서 서로 다른 프레임은 함께 받을 수 있습니다.',
+        },
+      ],
+    }),
+
+    sec({
+      id: 'launcher-kosis-neis',
+      category: CAT,
+      group: '공공 데이터',
+      title: 'KOSIS · NEIS 대리 수신 — 통계와 학교 정보',
+      subtitle: '키가 따로인 두 원천을 같은 결로 — 정해 둔 조회와 변수만',
+      summary:
+        '색칠 지도의 KOSIS 가져오기와 일기장의 "우리 학교"(급식·학사일정·시간표)가 바깥을 보는 경로입니다. 둘 다 공공데이터포털 키와 따로인 자기 키를 쓰고, ' +
+        '키는 지하철·공공데이터포털 키와 같은 방식(DPAPI·기억하기·X-ClassDock-Action)으로 보관합니다. 원격 주소는 받지 않고 조회 종류와 변수 이름·모양을 런처가 정합니다.',
+      usage: [
+        {
+          title: 'KOSIS: 조회 셋, 변수는 정규식으로',
+          body:
+            'search(통합검색) · meta(분류·항목·주기) · data(자료) 셋만 묻고, 기관·표 ID·항목·주기·분류 값을 각각 정해 둔 꼴로만 받습니다. jsonVD=Y 를 꼭 붙이는데, 없으면 따옴표 없는 JS 객체 글이 오기 때문입니다. ' +
+            '오류도 HTTP 200 의 {"err":"30"} 꼴이라(30 결과 없음 · 31 4만 셀 넘음 · 40~42 한도) 본문으로 가릅니다.',
+        },
+        {
+          title: 'NEIS: 서비스별 허용 변수 표',
+          body:
+            '서비스 일곱 가지마다 받을 수 있는 변수 이름을 표(NeisServiceParams)로 두고, 변수마다 모양(교육청 코드 · 학교 코드 · 학년 · 날짜 …)을 검사합니다. ' +
+            '키가 없어도 묻되 한 쪽 5줄로 묻고 X-ClassDock-Neis-Sample 로 "샘플" 임을 알립니다. Accept: application/json 을 붙이면 NEIS 가 500 을 준다는 실측도 주석에 있습니다.',
+        },
+      ],
+      features: [
+        { title: '캐시', body: 'KOSIS 하루. NEIS 학교 정보 하루 · 학사일정 12시간 · 급식·시간표 3시간. 샘플과 키 응답은 캐시 칸을 나눕니다.' },
+        { title: '응답 상한', body: 'NEIS 4MB, 제한 시간 15초, 리다이렉트를 따라가지 않습니다.' },
+      ],
+      files: [
+        L('launcher.cs (KOSIS·NEIS 라우팅)', { from: 'else if (method == "GET" && path == "/can-proxy-kosis")', to: 'else if (method == "DELETE" && path == "/neis-key")', after: 10 }, '/kosis · /kosis-key* · /neis · /neis-key*'),
+        L('launcher.cs (NEIS·KOSIS 대리 수신과 키)', { from: '/* NEIS 교육정보 개방 포털', to: '// 공공데이터포털 일반 인증키. tago 이름과 파일은', after: -1 }, '허용 변수 표·샘플 모드·결과 코드·캐시·키 보관(DPAPI)'),
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '"아무 통계표나 검색해 고른다" 는 열린 기능을 런처 쪽에서는 닫힌 조회로 받았습니다. 화면이 고른 표 ID 가 무엇이든 런처가 만드는 주소는 kosis.kr/openapi 아래 정해 둔 셋뿐이고, ' +
+            '변수 하나하나가 정규식을 통과해야 합니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body:
+            '인증키가 넷(지하철 · 공공데이터포털 · KOSIS · NEIS, 여기에 카카오·환율까지 여섯)으로 늘며 보관 코드가 키마다 거의 같은 모양으로 복사돼 있습니다(Current*Key · *KeyStatusJson · SaveProtected*Key · Clear*Key · TrySet*Key). ' +
+            '엔트로피 문자열만 다른 같은 일을 하나의 키 보관 클래스로 묶으면, 다음 키를 더할 때 고칠 자리가 한 줄이 됩니다.',
+        },
+      ],
+    }),
+
+    sec({
+      id: 'launcher-photo-album',
+      category: CAT,
+      group: '사진첩',
+      title: '사진첩 저장소 — /photo-album-*',
+      subtitle: '브라우저 origin 이 바뀌어도 남는 앱 데이터 폴더',
+      summary:
+        '사진첩의 사진·영상·음악 원본과 메타데이터를 %LOCALAPPDATA%\\ClassDock\\photo-album 에 GUID 이름의 .bin · .json 쌍으로 둡니다. ' +
+        '런처는 실행마다 포트가 달라질 수 있어 IndexedDB(origin 별)에 두면 다음 실행에서 사라져 보이기 때문입니다. 읽기·쓰기·지우기 모두 실행별 토큰을 요구합니다.',
+      usage: [
+        {
+          title: '이름은 GUID 로만',
+          body:
+            'PhotoAlbumPath 가 id 를 Guid.TryParse 로만 받아 "N" 꼴로 다시 써서 경로를 만들므로, 어떤 문자열을 보내도 폴더 밖으로 나가지 못합니다. ' +
+            '메타데이터는 JSON 의 id 가 파일 이름과 같고 type 이 image·video·audio·art·album 중 하나일 때만, 원본이 필요한 갈래는 원본이 먼저 있을 때만 씁니다.',
+        },
+        {
+          title: '본문을 읽기 전에 상한',
+          body:
+            '원본 256MB · 메타데이터 512KB 상한을 요청 본문을 읽기 전에 Content-Length 로 봅니다. 쓰기는 원자적으로 하고, 목록 읽기에서 손상된 항목 하나는 건너뛰어 나머지 사진첩을 감추지 않습니다.',
+        },
+      ],
+      files: [
+        L('launcher.cs (사진첩 라우팅)', { from: 'else if (method == "GET" && path == "/photo-album-list")', to: 'else if (method == "POST" && path.StartsWith("/photo-album-delete?", StringComparison.Ordinal))', after: 11 }, '/photo-album-list · file(GET/POST) · meta · delete'),
+        L('launcher.cs (사진첩 저장)', { from: 'static string PhotoAlbumPath(string rawId, string extension)', to: '// origin(포트) 무관 설정 저장소 읽기.', after: -2 }, 'GUID 경로 · 목록 · 원자적 쓰기 · 지우기'),
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '브라우저가 보낸 값을 경로·파일 내용으로 그대로 쓰지 않는 세 겹(GUID 재작성 · 메타데이터의 id·type 대조 · 원본 선행)이 짧은 코드 안에 다 있습니다. ' +
+            '"손상된 항목 하나 때문에 나머지를 감추지 않는다" 는 주석처럼 실패의 범위를 항목 하나로 좁힌 것도 맞습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '이 폴더는 사용자가 볼 수 있는 이름이 하나도 없고(GUID), 앱 백업에도, 작업공간에도 들어가지 않습니다. 저장소 쪽에서 할 수 있는 일은 많지 않지만, ' +
+            '목록·원본을 ZIP 하나로 묶어 주는 내보내기 경로가 생기면 그 첫 받침은 여기입니다(사진첩 섹션의 Risk 와 같은 이야기).',
         },
       ],
     }),
@@ -956,6 +1181,13 @@ export default ({ helpers, diagrams, rootDir }) => {
         {
           type: 'good',
           label: 'Good',
+          body:
+            'ffmpeg 입력·출력 경로와 SQLite 러너 인자에 남아 있던 손 따옴표("\"" + path + "\"")를 QuoteProcessArgument 로 바꿨습니다(2026-09-14). 자바·파이썬 쪽에서 먼저 모은 인용 규칙이 여기까지 넓어진 것이고, ' +
+            '파일 이름에 따옴표·역슬래시가 섞여도 인자가 쪼개지지 않습니다. tests/launcher-arg-quoting.test.js 가 "손으로 붙인 따옴표가 남아 있지 않다" 를 함께 봅니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
           body: '해시 일치를 편집 활성화 조건으로 삼았습니다. "브라우저에서 연 파일"과 "디스크에서 열 파일"이 같음을 확인하는 정확한 방법입니다.',
         },
         {
@@ -1096,7 +1328,7 @@ export default ({ helpers, diagrams, rootDir }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            'launcher.cs 가 이 기능으로 1,200줄 넘게 늘어 9,800줄대가 됐습니다. SSH 는 ssh_terminal.cs 로, 원격 파일은 ssh_files.cs 로 ' +
+            'launcher.cs 가 이 기능으로 1,200줄 넘게 늘었습니다(그때 9,800줄대, 지금은 ' + launcherLines + '). SSH 는 ssh_terminal.cs 로, 원격 파일은 ssh_files.cs 로 ' +
             '갈라 냈는데 DB 는 라우팅과 세션 관리가 모두 launcher.cs 안에 있습니다. ' +
             '워커 쪽 로직이 Python 으로 빠져 C# 쪽이 얇긴 하지만, 클래스 둘(DbSession·DbQueryJob)과 헬퍼 20여 개가 한 파일에 더 얹힌 상태입니다.',
         },
@@ -1190,10 +1422,15 @@ export default ({ helpers, diagrams, rootDir }) => {
         { title: '개폐 제어', body: '선생님이 명시적으로 열고 닫습니다. 상시 열려 있지 않습니다.' },
         { title: '접수 목록', body: '폴링으로 누가 냈는지 실시간 확인합니다.' },
         { title: '폴백', body: '연결 실패 시 학생은 파일 제출로 돌아갑니다.' },
+        { title: '연결 상한', body: '동시 연결 48개를 넘으면 곧바로 503 busy 로 닫고, 연결 하나는 헤더+본문을 20초 안에 다 보내야 합니다(읽기 한 번 10초). 학생 앱은 503 이면 잠시 뒤 두 번까지 다시 보냅니다.' },
+        { title: '이름 겹침', body: '파일 이름이 학생 이름 + 초 단위 시각이라, 동명이인이 같은 초에 내면 CreateNew 로 _2 · _3 을 붙여 모두 보존합니다.' },
       ],
       files: [
         L('launcher.cs (제출 수신)', { from: 'method == "GET" && path == "/exam-hello"', before: 40, lines: 137 }, '/exam-hello 와 제출 리스너'),
         L('launcher.cs (수신 개폐)', { from: 'method == "POST" && path == "/exam-receive-start"', before: 2, to: 'method == "POST" && path == "/exam-receive-stop"', after: 12 }, '/exam-receive-start · /exam-receive-stop'),
+        L('launcher.cs (리스너·상한·코드)', { from: 'const int ExamReceiveMaxItems = 300;', before: 7, to: 'static void ExamReceiveWrite(Stream stream, string status, string body)', after: -1 }, '경로 셋 · 상한 · 세션 코드(암호학적 난수) · 수락 루프의 동시 연결 한도'),
+        L('launcher.cs (접수 저장)', { from: 'static string ExamReceiveSaveSubmission(string baseRel, byte[] body)', before: 3, to: 'static void ExamReceiveHandle(TcpClient client)', after: 50 }, '이름 겹침 보존(CreateNew) · 연결 시작과 머리 읽기 기한'),
+        { path: 'tests/exam-receive-limit.test.js', label: 'exam-receive-limit.test.js', description: '루프백에서 실제 수락 루프를 돌려 동시 연결 한도·기한 확인' },
         { path: 'docs/시험지-온라인제출-설계.md', label: '온라인제출-설계.md', description: '설계 문서' },
       ],
       notes: [
@@ -1206,7 +1443,15 @@ export default ({ helpers, diagrams, rootDir }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '6자리 코드는 짧습니다. 같은 LAN 에 있는 학생이 무차별 시도하면 뚫릴 수 있으므로, 시도 횟수 제한이나 코드 회전이 있는지 확인이 필요합니다.',
+            '6자리 코드는 짧습니다. 확인해 보니 시도 제한은 있습니다 — 같은 IP 는 1분에 20번까지만 받고(코드 검사보다 먼저), 코드는 세션을 열 때마다 RNGCryptoServiceProvider 로 새로 뽑습니다. ' +
+            '한 수업(50분) 동안 한 PC 가 맞힐 확률은 0.1% 남짓이라 교실 위협 모델로는 충분합니다. 다만 제한이 "IP 당" 이라 여러 PC 가 함께 시도하면 그만큼 늘고, 틀린 코드를 연달아 보내는 IP 를 선생님 화면에 알리는 장치는 없습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '교실 LAN 에 열린 입구의 자원 한도를 이유와 함께 넣었습니다(2026-09-14) — 연결마다 스레드와 최대 1MB 버퍼가 생기고, 바이트를 조금씩 흘려 읽기 시간 제한을 계속 갱신하는 연결이 오래 버틸 수 있다는 것. ' +
+            '그래서 연결당 전체 기한을 따로 두고, 앱 본체 서버와 스레드 풀을 나눠 LAN 이 몰려도 선생님 화면의 저장·실행이 밀리지 않게 했습니다. 테스트가 루프백에서 실제 수락 루프를 돌려 확인합니다.',
         },
         {
           type: 'risk',
@@ -1223,9 +1468,9 @@ export default ({ helpers, diagrams, rootDir }) => {
       title: 'EXE 빌드와 Go 폴백',
       subtitle: 'csc.exe 우선, 없으면 go build',
       summary:
-        'build.bat 은 세 단계입니다 — ① 오프라인 HTML 을 app.html 로 복사 ② csc.exe 로 launcher.cs · ssh_terminal.cs · ssh_files.cs 를 함께 컴파일하며 ' +
+        'build.bat 은 세 단계입니다 — ① 오프라인 HTML 을 app.html 로 복사 ② csc.exe 로 launcher.cs · ssh_terminal.cs · ssh_files.cs · world_wind.cs(와 버전 정보 AssemblyInfo.generated.cs)를 함께 컴파일하며 ' +
         'app.html·python_kernel.py·db_worker.py·npm_package_runner.js·ssh_shell_integration.bash 를 리소스로 넣기 ③ 결과를 프로젝트 루트의 ClassDock.exe 로 출력. ' +
-        'C# 컴파일러가 없으면 Go 폴백(main.go)으로 빌드하는데, 이때는 PowerPoint 변환과 SSH 원격 터미널이 빠집니다.',
+        'C# 컴파일러가 없으면 Go 폴백(main.go)으로 빌드하는데, Go 쪽은 지도 타일·장소 검색·환율·지하철만 대신 받아 주는 얇은 런처라 파일 저장·Python·Java·변환·SSH·DB·대부분의 지도 층이 빠집니다' + routeGap + '.',
       usage: [
         {
           title: '선행 조건',
@@ -1245,8 +1490,8 @@ export default ({ helpers, diagrams, rootDir }) => {
       ],
       features: [
         { title: '리소스 내장 다섯 개', body: 'app.html · python_kernel.py · db_worker.py · npm_package_runner.js · ssh_shell_integration.bash. 앞의 넷은 실행 대상이고 마지막은 원격 Bash 에 물릴 시작 스크립트입니다.' },
-        { title: '소스 세 벌', body: '컴파일 대상이 launcher.cs → +ssh_terminal.cs → +ssh_files.cs 로 늘었습니다. 리소스가 아니라 함께 컴파일되는 소스입니다.' },
-        { title: '두 배치의 리소스가 다르다', body: 'build.bat 에는 ssh_shell_integration.bash 가 들어 있고 build-dotnet.bat 에는 없습니다.' },
+        { title: '소스 네 벌', body: '컴파일 대상이 launcher.cs → +ssh_terminal.cs → +ssh_files.cs → +world_wind.cs 로 늘었습니다. 리소스가 아니라 함께 컴파일되는 소스입니다. 버전 정보는 tools/release.js 가 만드는 AssemblyInfo.generated.cs 로 들어갑니다.' },
+        { title: '두 배치의 옵션이 다르다', body: 'build.bat 에만 아이콘(/win32icon:classdock.ico) · System.Web.Extensions 참조 · 버전 정보 파일이 있습니다. 소스와 리소스 목록은 이제 같습니다.' },
         { title: 'winexe', body: '/target:winexe 라 콘솔 창이 뜨지 않습니다.' },
         { title: 'build-dotnet.bat', body: 'Go 폴백 없이 C# 만 강제하는 변형입니다.' },
       ],
@@ -1256,6 +1501,7 @@ export default ({ helpers, diagrams, rootDir }) => {
         { path: 'desktop/ssh_files.cs', label: 'ssh_files.cs', description: '세 번째 C# 소스 — 읽기 전용 SFTP' },
         { path: 'desktop/build-dotnet.bat', label: 'build-dotnet.bat', description: 'C# 전용 빌드' },
         { path: 'desktop/main.go', label: 'main.go', description: 'Go 폴백 런처' },
+        { path: 'tests/launcher-parity.test.js', label: 'launcher-parity.test.js', description: '두 런처의 타일 허용 호스트·상한·시간·바깥 주소·User-Agent, JDK 판 번호 짝 맞춤' },
         { path: 'desktop/console_windows.go', label: 'console_windows.go', description: 'Go 빌드의 콘솔 숨김' },
       ],
       notes: [
@@ -1269,20 +1515,30 @@ export default ({ helpers, diagrams, rootDir }) => {
           label: 'Risk',
           body:
             'Go 폴백은 기능이 다른 산출물을 같은 파일명으로 만듭니다. 빌드 로그를 보지 않으면 어느 쪽으로 빌드됐는지 알 수 없어, PowerPoint 변환이 조용히 사라질 수 있습니다. ' +
-            '빠지는 기능은 이제 셋입니다 — PowerPoint 변환·SSH 원격 터미널에 원격 파일과 DB 클라이언트까지, C# 쪽에만 있는 코드가 계속 늘고 있습니다.',
+            '빠지는 기능은 PowerPoint 변환·SSH 원격 터미널·원격 파일·DB 클라이언트에 더해 지도 쪽으로도 계속 늘고 있습니다' +
+            (csOnly && csProbes
+              ? ` — 능력 프로브만 세어도 C# 런처 ${csProbes.length}개 중 ${csOnly.length}개(${csOnly.join(' · ')})가 Go 쪽에 없습니다.`
+              : '.'),
         },
         {
           type: 'risk',
           label: 'Risk',
           body:
-            '두 빌드 배치의 /resource: 목록이 서로 다릅니다 — build.bat 은 ssh_shell_integration.bash 를 넣고 build-dotnet.bat 은 넣지 않습니다. ' +
-            'C# 전용 빌드로 만든 EXE 는 원격 터미널의 현재 폴더 자동 채우기가 조용히 동작하지 않는다는 뜻입니다. ' +
-            '컴파일 명령줄이 두 파일에 손으로 복사돼 있어 한쪽만 고치기 쉬운 구조이고, 이 목록을 대조하는 검사는 없습니다.',
+            '이 리뷰가 짚었던 /resource: 목록 차이(build-dotnet.bat 에 ssh_shell_integration.bash 가 없던 것)는 고쳐졌고, world_wind.cs 를 두 배치에 모두 넣었는지는 테스트가 확인합니다. ' +
+            '하지만 컴파일 명령줄은 여전히 두 파일에 손으로 복사돼 있고 이번에는 다른 데서 갈렸습니다 — build-dotnet.bat 에는 아이콘·System.Web.Extensions 참조·버전 정보 파일이 없습니다. ' +
+            '대조 검사가 "새 소스가 둘 다에 있는가" 만 보므로, 명령줄 전체를 한 곳(예: 공용 .rsp 응답 파일)에 두는 편이 근본적입니다.',
         },
         {
           type: 'risk',
           label: 'Risk',
           body: 'EXE 는 서명되지 않아 SmartScreen 경고가 뜹니다. 배포 대상이 학교라면 이 부분이 실제 도입 장벽이 됩니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '두 런처에 따로 적혀 있던 같은 값(타일 허용 호스트, 프록시 크기·캐시 상한과 시간, 바깥 API 주소·User-Agent, JDK 판 번호)을 짝 맞춤 테스트로 묶었습니다(launcher-parity.test.js). ' +
+            '그 과정에서 C# 의 이름 없는 2MB 를 TileMaxBytes 로 이름 붙였고, Go 주석이 가리키던 틀린 테스트 이름도 바로잡았습니다. 코드가 두 언어로 갈라진 구조의 비용을 테스트로 줄이는 맞는 방향입니다.',
         },
       ],
     }),

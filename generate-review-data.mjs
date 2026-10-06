@@ -18,7 +18,7 @@ import vm from 'node:vm';
 import { collectLauncherRoutes, checkEndpointContracts } from './lib/endpoint-check.mjs';
 import { anchorKey, collectRefs, resolveLineAnchor } from './lib/line-anchor.mjs';
 
-import { createHelpers } from './lib/section.mjs';
+import { createHelpers, brokenModuleRanges } from './lib/section.mjs';
 import {
   buildLayerDiagram,
   buildDependencyDiagram,
@@ -39,11 +39,15 @@ import buildPython from './sections/30-python.mjs';
 import buildJavaScript from './sections/35-javascript.mjs';
 import buildJava from './sections/36-java.mjs';
 import buildEditors from './sections/40-editors.mjs';
+import buildPlay from './sections/44-play.mjs';
 import buildMap from './sections/45-map.mjs';
+import buildMapLayers from './sections/46-map-layers.mjs';
 import buildTimeline from './sections/47-timeline.mjs';
 import buildConcept from './sections/48-concept.mjs';
+import buildPhotoAlbum from './sections/49-photo-album.mjs';
 import buildLearning from './sections/50-learning.mjs';
 import buildMusic from './sections/55-music.mjs';
+import buildDiary from './sections/56-diary.mjs';
 import buildRemoteTerminal from './sections/57-remote-terminal.mjs';
 import buildDbClient from './sections/58-db-client.mjs';
 import buildDesktop, { brokenAnchors } from './sections/60-desktop.mjs';
@@ -117,7 +121,7 @@ manifest.applicationLayers.forEach((layer) => {
   layer.id = layer.name;
 });
 
-const helpers = createHelpers(manifest);
+const helpers = createHelpers(manifest, rootDir);
 const dependencyCount = Object.keys(manifest.scriptDependencies ?? {}).length;
 const formatArtifactSize = async (relativePath) => {
   try {
@@ -247,11 +251,15 @@ const reviewSections = [
   ...buildJavaScript(context),
   ...buildJava(context),
   ...buildEditors(context),
+  ...buildPlay(context),
   ...buildMap(context),
+  ...buildMapLayers(context),
   ...buildTimeline(context),
   ...buildConcept(context),
+  ...buildPhotoAlbum(context),
   ...buildLearning(context),
   ...buildMusic(context),
+  ...buildDiary(context),
   ...buildRemoteTerminal(context),
   ...buildDbClient(context),
   ...buildDesktop(context),
@@ -450,6 +458,16 @@ const listDir = async (relativeDir, ext) => {
 
 const docFiles = await listDir('docs', '.md');
 const uncoveredDocs = docFiles.filter((file) => !covered.has(`docs/${file}`));
+
+// 빌드 도구와 EXE 소스도 같은 이유로 전부 싣는다. 2026-10-06 갱신 때 이 검사가 없어서 새 C# 소스
+// desktop/world_wind.cs(GRIB2 해독기)와 도구 아홉 개가 아무 경고 없이 빠져 있었다 — src/js·docs 만
+// 보던 검사가 놓친, 이 README 가 여러 번 적은 바로 그 종류의 빈틈이다.
+// desktop 은 소스·스크립트만 본다(아이콘·생성된 AssemblyInfo 는 리뷰 대상이 아니다).
+const toolFiles = await listDir('tools', '');
+const desktopFiles = (await listDir('desktop', ''))
+  .filter((name) => /\.(cs|go|py|js|bash|bat|cmd|vbs)$/.test(name) && !/\.generated\.cs$/.test(name));
+const uncoveredTools = toolFiles.filter((file) => !covered.has(`tools/${file}`));
+const uncoveredDesktop = desktopFiles.filter((file) => !covered.has(`desktop/${file}`));
 
 const testFiles = await listDir('tests', '.test.js');
 const e2eFiles = await listDir('tests/e2e', '.spec.js');
@@ -751,6 +769,11 @@ if (brokenAnchors.length) {
   for (const item of brokenAnchors) console.warn(`  ${item}`);
   console.warn('  sections/60-desktop.mjs 의 앵커 문자열을 현재 소스에 맞게 고치세요.');
 }
+if (brokenModuleRanges.length) {
+  console.warn(`\n[경고] 모듈 구간(ranges)에서 찾지 못한 앵커 ${brokenModuleRanges.length}개 — 그 구간은 코드 없이 실립니다:`);
+  for (const item of brokenModuleRanges) console.warn(`  ${item}`);
+  console.warn('  sections/*.mjs 의 mod(..., { ranges }) 앵커를 현재 소스에 맞게 고치세요.');
+}
 if (anchorFailures.length) {
   console.warn(`\n[경고] 코드 앵커를 찾지 못한 파일 위치 ${anchorFailures.length}개 — 눌러도 코드가 뜨지 않습니다:`);
   for (const item of anchorFailures) console.warn(`  ${item}`);
@@ -783,6 +806,14 @@ if (nearLimitFiles.size) {
 if (uncoveredDocs.length) {
   console.warn(`\n[경고] 섹션에 실리지 않은 docs 문서 ${uncoveredDocs.length}개:`);
   console.warn(`  ${uncoveredDocs.join(', ')}`);
+}
+if (uncoveredTools.length) {
+  console.warn(`\n[경고] 섹션에 실리지 않은 tools 파일 ${uncoveredTools.length}개:`);
+  console.warn(`  ${uncoveredTools.join(', ')}`);
+}
+if (uncoveredDesktop.length) {
+  console.warn(`\n[경고] 섹션에 실리지 않은 desktop 소스 ${uncoveredDesktop.length}개:`);
+  console.warn(`  ${uncoveredDesktop.join(', ')}`);
 }
 if (unusedTerms.length) {
   console.warn(`\n[경고] 리뷰 본문에 나오지 않는 사전 항목 ${unusedTerms.length}개:`);

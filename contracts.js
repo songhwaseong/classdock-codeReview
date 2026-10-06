@@ -331,6 +331,24 @@ MNBoardTools.transformedItem(item, transform, measure);// 대칭·회전·평행
     note: '설정 저장은 다음 실행 동작을 바꾸고 재열기는 브라우저 프로세스를 띄우므로 둘 다 토큰이 필요합니다.',
   },
 
+  {
+    sectionIds: ['launcher-security'],
+    kind: 'GET',
+    title: '/local-token — 재시작 뒤 새 토큰 받기',
+    endpoints: ['/local-token'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path == \"/local-token\")",
+    when: 'ClassDock.exe 가 다시 시작돼 열린 창의 요청이 403 local-token-required 를 받을 때',
+    tags: ['토큰 없이', 'X-ClassDock-Action 필수', 'Origin 검사'],
+    snippet: `GET /local-token   (X-ClassDock-Action: 1)
+  → { "token": "…" }
+  헤더가 없으면 403 action-header-required`,
+    note:
+      '토큰을 새로 여는 권한이 아니라 다시 받는 입구입니다 — 앱 페이지(GET /)가 이미 토큰을 담아 주므로 같은 PC 의 로컬 프로그램에게는 새로 생기는 것이 없고, ' +
+      '다른 사이트는 사용자 정의 헤더 때문에 사전 요청에서 막히고 Origin 검사에도 걸립니다.',
+  },
+
   // ── EXE 로컬 서버 — 파일 ─────────────────────────────
 
   {
@@ -815,6 +833,25 @@ GET  /media-stream?t=            200 / 206 Partial Content (Range), 표가 없�
     note: '경로만 믿지 않고 내용 해시로 동일성을 확인합니다. 임의 SQL 을 여는 기능에서 최소한의 안전 조건입니다.',
   },
 
+  {
+    sectionIds: ['launcher-convert-sqlite', 'trip'],
+    kind: 'POST',
+    title: '/shrink-media — 문서에 담을 짧은 영상으로 줄이기',
+    endpoints: ['/shrink-media'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && (path == \"/shrink-media\" || path.StartsWith(\"/shrink-media?\", StringComparison.Ordinal)))",
+    when: '여행일지 장소에 8MB 넘거나 그대로 틀 수 없는 영상을 넣을 때',
+    tags: ['토큰 필요', 'C# 런처 전용', 'ffmpeg', '위치 메타데이터 지움', '한 번에 하나'],
+    snippet: `POST /shrink-media?dim=1280&sec=120   본문: 원본 영상 바이트
+  → 200 video/mp4  (X-Media-Source-Duration-Ms: 원래 길이)
+  ffmpeg 없음 501 no-ffmpeg · 실패 500 shrink-media-failed: …
+  dim 160~상한, sec 1~상한으로 눌러 담는다. 늘 다시 인코딩(H.264/AAC, -map_metadata -1)`,
+    note:
+      'dim·sec 는 런처가 범위로 누르고 파일 경로는 인용 함수로 감쌉니다. 변환은 다른 영상 변환과 같은 잠금으로 한 번에 하나만 돕니다. ' +
+      '원래 길이를 머리글로 돌려줘 앱이 "앞부분만 넣었다" 고 말할 수 있게 합니다.',
+  },
+
   // ── EXE 로컬 서버 — 시험지 ───────────────────────────
 
   {
@@ -869,6 +906,40 @@ MNExchangeRate.normalize(raw, "ecb");        // 유로 기준 교차환율, 송�
     note:
       '따라치기와 형제지만 규칙이 정반대인 곳이 셋입니다 — 악보를 보여 주지 않고, 틀려도 진도가 나가고, 다시 듣기를 제한합니다. ' +
       '그 셋이 파일을 나눈 이유이며 첫머리 주석에 적혀 있습니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'music-library', 'music-overview'],
+    kind: 'API',
+    title: 'MNMusicLibrary — 무료 악보(OpenScore) 검색·가져오기',
+    source: 'src/js/music-library.js',
+    file: 'src/js/music-library.js',
+    at: 'const MNMusicLibrary = (() => {',
+    when: '악보 편집기에서 "무료 악보 가져오기" 창을 열 때',
+    tags: ['소비자 1개', 'open()', 'search()', 'CC0 카탈로그 내장', '받기만 온라인'],
+    snippet: `MNMusicLibrary.open();                       // 검색 창(모달)을 연다 — 이미 열려 있으면 검색칸에 포커스
+MNMusicLibrary.search("슈베르트", "DE");       // → 카탈로그 항목[] (악센트·한글 작곡가 이름으로도 찾음)
+MNMusicLibrary.count;                        // 카탈로그 곡 수
+MNMusicLibrary.catalog;                      // MNOpenScoreCatalog(music-library-data.js, 생성물)
+// 고른 곡은 MXL 을 받아 loadMusicXml(file, { importAsSheet:true, sourceMetadata }) 로 넘긴다.`,
+    note:
+      '카탈로그는 tools/update-openscore-catalog.mjs 가 만드는 생성물이라 손으로 고치지 않습니다. 가져온 악보에는 제공처·라이선스·원본 주소가 sourceMetadata 로 붙습니다.',
+  },
+  {
+    sectionIds: ['module-boundaries', 'music-pitch', 'music-editor'],
+    kind: 'API',
+    title: 'MNMusicPitch — 마이크 음높이 찾기',
+    source: 'src/js/music-pitch.js',
+    file: 'src/js/music-pitch.js',
+    at: 'const MNMusicPitch = (() => {',
+    when: '따라치기 연습에서 🎤 를 켜 노래·리코더로 답할 때',
+    tags: ['소비자 1개', 'detect()', 'createTracker()', 'createMic()', 'node 에서 검증'],
+    snippet: `MNMusicPitch.detect(samples, sampleRate);   // → { freq, clarity, rms } — YIN, 한 조각(약 40ms)
+const tracker = MNMusicPitch.createTracker(options);   // → { feed, reset } — 조각들을 "한 음" 사건으로
+const mic = MNMusicPitch.createMic(options);           // → { start, stop, mute, supported, active }
+MNMusicPitch.label(midi);                    // "C4 +12" 같은 표시 글
+MNMusicPitch.HOLD_MS · GAP_MS · CENTS_TOLERANCE  // 판정 상수(테스트가 읽는다)`,
+    note:
+      'detect·createTracker 는 DOM·오디오 없이 돌아 node 에서 검증하고, createMic 만 getUserMedia 를 씁니다. 채점 규칙은 이 파일이 아니라 따라치기(music-editor.js)가 맡습니다.',
   },
   {
     sectionIds: ['module-boundaries', 'context-menu', 'python-editor'],
@@ -1053,43 +1124,212 @@ POST /tile-cache-clear  → 디스크 캐시 삭제
   {
     sectionIds: ['launcher-transit', 'map-live-transit', 'subway-live'],
     kind: 'GET/POST/DELETE',
-    title: '/subway-position · /subway-key — 수도권 실시간 열차 위치',
-    endpoints: ['/can-proxy-subway', '/subway-position', '/subway-key', '/subway-key-status'],
+    title: '/subway-position · /subway-arrival · /subway-key — 수도권 실시간 열차',
+    endpoints: ['/can-proxy-subway', '/subway-position', '/subway-arrival', '/subway-key', '/subway-key-status'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
     at: "else if (method == \"GET\" && path.StartsWith(\"/subway-position?\", StringComparison.Ordinal))",
-    when: '지도에서 🚇 실시간 열차를 켜 두는 동안 15초마다, 설정의 "지하철 실시간" 에서 키를 넣고 지울 때',
-    tags: ['토큰 필요', '키 조작은 X-ClassDock-Action 도', '노선 16개 허용 목록', '캐시 12초 · 실패 시 1분'],
-    snippet: `GET    /can-proxy-subway            → "yes"
-GET    /subway-position?line=2호선  → 원본 JSON (캐시면 X-ClassDock-Subway-Cached: 1)
-                                     키 없음 428 subway-key-required · 목록 밖 노선 400
-GET    /subway-key-status           → { hasKey, remembered, persistentSupported }
-POST   /subway-key?remember=1       본문: 키 → 2호선으로 시험 조회 후 저장(DPAPI)
-DELETE /subway-key                  키와 그 키로 받은 캐시를 함께 지움`,
+    when: '지도에서 🚇 실시간 열차를 켜 두는 동안 15초마다, 역을 눌러 도착 정보를 볼 때, 설정의 "지하철 실시간" 에서 키를 넣고 지울 때',
+    tags: ['위치는 토큰 필요', '키 조작은 X-ClassDock-Action 도', '노선 16개 허용 목록', '위치 캐시 12초 · 실패 시 1분', '도착 캐시 20초'],
+    snippet: `GET    /can-proxy-subway             → "yes"
+GET    /subway-position?line=2호선   → 원본 JSON (캐시면 X-ClassDock-Subway-Cached: 1)
+GET    /subway-arrival?station=…     → 역별 도착 원본 JSON (낡은 값은 대신 내주지 않음)
+       키 없음 428 subway-key-required · 그 밖 502 (subway-key-invalid · subway-quota · subway-failed)
+       목록 밖 노선·글자 밖 역 이름 400
+GET    /subway-key-status            → { hasKey, remembered, persistentSupported }
+POST   /subway-key?remember=1        본문: 키 → 2호선으로 시험 조회 후 저장(DPAPI)
+DELETE /subway-key                   키와 그 키로 받은 캐시를 함께 지움`,
     note:
-      '이 API 는 오류도 HTTP 200 으로 주므로 본문의 INFO-000/100/200 으로 가릅니다. INFO-200(열차 없음)은 정상 답입니다. ' +
-      '하루 1,000회 한도라 화면 15초 · 런처 12초 캐시가 곧 예산이며, 한도 소진은 따로 구분하지 않고 일반 실패로 보입니다.',
+      '이 API 는 오류도 HTTP 200 으로 주므로 본문의 INFO-000/100/200 · ERROR-337 로 가릅니다. INFO-200(열차 없음)은 정상 답이고, ERROR-337(하루 1,000회 초과)은 subway-quota 로 따로 알려 ' +
+      '화면이 재시도를 멈추고 "내일 다시" 를 안내합니다. 화면 15초 · 런처 12초 캐시가 곧 예산입니다. 같은 키·같은 한도를 쓰는데 /subway-arrival 만 토큰 규칙(RequiresLocalAuthToken)에 빠져 있습니다.',
   },
   {
     sectionIds: ['launcher-transit', 'map-live-transit', 'jeju-bus-api', 'jeju-bus-map'],
     kind: 'GET',
-    title: '/jeju-bus-routes · route · shape · position — 제주 버스 (시범)',
+    title: '/jeju-bus-routes · route · position · arrivals · nearby · cities — 전국 버스 (TAGO · 서울)',
     endpoints: ['/can-proxy-jeju-bus', '/jeju-bus-'],
     source: 'desktop/launcher.cs',
     file: 'desktop/launcher.cs',
-    at: "else if (method == \"GET\" && path.StartsWith(\"/jeju-bus-\", StringComparison.Ordinal))",
-    when: '지도의 🚌 제주 버스 패널에서 노선을 검색·선택하고, 표시를 켜 둔 동안 30초마다',
-    tags: ['토큰 필요', '키 없음', 'C# 런처 전용', '위치 30초 · 정적 24시간 캐시', 'Retry-After'],
-    snippet: `GET /can-proxy-jeju-bus               → "yes"
-GET /jeju-bus-routes?keyword=201      노선 검색     (숫자·하이픈 12자)
-GET /jeju-bus-route?routeId=…         정류장 목록   (숫자 12자)
-GET /jeju-bus-shape?routeId=…         노선 경로 좌표
-GET /jeju-bus-position?routeId=…      실시간 차량 위치
-    응답 헤더: X-ClassDock-Bus-Fetched-At(원본 수신 시각) · X-ClassDock-Bus-Stale · Retry-After
+    at: "else if (method == \"GET\" && (path.StartsWith(\"/jeju-bus-\", StringComparison.Ordinal)",
+    when: '지도의 🚌 버스 패널에서 도시·노선을 고르고, 표시를 켜 둔 동안 30초마다, 정류장 도착·근처 정류장을 볼 때',
+    tags: ['토큰 필요', '공공데이터포털 키', 'C# 런처 전용', '위치 30초 · 도착 20초 · 정적 하루 캐시', '428 키 · 429 한도'],
+    snippet: `GET /can-proxy-jeju-bus                      → "yes"
+GET /jeju-bus-cities                         TAGO 도시 목록
+GET /jeju-bus-routes?keyword=201&city=…      노선 검색   (번호 20자, 마을1·B1 허용)
+GET /jeju-bus-route?routeId=…&city=…         정류장 목록
+GET /jeju-bus-position?routeId=…&city=…      실시간 차량 위치
+GET /jeju-bus-arrivals?nodeId=…&city=…       정류장 도착 예정
+GET /jeju-bus-nearby?lat=…&lng=…             좌표 근처 정류장 (서울이면 &city=11)
+    city 빈칸 = 제주 · 11 = 서울(서울시 버스정보 API, http)
+    응답 헤더: X-ClassDock-Bus-Fetched-At · X-ClassDock-Bus-Stale · Retry-After
+    실패: 428 bus-key-required/-invalid · 429 bus-quota · 503 (X-ClassDock-Bus-Upstream: 상류 코드)
     &refresh=1 은 정적 조회만, 그래도 30초 안에는 상류를 다시 부르지 않음`,
     note:
-      '원격 호스트(bus.jeju.go.kr/data/search/)·경로 네 개·POST 메서드를 고정하고 리다이렉트를 따라가지 않습니다. ' +
-      '연결한 경로는 공식 개발자 API 가 아니라 사이트 자신의 조회 경로라, 이용 조건 확인과 TAGO 공식 API 전환이 설계 문서에 후속 과제로 남아 있습니다.',
+      '호스트(apis.data.go.kr/1613000 · ws.bus.go.kr)와 조회 종류를 고정하고 리다이렉트를 따라가지 않습니다. 같은 분기가 항공·여객선·날씨·장날 조회도 받으며(경로 → 종류를 한 줄 삼항 사슬로 정함), ' +
+      '캐시 100칸과 잠금 16개도 그들과 나눠 씁니다. 키·한도 문제일 때는 낡은 위치를 대신 내주지 않습니다.',
+  },
+  {
+    sectionIds: ['launcher-transit', 'jeju-bus-api', 'jeju-bus-map'],
+    kind: 'GET/POST/DELETE',
+    title: '/jeju-bus-catalog* · /tago-key* — 노선 목록 최신화 · 공공데이터포털 키',
+    endpoints: ['/jeju-bus-catalog', '/jeju-bus-catalog-', '/jeju-bus-catalog-status', '/jeju-bus-catalog-refresh', '/jeju-bus-catalog-cancel', '/tago-key', '/tago-key-status'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"POST\" && path.StartsWith(\"/jeju-bus-catalog-refresh\", StringComparison.Ordinal))",
+    when: '버스 패널의 [목록 최신화] · 도시를 바꿔 노선 목록을 열 때, 설정 → 연결 → 공공데이터포털에서 키를 넣고 지울 때',
+    tags: ['토큰 필요', 'POST·키 조작은 X-ClassDock-Action 도', '한 번에 하나', '결과가 적으면 예전 목록 유지'],
+    snippet: `GET    /jeju-bus-catalog?city=…          저장해 둔 도시 노선 목록 (없으면 404 no-catalog)
+GET    /jeju-bus-catalog-status          → { state, error, done, total, found, city }
+POST   /jeju-bus-catalog-refresh?min=…&city=…   202 시작 · 409 이미 도는 중
+POST   /jeju-bus-catalog-cancel
+GET    /tago-key-status                  → { hasKey, remembered, persistentSupported }
+POST   /tago-key?remember=1              본문: 키 → 형식만 확인하고 저장(DPAPI)
+DELETE /tago-key                         키와 버스·항공·여객선·날씨 공용 캐시를 함께 지움`,
+    note:
+      '최신화는 백그라운드 스레드 하나가 번호 없이 한 번 → 모자라면 1~9(서울은 0~9)로 나눠 묻고, min 보다 적게 모이면 bus-catalog-too-few 로 끝내 예전 파일을 지킵니다. ' +
+      '키 저장 때 시험 조회를 하지 않는 것은 의도입니다 — 활용신청이 서비스마다 따로라 버스로 시험하면 항공·여객선만 신청한 정상 키를 거절합니다. 내부 이름 tago 는 기존 설치 호환 때문에 남았습니다.',
+  },
+
+  {
+    sectionIds: ['launcher-transit', 'flight-map'],
+    kind: 'GET',
+    title: '/flight-board · /flight-search — 공항 운항 게시판',
+    endpoints: ['/can-proxy-flight', '/flight-', '/flight-board', '/flight-search'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "|| path.StartsWith(\"/flight-board?\", StringComparison.Ordinal) || path.StartsWith(\"/flight-search?\", StringComparison.Ordinal)",
+    when: '지도의 항공 패널에서 공항 게시판을 열 때(3분마다), 편명을 찾을 때',
+    tags: ['토큰 필요', '공공데이터포털 키', '한국공항공사 활용신청', '캐시 1분', '버스와 같은 분기'],
+    snippet: `GET /can-proxy-flight                                   → "yes"
+GET /flight-board?airport=GMP&io=O&line=D&page=1          게시판 한 쪽(100줄)
+GET /flight-search?fln=KE1201                             편명 하나
+  실패: 428 키 · 429 한도 · 503 (버스와 같은 X-ClassDock-Bus-* 머리글)`,
+    note:
+      '값은 공항(영문 대문자 셋)-출도착(O/I)-국내국제(D/I)-쪽(1~6), 편명은 정규식으로만 받습니다. 한 쪽 100줄을 넘기면 상류가 HTTP 200 에 게이트웨이 오류를 주므로 화면이 쪽을 넘겨 묻습니다.',
+  },
+  {
+    sectionIds: ['launcher-transit', 'ship-map'],
+    kind: 'GET',
+    title: '/ship-ports · /ship-schedule — 여객선 시간표',
+    endpoints: ['/can-proxy-ship', '/ship-', '/ship-ports', '/ship-schedule'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "|| path == \"/ship-ports\" || path.StartsWith(\"/ship-ports?\", StringComparison.Ordinal)",
+    when: '지도의 여객선 패널에서 항구 목록을 받고 출발 항구 하나의 시간표를 열 때',
+    tags: ['토큰 필요', '공공데이터포털 키', 'TAGO 국내선박운항정보', '시간표 10분 · 항구 하루'],
+    snippet: `GET /can-proxy-ship                           → "yes"
+GET /ship-ports                                 전국 항구 목록(한 번에)
+GET /ship-schedule?port=SEA10100&date=20260919  그 항구에서 그날 떠나는 편
+  날짜는 어제 ~ 열흘 뒤만`,
+    note: '응답에 좌표·결항 정보가 없어 지도 위치는 화면의 ship-ports-data.js 표가 붙입니다. 가장 붐비는 항구도 하루 500줄 안이라 한 쪽으로 묻습니다.',
+  },
+  {
+    sectionIds: ['launcher-transit', 'weather-api', 'weather-map', 'weather-wind'],
+    kind: 'GET',
+    title: '/weather-* — 기상청 예보·관측·태풍 · 천문연 특일',
+    endpoints: ['/can-proxy-weather', '/weather-'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "|| path.StartsWith(\"/weather-\", StringComparison.Ordinal)",
+    when: '지도 날씨·바람 창, 일기장 "기상청 날씨로 채우기", 여행일지 그날 날씨·여정 띠 공휴일',
+    tags: ['토큰 필요', '공공데이터포털 키', '서비스마다 활용신청', '발표 시각은 런처가 정함'],
+    snippet: `GET /weather-now|ultra|forecast?nx=60&ny=127   실황 · 초단기 · 단기예보(격자)
+GET /weather-mid-land|mid-temp?reg=11B00000     중기예보 (X-ClassDock-Weather-Issued-At)
+GET /weather-day?stn=108&date=20260918          지난 날 관측(어제까지)
+GET /weather-holidays|terms?year=2026&month=10  공휴일 · 24절기
+GET /weather-typhoon · /weather-typhoon-fcst?seq=27&tmfc=202610021600
+  캐시: 실황·초단기·태풍 10분 · 단기·중기 30분 · 그 밖 하루`,
+    note:
+      '발표 시각(base_date·base_time)을 화면이 아니라 런처가 한국 시각으로 정하고 캐시 열쇠에도 넣어, 아직 안 나온 발표를 묻거나 PC 시간대 때문에 어긋나는 일을 막습니다. 격자·지역·지점·날짜 값은 모두 범위·목록으로 검사합니다.',
+  },
+  {
+    sectionIds: ['launcher-transit', 'market-days'],
+    kind: 'GET',
+    title: '/market-days — 전국 전통시장 표준데이터',
+    endpoints: ['/market-days'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "|| path.StartsWith(\"/market-days?\", StringComparison.Ordinal)))",
+    when: '지도의 장날 단추를 처음 누를 때(브라우저가 이레 동안 담아 둠)',
+    tags: ['토큰 필요', '공공데이터포털 키', '표준데이터 활용신청', '캐시 하루'],
+    snippet: `GET /market-days?page=1   1000줄씩, 쪽 번호 1~9 만
+  표준데이터 API 는 주소(api.data.go.kr/openapi)와 봉투 모양이 달라 결과 코드 읽기가 그 꼴도 받는다`,
+    note: '장날은 "시장개설주기" 글로 오고 해석은 화면(market-days.js)이 합니다. 런처는 쪽 번호 하나만 받습니다.',
+  },
+  {
+    sectionIds: ['launcher-world-wind', 'weather-wind'],
+    kind: 'GET',
+    title: '/world-wind-catalog · /world-wind-frame — 세계·상층 바람',
+    endpoints: ['/can-proxy-world-wind', '/world-wind-', '/world-wind-catalog', '/world-wind-frame'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && (path == \"/world-wind-catalog\" || path.StartsWith(\"/world-wind-frame?\", StringComparison.Ordinal)))",
+    when: '지도 바람 창에서 "세계" 범위나 850·500·250hPa 를 고를 때',
+    tags: ['토큰 필요', '키 없음(NOAA 공개)', 'C# 런처 전용', 'GRIB2 직접 해독', '디스크 캐시 128MB · 72시간'],
+    snippet: `GET /can-proxy-world-wind                          → "yes"
+GET /world-wind-catalog                              → 받을 수 있는 발표·예보 시각 JSON
+GET /world-wind-frame?cycle=2026100200&hour=6&level=850
+  → application/octet-stream: 머리 40바이트 + 360×181 격자 × 4채널(u·v·기온·해면기압) float32
+  400 world-wind-query · 502 world-wind-data(해독 거절) · 503 world-wind-network`,
+    note:
+      '발표 시각은 6시간 단위·48시간 이내, 예보는 3시간 단위·72시간까지, 기압면은 넷 중 하나만 받습니다. 화면은 받은 프레임의 길이·시각·값 범위를 다시 검사하고 하나라도 어긋나면 프레임 전체를 버립니다.',
+  },
+  {
+    sectionIds: ['launcher-kosis-neis', 'kosis-choro'],
+    kind: 'GET/POST/DELETE',
+    title: '/kosis · /kosis-key — KOSIS 국가통계',
+    endpoints: ['/can-proxy-kosis', '/kosis', '/kosis-key', '/kosis-key-status'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path.StartsWith(\"/kosis?\", StringComparison.Ordinal))",
+    when: '색칠 지도의 "KOSIS에서 가져오기" 에서 통계를 검색·선택·가져올 때, 설정에서 KOSIS 키를 넣고 지울 때',
+    tags: ['토큰 필요', 'KOSIS 키(따로)', '조회 셋', '캐시 하루', '키 조작은 X-ClassDock-Action 도'],
+    snippet: `GET    /can-proxy-kosis                     → "yes"
+GET    /kosis?op=search&q=고령인구           통합검색
+GET    /kosis?op=meta&orgId=101&tblId=…&type=ITM
+GET    /kosis?op=data&orgId=…&tblId=…&itmId=…&prdSe=Y&objL1=…&newEstPrdCnt=1
+  실패: 400 · 428 키 · 429 한도 · 413 4만 셀 넘음 · 503 (X-ClassDock-Upstream)
+GET    /kosis-key-status · POST /kosis-key?remember=1 · DELETE /kosis-key`,
+    note: '화면이 고른 표가 무엇이든 런처가 만드는 주소는 kosis.kr/openapi 아래 셋뿐이고, 기관·표·항목·주기·분류 값이 각각 정규식을 통과해야 합니다.',
+  },
+  {
+    sectionIds: ['launcher-kosis-neis', 'neis-api'],
+    kind: 'GET/POST/DELETE',
+    title: '/neis · /neis-key — NEIS 학교 정보',
+    endpoints: ['/can-proxy-neis', '/neis', '/neis-key', '/neis-key-status'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path.StartsWith(\"/neis?\", StringComparison.Ordinal))",
+    when: '일기장의 "우리 학교" 에서 학교를 찾고 급식·학사일정·시간표를 볼 때, 설정에서 NEIS 키를 넣고 지울 때',
+    tags: ['토큰 필요', 'NEIS 키(없어도 5줄)', '서비스 일곱', '허용 변수 표'],
+    snippet: `GET /neis?svc=schoolInfo&SCHUL_NM=가락
+GET /neis?svc=mealServiceDietInfo&ATPT_OFCDC_SC_CODE=B10&SD_SCHUL_CODE=…&MLSV_FROM_YMD=…&MLSV_TO_YMD=…
+  → 원본 JSON (X-ClassDock-Fetched-At · X-ClassDock-Neis-Sample: 1 이면 키 없는 5줄)
+  실패: 400 · 428 키 · 429 한도 · 503
+GET /neis-key-status · POST /neis-key?remember=1 · DELETE /neis-key`,
+    note: '서비스마다 받을 수 있는 변수 이름을 표로 두고 변수마다 모양을 봅니다. 캐시는 학교 정보 하루 · 학사일정 12시간 · 급식·시간표 3시간이고, 샘플과 키 응답은 칸을 나눕니다.',
+  },
+
+  // ── EXE 로컬 서버 — 사진첩 ───────────────────────────
+
+  {
+    sectionIds: ['launcher-photo-album', 'photo-album'],
+    kind: 'GET/POST',
+    title: '/photo-album-* — 사진첩 원본·메타데이터 저장소',
+    endpoints: ['/photo-album-', '/photo-album-list', '/photo-album-file', '/photo-album-meta', '/photo-album-delete'],
+    source: 'desktop/launcher.cs',
+    file: 'desktop/launcher.cs',
+    at: "else if (method == \"GET\" && path == \"/photo-album-list\")",
+    when: '사진첩을 열 때(목록), 사진·영상·음악을 넣거나 꾸민 것을 저장할 때, 지울 때',
+    tags: ['토큰 필요', 'GUID 이름만', '원본 256MB · 메타 512KB', '원자적 쓰기'],
+    snippet: `GET  /photo-album-list                 → [메타데이터…] (손상 항목은 건너뜀)
+GET  /photo-album-file?id=<GUID>         원본 바이트(Range 지원)
+POST /photo-album-file?id=<GUID>         본문: 원본
+POST /photo-album-meta?id=<GUID>         본문: { id, type:image|video|audio|art|album, … }
+POST /photo-album-delete?id=<GUID>
+  %LOCALAPPDATA%\\ClassDock\\photo-album\\<GUID>.bin · .json`,
+    note:
+      'id 는 Guid.TryParse 로만 받아 다시 써서 경로를 만듭니다. 메타데이터는 id 가 파일 이름과 같고 type 이 다섯 중 하나일 때만, 원본이 필요한 갈래는 원본이 먼저 있을 때만 씁니다. 상한은 본문을 읽기 전에 봅니다.',
   },
 
   // ── EXE 로컬 서버 — DB 클라이언트 ────────────────────

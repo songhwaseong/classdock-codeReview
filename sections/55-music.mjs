@@ -1,17 +1,34 @@
-// 8. learning-tools — 악보 문서(.msheet). 모델·MusicXML·소리·편집기·음감 테스트 다섯 파일.
+// 8. learning-tools — 악보 문서(.msheet). 모델·MusicXML·소리·편집기·음감 테스트에 무료 악보(OpenScore)·마이크 음 확인까지.
 //
-// learning-tools 계층에 속하지만 파일이 다섯이고 분량이 커서 50-learning.mjs 에서 떼어 둔다.
+// learning-tools 계층에 속하지만 파일이 여럿이고 분량이 커서 50-learning.mjs 에서 떼어 둔다.
 // 카테고리는 같으므로 사이드바에서는 learning-tools 안의 "악보" 묶음으로 이어 붙는다.
 
-import { linesLabel } from '../lib/source-metrics.mjs';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { anchoredRange, linesLabel } from '../lib/source-metrics.mjs';
 
-export default ({ helpers, rootDir }) => {
+// 테스트 개수도 손으로 적지 않는다 — "규칙 62개" · "왕복 10개" · "13개" 가 64 · 12 · 23 이 되는 동안 그대로 남아 있었다.
+const testCount = (rootDir, relativePath) => {
+  try {
+    return (readFileSync(path.join(rootDir, relativePath), 'utf8').match(/^\s*test\(/gm) || []).length;
+  } catch {
+    return null;
+  }
+};
+
+export default ({ manifest, helpers, rootDir }) => {
   const { mod, sec } = helpers;
   // 줄 수는 문장에 적지 않고 생성 때 잰다(lib/source-metrics.mjs).
   const modelLines = linesLabel(rootDir, 'src/js/music-model.js');
   const editorLines = linesLabel(rootDir, 'src/js/music-editor.js');
   const xmlLines = linesLabel(rootDir, 'src/js/music-xml.js');
   const audioLines = linesLabel(rootDir, 'src/js/music-audio.js');
+  const musicFiles = manifest.localScripts.filter((file) => /^music-[a-z-]+\.js$/.test(file));
+  const count = (file) => {
+    const n = testCount(rootDir, file);
+    return n == null ? '' : ` ${n}개`;
+  };
+  const catalogHead = anchoredRange(rootDir, 'src/js/music-library-data.js', { from: /^/, to: '"scores": [', after: 16 });
 
   return [
     sec({
@@ -19,7 +36,7 @@ export default ({ helpers, rootDir }) => {
       category: '8. learning-tools',
       group: '악보',
       title: '악보 문서 개요 (.msheet)',
-      subtitle: '모델·MusicXML·소리·편집기·음감 테스트 5개 파일 — 새 문서 종류를 붙이는 표준 경로',
+      subtitle: `music-*.js ${musicFiles.length}개 파일 — 새 문서 종류를 붙이는 표준 경로`,
       summary:
         '오선을 클릭해 음표를 놓고, 놓는 즉시 그 음을 듣고, 전체나 고른 마디만 재생하고, 들은 것과 같은 소리를 WAV 로 저장합니다. ' +
         '자체 확장자 .msheet(JSON)로 저장·재편집하고 MusicXML(.musicxml/.mxl)로 주고받습니다. ' +
@@ -27,12 +44,13 @@ export default ({ helpers, rootDir }) => {
         '앱 본체에 들어간 변경은 한 줄짜리 분기 몇 개뿐입니다.',
       usage: [
         {
-          title: '다섯 파일의 경계',
+          title: '파일의 경계',
           body:
             'music-model.js 는 음악 규칙(틱·음높이·조표·마디 채움)만 알고 DOM·오디오·VexFlow 를 참조하지 않습니다. ' +
             'music-xml.js 는 MusicXML 과의 변환, music-audio.js 는 소리, music-editor.js 는 화면과 조작, ' +
             'music-eartest.js 는 음감 테스트 화면입니다. ' +
-            '모델이 순수하기 때문에 음악 규칙 62개를 node --test 로 브라우저 없이 검증합니다 — 문제 만들기(musicEarQuestions)까지 이쪽에 있습니다.',
+            `모델이 순수하기 때문에 음악 규칙${count('tests/music-model.test.js')}을 node --test 로 브라우저 없이 검증합니다 — 문제 만들기(musicEarQuestions)까지 이쪽에 있습니다. ` +
+            '그 뒤 무료 악보 가져오기(music-library.js + 카탈로그 music-library-data.js)와 마이크 음 확인(music-pitch.js)이 붙었는데, 둘 다 같은 원칙 — 계산은 DOM 없는 쪽에 — 을 따릅니다.',
         },
         {
           title: '앱 본체에 남긴 자국',
@@ -98,9 +116,9 @@ export default ({ helpers, rootDir }) => {
       files: [
         { path: 'docs/악보-설계.md', label: '악보-설계.md', description: '1차 설계 문서 — 결정과 그 근거, P0~P4 단계' },
         { path: 'docs/악보-확장-설계.md', label: '악보-확장-설계.md', description: '2차 설계 문서(2026-08-30) — 실무용 4종. 먼저 기존 구현을 훑고 시작합니다' },
-        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '음악 규칙 62개' },
-        { path: 'tests/music-xml.test.js', label: 'music-xml.test.js', description: 'MusicXML 왕복 10개' },
-        { path: 'tests/music-memo-roundtrip.test.js', label: 'music-memo-roundtrip.test.js', description: '메모 그림 ↔ 악보 탭 왕복 9개' },
+        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: `음악 규칙${count('tests/music-model.test.js')}` },
+        { path: 'tests/music-xml.test.js', label: 'music-xml.test.js', description: `MusicXML 왕복${count('tests/music-xml.test.js')}` },
+        { path: 'tests/music-memo-roundtrip.test.js', label: 'music-memo-roundtrip.test.js', description: `메모 그림 ↔ 악보 탭 왕복${count('tests/music-memo-roundtrip.test.js')}` },
       ],
       notes: [
         {
@@ -200,7 +218,7 @@ export default ({ helpers, rootDir }) => {
         { title: '줄바꿈 배치', body: 'musicPackLines 가 마디별 폭을 어림해 줄에 채우고 남는 폭을 비례 배분합니다.' },
       ],
       files: [
-        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: '학교종 4마디 표본으로 규칙 62개 검증' },
+        { path: 'tests/music-model.test.js', label: 'music-model.test.js', description: `학교종 4마디 표본으로 규칙${count('tests/music-model.test.js')} 검증` },
       ],
       notes: [
         {
@@ -263,7 +281,7 @@ export default ({ helpers, rootDir }) => {
         { title: '압축형', body: '.mxl 은 JSZip 지연 로드 후 container.xml 로 본체를 찾습니다.' },
       ],
       files: [
-        { path: 'tests/music-xml.test.js', label: 'music-xml.test.js', description: '왕복 변환과 손실 경고 7개' },
+        { path: 'tests/music-xml.test.js', label: 'music-xml.test.js', description: `왕복 변환과 손실 경고${count('tests/music-xml.test.js')}` },
       ],
       notes: [
         {
@@ -326,7 +344,7 @@ export default ({ helpers, rootDir }) => {
         { title: 'WAV 인코더', body: '16bit PCM 헤더 44바이트를 직접 씁니다. 외부 의존 없음.' },
       ],
       files: [
-        { path: 'tests/music-audio.test.js', label: 'music-audio.test.js', description: '가짜 AudioContext 로 예약 시각·주파수·WAV 헤더 13개' },
+        { path: 'tests/music-audio.test.js', label: 'music-audio.test.js', description: `가짜 AudioContext 로 예약 시각·주파수·WAV 헤더${count('tests/music-audio.test.js')}` },
         { path: 'tools/music-audio-check.html', label: 'music-audio-check.html', description: '브라우저에서 실제 소리를 듣는 수동 확인 페이지' },
       ],
       notes: [
@@ -491,9 +509,95 @@ export default ({ helpers, rootDir }) => {
           type: 'risk',
           label: 'Risk',
           body:
-            '이 파일 자체를 겨눈 테스트가 없습니다. 문제 생성은 모델 쪽에서 덮이지만, ' +
-            '채점·다시 듣기 제한·간섭음 순서 같은 이 파일의 규칙은 검증되지 않습니다. ' +
-            'create() 가 화면 조각을 돌려주는 구조라 순수부(채점·상태 전이)를 조금만 밖으로 빼면 그대로 테스트할 수 있습니다.',
+            '예전에는 이 파일을 겨눈 테스트가 없었고, 지금은 tests/music-eartest.test.js 가 다시 듣기 제한(1~10회·무제한, 버튼과 직접 호출이 같은 제한, 잘못된 값은 1회)을 vm 으로 읽어 덮습니다. ' +
+            '채점과 간섭음 순서는 아직 검증 밖입니다. create() 가 화면 조각을 돌려주는 구조라 순수부(채점·상태 전이)를 조금만 밖으로 빼면 그대로 테스트할 수 있다는 처방은 그대로입니다.',
+        },
+      ],
+    }),
+
+    mod('music-library.js', {
+      group: '악보',
+      title: 'music-library.js — 무료 악보 가져오기 (MNMusicLibrary)',
+      subtitle: 'OpenScore Lieder CC0 카탈로그를 앱에 넣고, 고른 악보만 내려받는다',
+      summary:
+        'OpenScore Lieder 의 CC0 카탈로그(제목·작곡가·가사 작가·언어·MXL 주소)를 빌드에 넣어 두고, 검색은 오프라인으로 합니다. 고른 곡의 MXL 만 내려받아 ' +
+        '기존 MusicXML 가져오기(loadMusicXml)로 넘겨 새 편집 악보로 엽니다. 카탈로그는 tools/update-openscore-catalog.mjs 가 공식 목록에서 다시 만듭니다.',
+      usage: [
+        {
+          title: '한글 작곡가 이름으로도 찾는다',
+          body:
+            '검색 글을 NFD 로 풀어 악센트를 떼고(Fauré → faure), 성씨에 한글 이름(슈베르트·포레 …)을 덧붙여 색인합니다. 검색어가 없으면 교실에서 익숙한 작곡가를 앞에 둡니다.',
+        },
+        {
+          title: '출처를 악보에 함께',
+          body: '가져온 악보에 제공처·라이선스(CC0)·원본 주소·IMSLP 주소를 sourceMetadata 로 붙여, 나중에 그 악보가 어디서 왔는지 문서 안에서 알 수 있게 합니다.',
+        },
+      ],
+      files: [
+        catalogHead
+          ? { path: 'src/js/music-library-data.js', label: 'music-library-data.js (머리 · 첫 항목)', range: catalogHead, description: 'MNOpenScoreCatalog — 생성물. 나머지는 같은 모양의 곡 항목이 이어집니다' }
+          : { path: 'src/js/music-library-data.js', label: 'music-library-data.js', range: [0, 0], description: '(앵커를 찾지 못해 코드 없이 실림) MNOpenScoreCatalog' },
+        { path: 'tools/update-openscore-catalog.mjs', label: 'update-openscore-catalog.mjs', description: '공식 목록(HTML 표)을 읽어 카탈로그 파일을 다시 쓰는 도구' },
+        { path: 'tests/music-library.test.js', label: 'music-library.test.js', description: '천 곡 이상·MusicXML 주소만·원어/한글/언어 검색' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body: '라이선스가 분명한(CC0) 원천만 골랐고, 검색은 인터넷 없이 되게 하되 내려받기만 온라인으로 두었습니다. 받은 악보가 기존 MusicXML 가져오기 길을 그대로 타므로 새 파서가 생기지 않았습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            'MXL 주소가 모두 OpenScore 저장소의 refs/heads/main(움직이는 가지)을 가리킵니다. 저쪽에서 파일을 옮기거나 고치면 앱에 든 카탈로그의 링크가 조용히 깨지거나 다른 내용을 받습니다. ' +
+            '카탈로그를 만들 때의 커밋으로 주소를 고정하면, 카탈로그를 다시 만들기 전까지 같은 악보를 받는다는 것이 보장됩니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '카탈로그(약 600KB 의 JS 객체)가 시작 스크립트로 실려, 무료 악보 창을 한 번도 열지 않는 사용자도 매번 파싱합니다. 창을 열 때 읽는 지연 묶음이나 JSON 자산으로 옮기기 좋은 자리입니다. ' +
+            '이 파일은 리뷰 상한을 넘는 데이터라 여기에는 머리와 첫 항목만 실었습니다.',
+        },
+        {
+          type: 'info',
+          label: 'Info',
+          body: 'MXL 은 런처를 거치지 않고 브라우저가 raw.githubusercontent.com 에서 직접 받습니다(CORS 허용). 키가 없는 정적 파일이라 런처를 거칠 이유는 적지만, 바람 격자(Open-Meteo)와 함께 "바깥 호출은 런처로" 원칙의 예외입니다.',
+        },
+      ],
+    }),
+
+    mod('music-pitch.js', {
+      group: '악보',
+      title: 'music-pitch.js — 마이크 음 확인 (MNMusicPitch)',
+      subtitle: '노래·리코더 소리를 "누른 음" 으로 — YIN 으로 찾고, 사건으로 묶는다',
+      summary:
+        '따라치기 연습에서 건반 대신 노래·리코더로 답할 수 있게, 마이크 소리에서 음높이를 찾아 "누른 음" 으로 넘깁니다. 세 칸으로 나눴습니다 — detect(약 40ms 조각의 기본 주파수, YIN), ' +
+        'createTracker(조각마다 나온 음높이를 이어 "한 음을 냈다" 는 사건으로), createMic(getUserMedia 로 열고 일정 간격으로 앞의 둘을 돌림). 앞의 둘은 DOM·오디오 없이 node 에서 검증합니다.',
+      usage: [
+        {
+          title: '소리에는 누르는 순간이 없다',
+          body:
+            '끌어올리며 부르는 사이의 음, 한 음을 길게 끄는 동안의 반복, 같은 음 두 번(도 도)을 tracker 가 가립니다 — 같은 반음에 120ms 머물러야 한 음, 같은 음을 다시 내려면 70ms 쉬어야 합니다. ' +
+            '숫자마다 이름과 이유(교실 잡음 수준, 리코더 최고음)가 상수 옆에 있습니다.',
+        },
+        {
+          title: '옥타브 통과가 오히려 맞다',
+          body: '채점은 따라치기의 규칙(옥타브가 달라도 같은 음, 틀리면 진도 멈춤)을 그대로 씁니다. 아이와 어른 목소리가 옥타브가 달라도 같은 음으로 봐야 해서 노래에 잘 맞는다는 판단이 머리말에 있습니다.',
+        },
+      ],
+      files: [
+        { path: 'tests/music-pitch.test.js', label: 'music-pitch.test.js', description: `음높이 찾기·배음·조용함·길게 끌기·스친 음·같은 음 두 번${count('tests/music-pitch.test.js')}` },
+        { path: 'tests/e2e/music-practice-mic.spec.js', label: 'music-practice-mic.spec.js', description: '가짜 마이크로 학교종을 불러 끝까지 채점' },
+      ],
+      notes: [
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '마이크 수명 관리가 꼼꼼합니다. 에코 제거·잡음 억제·자동 음량을 끄고 원신호를 받으며(음높이가 뭉개지지 않게), 앱이 문제 음을 들려주는 동안은 마이크를 잠시 막아 스피커 소리를 답으로 듣지 않고, ' +
+            '허락을 기다리는 사이에 연습을 그만두면 받은 마이크를 바로 놓고, 문서를 닫으면 트랙을 멈춰 브라우저의 녹음 표시를 끕니다. e2e 는 가짜 마이크로 학교종 한 곡을 끝까지 부릅니다.',
         },
       ],
     }),

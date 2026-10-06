@@ -5,9 +5,9 @@
 // 카테고리는 같으므로 사이드바에서는 document-editors 안의 "지도" 묶음으로 이어 붙는다.
 // 도구상자 계산부(board-tools.js)는 화이트보드와 함께 읽어야 해서 40-editors.mjs 에 남겼다.
 
-import { linesLabel, topLevelFunctionSpan, functionShare } from '../lib/source-metrics.mjs';
+import { linesLabel, topLevelFunctionSpan, functionShare, largestScripts } from '../lib/source-metrics.mjs';
 
-export default ({ helpers, rootDir }) => {
+export default ({ manifest, helpers, rootDir }) => {
   const { mod, sec } = helpers;
   // 줄 수와 "한 함수가 파일의 몇 %인가" 는 생성 때 잰다(lib/source-metrics.mjs).
   const mapLines = linesLabel(rootDir, 'src/js/map-viewer.js');
@@ -16,6 +16,8 @@ export default ({ helpers, rootDir }) => {
   const mountLabel = mount
     ? `${mount.span.toLocaleString('en-US')}줄(${mount.start}–${mount.end})`
     : '한 함수';
+  // "src/js 에서 3번째로 큰 파일" 도 손으로 적지 않는다 — 순위는 다른 파일이 자라도 바뀐다.
+  const mapRank = largestScripts(rootDir, manifest, manifest.localScripts.length).findIndex((item) => item.file === 'map-viewer.js') + 1;
 
   return [
     sec({
@@ -145,7 +147,12 @@ export default ({ helpers, rootDir }) => {
     mod('map-viewer.js', {
       group: '지도',
       title: 'map-viewer.js — 지도 문서 (.map)',
-      subtitle: '모델·거리 계산·타일·검색·화면을 한 파일에 — src/js 에서 3번째로 큰 파일',
+      subtitle: `모델·거리 계산·타일·검색·화면을 한 파일에${mapRank ? ` — src/js 에서 ${mapRank}번째로 큰 파일` : ''}`,
+      // 리뷰 상한(MAX_LINES)을 넘겨 mountMapEditor 시작 줄을 경계로 두 구간으로 싣는다. 함수 경계라 아무 함수도 잘리지 않는다.
+      ranges: [
+        { label: '모델·계산·통신', anchor: { from: /^/, to: /^(async )?function mountMapEditor\b/, after: -1 }, description: 'DOM 없는 순수 계산과 통신 함수 — node --test 로 검증되는 쪽' },
+        { label: 'mountMapEditor · 내보내기', anchor: { from: /^(async )?function mountMapEditor\b/, lines: 1e6 }, description: '편집기 화면 전체(한 함수)와 module.exports' },
+      ],
       summary:
         '.map 의 데이터 모델과 정규화, 구면 거리·넓이 계산, 축척·격자 눈금 계산, CSV 왕복, 타일 프록시 판단, ' +
         '장소 검색과 좌표 → 주소 되묻기, 그리고 편집기 화면 전체가 들어 있습니다. ' +
@@ -253,7 +260,8 @@ export default ({ helpers, rootDir }) => {
           body:
             `mountMapEditor 가 ${mountLabel}입니다. 이 함수의 지역 변수에 화면 상태가 전부 들어 있어, ` +
             '기능을 하나 더 붙일 때마다 함수가 길어지는 것 말고는 선택지가 없습니다. ' +
-            '리뷰에서도 이 파일은 구간으로 나누지 못하고 통째로 싣습니다 — 어디를 잘라도 함수 중간이기 때문입니다.',
+            '이 파일은 리뷰 상한도 넘겨, 지금은 mountMapEditor 시작 줄을 경계로 두 구간으로 나눠 싣습니다. 그 경계 말고는 자를 자리가 없어서, ' +
+            '이 함수 하나가 상한에 닿으면 그때는 함수 중간을 잘라야 합니다.',
         },
         {
           type: 'risk',
@@ -290,12 +298,13 @@ export default ({ helpers, rootDir }) => {
       id: 'map-live-transit',
       category: '7. document-editors',
       group: '지도',
-      title: '실시간 교통 층 개요 — 수도권 지하철 · 제주 버스',
+      title: '실시간 교통 층 개요 — 수도권 지하철 · 전국 버스',
       subtitle: '같은 "움직이는 점" 을 두 번, 서로 다른 데이터 성질에 맞춰 풀었다',
       summary:
         '지도 위에 지금 운행 중인 열차와 버스를 띄우는 두 기능입니다. 둘 다 EXE 런처가 외부 API 를 대신 받고, 둘 다 .map 문서에는 한 글자도 남기지 않으며, ' +
         '둘 다 캡처(칠판·PNG·인쇄)에는 그 순간의 위치를 남깁니다. 그러나 받는 데이터의 성질이 달라 계산은 공유하지 않습니다 — ' +
-        '지하철 API 는 좌표 없이 "어느 역에 어떤 상태로" 라는 사건만 주고, 제주 버스는 좌표를 주지만 측정 시각이 없습니다.',
+        '지하철 API 는 좌표 없이 "어느 역에 어떤 상태로" 라는 사건만 주고, 버스는 좌표를 주지만 측정 시각도 도로 경로도 없습니다. ' +
+        '버스는 제주 버스정보 사이트로 시범을 연 뒤 2026-09-16 에 TAGO 공식 API 로 옮기며 전국 도시로 넓어졌고, 서울만은 서울시 버스정보 API 를 따로 씁니다.',
       usage: [
         {
           title: '지하철: 좌표가 없으니 역 사이를 계산한다',
@@ -304,11 +313,11 @@ export default ({ helpers, rootDir }) => {
             '정차 45초 + 거리÷15m/s 로 달리게 하고, 다음 역을 지나치지 않게 97% 에서 멈춥니다. 화면과 통신은 map-viewer.js 의 mountMapEditor 안에 있습니다.',
         },
         {
-          title: '제주 버스: 좌표는 있으니 "움직였다고 말하지 않는 법" 을 계산한다',
+          title: '버스: 좌표는 있으니 "움직였다고 말하지 않는 법" 을 계산한다',
           body:
-            'jeju-bus-api.js 가 응답을 정규화하고, jeju-bus-live.js 가 같은 좌표 재수신·캐시 재전달·정류장만 바뀐 응답·큰 점프·부분 누락을 구분해 ' +
-            '"새로 움직였다" 로 오해하지 않게 합니다. 경로가 검증되고 짧은 정상 이동일 때만 1.8초 동안 경로를 따라 옮기고, 미래 위치는 만들지 않습니다. ' +
-            '화면은 jeju-bus-map.js 로 따로 떼어 map-viewer.js 는 장착과 캡처 연결만 합니다.',
+            'jeju-bus-api.js 가 TAGO·서울 응답을 같은 모양으로 정규화하고, jeju-bus-live.js 가 같은 좌표 재수신·캐시 재전달·정류장만 바뀐 응답·큰 점프·부분 누락을 구분해 ' +
+            '"새로 움직였다" 로 오해하지 않게 합니다. TAGO 에는 도로 경로가 없어 차량은 새 자리로 옮겨 놓기만 하고, 정류장 순서는 옅은 점선으로 잇습니다 — ' +
+            '정류장 사이를 곧게 보간하면 건물·바다를 가로지르기 때문입니다. 화면은 jeju-bus-map.js 로 따로 떼어 map-viewer.js 는 장착과 캡처 연결만 합니다.',
         },
         {
           title: '공통 규칙: 문서에 남기지 않는다',
@@ -319,12 +328,12 @@ export default ({ helpers, rootDir }) => {
       ],
       features: [
         { title: '🚇 실시간 열차', body: '수도권 16개 노선 중 하나를 골라 열차 점과 노선(역을 곧게 이은 선)을 깔고, 가까이 가면 역 이름을 늘 붙입니다. 서울시 인증키가 필요합니다.' },
-        { title: '🚌 제주 버스 (시범)', body: '노선번호로 세부 노선을 찾아 정류장·경로·차량을 표시합니다. 키 없이 EXE 에서 쓰며, C# 런처에만 있고 Go 폴백 런처에서는 단추가 비활성입니다.' },
+        { title: '🚌 버스', body: '도시를 고르고 노선번호로 세부 노선을 찾아 정류장·차량을 표시합니다. 정류장 도착 예정·지도 가운데 근처 정류장도 봅니다. 공공데이터포털 키와 TAGO 활용신청이 필요하고, C# 런처에만 있어 Go 폴백 런처에서는 단추가 비활성입니다.' },
         { title: '신선도 표시', body: '지하철은 5분 소식이 없으면 감춥니다. 버스는 2분 지연이면 흐리게, 5분이면 숨기고, 90초 좌표가 그대로면 "위치 변화 확인 안 됨" 이라고만 씁니다.' },
-        { title: '보이지 않으면 묻지 않는다', body: '다른 탭을 보거나 지도가 숨으면 조회를 멈춥니다. 지하철은 하루 조회 한도를, 버스는 공식 API 가 아닌 사이트의 부담을 이유로 듭니다.' },
+        { title: '보이지 않으면 묻지 않는다', body: '다른 탭을 보거나 지도가 숨으면 조회를 멈춥니다. 지하철도 버스도 하루 조회 한도가 있는 키라, 보지 않는 화면이 한도를 쓰지 않게 합니다.' },
       ],
       files: [
-        { path: 'docs/제주버스-실시간지도-설계.md', label: '제주버스-실시간지도-설계.md', description: '설계 문서 — 실측 관측·데이터 한계·표시 규칙표·캐시·동시성·1차 구현 결과' },
+        { path: 'docs/제주버스-실시간지도-설계.md', label: '제주버스-실시간지도-설계.md', description: '설계 문서 — TAGO 전환 기록(맨 앞) · 시범 때의 실측 관측·데이터 한계·표시 규칙표·캐시·동시성' },
         { path: 'tools/build-subway-stations.mjs', label: 'build-subway-stations.mjs', description: 'OSM Overpass 에서 역 좌표·이웃 표를 만드는 생성기(--check 로 비교)' },
         { path: 'tests/e2e/subway-live.spec.js', label: 'subway-live.spec.js', description: '런처 여부·움직임·노선 깔기·문서에 안 남기기·키 없음·빈 운행' },
       ],
@@ -341,22 +350,31 @@ export default ({ helpers, rootDir }) => {
           type: 'good',
           label: 'Good',
           body:
-            '제주 버스 설계 문서가 "하지 않는 것" 을 분명히 적었습니다 — 도착 예측·미래 위치 추정·전역 조회는 후속 범위이고, 정류장을 임의로 "다음 정류장" 이라 부르지 않으며, ' +
-            '유효하지 않은 응답을 "운행 차량 없음" 으로 바꾸지 않습니다. 지도 개요에서 "비목표가 문서로 남아 있지 않다" 고 짚었던 빈자리가, 적어도 이 기능에서는 채워졌습니다.',
+            '버스 설계 문서가 "하지 않는 것" 을 분명히 적었고, 범위가 전국으로 넓어진 뒤에도 그 선을 지킵니다 — 미래 위치·속도는 여전히 만들지 않고, ' +
+            '정류장 도착 예정은 TAGO·서울시가 준 값을 그대로 보이며, 구간 예상시간도 서울 열린데이터광장의 시간대별 구간 통계를 더할 뿐 스스로 추정하지 않습니다 ' +
+            '(통계가 없는 서울 밖은 "소요시간은 추정하지 않는다" 가 테스트 제목입니다). 유효하지 않은 응답을 "운행 차량 없음" 으로 바꾸지 않는 약속도 그대로입니다.',
         },
         {
           type: 'risk',
           label: 'Risk',
           body:
-            '두 기능의 코드 모양이 극단적으로 다릅니다. subway-live.js 는 한 줄마다 근거 주석이 붙은 반면, jeju-bus-* 세 파일은 주석이 거의 없고 세미콜론으로 이은 압축 문체입니다. ' +
-            '설계 문서가 자세해 의도는 복원할 수 있지만, 코드와 문서의 연결(어느 함수가 표의 어느 칸인지)이 코드 쪽에는 남아 있지 않습니다.',
+            '설계 문서가 절반만 갱신됐습니다. 맨 앞에 "TAGO 전환(2026-09-16)" 절을 덧붙였지만, 본문의 목표·공급자 판단·조회 경로 절은 아직 "호스트는 bus.jeju.go.kr 로 고정한다" · ' +
+            '"현재 조회에는 인증키가 필요하지 않았다" 같은 시범 때 문장 그대로입니다. 위에서부터 읽으면 앞뒤가 맞지 않는 문서라, 시범 내용을 "기록" 절로 내리고 본문을 현재 기준으로 고쳐 쓰는 편이 낫습니다.',
         },
         {
           type: 'risk',
           label: 'Risk',
           body:
-            '지하철 화면은 여전히 mountMapEditor 안에 있고 제주 버스 화면만 jeju-bus-map.js 로 떼어 냈습니다. 설계 문서가 "지하철을 공통 교통 모듈로 재구성하지 않는다" 고 범위를 정한 결과지만, ' +
-            '같은 종류의 층을 두 방식으로 붙여 둔 상태라 세 번째 교통 수단이 오면 어느 쪽을 따를지부터 정해야 합니다.',
+            '두 기능의 코드 모양이 극단적으로 다릅니다. subway-live.js 는 한 줄마다 근거 주석이 붙은 반면, jeju-bus-live.js·jeju-bus-map.js 는 주석이 거의 없고 세미콜론으로 이은 압축 문체입니다 ' +
+            '(TAGO 전환 때 손본 jeju-bus-api.js 는 응답 봉투의 함정마다 주석이 붙어 나아졌습니다). 코드와 설계 문서의 연결(어느 함수가 표의 어느 칸인지)은 여전히 코드 쪽에 남아 있지 않습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '지하철 화면은 여전히 mountMapEditor 안에 있고 버스 화면만 jeju-bus-map.js 로 떼어 냈습니다. 이 리뷰는 "세 번째 교통 수단이 오면 어느 쪽을 따를지부터 정해야 한다" 고 적었는데, ' +
+            '그 뒤 들어온 항공(flight-map.js)·여객선(ship-map.js)은 모두 버스 쪽 — 같은 mount({map, stage, toolRow, doc, t, movePanel}) 모양의 별도 파일 — 을 따랐습니다. ' +
+            '이제 지하철 하나만 다른 방식으로 남아, 옮겨 맞출 쪽이 분명해졌습니다.',
         },
       ],
     }),
@@ -476,17 +494,24 @@ export default ({ helpers, rootDir }) => {
 
     mod('jeju-bus-api.js', {
       group: '지도',
-      title: 'jeju-bus-api.js — 제주 버스 응답 정규화 (MNJejuBusApi)',
-      subtitle: '수신 시각을 GPS 측정 시각으로 쓰지 않는다',
+      title: 'jeju-bus-api.js — 버스 응답 정규화 (MNJejuBusApi)',
+      subtitle: 'TAGO 와 서울시, 두 공급자를 한 모양으로 — 수신 시각을 GPS 측정 시각으로 쓰지 않는다',
       summary:
-        '런처의 /jeju-bus-routes·route·shape·position 을 부르고, 제주 버스정보 사이트의 응답을 공급자와 무관한 모양으로 바꿉니다. ' +
-        '노선은 {id, number, from, to, description, type}, 차량은 {id, label, at, stationId, stationName, observedAt:null} 이고, ' +
-        '위치 응답에는 런처가 헤더로 준 원본 수신 시각·캐시 나이·지연 여부·Retry-After 를 붙입니다.',
+        '런처의 /jeju-bus-routes·route·position·arrivals·nearby·cities 와 노선 목록(/jeju-bus-catalog*)을 부르고, TAGO 응답과 서울시 버스정보 응답을 공급자와 무관한 모양으로 바꿉니다. ' +
+        '노선은 {id, number, from, to, description, type}, 차량은 {id, label, at, stationId, stationName, observedAt:null}, 도착 예정은 {number, seconds, stops} 이고, ' +
+        '위치 응답에는 런처가 헤더로 준 원본 수신 시각·캐시 나이·지연 여부·Retry-After 를 붙입니다. 서울 노선의 구간 예상시간 계산도 이 파일에 있습니다.',
       usage: [
         {
-          title: '제주 범위 밖 좌표는 버린다',
+          title: '응답 봉투의 함정을 한곳에서',
           body:
-            'coords 가 위도 33~33.7, 경도 126~127.1 안의 유한한 수만 받습니다. 0 좌표·NaN·빈 문자열이 (0, 0) 으로 조용히 통과해 지도가 바다 한가운데로 날아가는 일을 막습니다.',
+            'TAGO 는 결과가 한 건이면 item 이 배열이 아니라 객체로, 없으면 items 가 빈 문자열로 오고, 번호(routeno 201)는 숫자로 올 수 있습니다. rows() 가 이 셋을 모두 펴서 배열로 돌려주고, ' +
+            '00 정상 · 03 자료 없음이 아니면 bus-invalid-data 를 던집니다. 서울은 seoulRows() 가 msgHeader.headerCd(0 · 4)로 같은 일을 합니다. 런처는 결과 코드만 보므로 모양 검사는 여기가 맡습니다.',
+        },
+        {
+          title: '대한민국 범위 밖 좌표는 버린다',
+          body:
+            'coords 가 위도 33~38.7, 경도 124.5~132 안의 유한한 수만 받습니다. 제주만 보던 때의 좁은 상자를 전국으로 넓혔지만 목적은 같습니다 — ' +
+            '0 좌표·NaN·빈 문자열(Number("") 은 0)이 (0, 0) 으로 조용히 통과해 지도가 바다 한가운데로 날아가는 일을 막습니다.',
         },
         {
           title: '"차량 없음" 과 "응답이 이상함" 을 가른다',
@@ -499,24 +524,58 @@ export default ({ helpers, rootDir }) => {
           body:
             '원본에 차량 위치의 측정 시각이 없습니다. 받은 시각으로 채우면 "방금 측정한 위치" 처럼 보이므로 비워 두고, 신선도는 런처가 상류에서 받은 시각(fetchedAt)으로만 판단합니다.',
         },
+        {
+          title: '근처 정류장은 좌표로 공급자를 고른다',
+          body:
+            '서울 정류장은 TAGO 에 없고 서울 API 에만 있습니다. nearbyAt 이 서울 경계 고리(SEOUL_RING)까지의 부호 있는 거리를 재서, 안쪽 800m 넘게 들어가면 서울만 · 바깥 800m 넘게 나가면 TAGO 만 · ' +
+            '그 사이 띠에서는 둘 다 묻습니다(800m = 조회 반경 500m + 경계를 줄인 오차 200m + 여유 100m). 한쪽만 실패하면 받은 쪽을 보이고, 양쪽에 실린 같은 이름 30m 안의 정류장은 서울 쪽만 남깁니다.',
+        },
+        {
+          title: '구간 예상시간은 통계를 더할 뿐',
+          body:
+            'tripEstimate 가 출발·도착 정류장 사이 구간마다 서울 열린데이터광장의 시간대별 평균 운행시간을 더합니다. 구간을 지나며 시간대가 바뀌면 다음 구간에는 다음 시간대 값을 쓰고, ' +
+            '정류장 ID·순번이 모두 맞는 구간만 씁니다. 순번에 빈칸이 있거나 자료가 없는 구간이 하나라도 있으면 합계를 내지 않습니다. 서울 밖은 "unsupported" 로 계산하지 않습니다.',
+        },
       ],
       files: [
-        { path: 'tests/jeju-bus-live.test.js', label: 'jeju-bus-live.test.js', description: '잘못된 응답·좌표 거부, 세부 노선 ID 유지, 정류장 정렬' },
-        { path: 'tests/fixtures/jeju-bus-observations.json', label: 'jeju-bus-observations.json', description: '201번 노선 실측 응답에서 옮긴 최소 사례' },
+        { path: 'tests/bus-nationwide.test.js', label: 'bus-nationwide.test.js', description: '도시 목록·도착 예정·근처 정류장·전국 좌표와 글자 든 노선 번호' },
+        { path: 'tests/bus-seoul.test.js', label: 'bus-seoul.test.js', description: '서울 결과 코드·gpsX/gpsY·노선 종류·가상 정류장·도착 안내 글 읽기' },
+        { path: 'tests/bus-trip.test.js', label: 'bus-trip.test.js', description: '중복 이름·순환 노선, 시간대 넘김, 포함된 통계 전 구간의 ID·순번·초 계약' },
+        { path: 'tests/jeju-bus-live.test.js', label: 'jeju-bus-live.test.js', description: '실측 TAGO 위치 응답 읽기, 잘못된 응답·좌표 거부, 세부 노선 ID 유지' },
+        { path: 'tests/fixtures/jeju-bus-observations.json', label: 'jeju-bus-observations.json', description: '시범 때 201번 노선 실측 응답에서 옮긴 최소 사례' },
+        { path: 'tools/build-seoul-ring.mjs', label: 'build-seoul-ring.mjs', description: 'SEOUL_RING 을 행정경계에서 200m 허용으로 줄여 다시 뽑는 생성기' },
+        { path: 'tools/build-bus-travel-data.mjs', label: 'build-bus-travel-data.mjs', description: '서울 구간 운행시간 CSV → src/assets/bus-travel-seoul.json 집계기' },
+        { path: 'src/assets/bus-travel-seoul.ATTRIBUTION.md', label: 'bus-travel-seoul.ATTRIBUTION.md', description: '통계 출처·기간·가공 방법·90일 사용 기한' },
       ],
       notes: [
         {
           type: 'good',
           label: 'Good',
           body:
-            '공급자별 필드 이름(localY·localX·vhId·currStationNm)이 이 파일 밖으로 나가지 않습니다. 설계 문서가 예고한 TAGO 공식 API 로 바꿀 때 고칠 자리가 여기와 런처뿐인 구조입니다.',
+            '시범 때 이 리뷰는 "공급자별 필드 이름이 이 파일 밖으로 나가지 않아, TAGO 로 바꿀 때 고칠 자리가 여기와 런처뿐인 구조" 라고 적었습니다. 실제 전환에서 그대로 됐습니다 — ' +
+            '관측 이력을 다루는 jeju-bus-live.js 는 한 줄도 바뀌지 않았고, 서울이라는 두 번째 공급자도 seoul* 함수 묶음으로 같은 모양에 맞춰 들어왔습니다.',
+        },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '숫자의 근거를 숫자 옆에 적었습니다. 800m 가 어디서 나왔는지(500 + 200 + 100), SEOUL_RING 이 어느 자료를 어떤 허용 오차로 줄인 값이며 무엇으로 다시 뽑는지가 상수 바로 위에 있습니다. ' +
+            '구간 통계에는 출처·이용허락·가공 방법·원본 해시를 적은 ATTRIBUTION 파일이 붙어 있습니다.',
+        },
+        {
+          type: 'risk',
+          label: 'Risk',
+          body:
+            '구간 예상시간에 만료일이 박혀 있습니다. 통계 기간(src/assets/bus-travel-seoul.json 의 to)으로부터 90일이 지나면 tripEstimate 가 "old" 를 돌려주는데, 지금 들어 있는 자료로는 그날이 2026-12-12 입니다. ' +
+            '화면은 "통계가 오래되었다" 고 정직하게 말하지만, 빌드·릴리스 검사(tools/check-release.js)는 이 날짜를 보지 않아 그 전에 자료를 갈아 넣으라는 신호가 없습니다. ' +
+            '릴리스 때 남은 날이 30일 아래면 경고하는 한 줄이 맞는 자리입니다.',
         },
         {
           type: 'info',
           label: 'Info',
           body:
-            '연결한 네 경로는 공식 개발자 API 가 아니라 제주 버스정보 사이트가 자기 화면에서 쓰는 조회 경로입니다. 설계 문서가 "안정성·이용 범위가 보장된다고 간주하지 않는다" 고 적고 ' +
-            '버튼에도 "시범" 을 붙였습니다. 정식 배포 전 이용 조건 확인이 남은 일로 기록돼 있습니다.',
+            '구간 통계 JSON 은 9MB 남짓이고 오프라인 HTML 에 <script type="application/json"> 으로 통째로 실립니다. 버스 패널을 열지 않는 사용자도 그만큼을 받게 되며, ' +
+            '읽기(JSON.parse)는 처음 예상시간을 물을 때로 미뤄 두었습니다.',
         },
       ],
     }),
@@ -544,7 +603,13 @@ export default ({ helpers, rootDir }) => {
         {
           title: '500m 넘는 이음새는 잇지 않는다',
           body:
-            'prepareShape 가 경로 점 사이가 500m 를 넘으면 구간을 끊습니다. 실제 201번 경로에서 그런 이음새 두 곳이 발견됐고, 이어 그리면 노선이 엉뚱한 직선을 긋습니다.',
+            'prepareShape 가 경로 점 사이가 500m 를 넘으면 구간을 끊습니다. 시범 때 제주 사이트가 준 201번 경로에서 그런 이음새 두 곳이 발견됐고, 이어 그리면 노선이 엉뚱한 직선을 긋습니다.',
+        },
+        {
+          title: '지금은 경로 없이 돈다',
+          body:
+            'TAGO 에는 도로 경로가 없어 jeju-bus-map.js 가 shape 를 늘 null 로 넘깁니다. 그러면 transition 이 곧바로 null 을 돌려 위의 두 규칙은 쓰이지 않고, 좌표가 바뀐 차량은 새 자리에 바로 놓입니다. ' +
+            '설계 문서는 "다른 공급자를 위해 그대로 둔다" 고 남겨 두었습니다.',
         },
       ],
       features: [
@@ -561,24 +626,26 @@ export default ({ helpers, rootDir }) => {
           label: 'Good',
           body:
             '표시 규칙이 설계 문서의 표(상황 → 표시 동작) 와 한 줄씩 대응하고, 각 줄이 테스트 하나로 옮겨져 있습니다. "움직이는 척하지 않는다" 는 이 기능의 핵심 약속이 ' +
-            '캐시·역순 응답·정류장만 바뀐 응답·큰 점프 네 갈래 모두에서 검증됩니다.',
+            '캐시·역순 응답·정류장만 바뀐 응답·큰 점프 네 갈래 모두에서 검증됩니다. 공급자가 바뀌어도 이 파일은 손대지 않았고, 테스트에 실측 TAGO 응답 사례가 더해졌습니다.',
         },
         {
           type: 'risk',
           label: 'Risk',
           body:
             '500m·40m·150m·1.5km·시속 100km·1.8초·90초·2분·5분이 전부 이름 없는 숫자로 코드에 박혀 있습니다. 설계 문서는 "실측 보장이 아닌 초기 설정값이며 추가 표본으로 조정한다" 고 했는데, ' +
-            '조정할 자리가 상수로 모여 있지 않아 문서의 어느 값이 코드의 어느 숫자인지 찾아야 합니다. subway-live.js 가 DWELL_SECONDS 같은 이름을 붙여 둔 것과 대조됩니다.',
+            '조정할 자리가 상수로 모여 있지 않아 문서의 어느 값이 코드의 어느 숫자인지 찾아야 합니다. subway-live.js 가 DWELL_SECONDS 같은 이름을 붙여 둔 것과 대조됩니다. ' +
+            '게다가 경로 관련 숫자(500m·40m·150m·1.5km·시속 100km·1.8초)는 지금 공급자에서 한 번도 실행되지 않는 코드라, 테스트만 지키고 있는 잠든 규칙입니다.',
         },
       ],
     }),
 
     mod('jeju-bus-map.js', {
       group: '지도',
-      title: 'jeju-bus-map.js — 제주 버스 패널과 Leaflet 층 (MNJejuBusMap)',
+      title: 'jeju-bus-map.js — 버스 패널과 Leaflet 층 (MNJejuBusMap)',
       subtitle: '지도에만 속하는 실시간 층 — .map 모델과 사용자 표시를 고치지 않는다',
       summary:
-        '지도 도구막대의 🚌 제주 버스 단추, 노선 검색·세부 노선 선택 패널, 경로·정류장·차량 층, 30초 조회와 1초 틱, 캡처 고정·재개, 정리까지 담당합니다. ' +
+        '지도 도구막대의 🚌 버스 단추와 패널 전체입니다 — 도시 고르기, 노선 목록(앱에 넣어 둔 제주 목록 또는 런처가 최신화한 도시별 목록)과 번호 검색, 세부 노선 선택, ' +
+        '정류장·차량 층, 정류장 도착 예정, 지도 가운데 근처 정류장, 서울 노선의 구간 예상시간, 30초 조회와 1초 틱, 캡처 고정·재개, 정리까지 담당합니다. ' +
         'map-viewer.js 는 mount 한 번과 캡처 때 freeze()·captureNote() 호출만 합니다.',
       usage: [
         {
@@ -595,17 +662,26 @@ export default ({ helpers, rootDir }) => {
         {
           title: '캡처하는 동안은 멈춘다',
           body:
-            'freeze() 가 조회·그리기를 멈추고 재개 함수를 돌려줍니다. 칠판·PNG·인쇄 캡처 중에 차량이 움직이지 않고, 캡처 그림에는 "제주 버스 위치 · 마지막 수신 시각 · bus.jeju.go.kr" 이 함께 새겨져 ' +
+            'freeze() 가 조회·그리기를 멈추고 재개 함수를 돌려줍니다. 칠판·PNG·인쇄 캡처 중에 차량이 움직이지 않고, 캡처 그림에는 "버스 위치 · 마지막 수신 시각 · TAGO(서울이면 서울특별시)" 가 함께 새겨져 ' +
             '정지 그림이 지금 화면으로 오해되지 않게 합니다.',
+        },
+        {
+          title: '고칠 일이면 "다시 시도 중" 이라고 하지 않는다',
+          body:
+            '런처가 428(키)·429(한도)로 까닭을 주면 상태 줄이 재시도 대신 할 일을 알립니다 — 조회 종류마다 어느 활용신청(버스노선·위치·도착·정류소)을 확인하라는지까지 따로 적었습니다. ' +
+            '노선 목록 최신화는 하루 한도에서 몇 번을 쓰는지 먼저 보여 주고 확인을 받은 뒤에만 시작하며, 실패하거나 멈추면 예전 목록을 그대로 둡니다.',
         },
       ],
       features: [
         { title: '능력 프로브', body: '/can-proxy-jeju-bus 가 yes 일 때만 단추를 켭니다. 브라우저로 그냥 연 경우와 Go 폴백 런처에서는 이유를 title 로 밝힌 채 비활성입니다.' },
+        { title: '도시 빈칸 = 제주', body: '도시 코드 "" 는 제주입니다. 예전 제주 노선 목록 파일·설정이 빈 코드에 묶여 있어 그대로 두었고, 서울(11)은 TAGO 도시 목록에 없어 늘 끼워 넣습니다.' },
         { title: '첫 표시만 맞춤', body: '지도를 켤 때 한 번만 노선 전체로 이동하고, 새 응답마다 사용자가 옮겨 둔 화면을 바꾸지 않습니다. "노선 전체 보기" 로 다시 맞춥니다.' },
         { title: '색만으로 구분하지 않기', body: '노선 유형 색에 노선번호 글자를 함께 붙이고, 단추에 aria-pressed·aria-expanded 를, 상태 줄에 aria-live 를 둡니다.' },
       ],
       files: [
-        { path: 'tests/jeju-bus-controller.test.js', label: 'jeju-bus-controller.test.js', description: '늦은 응답 무시·닫을 때 정리·숨김 중 중지·캡처 고정·실패와 빈 운행 구분' },
+        { path: 'src/js/jeju-bus-routes-data.js', label: 'jeju-bus-routes-data.js', description: '앱에 넣어 둔 제주 노선 목록(MNJejuBusRouteCatalog) — TAGO 노선 검색으로 만든 생성물' },
+        { path: 'tests/jeju-bus-controller.test.js', label: 'jeju-bus-controller.test.js', description: '늦은 응답 무시·닫을 때 정리·숨김 중 중지·캡처 고정·실패와 빈 운행 구분·도시 전환·도착 정보·구간 조회' },
+        { path: 'tests/e2e/bus-map.spec.js', label: 'bus-map.spec.js', description: '차량 이름표 — 노선 색 머리띠에 번호·유형·차량 번호, 아래에 정류장과 수신 시각' },
       ],
       notes: [
         {
@@ -613,20 +689,22 @@ export default ({ helpers, rootDir }) => {
           label: 'Good',
           body:
             '정리 경로가 빠짐없습니다. destroy 가 타이머·visibilitychange·zoomend·세 AbortController·패널·단추·Leaflet pane 까지 떼고, 그 destroy 를 doc.cleanupFns 에 등록합니다. ' +
-            '지도 탭을 닫았는데 30초마다 제주 사이트를 부르는 유령 조회가 남는 일을 테스트("지도를 닫으면 요청·타이머를 정리한다")가 막습니다.',
+            '도착 정보·근처 정류장·구간 조회가 더해지며 세대 번호와 AbortController 도 그만큼 늘었는데(검색·세부 노선·위치·정류장·구간), destroy 가 그 전부를 함께 끊습니다. ' +
+            '지도 탭을 닫았는데 30초마다 하루 한도를 쓰는 유령 조회가 남는 일을 테스트("지도를 닫으면 요청·타이머를 정리한다")가 막습니다.',
         },
         {
           type: 'risk',
           label: 'Risk',
           body:
-            '노선 검색과 세부 노선 선택이 둘 다 먼저 stopLive() 를 부르는데, stopLive 는 끝에서 상태 줄을 "제주 버스 표시를 껐어요." 로 씁니다. ' +
+            '노선 검색과 세부 노선 선택이 둘 다 먼저 stopLive() 를 부르는데, stopLive 는 끝에서 상태 줄을 "버스 표시를 껐어요." 로 씁니다. ' +
             '그래서 한 번도 켜지 않은 채 노선을 검색하기만 해도 패널 상태 줄에 "껐어요" 가 남습니다. 켜져 있을 때만 그 문구를 쓰거나, 끄기 동작과 초기화를 나누는 편이 맞습니다.',
         },
         {
           type: 'info',
           label: 'Info',
           body:
-            '이 파일은 module.exports 가 없어 테스트가 소스를 vm 으로 읽고 Leaflet·DOM 을 흉내 내 검증합니다. 순수 계산(jeju-bus-live.js)을 따로 뺀 덕에 화면 쪽 테스트는 수명·취소 규칙에만 집중합니다.',
+            '이 파일은 module.exports 가 없어 테스트가 소스를 vm 으로 읽고 Leaflet·DOM 을 흉내 내 검증합니다. 순수 계산(jeju-bus-live.js·jeju-bus-api.js)을 따로 뺀 덕에 화면 쪽 테스트는 수명·취소 규칙에만 집중합니다. ' +
+            '다만 기능이 셋(실시간 위치·정류장 도착·구간 예상시간)으로 늘며 mount 한 함수가 파일 대부분이 됐고, 세 기능이 상태 줄·패널·지도 층을 나눠 써 이제는 떼어 볼 때가 됐습니다.',
         },
       ],
     }),

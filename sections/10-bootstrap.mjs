@@ -1,6 +1,6 @@
 // 1. bootstrap — 설정과 공통 기반. 화면이 그려지기 전에 자리를 잡는 계층.
 
-import { anchoredRange, linesLabel } from '../lib/source-metrics.mjs';
+import { anchoredRange, formatLines, linesLabel, sourceLines } from '../lib/source-metrics.mjs';
 
 export default ({ manifest, helpers, rootDir }) => {
   const { mod, sec } = helpers;
@@ -9,6 +9,22 @@ export default ({ manifest, helpers, rootDir }) => {
   const coreLines = linesLabel(rootDir, 'src/js/core.js');
   const stateLines = linesLabel(rootDir, 'src/js/state.js');
   const coreTestLines = linesLabel(rootDir, 'tests/core.test.js');
+  // i18n.js 는 대부분이 사전이라 데이터와 엔진을 따로 잰다. 앞서 "1,753줄 대부분이 사전" 이라고 적어 둔 문장이
+  // 파일이 11,000줄을 넘는 동안 그대로 남아 있었다.
+  const i18nPath = 'src/js/i18n.js';
+  const i18nTotal = sourceLines(rootDir, i18nPath);
+  const spanOf = (anchor) => {
+    const range = anchoredRange(rootDir, i18nPath, anchor);
+    return range ? range[1] - range[0] : null;
+  };
+  const i18nDictLines = spanOf({ from: 'var DICT = {', to: 'var HTML_DICT = {' });
+  const i18nParamLines = spanOf({ from: 'var PARAMS = {', to: 'function tf(tmpl, vars) {' });
+  const i18nEngineRange = anchoredRange(rootDir, i18nPath, { from: 'function tf(tmpl, vars) {', to: /^\}\)\(\);/ });
+  const i18nDataShare =
+    i18nTotal && i18nDictLines != null && i18nParamLines != null
+      ? Math.round(((i18nDictLines + i18nParamLines) / i18nTotal) * 100)
+      : null;
+  const i18nEngineLines = i18nEngineRange ? formatLines(i18nEngineRange[1] - i18nEngineRange[0] + 1) : null;
   // 지연 vendor 통계도 손으로 적지 않는다 — 묶음이 늘 때마다 문장이 조용히 낡는 자리였다.
   const lazyVendors = (manifest.vendorScripts ?? []).filter((item) => item.lazy);
   const lazyBundleNames = [...new Set(lazyVendors.map((item) => item.lazy))];
@@ -410,7 +426,13 @@ export default ({ manifest, helpers, rootDir }) => {
       subtitle: 'DOM 텍스트·title·aria 자동 치환',
       summary:
         '한국어를 기준 문구로 두고 영어 사전을 매핑합니다. 정적 문자열뿐 아니라 매개변수가 낀 문구, DOM 의 textContent·title·aria-label 까지 ' +
-        '훑어 치환하고 언어 전환 시 다시 적용합니다. 사용자에게 보이는 새 문구를 추가하면 이 파일의 영문 사전도 함께 채워야 합니다.',
+        '훑어 치환하고 언어 전환 시 다시 적용합니다. 사용자에게 보이는 새 문구를 추가하면 이 파일의 영문 사전도 함께 채워야 합니다. ' +
+        '파일 대부분이 사전이라 리뷰에는 머리말·사전 첫머리·HTML 사전과 t()·번역 엔진만 구간으로 싣고, 사전 본문(DICT·PARAMS 의 나머지)은 싣지 않습니다.',
+      ranges: [
+        { label: '머리말 · 원자 사전 첫머리', anchor: { from: '/* 한국어 ⇄ English UI 다국어(i18n)', to: 'var DICT = {', after: 30 }, description: '번역 범위 선언, 언어 감지, DICT 의 앞 30줄' },
+        { label: 'HTML 사전 · t() · 매개변수 사전 첫머리', anchor: { from: 'var HTML_DICT = {', to: 'var PARAMS = {', after: 20 }, description: 'data-i18n 리치 블록, 정확 일치 → 앞뒤 공백 보존 → 패턴 순의 t(), PARAMS 의 앞 20줄' },
+        { label: '자동 번역 엔진', anchor: { from: 'function tf(tmpl, vars) {', to: /^\}\)\(\);/ }, description: 'tf() 템플릿, 보호 영역, 바인딩·스캔·되돌리기, 언어 토글, 늦게 붙는 UI 관찰' },
+      ],
       usage: [
         {
           title: '왜 DOM 을 훑는가',
@@ -442,8 +464,24 @@ export default ({ manifest, helpers, rootDir }) => {
         {
           type: 'info',
           label: 'Info',
-          body: '1,753줄 대부분이 사전 데이터입니다. 로직 자체는 크지 않습니다.',
+          body: i18nDataShare != null
+            ? `파일의 ${i18nDataShare}% 가 사전 데이터(DICT · PARAMS)이고, 번역 엔진은 ${i18nEngineLines}줄입니다. ` +
+              '영어 전환 작업 동안 사전은 몇 배로 불었고 엔진도 늦게 붙는 메뉴·패턴 번역으로 커졌지만 여전히 파일의 작은 몫이라, 이 파일의 크기는 로직의 복잡도가 아니라 화면 문구의 양을 따라갑니다. ' +
+              '그래서 리뷰 상한(MAX_LINES)에 걸린 첫 데이터 파일이 됐고, 꼬리를 자르는 대신 데이터와 엔진의 경계로 구간을 나눠 실었습니다.'
+            : '파일 대부분이 사전 데이터입니다. 로직 자체는 크지 않습니다.',
         },
+        {
+          type: 'good',
+          label: 'Good',
+          body:
+            '영어 전환의 빈틈을 스스로 감사한 기록(docs/en-translation-audit-2026-10-03.md)이 있습니다. 정적 HTML 과 동적 UI 를 AST 로 훑어 후보를 뽑고, ' +
+            '"후보 수는 확정 누락 수가 아니다" · "사전 크기는 번역률을 뜻하지 않는다" 를 결론보다 먼저 밝혔습니다. 원인을 사전 누락이 아니라 ' +
+            '"뒤늦게 생기는 화면의 번역 연결" 에서 먼저 찾은 것도 맞는 순서입니다 — DOM 을 훑는 설계의 약점이 정확히 그 자리이기 때문입니다.',
+        },
+      ],
+      files: [
+        { path: 'tests/i18n-dynamic.test.js', label: 'i18n-dynamic.test.js', description: '늦게 붙는 메뉴·EN/KO/EN 왕복·문서 본문과 셀 값 보존' },
+        { path: 'docs/en-translation-audit-2026-10-03.md', label: 'en-translation-audit-2026-10-03.md', description: 'EN 전환 누락 감사 — 집계 방법·한계·수정 순서' },
       ],
     }),
 
@@ -761,7 +799,7 @@ export default ({ manifest, helpers, rootDir }) => {
       files: [
         { path: 'tests/workspaces.test.js', label: 'workspaces.test.js', description: '정규화·복원 순서·경로 인덱스·공유 문서 14개' },
         { path: 'tests/workspace-membership.test.js', label: 'workspace-membership.test.js', description: '복원 중에는 작업공간 소속을 저장하지 않는다' },
-        { path: 'tests/e2e/workspace-tab-reorder.spec.js', label: 'workspace-tab-reorder.spec.js', description: '작업공간 탭을 끌어 순서를 바꾸면 다시 열어도 유지' },
+        { path: 'tests/e2e/workspace-menu-button.spec.js', label: 'workspace-menu-button.spec.js', description: '작업공간 버튼이 탭 줄 왼쪽에 — 탭이 없어도 보이고, 좁은 창·키보드로도 전환' },
       ],
       notes: [
         {
